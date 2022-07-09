@@ -129,7 +129,7 @@ const options:ParserOptions = {
 
 Whenever a potential directive is encountered and is present in the `ignoreDirectives` list, that section of the template is skipped over and that potential directive becomes part of the document's literal text.
 
-To contrast, the `directives` configuration option can be used to supply a list of directive names that *can be parsed*. If a potential directive is encountered that is *not* in this list, that potential directive is skipped and becomes part of the document's literal text.
+In contrast, the `directives` configuration option can be used to supply a list of directive names that *can be parsed*. If a potential directive is encountered that is *not* in this list, that potential directive is skipped and becomes part of the document's literal text.
 
 ### The `customIfs` Configuration Option
 
