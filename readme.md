@@ -127,7 +127,7 @@ const options:ParserOptions = {
 };
 ```
 
-Whenever a potential directive is encountered and is present in the `ignoreDirectives` list, that section of the template is skipepd over and that potential directive becomes part of the document's literal text.
+Whenever a potential directive is encountered and is present in the `ignoreDirectives` list, that section of the template is skipped over and that potential directive becomes part of the document's literal text.
 
 To contrast, the `directives` configuration option can be used to supply a list of directive names that *can be parsed*. If a potential directive is encountered that is *not* in this list, that potential directive is skipped and becomes part of the document's literal text.
 
@@ -147,7 +147,7 @@ const options:ParserOptions = {
 };
 ```
 
-In most situations you do *not* need to supply any value for this configuration option. The parser is capable of analysing your Blade templates and detecting custom if statements automatically.
+In most situations you do *not* need to supply any value for this configuration option. The parser is capable of analyzing your Blade templates and detecting custom if statements automatically.
 
 ## Reporting Issues
 
