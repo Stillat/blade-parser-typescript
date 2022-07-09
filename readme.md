@@ -12,7 +12,7 @@ What this project is:
 
 What this project is not:
 
-* This project (when used by itself) is *not* a formatter. However, it can be used to quickly write a formatter.
+* This project (when used by itself) is *not* a formatter. However, it can be used to quickly write a formatter
 * A view engine. It will not be able to actually render your Blade templates
 
 ## Installing
