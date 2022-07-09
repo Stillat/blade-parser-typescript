@@ -1,6 +1,6 @@
 # Blade Parser
 
-This library provides a Laravel Blade parser written in TypeScript. In addition to being able to parse Blade template files, this library also provides utilities and libraries that make it simpler to perform static analysixs on Blade documents.
+This library provides a Laravel Blade parser written in TypeScript. In addition to being able to parse Blade template files, this library also provides utilities and libraries that make it simpler to perform static analysis on Blade documents.
 
 What this project is:
 
