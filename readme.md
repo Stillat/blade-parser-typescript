@@ -151,7 +151,7 @@ In most situations you do *not* need to supply any value for this configuration 
 
 ## Reporting Issues
 
-Please use the issue's feature on GitHub to report bugs/issues. For general questions on how to use this library, please use the Discussions feature. Be considerate when interacting with others :)
+Please use the issues feature on GitHub to report bugs/issues. For general questions on how to use this library, please use the Discussions feature. Be considerate when interacting with others :)
 
 Due to the complexity and scope of this project, when reporting bugs/issues please include *all* required information to reproduce the bug or issue. You are encouraged to attach any problematic templates to the issue as a file in addition to being included in the issue description (this helps to eliminate any formatting/adjustments that the GitHub UI may apply).
 
