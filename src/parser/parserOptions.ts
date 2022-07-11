@@ -1,4 +1,5 @@
-import { CssAtRules } from './cssAtRules';
+import { CssAtRules } from './excludeDirectives/cssAtRules';
+import { CommonEventShortcuts } from './excludeDirectives/commonEventShortcuts';
 
 export interface ParserOptions {
     ignoreDirectives: string[],
@@ -8,7 +9,8 @@ export interface ParserOptions {
 
 let globalOptions: ParserOptions = {
     ignoreDirectives: [
-        ...CssAtRules
+        ...CssAtRules,
+        ...CommonEventShortcuts
     ],
     directives: [],
     customIfs: []
