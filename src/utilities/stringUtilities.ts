@@ -1,8 +1,6 @@
+// ctype regexes adapted from: https://github.com/locutusjs/locutus/blob/master/src/php/strings/setlocale.js
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const ctype = require('locutus/php/ctype');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const is_numeric = require('locutus/php/var/is_numeric');
+import { is_numeric } from './isNumeric';
 
 export class StringUtilities {
     static normalizeLineEndings(string: string, to = "\n") {
@@ -17,19 +15,19 @@ export class StringUtilities {
     }
 
     static ctypeSpace(char: string | null) {
-        return ctype.ctype_space(char);
+        return char?.search(/^[\f\n\r\t\v ]+$/g) !== -1;
     }
 
     static ctypeAlpha(char: string | null) {
-        return ctype.ctype_alpha(char);
+        return char?.search(/^[A-Za-z]+$/g) !== -1;
     }
 
     static ctypeDigit(char: string | null) {
-        return ctype.ctype_digit(char);
+        return char?.search(/^[\d]+$/g) !== -1;
     }
 
     static ctypePunct(char: string | null) {
-        return ctype.ctype_punct(char);
+        return char?.search(/^[\u0021-\u002F\u003A-\u0040\u005B-\u0060\u007B-\u007E]+$/g) !== -1;
     }
 
     static trimLeft(value: string, charList = "\\s") {
@@ -120,7 +118,7 @@ export class StringUtilities {
     }
 
     static unwrapString(value: string): string {
-        let returnValue = value.substring(1);
+        const returnValue = value.substring(1);
 
         return returnValue.substring(0, returnValue.length - 1);
     }
