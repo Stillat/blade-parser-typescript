@@ -4,7 +4,7 @@
     "description": "Parses Laravel Blade template files, and provides static analysis features.",
     "author": "John Koster",
     "license": "MIT",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "engines": {
         "node": "*"
     },
