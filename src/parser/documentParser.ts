@@ -397,8 +397,8 @@ export class DocumentParser implements StringIterator {
 
             let prefetchLength = 3,
                 shouldCheckForIgnoredDirectives = false,
-                exclusiveDirectivesSupplied = false,
-                lowerIgnoreDirectives:string[] = [],
+                exclusiveDirectivesSupplied = false;
+            const lowerIgnoreDirectives:string[] = [],
                 lowerExclusiveDirectives:string[] = [];
 
             if (this.parserOptions.ignoreDirectives.length > 0) {
@@ -1218,7 +1218,7 @@ export class DocumentParser implements StringIterator {
 
                 const startOffset = (node.endPosition?.index ?? 0),
                     length = ((isClosedBy.startPosition?.index ?? 0) - 1) - startOffset,
-                    childText = this.content.substr(startOffset, length)
+                    childText = this.content.substr(startOffset, length);
                 node.childrenDocument = BladeDocument.childFromText(childText, getStartPosition(node.getChildren()));
             }
         });
@@ -1897,7 +1897,7 @@ export class DocumentParser implements StringIterator {
         directive.directiveName = name.trim();
         directive.name = name.trim();
 
-        let lowerName = directive.name.toLowerCase();
+        const lowerName = directive.name.toLowerCase();
 
         if (lowerName == 'endcan' || lowerName == 'endcannot' || lowerName == 'endauth' || lowerName == 'endguest' || lowerName == 'endenv' || lowerName == 'endproduction') {
             directive.name = 'if';

@@ -234,7 +234,7 @@ export class Transformer {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
             charactersLength = characters.length;
 
-        for (var i = 0; i < length - 1; i++) {
+        for (let i = 0; i < length - 1; i++) {
             result += characters.charAt(Math.floor(Math.random() *
                 charactersLength));
         }
@@ -418,7 +418,7 @@ export class Transformer {
 
         this.registerPhpBlock(slug, php);
 
-        let open = this.open(slug),
+        const open = this.open(slug),
             close = this.close(slug);
 
         return "\n" + open + close + "\n";
@@ -772,10 +772,10 @@ export class Transformer {
 
                 value += 'slot name="' + slotName + '"';
             } else {
-                value += component.getComponentName()
+                value += component.getComponentName();
             }
         } else {
-            value += component.getComponentName()
+            value += component.getComponentName();
         }
 
         if (component.hasParameters) {
@@ -894,7 +894,7 @@ export class Transformer {
                 virtualSwitchOpen: virtualSwitchOpen
             };
 
-            let virtualStruct = "\n" + virtualSwitchOpen + "\n" + result + "\n" + virtualSwitchClose;
+            const virtualStruct = "\n" + virtualSwitchOpen + "\n" + result + "\n" + virtualSwitchClose;
 
             this.registerSwitchStatement(tSwitch);
 
@@ -1026,7 +1026,7 @@ export class Transformer {
                 pairClose: pairClose,
                 structures: transformedBranches,
                 condition: condition
-            }
+            };
 
             this.registerCondition(tCond);
 
@@ -1323,7 +1323,7 @@ export class Transformer {
                         value = value.replace(structure.pairOpen, this.printDirective(structureDirective));
                     } else {
                         this.removeLines.push(structure.pairClose);
-                        value = value.replace(structure.pairOpen, this.printDirective(structureDirective))
+                        value = value.replace(structure.pairOpen, this.printDirective(structureDirective));
                     }
                 } else {
                     value = value.replace(structure.pairOpen, this.printDirective(structureDirective));
@@ -1625,7 +1625,7 @@ export class Transformer {
                 selfClose = this.selfClosing(slug),
                 openRegex = '/<' + slug + '(.*?)>/gms',
                 closeRegex = '/</' + slug + '(.*?)>/gms',
-                selfCloseRegex = '/<' + slug + '(.*?)\/>/gms';
+                selfCloseRegex = '/<' + slug + '(.*?)/>/gms';
             result = result.replace(openRegex, open);
             result = result.replace(closeRegex, close);
             result = result.replace(selfCloseRegex, selfClose);

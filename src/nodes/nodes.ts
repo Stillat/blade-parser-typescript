@@ -59,13 +59,13 @@ export class AbstractNode {
     public originalAbstractNode: AbstractNode | null = null;
     public fragment: FragmentNode | null = null;
     public fragmentPosition: FragmentPosition = FragmentPosition.Unresolved;
-    public containsAnyFragments: boolean = false;
-    public containsChildStructures: boolean = false;
+    public containsAnyFragments = false;
+    public containsChildStructures = false;
     public offset: Offset | null = null;
     public errors: BladeError[] = [];
 
-    public isInScriptTag: boolean = false;
-    public isInStyleTag: boolean = false;
+    public isInScriptTag = false;
+    public isInStyleTag = false;
 
     isEmbedded(): boolean {
         return this.isInScriptTag || this.isInStyleTag;
@@ -212,7 +212,7 @@ export class BladeCommentNode extends AbstractNode {
 }
 
 export class InlinePhpNode extends AbstractNode {
-    private cachedHasValidPhp: Boolean | null = null;
+    private cachedHasValidPhp: boolean | null = null;
     private cachedPhpLastError: SyntaxError | null = null;
 
     public isInline = false;
@@ -223,7 +223,7 @@ export class InlinePhpNode extends AbstractNode {
             this.cachedPhpLastError = PhpValidator.lastError;
         }
 
-        return this.cachedHasValidPhp as Boolean;
+        return this.cachedHasValidPhp as boolean;
     }
 
     getPhpError(): SyntaxError | null {
@@ -256,9 +256,9 @@ export class DirectiveNode extends AbstractNode {
     public documentContent = '';
     public nodeContent = '';
 
-    private cachedHasValidJson: Boolean | null = null;
+    private cachedHasValidJson: boolean | null = null;
 
-    private cachedHasValidPhp: Boolean | null = null;
+    private cachedHasValidPhp: boolean | null = null;
     private cachedPhpLastError: SyntaxError | null = null;
 
     hasValidJson() {
@@ -280,7 +280,7 @@ export class DirectiveNode extends AbstractNode {
             }
         }
 
-        return this.cachedHasValidJson as Boolean;
+        return this.cachedHasValidJson as boolean;
     }
 
     hasValidPhp() {
@@ -293,7 +293,7 @@ export class DirectiveNode extends AbstractNode {
             this.cachedPhpLastError = PhpValidator.lastError;
         }
 
-        return this.cachedHasValidPhp as Boolean;
+        return this.cachedHasValidPhp as boolean;
     }
 
     getPhpError(): SyntaxError | null {
@@ -464,8 +464,8 @@ export class ExecutionBranchNode extends AbstractNode {
 
     public childDocument: ChildDocument | null = null;
 
-    public documentContent: string = '';
-    public innerContent: string = '';
+    public documentContent = '';
+    public innerContent = '';
     public innerOffset: Offset | null = null;
 }
 
@@ -505,8 +505,8 @@ export class SwitchCaseNode extends AbstractNode {
     public isDefault = false;
     public isClosedBy: DirectiveNode | null = null;
     public childDocument: ChildDocument | null = null;
-    public documentContent: string = '';
-    public innerContent: string = '';
+    public documentContent = '';
+    public innerContent = '';
     public innerOffset: Offset | null = null;
 }
 
@@ -522,15 +522,15 @@ export class ForElseNode extends AbstractNode {
     public truthDocument: ChildDocument | null = null;
     public falseDocument: ChildDocument | null = null;
 
-    public documentContent: string = '';
+    public documentContent = '';
 
-    public truthDocumentContent: string = '';
-    public truthInnerContent: string = '';
+    public truthDocumentContent = '';
+    public truthInnerContent = '';
     public truthDocumentOffset: Offset | null = null;
     public truthInnerOffset: Offset | null = null;
 
-    public falseDocumentContent: string = '';
-    public falseInnerContent: string = '';
+    public falseDocumentContent = '';
+    public falseInnerContent = '';
     public falseDocumentOffset: Offset | null = null;
     public falseInnerOffset: Offset | null = null;
 }
@@ -538,9 +538,9 @@ export class ForElseNode extends AbstractNode {
 export class BladeEchoNode extends AbstractNode {
     public content = '';
 
-    private cachedHasValidPhp: Boolean | null = null;
+    private cachedHasValidPhp: boolean | null = null;
     private cachedPhpLastError: SyntaxError | null = null;
-    public isInlineEcho: boolean = false;
+    public isInlineEcho = false;
 
     hasValidPhp() {
         if (this.cachedHasValidPhp == null) {
@@ -548,7 +548,7 @@ export class BladeEchoNode extends AbstractNode {
             this.cachedPhpLastError = PhpValidator.lastError;
         }
 
-        return this.cachedHasValidPhp as Boolean;
+        return this.cachedHasValidPhp as boolean;
     }
 
     getPhpError(): SyntaxError | null {
@@ -564,7 +564,7 @@ export class BladeStaticNode extends AbstractNode { }
 export class BladeVerbatimNode extends AbstractNode { }
 
 export class ArrayStartNode extends AbstractNode {
-    public tokenLength: number = 0;
+    public tokenLength = 0;
 }
 export class ArrayEndNode extends AbstractNode { }
 export class ArrayElementSeparatorNode extends AbstractNode { }
