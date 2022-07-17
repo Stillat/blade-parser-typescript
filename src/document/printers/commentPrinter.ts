@@ -19,6 +19,6 @@ export class CommentPrinter {
             return newComment;
         }
 
-        return '{{-- ' + comment.innerContent.trim() + ' --}}'
+        return '{{-- ' + comment.innerContent.trim() + ' --}}';
     }
 }
