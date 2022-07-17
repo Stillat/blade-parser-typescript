@@ -321,11 +321,14 @@ export class DirectiveNode extends AbstractNode {
     getImmediateChildren(): AbstractNode[] {
         const immediateChildren: AbstractNode[] = [];
 
-        this.children.forEach((node) => {
+        for (let i = 0; i < this.children.length; i++) {
+            const node = this.children[i];
+
             if (node.parent == this) {
+                if (node == this.isClosedBy) { break; }
                 immediateChildren.push(node);
             }
-        });
+        }
 
         return immediateChildren;
     }

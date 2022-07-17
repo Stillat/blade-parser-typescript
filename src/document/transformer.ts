@@ -465,6 +465,56 @@ export class Transformer {
         return phpContent;
     }
 
+    private shouldCreateVirutal(directive: DirectiveNode): boolean {
+        const children = directive.getImmediateChildren();
+
+        if (children.length == 0) {
+            return true;
+        }
+
+        let allEchosInline = true,
+            allLiteralsWhitespace = true,
+            inlineEchos = 0,
+            bladeCount = 0,
+            literalCount = 0,
+            createVirtual = true;
+
+        for (let i = 0; i < children.length; i++) {
+            const child = children[i];
+
+            if (child instanceof BladeEchoNode && child.isInlineEcho) {
+                allEchosInline = false;
+                inlineEchos += 1;
+                bladeCount += 1;
+            } else if (child instanceof LiteralNode) {
+                literalCount += 1;
+                if (child.content.trim().length > 0) {
+                    allLiteralsWhitespace = false;
+                }
+            } else {
+                bladeCount += 1;
+            }
+        }
+
+        if (inlineEchos == 0) {
+            createVirtual = true;
+        }
+
+        if (bladeCount > 0 && allEchosInline == true) {
+            return false;
+        }
+
+        if (allLiteralsWhitespace == false && bladeCount == 0) {
+            createVirtual = true;
+        }
+
+        if (allLiteralsWhitespace == true && bladeCount == 0) {
+            createVirtual = true;
+        }
+
+        return createVirtual;
+    }
+
     private preparePairedDirective(directive: DirectiveNode): string {
         const slug = this.makeSlug(directive.sourceContent.length),
             directiveName = directive.directiveName.toLowerCase(),
@@ -477,7 +527,7 @@ export class Transformer {
                 virtualSlug = this.makeSlug(15);
                 result += this.pair(virtualSlug);
             } else {
-                if (directive.containsChildStructures == false && directive.containsAnyFragments == false) {
+                if (this.shouldCreateVirutal(directive) && directive.containsChildStructures == false && directive.containsAnyFragments == false) {
                     virtualSlug = this.makeSlug(15);
                     result += this.pair(virtualSlug, innerDoc);
                 } else {

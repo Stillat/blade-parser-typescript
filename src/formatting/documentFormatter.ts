@@ -1,18 +1,26 @@
 import { TransformOptions } from '../document/transformOptions';
 import { PhpFormatter, BlockPhpFormatter, PhpTagFormatter, JsonFormatter, HtmlFormatter, PreFormatter } from '../document/formatters';
 import { BladeDocument } from '../document/bladeDocument';
+import { FormattingOptions } from './formattingOptions';
 
 export class DocumentFormatter {
+    private formattingOptions: FormattingOptions | null = null;
     private transformOptions: TransformOptions | null = null;
     private htmlFormatter: HtmlFormatter | null = null;
     private phpFormatter: PhpFormatter | null = null;
     private blockPhpFormatter: BlockPhpFormatter | null = null;
     private phpTagFormatter: PhpTagFormatter | null = null;
     private jsonFormatter: JsonFormatter | null = null;
-    private preFormatter:  PreFormatter | null = null;
+    private preFormatter: PreFormatter | null = null;
 
     withTransformOptions(options: TransformOptions) {
         this.transformOptions = options;
+
+        return this;
+    }
+
+    withFormattingOptions(options: FormattingOptions | null) {
+        this.formattingOptions = options;
 
         return this;
     }
@@ -75,7 +83,7 @@ export class DocumentFormatter {
             .withPhpFormatter(this.phpFormatter)
             .withPhpTagFormatter(this.phpTagFormatter)
             .withJsonFormatter(this.jsonFormatter);
-        
+
         if (this.transformOptions != null) {
             document.transform().withOptions(this.transformOptions);
         }
