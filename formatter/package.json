@@ -1,0 +1,20 @@
+{
+    "name": "prettier-plugin-blade-stillat",
+    "version": "0.0.2",
+    "description": "A Prettier plugin to format Laravel Blade tempaltes",
+    "main": "plugin.js",
+    "scripts": {},
+    "keywords": [
+        "Blade",
+        "Prettier",
+        "Laravel"
+    ],  
+    "peerDependencies": {
+        "prettier": ">=2.2.0"
+    },
+    "author": "John Koster",
+    "license": "MIT",
+    "engines": {
+        "node": ">=6.9.0"
+    }
+}
