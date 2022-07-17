@@ -2,17 +2,13 @@ import { AbstractNode, BladeCommentNode, BladeComponentNode, BladeEchoNode, Cond
 import { SimpleArrayParser } from '../parser/simpleArrayParser';
 import { StringUtilities } from '../utilities/stringUtilities';
 import { BladeDocument } from './bladeDocument';
+import { BlockPhpFormatter, JsonFormatter, PhpFormatter, PhpTagFormatter } from './formatters';
 import { ArrayPrinter } from './printers/arrayPrinter';
 import { CommentPrinter } from './printers/commentPrinter';
 import { DirectivePrinter } from './printers/directivePrinter';
 import { EchoPrinter } from './printers/echoPrinter';
 import { IndentLevel } from './printers/indentLevel';
 import { TransformOptions } from './transformOptions';
-
-export type PhpFormatter = (input: string) => string;
-export type BlockPhpFormatter = (input: string) => string;
-export type PhpTagFormatter = (input: string) => string;
-export type JsonFormatter = (input: string) => string;
 
 interface EmbeddedDocument {
     slug: string,
@@ -155,25 +151,25 @@ export class Transformer {
         return this;
     }
 
-    withJsonFormatter(formatter: JsonFormatter) {
+    withJsonFormatter(formatter: JsonFormatter | null) {
         this.jsonFormatter = formatter;
 
         return this;
     }
 
-    withBlockPhpFormatter(formatter: BlockPhpFormatter) {
+    withBlockPhpFormatter(formatter: BlockPhpFormatter | null) {
         this.blockPhpFormatter = formatter;
 
         return this;
     }
 
-    withPhpTagFormatter(formatter: PhpTagFormatter) {
+    withPhpTagFormatter(formatter: PhpTagFormatter | null) {
         this.phpTagFormatter = formatter;
 
         return this;
     }
 
-    withPhpFormatter(formatter: PhpFormatter) {
+    withPhpFormatter(formatter: PhpFormatter | null) {
         this.phpFormatter = formatter;
 
         return this;

@@ -1,6 +1,6 @@
 import { DirectiveNode } from '../../nodes/nodes';
 import { StringUtilities } from '../../utilities/stringUtilities';
-import { JsonFormatter, PhpFormatter } from '../transformer';
+import { JsonFormatter, PhpFormatter } from '../formatters';
 import { TransformOptions } from '../transformOptions';
 
 export class DirectivePrinter {

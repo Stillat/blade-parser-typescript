@@ -1,6 +1,6 @@
 import { BladeEchoNode, BladeEntitiesEchoNode, BladeEscapedEchoNode } from '../../nodes/nodes';
 import { StringUtilities } from '../../utilities/stringUtilities';
-import { PhpFormatter } from '../transformer';
+import { PhpFormatter } from '../formatters';
 
 export class EchoPrinter {
     static printEcho(echo: BladeEchoNode, phpFormatter: PhpFormatter | null): string {

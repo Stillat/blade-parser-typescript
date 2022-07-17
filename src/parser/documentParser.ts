@@ -80,6 +80,7 @@ export class DocumentParser implements StringIterator {
     private lineIndex: Map<number, LineOffset> = new Map();
     private lastDocumentOffsetKey: number | null = null;
     private content = '';
+    private originalContent = '';
     private seedOffset = 0;
     private seedStartLine = 1;
     private shiftLine = 0;
@@ -313,6 +314,7 @@ export class DocumentParser implements StringIterator {
     }
 
     private processInputText(input: string) {
+        this.originalContent = input;
         this.content = StringUtilities.normalizeLineEndings(input);
         this.inputLen = this.content.length;
 
@@ -532,6 +534,10 @@ export class DocumentParser implements StringIterator {
 
     getContent() {
         return this.content;
+    }
+
+    getOriginalContent() {
+        return this.originalContent;
     }
 
     getFragments() {

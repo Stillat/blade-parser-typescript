@@ -64,6 +64,10 @@ export class BladeDocument {
         return this.documentParser.getContent();
     }
 
+    getOriginalContent() {
+        return this.documentParser.getOriginalContent();
+    }
+
     getAllNodes() {
         return this.documentParser.getNodes();
     }
