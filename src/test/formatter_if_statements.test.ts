@@ -72,6 +72,43 @@ Another Thing
         );
     });
 
+    test('it can parse and format conditions with lots of whitespace', () => {
+        assert.strictEqual(
+            formatBladeString(`@if         ($true)
+            <span>Hello</span>
+            @elseif                     ($anotherValue)
+            <div>
+                <p>Hello world</p>
+                <div>
+                @pair
+                    Test
+            
+            @endpair
+                </div>
+                </div>
+            @else
+            
+            <p>Test {{ $title}}     test
+                    </p>
+            
+            @endif`).trim(),
+            `@if($true)
+    <span>Hello</span>
+@elseif($anotherValue)
+    <div>
+        <p>Hello world</p>
+        <div>
+            @pair
+                Test
+            @endpair
+        </div>
+    </div>
+@else
+    <p>Test {{ $title }} test</p>
+@endif`
+        );
+    });
+
     test('simple if statement does not add extra indentation', () => {
         assert.strictEqual(
             formatBladeString(`@if($true)

@@ -70,6 +70,7 @@ export class DocumentParser implements StringIterator {
     private maxLine = 1;
     private chunkSize = 5;
     private currentChunkOffset = 0;
+    private parsingOffset = 0;
     private isVerbatim = false;
     private isPhpNode = false;
     private bladeStartIndex: number[] = [];
@@ -834,8 +835,9 @@ export class DocumentParser implements StringIterator {
                 }
 
                 this.currentChunkOffset = offset;
+                this.parsingOffset = offset;
                 this.resetIntermediateState();
-                this.parseIntermediateText();
+                this.parseIntermediateText(offset);
 
                 if (this.isVerbatim) {
                     let found = false;
@@ -1238,6 +1240,13 @@ export class DocumentParser implements StringIterator {
             return;
         }
 
+        // Fake the chunking behavior.
+        const curChunk = Math.ceil(this.currentIndex / 5);
+
+        if (curChunk > 0) {
+            this.currentChunkOffset = this.parsingOffset + (this.chunkSize * curChunk);
+        }
+
         this.cur = this.chars[this.currentIndex];
 
         this.prev = null;
@@ -1248,36 +1257,16 @@ export class DocumentParser implements StringIterator {
         }
 
         if ((this.currentIndex + 1) < this.inputLen) {
-            let doPeek = true;
-
-            if (this.currentIndex == this.charLen - 1) {
-                const nextChunk = StringUtilities.split(
-                    StringUtilities.substring(this.content,
-                        this.currentChunkOffset + this.chunkSize,
-                        this.chunkSize
-                    ));
-                this.currentChunkOffset += this.chunkSize;
-
-                if (this.currentChunkOffset == this.inputLen) {
-                    doPeek = false;
-                }
-
-                nextChunk.forEach((nextChar) => {
-                    this.chars.push(nextChar);
-                    this.charLen += 1;
-                });
-            }
-
-            if (doPeek && (this.currentIndex + 1) < this.chars.length) {
+            if (this.currentIndex + 1 < this.chars.length) {
                 this.next = this.chars[this.currentIndex + 1];
             }
         }
     }
 
-    private parseIntermediateText() {
+    private parseIntermediateText(offset:number) {
         this.currentContent = [];
 
-        this.chars = this.content.substr(this.currentChunkOffset, this.chunkSize).split('');
+        this.chars = this.content.substring(offset).split('');
         this.charLen = this.chars.length;
 
         let parsedNode = false;
@@ -1397,21 +1386,6 @@ export class DocumentParser implements StringIterator {
     }
 
     private peek(count: number) {
-        if (count == this.charLen) {
-            const nextChunk = StringUtilities.split(
-                StringUtilities.substring(
-                    this.content,
-                    this.currentChunkOffset + this.chunkSize,
-                    this.chunkSize
-                ));
-
-            this.currentChunkOffset += this.chunkSize;
-            nextChunk.forEach((nextChar) => {
-                this.chars.push(nextChar);
-                this.charLen += 1;
-            });
-        }
-
         return this.chars[count];
     }
 

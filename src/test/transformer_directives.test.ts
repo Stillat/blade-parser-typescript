@@ -77,6 +77,7 @@ suite('Directive Transformer', () => {
 </div>
 
 @endpair
+
             </div>
 
     @endpair
@@ -84,6 +85,7 @@ suite('Directive Transformer', () => {
 </div>
 
 @endpair
+
             </div>
 
     @endpair
@@ -91,6 +93,7 @@ suite('Directive Transformer', () => {
 </div>
 
 @endpair
+
             </div>`
         );
     });
