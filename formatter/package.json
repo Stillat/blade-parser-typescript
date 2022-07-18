@@ -1,7 +1,7 @@
 {
-    "name": "prettier-plugin-blade-stillat",
-    "version": "0.0.2",
-    "description": "A Prettier plugin to format Laravel Blade tempaltes",
+    "name": "prettier-plugin-blade",
+    "version": "0.1.0",
+    "description": "A Prettier plugin to format Laravel Blade templates",
     "main": "plugin.js",
     "scripts": {},
     "keywords": [

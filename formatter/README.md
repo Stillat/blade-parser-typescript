@@ -7,7 +7,7 @@ This package provides a Prettier plugin that can parse and format Laravel Blade 
 The Blade Prettier Plugin can be installed with `npm` using the following command:
 
 ```bash
-npm install prettier-plugin-blade-stillat
+npm install prettier-plugin-blade
 ```
 
 ## Configuring the Blade Parser (Optional)
@@ -16,19 +16,23 @@ You may optionally configure the Blade parser by creating a file named `.blade.f
 
 * `customIfs`: A list of custom if statements. These provide hints to the parser and teach it how to treat custom ifs it encounters differently. If the parser consistently produces odd results for custom ifs, adding them to this list helps. Most of the time the parser can figure these out on its own, however.
 * `ignoreDirectives`: A list of directive names the parser should ignore.
+* `formatDirectivePhpParameters`: Indicates if PHP directive content should be formatted. Default: `true`
+* `formatDirectiveJsonParameters`: Indicates if JSON directive parameters should be formatted. Default: `true`
+* `spacesAfterDirective`: The number of spaces to add after directive names when they contain parameters. Values can be between `0` and `3`. Default: `0`
 
 > Note: Do not add the leading @ when adding directive names to any of the configuration options. When adding custom if statements, you just need to add the first name (add just "disk" instead of adding "disk" and "elsedisk").
 
 ```json
 {
-    "ignoreDirectives": [
-
-    ],
-    "customIfs": [
-
-    ]
+    "ignoreDirectives": [],
+    "customIfs": [],
+    "formatDirectivePhpParameters": true,
+    "formatDirectiveJsonParameters": true,
+    "spacesAfterDirective": 0
 }
 ```
+
+The internal formatters will only format PHP and JSON content if their contents are considered to be valid when configured to do so. The formatter will not throw an error, and will simply leave the JSON/PHP content unformatted and continue with the rest of the document.
 
 When configuring the `ignoreDirectives` option whatever values provided will take precedence over the defaults. By default the parser will ignore the following potential directive names that you may want to add back:
 
@@ -99,12 +103,12 @@ ignoreDirectives: [
 
 ## Prettier Configuration
 
-If you continuously receive errors like "could not resolve module prettier-plugin-blade-stillat", the following updates to a project's `.prettierrc` have proved successful:
+If you continuously receive errors like "could not resolve module prettier-plugin-blade", the following updates to a project's `.prettierrc` have proved successful:
 
 ```json
 {
     "plugins": [
-      "./node_modules/prettier-plugin-blade-stillat/"
+      "./node_modules/prettier-plugin-blade/"
     ],
     "overrides": [
       {

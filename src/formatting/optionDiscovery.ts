@@ -71,6 +71,14 @@ export function getEnvSettings(startingDirectory: string): FormattingOptions {
             directives = parsedFile.directives as string[];
         }
 
+        if (spacesAfterDirective < 0) {
+            spacesAfterDirective = 0;
+        }
+
+        if (spacesAfterDirective > 3) {
+            spacesAfterDirective = 3;
+        }
+
         return {
             ignoreDirectives: ignoreDirectives,
             spacesAfterDirective: spacesAfterDirective,
