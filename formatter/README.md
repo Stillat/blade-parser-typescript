@@ -12,7 +12,7 @@ npm install prettier-plugin-blade
 
 ## Configuring the Blade Parser (Optional)
 
-You may optionally configure the Blade parser by creating a file named `.blade.format.json` at the root of your project. The two options that can be used currently are:
+You may optionally configure the Blade parser by creating a file named `.blade.format.json` at the root of your project. The options that can be used currently are:
 
 * `customIfs`: A list of custom if statements. These provide hints to the parser and teach it how to treat custom ifs it encounters differently. If the parser consistently produces odd results for custom ifs, adding them to this list helps. Most of the time the parser can figure these out on its own, however.
 * `ignoreDirectives`: A list of directive names the parser should ignore.
