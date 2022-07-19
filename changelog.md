@@ -2,6 +2,10 @@
 
 A list of what's changed, and more.
 
+## 0.0.4
+
+- Fixes an issue where `@for` and `@endfor` regions were correctly labeled as not paired
+
 ## 0.0.3
 
 - Improves parsing and formatting of directives with lots of spaces between the directive name and the opening `(`
