@@ -1134,7 +1134,7 @@ export class DocumentParser implements StringIterator {
                         'Unclosed @for directive',
                         ErrrorLevel.Error
                     ));
-                } else if (lowerName == 'for' && directive.isOpenedBy == null) {
+                } else if (lowerName == 'for' && directive.isClosingDirective == true && directive.isOpenedBy == null) {
                     directive.pushError(BladeError.makeSyntaxError(
                         BladeErrorCodes.TYPE_UNPAIRED_FOR_CLOSING_DIRECTIVE,
                         directive,

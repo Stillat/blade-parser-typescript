@@ -1,10 +1,11 @@
 {
     "name": "stillat-blade-parser",
     "displayName": "Blade Template Parser",
+	"repository": "stillat/blade-parser-typescript",
     "description": "Parses Laravel Blade template files, and provides static analysis features.",
     "author": "John Koster",
     "license": "MIT",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "engines": {
         "node": "*"
     },
