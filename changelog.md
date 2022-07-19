@@ -4,7 +4,7 @@ A list of what's changed, and more.
 
 ## 0.0.4
 
-- Fixes an issue where `@for` and `@endfor` regions were correctly labeled as not paired
+- Fixes an issue where `@for` and `@endfor` regions were incorrectly labeled as not paired
 
 ## 0.0.3
 
