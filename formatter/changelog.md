@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2
+
+- Fixes an issue where `@for` and `@endfor` regions were correctly labeled as not paired
+
 ## 0.1.0
 
 - Improves the handling of the `spacesAfterDirective` configuration option
