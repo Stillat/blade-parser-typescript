@@ -118,8 +118,8 @@ export class ForElsePairAnalyzer {
             };
         }
 
-        forElseNode.truthDocument = BladeDocument.childFromText(parser.getNodeText(forElseNode.truthNodes), getStartPosition(forElseNode.truthNodes));
-        forElseNode.falseDocument = BladeDocument.childFromText(parser.getNodeText(forElseNode.falseNodes), getStartPosition(forElseNode.falseNodes));
+        forElseNode.truthDocument = BladeDocument.childFromText(parser.getNodeText(forElseNode.truthNodes), parser, getStartPosition(forElseNode.truthNodes));
+        forElseNode.falseDocument = BladeDocument.childFromText(parser.getNodeText(forElseNode.falseNodes), parser, getStartPosition(forElseNode.falseNodes));
 
         const forElseStart = (node.startPosition?.index ?? 0) - 1,
             forElseEnd = node.isClosedBy?.endPosition?.index ?? 0 - (node.startPosition?.index ?? 0),

@@ -21,6 +21,7 @@ import { FragmentsParser } from './fragmentsParser';
 import { IndexRange } from './indexRange';
 import { LineOffset } from './lineOffset';
 import { getParserOptions, ParserOptions } from './parserOptions';
+import { PhpValidator } from './php/phpValidator';
 import { isStartOfString } from './scanners/isStartOfString';
 import { nextNonWhitespace } from './scanners/nextNonWhitespace';
 import { scanToEndOfLogicGroup } from './scanners/scanToEndOfLogicGroup';
@@ -97,6 +98,7 @@ export class DocumentParser implements StringIterator {
     private doesHaveUnclosedComments = false;
     private doesHaveUnclosedRegions = false;
     private parserOptions: ParserOptions;
+    private phpValidator: PhpValidator | null = null;
 
     constructor() {
         this.componentParser = new ComponentParser(this);
@@ -104,6 +106,16 @@ export class DocumentParser implements StringIterator {
         this.fragmentsAnalyzer = new FragmentPositionAnalyzer(this, this.fragmentsParser);
 
         this.parserOptions = getParserOptions();
+    }
+
+    withPhpValidator(validator: PhpValidator | null) {
+        this.phpValidator = validator;
+
+        return this;
+    }
+
+    getPhpValidator(): PhpValidator | null {
+        return this.phpValidator;
     }
 
     withParserOptions(options: ParserOptions) {
@@ -401,8 +413,8 @@ export class DocumentParser implements StringIterator {
             let prefetchLength = 3,
                 shouldCheckForIgnoredDirectives = false,
                 exclusiveDirectivesSupplied = false;
-            const lowerIgnoreDirectives:string[] = [],
-                lowerExclusiveDirectives:string[] = [];
+            const lowerIgnoreDirectives: string[] = [],
+                lowerExclusiveDirectives: string[] = [];
 
             if (this.parserOptions.ignoreDirectives.length > 0) {
                 this.parserOptions.ignoreDirectives.forEach((directive) => {
@@ -439,14 +451,14 @@ export class DocumentParser implements StringIterator {
                 if (firstChar == '@' && StringUtilities.ctypeAlpha(secondChar)) {
                     if (exclusiveDirectivesSupplied) {
                         const checkPrefetch = this.breakPreFetch(preFetch).toLowerCase();
-    
+
                         if (lowerExclusiveDirectives.includes(checkPrefetch)) {
                             this.bladeStartIndex.push(offset);
                         }
                     } else {
                         if (shouldCheckForIgnoredDirectives) {
                             const checkPrefetch = this.breakPreFetch(preFetch).toLowerCase();
-    
+
                             if (!lowerIgnoreDirectives.includes(checkPrefetch)) {
                                 this.bladeStartIndex.push(offset);
                             }
@@ -1227,7 +1239,7 @@ export class DocumentParser implements StringIterator {
                 const startOffset = (node.endPosition?.index ?? 0),
                     length = ((isClosedBy.startPosition?.index ?? 0) - 1) - startOffset,
                     childText = this.content.substr(startOffset, length);
-                node.childrenDocument = BladeDocument.childFromText(childText, getStartPosition(node.getChildren()));
+                node.childrenDocument = BladeDocument.childFromText(childText, this, getStartPosition(node.getChildren()));
             }
         });
     }
@@ -1263,7 +1275,7 @@ export class DocumentParser implements StringIterator {
         }
     }
 
-    private parseIntermediateText(offset:number) {
+    private parseIntermediateText(offset: number) {
         this.currentContent = [];
 
         this.chars = this.content.substring(offset).split('');
@@ -1423,6 +1435,7 @@ export class DocumentParser implements StringIterator {
                     inlinePhp = new ShorthandInlinePhpNode();
                 }
 
+                inlinePhp.withParser(this);
                 inlinePhp.startPosition = this.positionFromOffset(startedOn + this.seedOffset, startedOn + this.seedOffset);
                 inlinePhp.endPosition = this.positionFromOffset(this.currentIndex + 1 + this.seedOffset, this.currentIndex + 1 + this.seedOffset);
 

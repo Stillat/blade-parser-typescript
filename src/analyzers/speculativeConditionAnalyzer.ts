@@ -132,8 +132,8 @@ export class SpeculativeConditionAnalyzer {
 
         branchOne.startPosition = branchOne.nodes[0].startPosition;
         branchOne.endPosition = branchOne.nodes[branchOne.nodes.length - 1].startPosition;
-        branchOne.childDocument = BladeDocument.childFromText(document.getNodeText(branchOneChildDocNodes), getStartPosition(branchOneChildDocNodes));
-        branchTwo.childDocument = BladeDocument.childFromText(document.getNodeText(branchTwoChildDocNodes), getStartPosition(branchTwoChildDocNodes));
+        branchOne.childDocument = BladeDocument.childFromText(document.getNodeText(branchOneChildDocNodes), document, getStartPosition(branchOneChildDocNodes));
+        branchTwo.childDocument = BladeDocument.childFromText(document.getNodeText(branchTwoChildDocNodes), document, getStartPosition(branchTwoChildDocNodes));
 
         branchTwo.startPosition = branchTwo.nodes[0].startPosition;
         branchTwo.endPosition = branchTwo.nodes[branchTwo.nodes.length - 1].startPosition;

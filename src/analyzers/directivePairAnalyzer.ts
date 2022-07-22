@@ -381,7 +381,7 @@ export class DirectivePairAnalyzer {
                                 length: branchDocLength
                             };
 
-                            executionBranch.childDocument = BladeDocument.childFromText(document.getNodeText(childDocNodes), getStartPosition(childDocNodes));
+                            executionBranch.childDocument = BladeDocument.childFromText(document.getNodeText(childDocNodes), document, getStartPosition(childDocNodes));
 
                             if (tail == null) {
                                 tail = executionBranch.head.isClosedBy;

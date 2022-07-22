@@ -1,11 +1,12 @@
 import assert from 'assert';
-import { PhpValidator } from '../parser/php/phpValidator';
+import { PhpParserPhpValidator } from '../parser/php/phpParserPhpValidator';
 import { assertNotNull } from './testUtils/assertions';
 
 suite('PHP Validator', () => {
     test('it detects invalid php', () => {
-        const isValid = PhpValidator.isValid(` $this+++++DS_F`),
-            error = PhpValidator.lastError;
+        const validator = new PhpParserPhpValidator(),
+            isValid = validator.isValid(` $this+++++DS_F`),
+            error = validator.getLastError();
 
         assertNotNull(error);
         assert.strictEqual(isValid, false);
@@ -13,7 +14,9 @@ suite('PHP Validator', () => {
     });
 
     test('it detects valid php', () => {
-        assert.strictEqual(PhpValidator.isValid('$attributes'), true);
-        assert.strictEqual(PhpValidator.lastError, null);
+        const validator = new PhpParserPhpValidator();
+
+        assert.strictEqual(validator.isValid('$attributes'), true);
+        assert.strictEqual(validator.getLastError(), null);
     });
 });

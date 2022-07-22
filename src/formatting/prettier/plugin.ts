@@ -2,6 +2,7 @@ import * as prettier from 'prettier';
 import { BladeDocument } from '../../document/bladeDocument';
 import { TransformOptions } from '../../document/transformOptions';
 import { ParserOptions } from '../../parser/parserOptions';
+import { PhpParserPhpValidator } from '../../parser/php/phpParserPhpValidator';
 import { FormattingOptions } from '../formattingOptions';
 import { getEnvSettings } from '../optionDiscovery';
 import { PrettierDocumentFormatter } from './prettierDocumentFormatter';
@@ -33,7 +34,9 @@ const plugin: prettier.Plugin = {
                 transformOptions.tabSize = getHtmlOptions().tabWidth;
 
                 const document = new BladeDocument();
-                document.getParser().withParserOptions(parserOptions);
+                document.getParser()
+                    .withParserOptions(parserOptions)
+                    .withPhpValidator(new PhpParserPhpValidator());
 
                 return document.loadString(text);
             },

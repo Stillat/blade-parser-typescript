@@ -28,7 +28,7 @@ npm install --save stillat-blade-parser
 The simplest way to get started using this library is to use the `BladeDocument.fromText` static helper method:
 
 ```ts
-import { BladeDocument } from "stillat-blade-parser/src/document/bladeDocument";
+import { BladeDocument } from "stillat-blade-parser/out/document/bladeDocument";
 
 const document = BladeDocument.fromText(`<html>
     <head>
@@ -42,8 +42,8 @@ This method will return an instance of `BladeDocument`, which provides many usef
 As an example, we can ask the document for a list of all parsed nodes and do something special with any directives we find:
 
 ```ts
-import { BladeDocument } from "stillat-blade-parser/src/document/bladeDocument";
-import { DirectiveNode } from 'stillat-blade-parser/src/nodes/nodes';
+import { BladeDocument } from "stillat-blade-parser/out/document/bladeDocument";
+import { DirectiveNode } from 'stillat-blade-parser/out/nodes/nodes';
 
 const document = BladeDocument.fromText(`<html>
     <head>
@@ -73,8 +73,8 @@ All provided option values are case-insensitive. Do not include the `@` when sup
 To supply parser options, you must have an instance of `BladeDocument` *before* you parse the template contents. Each `BladeDocument` also contains a parser instance. We can use the `getParser()` method to retrieve the internal parser instance, which will allow us to set our options:
 
 ```ts
-import { BladeDocument } from "stillat-blade-parser/src/document/bladeDocument";
-import { ParserOptions } from 'stillat-blade-parser/src/parser/parserOptions';
+import { BladeDocument } from "stillat-blade-parser/out/document/bladeDocument";
+import { ParserOptions } from 'stillat-blade-parser/out/parser/parserOptions';
 
 const document = new BladeDocument(),
     options:ParserOptions = {
@@ -221,7 +221,7 @@ npm run test:parser
 
 ### Debugging the Parser Library
 
-The easiest method to debug the parser library is to use VS Code and select the `Blade Parser` Run and Debug configuration. This debug configuration will launch the `/src/parser.ts` file in debug mode, allowing you to run and debug code from within that file right within VS Code.
+The easiest method to debug the parser library is to use VS Code and select the `Blade Parser` Run and Debug configuration. This debug configuration will launch the `/out/parser.ts` file in debug mode, allowing you to run and debug code from within that file right within VS Code.
 
 ## License
 

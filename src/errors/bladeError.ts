@@ -1,4 +1,3 @@
-import { Md5 } from 'ts-md5';
 import { AbstractNode } from '../nodes/nodes';
 import { Range } from '../nodes/position';
 
@@ -22,7 +21,7 @@ export class BladeError {
                 (this.node.startPosition?.offset ?? 0).toString() + "|";
         }
 
-        return Md5.hashStr(positionSlug + "|" + this.errorCode);
+        return positionSlug + "|" + this.errorCode;
     }
 
     static makeSyntaxError(errorCode: string, node: AbstractNode | null, message: string, level?: ErrrorLevel) {

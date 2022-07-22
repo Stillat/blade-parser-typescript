@@ -24,8 +24,16 @@ export class BladeDocument {
         return document.loadString(text);
     }
 
-    static childFromText(text: string, seedPosition: Position | null = null): ChildDocument {
-        const document = BladeDocument.fromText(text, seedPosition);
+    static childFromText(text: string, parentParser: DocumentParser, seedPosition: Position | null = null): ChildDocument {
+        const document = new BladeDocument();
+
+        if (seedPosition != null) {
+            document.getParser().setSeedPosition(seedPosition);
+        }
+
+        document.getParser().withPhpValidator(parentParser.getPhpValidator());
+
+        document.loadString(text);
 
         return {
             renderNodes: document.getRenderNodes(),

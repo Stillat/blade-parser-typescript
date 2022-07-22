@@ -55,7 +55,7 @@ export class SwitchPairAnalyzer {
                             end = (lastNode.endPosition?.index ?? 0) + 1,
                             childText = parser.getText(start, end);
 
-                        switchCase.leadingDocument = BladeDocument.childFromText(childText, firstNode.startPosition);
+                        switchCase.leadingDocument = BladeDocument.childFromText(childText, parser, firstNode.startPosition);
                     }
 
                     currentNodes = [];
@@ -81,7 +81,7 @@ export class SwitchPairAnalyzer {
                     }
                 }
 
-                switchCase.childDocument = BladeDocument.childFromText(parser.getNodeText(switchCase.children), getStartPosition(switchCase.children));
+                switchCase.childDocument = BladeDocument.childFromText(parser.getNodeText(switchCase.children), parser, getStartPosition(switchCase.children));
 
                 if (caseChildren.brokeOn != null) {
                     switchCase.endPosition = caseChildren.brokeOn.startPosition;
@@ -152,7 +152,7 @@ export class SwitchPairAnalyzer {
                     length: innerLength
                 };
 
-                defaultCase.childDocument = BladeDocument.childFromText(parser.getNodeText(childDocNodes), getStartPosition(childDocNodes));
+                defaultCase.childDocument = BladeDocument.childFromText(parser.getNodeText(childDocNodes), parser, getStartPosition(childDocNodes));
 
                 switchNode.cases.push(defaultCase);
                 break;
@@ -179,7 +179,7 @@ export class SwitchPairAnalyzer {
                 }
             }
 
-            node.childrenDocument = BladeDocument.childFromText(parser.getNodeText(childDocNodes), getStartPosition(childDocNodes));
+            node.childrenDocument = BladeDocument.childFromText(parser.getNodeText(childDocNodes), parser, getStartPosition(childDocNodes));
         }
 
         const switchStartOffset = (node.startPosition?.index ?? 0) - 1,

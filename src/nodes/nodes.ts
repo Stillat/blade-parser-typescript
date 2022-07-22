@@ -4,9 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { StringUtilities } from '../utilities/stringUtilities';
 import { BladeDocument } from '../document/bladeDocument';
 import { Offset } from './offset';
-import { PhpParser } from '../parser/php/phpParser';
 import { BladeError } from '../errors/bladeError';
-import { PhpValidator } from '../parser/php/phpValidator';
 
 function newRefId() {
     return StringUtilities.replaceAllInString(uuidv4(), '-', '_');
@@ -219,8 +217,14 @@ export class InlinePhpNode extends AbstractNode {
 
     hasValidPhp() {
         if (this.cachedHasValidPhp == null) {
-            this.cachedHasValidPhp = PhpValidator.isValid(this.sourceContent, false);
-            this.cachedPhpLastError = PhpValidator.lastError;
+            const validator = this.getParser()?.getPhpValidator();
+
+            if (validator != null) {
+                this.cachedHasValidPhp = validator.isValid(this.sourceContent, false);
+                this.cachedPhpLastError = validator.getLastError();
+            } else {
+                this.cachedHasValidPhp = false;
+            }
         }
 
         return this.cachedHasValidPhp as boolean;
@@ -288,9 +292,15 @@ export class DirectiveNode extends AbstractNode {
             this.cachedHasValidPhp = false;
         }
 
-        if (this.cachedHasValidPhp == null) {
-            this.cachedHasValidPhp = PhpValidator.isValid(this.getPhpContent());
-            this.cachedPhpLastError = PhpValidator.lastError;
+        if (this.cachedHasValidPhp == null) {            
+            const validator = this.getParser()?.getPhpValidator();
+
+            if (validator != null) {
+                this.cachedHasValidPhp = validator.isValid(this.getPhpContent(), true);
+                this.cachedPhpLastError = validator.getLastError();
+            } else {
+                this.cachedHasValidPhp = false;
+            }
         }
 
         return this.cachedHasValidPhp as boolean;
@@ -331,10 +341,6 @@ export class DirectiveNode extends AbstractNode {
         }
 
         return immediateChildren;
-    }
-
-    php() {
-        return new PhpParser(this);
     }
 
     getPhpContent() {
@@ -547,8 +553,14 @@ export class BladeEchoNode extends AbstractNode {
 
     hasValidPhp() {
         if (this.cachedHasValidPhp == null) {
-            this.cachedHasValidPhp = PhpValidator.isValid(this.content);
-            this.cachedPhpLastError = PhpValidator.lastError;
+            const validator = this.getParser()?.getPhpValidator();
+
+            if (validator != null) {
+                this.cachedHasValidPhp = validator.isValid(this.content, true);
+                this.cachedPhpLastError = validator.getLastError();
+            } else {
+                this.cachedHasValidPhp = false;
+            }
         }
 
         return this.cachedHasValidPhp as boolean;
