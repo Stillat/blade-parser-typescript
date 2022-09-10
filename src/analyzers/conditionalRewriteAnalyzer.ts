@@ -11,6 +11,10 @@ export class ConditionalRewriteAnalyzer {
             return BladeKeywords.If;
         }
 
+        if (node.name == 'can') {
+            return BladeKeywords.If;
+        }
+
         if (PairManager.isSpeculativeCondition(node.name)) {
             return BladeKeywords.If;
         }

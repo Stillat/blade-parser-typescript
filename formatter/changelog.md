@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.3
+
+- Fixes an issue that falsely flagged `can` pairs as invalid [#2](https://github.com/Stillat/blade-parser-typescript/issues/2)
+
 ## 0.1.2
 
 - Fixes an issue where `@for` and `@endfor` regions were incorrectly labeled as not paired

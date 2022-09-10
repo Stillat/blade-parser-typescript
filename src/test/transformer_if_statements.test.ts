@@ -17,7 +17,7 @@ More Things
 Another Thing
 @endif
 @endif`).trim(),
-            `@if($true)
+`@if($true)
 Thing
 
 @elseif($anotherValue)
@@ -30,7 +30,6 @@ Thing
 @elseif($anotherValue)
 More Things
 @else
-
 Another Thing
 @endif
 @endif`

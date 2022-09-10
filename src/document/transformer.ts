@@ -1029,7 +1029,7 @@ export class Transformer {
                     if (branch.head.containsChildStructures == false && branch.head.containsAnyFragments == false) {
                         tBranch.virtualBreakOpen = this.open(virtualBreakSlug);
                         tBranch.virtualBreakClose = this.close(virtualBreakSlug);
-                        result += tBranch.virtualBreakOpen + "\n";
+                        result += "\n" + tBranch.virtualBreakOpen + "\n";
                         result += innerDoc;
                         result += "\n" + tBranch.virtualBreakClose + "\n" + tBranch.pairClose;
                     } else {

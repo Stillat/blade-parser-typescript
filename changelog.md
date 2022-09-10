@@ -2,6 +2,10 @@
 
 A list of what's changed, and more.
 
+## 0.1.1
+
+- Improves `can` directive pairing
+
 ## 0.1.0
 
 - Abstracts the PHP Validator so that it is no longer dependent on `php-parser`
