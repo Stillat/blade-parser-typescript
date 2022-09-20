@@ -210,4 +210,11 @@ suite('Component Tags', () => {
 </x-alert>`
         );     
     });
+
+    test('it can format attribute short syntax', () => {
+        const template = `<x-profile :$userId :$size></x-profile>`;
+        const result = formatBladeString(template);
+
+        assert.strictEqual(result.trim(), template);
+    });
 });

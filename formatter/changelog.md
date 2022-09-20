@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.4
+
+- Adds coverage for short attribute syntax `<x-profile :user-id="$userId"></x-profile>` (from https://twitter.com/calebporzio/status/1568700635683627008)
+
 ## 0.1.3
 
 - Fixes an issue that falsely flagged `can` pairs as invalid [#2](https://github.com/Stillat/blade-parser-typescript/issues/2)

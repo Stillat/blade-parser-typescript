@@ -415,6 +415,11 @@ export class ComponentParser implements StringIterator {
                         const param = new ParameterNode(),
                             componentOffset = this.getComponentOffset();
                         param.type = ParameterType.Attribute;
+
+                        if (this.next == null && ! StringUtilities.ctypeSpace(this.cur)) {
+                            this.currentContent.push(this.cur as string);
+                        }
+
                         param.name = this.currentContent.join('');
 
                         const startOffset = this.currentIndex + componentOffset - param.name.length;
