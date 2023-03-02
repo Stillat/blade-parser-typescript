@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.5
+
+- Improves the formatting of Blade echo regions
+
 ## 0.1.4
 
 - Adds coverage for short attribute syntax `<x-profile :user-id="$userId"></x-profile>` (from https://twitter.com/calebporzio/status/1568700635683627008)
