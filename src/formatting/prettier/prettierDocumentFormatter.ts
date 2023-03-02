@@ -2,7 +2,7 @@ import * as prettier from 'prettier';
 import { ErrorPrinter } from '../../document/printers/errorPrinter';
 import { TransformOptions } from '../../document/transformOptions';
 import { DocumentFormatter } from '../documentFormatter';
-import { formatAsHtml, formatJson, formatPhp, formatTagPhp, setOptions } from './utils';
+import { formatAsHtml, formatJson, formatPhp, formatTagPhp, inlineFormatPhp, setOptions } from './utils';
 
 export class PrettierDocumentFormatter extends DocumentFormatter {
     constructor(options: prettier.ParserOptions, transformOptions: TransformOptions) {
@@ -11,7 +11,7 @@ export class PrettierDocumentFormatter extends DocumentFormatter {
         setOptions(options);
 
         this.withHtmlFormatter(formatAsHtml)
-            .withPhpFormatter(formatPhp)
+            .withPhpFormatter(inlineFormatPhp)
             .withBlockPhpFormatter(formatPhp)
             .withPhpTagFormatter(formatTagPhp)
             .withJsonFormatter(formatJson)

@@ -7,7 +7,8 @@ import php from "@prettier/plugin-php/standalone";
 import { formatJsonata } from "@stedi/prettier-plugin-jsonata/dist/lib";
 
 let phpOptions: ParserOptions,
-    htmlOptions: ParserOptions;
+    htmlOptions: ParserOptions,
+    echoPhpOptions: ParserOptions;
 
 export function cleanOptions(options: ParserOptions): ParserOptions {
     [
@@ -55,7 +56,15 @@ export function setOptions(options: ParserOptions) {
     phpOptions = cleanOptions(
         Object.assign({}, options, {
             parser: 'php',
-            plugins: [php]
+            plugins: [php],
+        })
+    );
+
+    echoPhpOptions = cleanOptions(
+        Object.assign({}, options, {
+            parser: 'php',
+            plugins: [php],
+            printWidth: 300,
         })
     );
 }
@@ -63,6 +72,18 @@ export function setOptions(options: ParserOptions) {
 
 export function formatAsHtml(text: string) {
     return prettier.format(text, htmlOptions);
+}
+
+export function inlineFormatPhp(text: string) {
+    let result = prettier.format(text, echoPhpOptions).trim();
+
+    result = result.substring(5);
+
+    if (text.endsWith(';') == false && result.endsWith(';')) {
+        result = result.substring(0, result.length - 1);
+    }
+
+    return result.trim();
 }
 
 export function formatPhp(text: string) {
