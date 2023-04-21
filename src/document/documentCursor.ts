@@ -1,5 +1,5 @@
 import { AbstractNode } from '../nodes/nodes';
-import { BladeDocument } from './BladeDocument';
+import { BladeDocument } from './bladeDocument';
 import { NodeQueries } from './scanners/nodeQueries';
 
 export class DocumentCursor {
