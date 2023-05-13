@@ -10,6 +10,26 @@ The Blade Prettier Plugin can be installed with `npm` using the following comman
 npm install prettier-plugin-blade
 ```
 
+After installing, add the following to your `.prettierrc` file:
+
+```json
+{
+    "plugins": [
+        "./node_modules/prettier-plugin-blade/"
+    ],
+    "overrides": [
+        {
+            "files": [
+                "*.blade.php"
+            ],
+            "options": {
+                "parser": "blade"
+            }
+        }
+    ]
+}
+```
+
 ## Configuring the Blade Parser (Optional)
 
 You may optionally configure the Blade parser by creating a file named `.blade.format.json` at the root of your project. The options that can be used currently are:
