@@ -166,4 +166,17 @@ asdf
 </div>`
         );
     });
+
+    test('virtual wrappers are not created for paired directives containing only inlined content', () => {
+        const input = `
+                @can('create', App\\Models\\User::class)
+                {!! $something_here !!}
+                @endcan
+`;
+        const out = `@can('create', App\\Models\\User::class)
+    {!! $something_here !!}
+@endcan
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    });
 });

@@ -334,7 +334,7 @@ export class DirectiveNode extends AbstractNode {
         for (let i = 0; i < this.children.length; i++) {
             const node = this.children[i];
 
-            if (node.parent == this) {
+            if (node.parent?.refId == this.refId) {
                 if (node == this.isClosedBy) { break; }
                 immediateChildren.push(node);
             }
