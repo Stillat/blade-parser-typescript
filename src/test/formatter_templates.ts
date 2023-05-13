@@ -1,5 +1,4 @@
 import assert from 'assert';
-import { transformString } from './testUtils/transform';
 import { formatBladeString } from '../formatting/prettier/utils';
 
 suite('General Template Formatting', () => {
