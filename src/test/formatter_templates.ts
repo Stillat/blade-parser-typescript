@@ -278,4 +278,37 @@ suite('General Template Formatting', () => {
         assert.strictEqual(formatBladeString(template), out);
     });
     
+    test('it indents conditions missing content', () => {
+        const template = `@extends('layouts.master')
+
+        @section('title', 'Dashboard')
+        
+        @section('content')
+        <h1>Dashboard</h1>
+        
+        @if (Auth::check())
+        
+        @if (Auth::user()->isAdmin())
+        @else
+        @endif
+        @else
+                                                @endif
+        @endsection`;
+        const out = `@extends("layouts.master")
+
+@section('title', 'Dashboard')
+
+@section("content")
+    <h1>Dashboard</h1>
+
+    @if(Auth::check())
+        @if(Auth::user()->isAdmin())
+        @else
+        @endif
+    @else
+    @endif
+@endsection
+`;
+        assert.strictEqual(formatBladeString(template), out);
+    });
 });
