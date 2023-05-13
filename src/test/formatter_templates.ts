@@ -91,4 +91,43 @@ suite('General Template Formatting', () => {
 `;
         assert.strictEqual(formatBladeString(template), out);
     });
+
+    test('it indents sections conditions and loops', () => {
+        const template = `@extends('layouts.master')
+
+@section('title', 'User List')
+
+@section('content')
+<h1>User List</h1>
+
+@if ($users->isEmpty())
+<p>No users found.</p>
+@else
+<ul>
+@foreach ($users as $user)
+<li>{{ $user->name }} - {{ $user->email }}</li>
+@endforeach
+</ul>
+@endif
+@endsection`;
+        const out = `@extends("layouts.master")
+
+@section('title', 'User List')
+
+@section("content")
+    <h1>User List</h1>
+
+    @if($users->isEmpty())
+        <p>No users found.</p>
+    @else
+        <ul>
+            @foreach($users as $user)
+                <li>{{ $user->name }} - {{ $user->email }}</li>
+            @endforeach
+        </ul>
+    @endif
+@endsection
+`;
+        assert.strictEqual(formatBladeString(template), out);
+    });
 });
