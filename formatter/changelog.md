@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0
+
+- General improvements to formatting
+
 ## 0.1.5
 
 - Improves the formatting of Blade echo regions

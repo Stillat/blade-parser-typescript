@@ -2,6 +2,12 @@
 
 A list of what's changed, and more.
 
+## 1.0.0
+
+- Improves results of `DirectiveNode.getImmediateChildren()`
+- General formatting improvements
+- Additional test coverage
+
 ## 0.1.2
 
 - Adds coverage for short attribute syntax `<x-profile :user-id="$userId"></x-profile>` (from https://twitter.com/calebporzio/status/1568700635683627008)
