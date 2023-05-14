@@ -23,28 +23,7 @@ suite('Props Directive', () => {
 
 <div>
     <div>
-        @props([
-            "hello",
-            "world",
-            "test" => [
-                1,
-                2,
-                3,
-                4,
-                5,
-                "more" => [
-                    "hello",
-                    "world",
-                    "test" => [
-                        1,
-                        2,
-                        3,
-                        4,
-                        5,
-                    ],
-                ],
-            ],
-        ])
+        @props(["hello", "world", "test" => [1, 2, 3, 4, 5, "more" => ["hello", "world", "test" => [1, 2, 3, 4, 5]]]])
     </div>
 </div>
 
@@ -97,5 +76,32 @@ suite('Props Directive', () => {
     {{ $slot }}
 </div>`
         );
+    });
+
+    test('it leaves associative arrays alone', () => {
+        const template = `@props([
+    'foo' => true,
+            'bar'       => false,
+                         'bar2'                   => false,
+])`;
+        const out = `@props([
+    "foo" => true,
+    "bar" => false,
+    "bar2" => false,
+])
+`;
+        assert.strictEqual(formatBladeString(template), out);
+    });
+
+    test('it can wrap prop lists', () => {
+        const template = `@props([
+    'heading','footer',
+])`;
+        const out = `@props([
+    "heading",
+    "footer",
+])
+`;
+        assert.strictEqual(formatBladeString(template), out);
     });
 });

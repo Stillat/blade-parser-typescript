@@ -1402,20 +1402,23 @@ export class Transformer {
                     }
                     let tResult = this.phpFormatter('<?php ' + params);
 
-                    tResult = StringUtilities.replaceAllInString(tResult, "\n", ' ');
 
                     const arrayParser = new SimpleArrayParser(),
-                        array = arrayParser.parse(tResult),
+                        array = arrayParser.parse(StringUtilities.replaceAllInString(tResult, "\n", ' ')),
                         targetIndent = this.indentLevel(open);
 
-                    if (array != null) {
-                        tResult = ArrayPrinter.print(array, this.transformOptions.tabSize, 1);
-
-                        if (targetIndent > 0) {
-                            tResult = StringUtilities.removeEmptyNewLines(IndentLevel.shiftIndent(tResult, targetIndent, true));
-                        }
-
+                    if (arrayParser.getIsAssoc()) {
                         content = '@props' + ' '.repeat(this.transformOptions.spacesAfterDirective) + '(' + tResult + ')';
+                    } else {
+                        if (array != null) {
+                            tResult = ArrayPrinter.print(array, this.transformOptions.tabSize, 1);
+    
+                            if (targetIndent > 0) {
+                                tResult = StringUtilities.removeEmptyNewLines(IndentLevel.shiftIndent(tResult, targetIndent, true));
+                            }
+    
+                            content = '@props' + ' '.repeat(this.transformOptions.spacesAfterDirective) + '(' + tResult + ')';
+                        }
                     }
                 }
             } catch (err) {

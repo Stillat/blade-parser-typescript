@@ -16,6 +16,8 @@ export class SimpleArrayParser implements StringIterator {
     private currentContent: string[] = [];
     private tokens: AbstractNode[] = [];
     private createdArrays: ArrayNode[] = [];
+    private keyValueTokens: number = 0;
+    private elements: number = 0;
 
     updateIndex(index: number): void {
         this.currentIndex = index;
@@ -64,7 +66,15 @@ export class SimpleArrayParser implements StringIterator {
     getContentSubstring(from: number, length: number): string {
         return this.content.substr(from, length);
     }
-
+    getNumberOfElements(): number {
+        return this.elements;
+    }
+    getNumberOfKeyValuePairs(): number {
+        return this.keyValueTokens;
+    }
+    getIsAssoc(): boolean {
+        return this.elements == this.keyValueTokens;
+    }
     private checkCurrentContent() {
         if (this.currentContent.length > 0) {
             const value = this.currentContent.join(''),
@@ -120,6 +130,7 @@ export class SimpleArrayParser implements StringIterator {
                 this.checkCurrentContent();
                 this.currentIndex += 1;
                 this.tokens.push(new ArrayKeyValueNode());
+                this.keyValueTokens += 1;
                 continue;
             } else {
                 this.currentContent.push(this.cur as string);
@@ -157,14 +168,14 @@ export class SimpleArrayParser implements StringIterator {
 
                 arrayNodes.shift();
                 arrayNodes.pop();
-                return this.createArray(arrayNodes);
+                return this.createArray(arrayNodes, true);
             }
         }
 
         return null;
     }
 
-    private createArray(tokens: AbstractNode[]): ArrayNode {
+    private createArray(tokens: AbstractNode[], isRoot: boolean): ArrayNode {
         const returnArray = new ArrayNode();
 
         this.createdArrays.push(returnArray);
@@ -181,6 +192,11 @@ export class SimpleArrayParser implements StringIterator {
                 const element = new ArrayElementNode();
                 element.value = token;
                 returnArray.elements.push(element);
+
+                if (isRoot) {
+                    this.elements += 1;
+                }
+
                 i += 1;
                 continue;
             } else if (nextToken instanceof ArrayKeyValueNode) {
@@ -191,6 +207,11 @@ export class SimpleArrayParser implements StringIterator {
                     element.key = token;
                     element.value = valueNode;
                     returnArray.elements.push(element);
+
+                    if (isRoot) {
+                        this.elements += 1;
+                    }
+
                     i += 3;
                     continue;
                 } else {
@@ -199,9 +220,11 @@ export class SimpleArrayParser implements StringIterator {
                     i += arrayNodes.length + 1;
                     arrayNodes.shift();
                     arrayNodes.pop();
-
+                    if (isRoot) {
+                        this.elements += 1;
+                    }
                     element.key = token;
-                    element.value = this.createArray(arrayNodes);
+                    element.value = this.createArray(arrayNodes, false);
                     returnArray.elements.push(element);
 
                     continue;
@@ -210,11 +233,15 @@ export class SimpleArrayParser implements StringIterator {
                 const arrayNodes = this.findEndOfArray(tokens.slice(i)),
                     element = new ArrayElementNode();
                 i += arrayNodes.length;
+                
+                if (isRoot) {
+                    this.elements += 1;
+                }
 
                 arrayNodes.shift();
                 arrayNodes.pop();
 
-                element.value = this.createArray(arrayNodes);
+                element.value = this.createArray(arrayNodes, false);
                 continue;
             }
         }
