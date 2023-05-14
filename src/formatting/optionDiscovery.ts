@@ -12,6 +12,7 @@ const defaultSettings:FormattingOptions = {
         ...CommonEventShortcuts
     ],
     spacesAfterDirective: 0,
+    spacesAfterControlDirective: 1,
     tabSize: 4,
     formatDirectiveJsonParameters: true,
     formatDirectivePhpParameters: true,
@@ -37,6 +38,7 @@ export function getEnvSettings(startingDirectory: string): FormattingOptions {
 
         let ignoreDirectives:string[] = CssAtRules,
             spacesAfterDirective = 0,
+            spacesAfterControlDirective = 1,
             tabSize = 4,
             formatDirectivePhpParameters = true,
             formatDirectiveJsonParameters = true,
@@ -49,6 +51,10 @@ export function getEnvSettings(startingDirectory: string): FormattingOptions {
 
         if (typeof parsedFile.spacesAfterDirective !== 'undefined' && parsedFile.spacesAfterDirective !== null) {
             spacesAfterDirective = parsedFile.spacesAfterDirective as number;
+        }
+
+        if (typeof parsedFile.spacesAfterControlDirective !== 'undefined' && parsedFile.spacesAfterControlDirective !== null) {
+            spacesAfterControlDirective = parsedFile.spacesAfterControlDirective as number;
         }
 
         if (typeof parsedFile.tabSize !== 'undefined' && parsedFile.tabSize !== null) {
@@ -75,8 +81,16 @@ export function getEnvSettings(startingDirectory: string): FormattingOptions {
             spacesAfterDirective = 0;
         }
 
+        if (spacesAfterControlDirective < 0) {
+            spacesAfterControlDirective = 1;
+        }
+
         if (spacesAfterDirective > 3) {
             spacesAfterDirective = 3;
+        }
+
+        if (spacesAfterControlDirective > 3) {
+            spacesAfterControlDirective = 3;
         }
 
         return {

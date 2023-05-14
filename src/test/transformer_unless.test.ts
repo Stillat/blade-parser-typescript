@@ -15,13 +15,13 @@ suite('Unless Transformer', () => {
 @endunless
 @endunless
 @endunless`).trim(),
-            `@unless($something)
+            `@unless ($something)
 
-@unless($somethingTwo)
+@unless ($somethingTwo)
 
-@unless($somethingThree)
+@unless ($somethingThree)
 
-@unless($somethingFour)
+@unless ($somethingFour)
 
 <div>
 <p>I am just some {{ $text }}</p>

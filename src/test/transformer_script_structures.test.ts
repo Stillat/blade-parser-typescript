@@ -67,7 +67,7 @@ background-color: @foreach ($something as $somethingElse)
 <style></style>
 <body>
 
-@if($true)
+@if ($true)
 
 <style>.thing {
 background-color: @foreach ($something as $somethingElse)

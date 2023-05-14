@@ -21,9 +21,9 @@ One
 </p>`).trim(),
             `<p>
     <strong>Message</strong>
-    @if($one)
+    @if ($one)
         One
-    @elseif($two)
+    @elseif ($two)
         <ul></ul>
 
         @for($i = 0; $i < 10; $i++)

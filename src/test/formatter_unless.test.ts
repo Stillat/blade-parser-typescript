@@ -24,15 +24,15 @@ suite('Unless Statements', () => {
                                     
             @endunless
             `).trim(),
-            `@unless($true)
+            `@unless ($true)
     
 @endunless
 
-@unless($true)
+@unless ($true)
     Hello
 @endunless
 
-@unless($true)
+@unless ($true)
     <p>World</p>
 @endunless`
         );
@@ -52,10 +52,10 @@ suite('Unless Statements', () => {
             @endunless
             @endunless
             @endunless`).trim(),
-            `@unless($something)
-    @unless($somethingTwo)
-        @unless($somethingThree)
-            @unless($somethingFour)
+            `@unless ($something)
+    @unless ($somethingTwo)
+        @unless ($somethingThree)
+            @unless ($somethingFour)
                 <div>
                     <p>I am just some {{ $text }}</p>
                 </div>

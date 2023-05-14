@@ -19,14 +19,14 @@ More Things
 @else
 Another Thing
 @endif`).trim(),
-            `@if($true)
-@elseif($anotherValue)
+            `@if ($true)
+@elseif ($anotherValue)
 @else
 @endif
 
-@if($true)
+@if ($true)
     Thing
-@elseif($anotherValue)
+@elseif ($anotherValue)
     More Things
 @else
     Another Thing
@@ -55,9 +55,9 @@ Another Thing
 
 @endif
 `).trim(),
-            `@if($true)
+            `@if ($true)
     <span>Hello</span>
-@elseif($anotherValue)
+@elseif ($anotherValue)
     <div>
         <p>Hello world</p>
         <div>
@@ -92,9 +92,9 @@ Another Thing
                     </p>
             
             @endif`).trim(),
-            `@if($true)
+            `@if ($true)
     <span>Hello</span>
-@elseif($anotherValue)
+@elseif ($anotherValue)
     <div>
         <p>Hello world</p>
         <div>
@@ -115,7 +115,7 @@ Another Thing
             <p>Hello
             </p>
             @endif`).trim(),
-            `@if($true)
+            `@if ($true)
     <p>Hello</p>
 @endif`
         );
@@ -136,14 +136,14 @@ Another Thing
             Another Thing
         @endif
         @endif`).trim(),
-            `@if($true)
+            `@if ($true)
     Thing
-@elseif($anotherValue)
+@elseif ($anotherValue)
     More Things
 @else
-    @if($true)
+    @if ($true)
         Thing
-    @elseif($anotherValue)
+    @elseif ($anotherValue)
         More Things
     @else
         Another Thing
@@ -157,9 +157,9 @@ Another Thing
             formatBladeString(`@if($true)
             Thing
                         @elseif($anotherValue) More Things @endif`).trim(),
-            `@if($true)
+            `@if ($true)
     Thing
-@elseif($anotherValue)
+@elseif ($anotherValue)
     More Things
 @endif`
         );

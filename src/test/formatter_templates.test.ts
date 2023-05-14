@@ -116,7 +116,7 @@ suite('General Template Formatting', () => {
 @section("content")
     <h1>User List</h1>
 
-    @if($users->isEmpty())
+    @if ($users->isEmpty())
         <p>No users found.</p>
     @else
         <ul>
@@ -211,7 +211,7 @@ suite('General Template Formatting', () => {
     @foreach($categories as $category)
         <h2>{{ $category->name }}</h2>
 
-        @if($category->products->isEmpty())
+        @if ($category->products->isEmpty())
             <p>No products in this category.</p>
         @else
             <ul>
@@ -254,10 +254,10 @@ suite('General Template Formatting', () => {
 @section("content")
     <h1>Dashboard</h1>
 
-    @if(Auth::check())
+    @if (Auth::check())
         <p>Welcome back, {{ Auth::user()->name }}!</p>
 
-        @if(Auth::user()->isAdmin())
+        @if (Auth::user()->isAdmin())
             <p>
                 You have
                 <a href="">admin</a>
@@ -286,7 +286,7 @@ suite('General Template Formatting', () => {
         @section('content')
         <h1>Dashboard</h1>
         
-        @if (Auth::check())
+        @if(Auth::check())
         
         @if (Auth::user()->isAdmin())
         @else
@@ -301,8 +301,8 @@ suite('General Template Formatting', () => {
 @section("content")
     <h1>Dashboard</h1>
 
-    @if(Auth::check())
-        @if(Auth::user()->isAdmin())
+    @if (Auth::check())
+        @if (Auth::user()->isAdmin())
         @else
         @endif
     @else

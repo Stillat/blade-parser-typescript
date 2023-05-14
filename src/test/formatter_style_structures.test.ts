@@ -64,7 +64,7 @@ suite('<style> Containing Structures', () => {
         </html>`).trim(),
             `<html>
     <body>
-        @if($true)
+        @if ($true)
             <style>
                 .thing {
                     background-color: @foreach ($something as $somethingElse)

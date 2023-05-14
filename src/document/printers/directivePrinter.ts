@@ -4,8 +4,13 @@ import { JsonFormatter, PhpFormatter } from '../formatters';
 import { TransformOptions } from '../transformOptions';
 
 export class DirectivePrinter {
+    private static defaultControlDirectiveNames:string[] = [
+        'if', 'elseif', 'unless'
+    ];
+
     static printDirective(directive: DirectiveNode, options: TransformOptions, phpFormatter: PhpFormatter | null, jsonFormatter: JsonFormatter | null): string {
-        let result = '@' + directive.directiveName.trim();
+        let directiveName = directive.directiveName.trim(),
+            result = '@' + directiveName;
 
         if (directive.hasDirectiveParameters) {
             let paramContent = directive.directiveParameters;
@@ -42,7 +47,13 @@ export class DirectivePrinter {
                 }
             }
 
-            result += ' '.repeat(options.spacesAfterDirective) + paramContent;
+            let spacesToUse = options.spacesAfterDirective;
+
+            if (DirectivePrinter.defaultControlDirectiveNames.includes(directiveName)) {
+                spacesToUse = options.spacesAfterControlDirective;
+            }
+
+            result += ' '.repeat(spacesToUse) + paramContent;
         }
 
         return result;

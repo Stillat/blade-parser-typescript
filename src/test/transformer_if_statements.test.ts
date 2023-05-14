@@ -17,17 +17,17 @@ More Things
 Another Thing
 @endif
 @endif`).trim(),
-`@if($true)
+`@if ($true)
 Thing
 
-@elseif($anotherValue)
+@elseif ($anotherValue)
 More Things
 @else
 
-@if($true)
+@if ($true)
 Thing
 
-@elseif($anotherValue)
+@elseif ($anotherValue)
 More Things
 @else
 Another Thing

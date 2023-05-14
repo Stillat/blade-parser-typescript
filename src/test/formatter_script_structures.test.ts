@@ -68,7 +68,7 @@ suite('<script> tag containing structures test', () => {
 
     <style></style>
     <body>
-        @if($true)
+        @if ($true)
             <style>
                 .thing {
                     background-color: @foreach ($something as $somethingElse)

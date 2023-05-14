@@ -136,6 +136,7 @@ export class Transformer {
 
     private transformOptions: TransformOptions = {
         spacesAfterDirective: 0,
+        spacesAfterControlDirective: 1,
         tabSize: 4,
         formatDirectiveJsonParameters: true,
         formatDirectivePhpParameters: true

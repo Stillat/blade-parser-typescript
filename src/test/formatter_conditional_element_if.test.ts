@@ -42,7 +42,7 @@ suite('Conditional Element If Statements', () => {
             <div>
                 <p>SOme {{ $text }} text</p>
 
-                @if($something)
+                @if ($something)
                     here
                 @endif
             </div>
