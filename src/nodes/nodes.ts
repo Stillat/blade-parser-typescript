@@ -577,7 +577,7 @@ export class BladeEntitiesEchoNode extends BladeEchoNode { }
 export class BladePhpNode extends AbstractNode { }
 export class BladeStaticNode extends AbstractNode { }
 export class BladeVerbatimNode extends AbstractNode { }
-
+export class OperatorNode extends AbstractNode { }
 export class ArrayStartNode extends AbstractNode {
     public tokenLength = 0;
 }

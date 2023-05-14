@@ -1,3 +1,4 @@
+import { PhpOperatorReflow } from '../../formatting/phpOperatorReflow';
 import { DirectiveNode } from '../../nodes/nodes';
 import { StringUtilities } from '../../utilities/stringUtilities';
 import { JsonFormatter, PhpFormatter } from '../formatters';
@@ -28,6 +29,10 @@ export class DirectivePrinter {
                     if (directive.directiveName.toLowerCase() == 'forelse') {
                         tResult = tResult.substring(9);
                         tResult = tResult.substring(0, tResult.length - 14);
+                    }
+
+                    if (PhpOperatorReflow.couldReflow(tResult)) {
+                        tResult = PhpOperatorReflow.instance.reflow(tResult);
                     }
 
                     paramContent = '(' + tResult + ')';
