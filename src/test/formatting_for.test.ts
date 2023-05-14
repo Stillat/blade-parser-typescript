@@ -26,7 +26,7 @@ One
     @elseif ($two)
         <ul></ul>
 
-        @for($i = 0; $i < 10; $i++)
+        @for ($i = 0; $i < 10; $i++)
             The current value is
             {{ $i }}
         @endfor
