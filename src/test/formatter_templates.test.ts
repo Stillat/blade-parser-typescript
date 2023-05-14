@@ -120,7 +120,7 @@ suite('General Template Formatting', () => {
         <p>No users found.</p>
     @else
         <ul>
-            @foreach($users as $user)
+            @foreach ($users as $user)
                 <li>{{ $user->name }} - {{ $user->email }}</li>
             @endforeach
         </ul>
@@ -208,14 +208,14 @@ suite('General Template Formatting', () => {
 @section("content")
     <h1>Product Categories</h1>
 
-    @foreach($categories as $category)
+    @foreach ($categories as $category)
         <h2>{{ $category->name }}</h2>
 
         @if ($category->products->isEmpty())
             <p>No products in this category.</p>
         @else
             <ul>
-                @foreach($category->products as $product)
+                @foreach ($category->products as $product)
                     <li>{{ $product->name }} - \${{ $product->price }}</li>
                 @endforeach
             </ul>

@@ -5,7 +5,7 @@ import { TransformOptions } from '../transformOptions';
 
 export class DirectivePrinter {
     private static defaultControlDirectiveNames:string[] = [
-        'if', 'elseif', 'unless'
+        'if', 'elseif', 'unless', 'foreach'
     ];
 
     static printDirective(directive: DirectiveNode, options: TransformOptions, phpFormatter: PhpFormatter | null, jsonFormatter: JsonFormatter | null): string {
