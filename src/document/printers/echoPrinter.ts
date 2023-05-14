@@ -1,9 +1,10 @@
 import { BladeEchoNode, BladeEntitiesEchoNode, BladeEscapedEchoNode } from '../../nodes/nodes';
 import { StringUtilities } from '../../utilities/stringUtilities';
 import { PhpFormatter } from '../formatters';
+import { TransformOptions } from '../transformOptions';
 
 export class EchoPrinter {
-    static printEcho(echo: BladeEchoNode, phpFormatter: PhpFormatter | null): string {
+    static printEcho(echo: BladeEchoNode, formattingOptions:TransformOptions, phpFormatter: PhpFormatter | null): string {
         let start = '{{ ',
             end = ' }}';
 
@@ -19,12 +20,14 @@ export class EchoPrinter {
 
         let innerContent = echo.content.trim();
 
-        if (phpFormatter != null && echo.hasValidPhp()) {
-            let tResult = phpFormatter('<?php ' + innerContent);
-            tResult = StringUtilities.replaceAllInString(tResult, "\n", ' ');
-
-            innerContent = tResult;
-        }
+        if (formattingOptions.formatInsideEcho) {
+            if (phpFormatter != null && echo.hasValidPhp()) {
+                let tResult = phpFormatter('<?php ' + innerContent);
+                tResult = StringUtilities.replaceAllInString(tResult, "\n", ' ');
+    
+                innerContent = tResult;
+            }
+        }        
 
         result += innerContent + end;
 

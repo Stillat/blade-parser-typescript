@@ -5,6 +5,8 @@ import * as plugin from './plugin';
 // @ts-ignore
 import php from "@prettier/plugin-php/standalone";
 import { formatJsonata } from "@stedi/prettier-plugin-jsonata/dist/lib";
+import { FormattingOptions } from '../formattingOptions';
+import { setEnvSettings } from '../optionDiscovery';
 
 let phpOptions: ParserOptions,
     htmlOptions: ParserOptions,
@@ -39,10 +41,13 @@ export function formatJson(text: string) {
     });
 }
 
-export function formatBladeString(text: string) {
+export function formatBladeString(text: string, options: FormattingOptions | null = null) {
+    // Override settings and disable automtic option discovery. Useful for testing.
+    setEnvSettings(options);
+
     return prettier.format(text, {
         parser: 'blade',
-        plugins: [plugin as any as string]
+        plugins: [plugin as any as string],
     });
 }
 

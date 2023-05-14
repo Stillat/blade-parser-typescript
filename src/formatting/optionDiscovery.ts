@@ -6,7 +6,7 @@ import { FormattingOptions } from './formattingOptions';
 
 const BLADE_CONFIG_FILE = '.blade.format.json';
 
-const defaultSettings:FormattingOptions = {
+const defaultSettings: FormattingOptions = {
     ignoreDirectives: [
         ...CssAtRules,
         ...CommonEventShortcuts
@@ -16,11 +16,24 @@ const defaultSettings:FormattingOptions = {
     tabSize: 4,
     formatDirectiveJsonParameters: true,
     formatDirectivePhpParameters: true,
+    formatInsideEcho: true,
     customIfs: [],
     directives: []
 };
 
+export {defaultSettings};
+
+let overrideOptions: FormattingOptions | null;
+
+export function setEnvSettings(options:FormattingOptions | null) {
+    overrideOptions = options;
+}
+
 export function getEnvSettings(startingDirectory: string): FormattingOptions {
+    if (overrideOptions != null) {
+        return overrideOptions;
+    }
+
     const settingsFile = findSettingsFile(startingDirectory);
 
     if (settingsFile == null) {
@@ -36,72 +49,7 @@ export function getEnvSettings(startingDirectory: string): FormattingOptions {
     try {
         const parsedFile = JSON.parse(optionContents) as any;
 
-        let ignoreDirectives:string[] = CssAtRules,
-            spacesAfterDirective = 0,
-            spacesAfterControlDirective = 1,
-            tabSize = 4,
-            formatDirectivePhpParameters = true,
-            formatDirectiveJsonParameters = true,
-            customIfs:string[] = [],
-            directives:string[] = [];
-        
-        if (typeof parsedFile.ignoreDirectives !== 'undefined' && parsedFile.ignoreDirectives !== null) {
-            ignoreDirectives = parsedFile.ignoreDirectives as string[];
-        }
-
-        if (typeof parsedFile.spacesAfterDirective !== 'undefined' && parsedFile.spacesAfterDirective !== null) {
-            spacesAfterDirective = parsedFile.spacesAfterDirective as number;
-        }
-
-        if (typeof parsedFile.spacesAfterControlDirective !== 'undefined' && parsedFile.spacesAfterControlDirective !== null) {
-            spacesAfterControlDirective = parsedFile.spacesAfterControlDirective as number;
-        }
-
-        if (typeof parsedFile.tabSize !== 'undefined' && parsedFile.tabSize !== null) {
-            tabSize = parsedFile.tabSize as number;
-        }
-
-        if (typeof parsedFile.formatDirectivePhpParameters !== 'undefined' && parsedFile.formatDirectivePhpParameters !== null) {
-            formatDirectivePhpParameters = parsedFile.formatDirectivePhpParameters as boolean;
-        }
-
-        if (typeof parsedFile.formatDirectiveJsonParameters !== 'undefined' && parsedFile.formatDirectiveJsonParameters !== null) {
-            formatDirectiveJsonParameters = parsedFile.formatDirectiveJsonParameters as boolean;
-        }
-
-        if (typeof parsedFile.customIfs !== 'undefined' && parsedFile.customIfs !== null) {
-            customIfs = parsedFile.customIfs as string[];
-        }
-
-        if (typeof parsedFile.directives !== 'undefined' && parsedFile.directives !== null) {
-            directives = parsedFile.directives as string[];
-        }
-
-        if (spacesAfterDirective < 0) {
-            spacesAfterDirective = 0;
-        }
-
-        if (spacesAfterControlDirective < 0) {
-            spacesAfterControlDirective = 1;
-        }
-
-        if (spacesAfterDirective > 3) {
-            spacesAfterDirective = 3;
-        }
-
-        if (spacesAfterControlDirective > 3) {
-            spacesAfterControlDirective = 3;
-        }
-
-        return {
-            ignoreDirectives: ignoreDirectives,
-            spacesAfterDirective: spacesAfterDirective,
-            tabSize: tabSize,
-            formatDirectivePhpParameters: formatDirectivePhpParameters,
-            formatDirectiveJsonParameters: formatDirectiveJsonParameters,
-            customIfs: customIfs,
-            directives: directives
-        };
+        return parseBladeConfigObject(parsedFile);
     } catch (err) {
         console.log(err);
     }
@@ -109,20 +57,96 @@ export function getEnvSettings(startingDirectory: string): FormattingOptions {
     return defaultSettings;
 }
 
-function findSettingsFile(startingDirectory:string): string | null {
+export function parseBladeConfigObject(configObject: any): FormattingOptions {
+    let ignoreDirectives: string[] = CssAtRules,
+        spacesAfterDirective = 0,
+        spacesAfterControlDirective = 1,
+        tabSize = 4,
+        formatDirectivePhpParameters = true,
+        formatDirectiveJsonParameters = true,
+        formatInsideEcho = true,
+        customIfs: string[] = [],
+        directives: string[] = [];
+
+    if (typeof configObject.ignoreDirectives !== 'undefined' && configObject.ignoreDirectives !== null) {
+        ignoreDirectives = configObject.ignoreDirectives as string[];
+    }
+
+    if (typeof configObject.spacesAfterDirective !== 'undefined' && configObject.spacesAfterDirective !== null) {
+        spacesAfterDirective = configObject.spacesAfterDirective as number;
+    }
+
+    if (typeof configObject.spacesAfterControlDirective !== 'undefined' && configObject.spacesAfterControlDirective !== null) {
+        spacesAfterControlDirective = configObject.spacesAfterControlDirective as number;
+    }
+
+    if (typeof configObject.tabSize !== 'undefined' && configObject.tabSize !== null) {
+        tabSize = configObject.tabSize as number;
+    }
+
+    if (typeof configObject.formatDirectivePhpParameters !== 'undefined' && configObject.formatDirectivePhpParameters !== null) {
+        formatDirectivePhpParameters = configObject.formatDirectivePhpParameters as boolean;
+    }
+
+    if (typeof configObject.formatDirectiveJsonParameters !== 'undefined' && configObject.formatDirectiveJsonParameters !== null) {
+        formatDirectiveJsonParameters = configObject.formatDirectiveJsonParameters as boolean;
+    }
+
+    if (typeof configObject.customIfs !== 'undefined' && configObject.customIfs !== null) {
+        customIfs = configObject.customIfs as string[];
+    }
+
+    if (typeof configObject.directives !== 'undefined' && configObject.directives !== null) {
+        directives = configObject.directives as string[];
+    }
+
+    if (typeof configObject.formatInsideEcho !== 'undefined' && configObject.formatInsideEcho !== null) {
+        formatInsideEcho = configObject.formatInsideEcho as boolean;
+    }
+
+    if (spacesAfterDirective < 0) {
+        spacesAfterDirective = 0;
+    }
+
+    if (spacesAfterControlDirective < 0) {
+        spacesAfterControlDirective = 1;
+    }
+
+    if (spacesAfterDirective > 3) {
+        spacesAfterDirective = 3;
+    }
+
+    if (spacesAfterControlDirective > 3) {
+        spacesAfterControlDirective = 3;
+    }
+
+    return {
+        ignoreDirectives: ignoreDirectives,
+        spacesAfterDirective: spacesAfterDirective,
+        spacesAfterControlDirective: spacesAfterControlDirective,
+        tabSize: tabSize,
+        formatDirectivePhpParameters: formatDirectivePhpParameters,
+        formatDirectiveJsonParameters: formatDirectiveJsonParameters,
+        formatInsideEcho: formatInsideEcho,
+        customIfs: customIfs,
+        directives: directives
+    };
+}
+
+function findSettingsFile(startingDirectory: string): string | null {
     let searchPath = path.dirname(startingDirectory);
 
     if (searchPath == '.') {
         searchPath = process.cwd();
     }
 
-    const parts  = searchPath.split(path.sep);
+    const parts = searchPath.split(path.sep);
 
     while (parts.length > 0) {
         const newPath = parts.join(path.sep),
             formatFileCandidate = path.join(newPath, BLADE_CONFIG_FILE);
-        
-            if (fs.existsSync(formatFileCandidate)) {
+
+        if (fs.existsSync(formatFileCandidate)) {
             return formatFileCandidate;
         }
 

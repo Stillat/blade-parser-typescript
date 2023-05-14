@@ -139,7 +139,8 @@ export class Transformer {
         spacesAfterControlDirective: 1,
         tabSize: 4,
         formatDirectiveJsonParameters: true,
-        formatDirectivePhpParameters: true
+        formatDirectivePhpParameters: true,
+        formatInsideEcho: true,
     }
 
     constructor(doc: BladeDocument) {
@@ -1181,7 +1182,7 @@ export class Transformer {
     private transformDynamicEcho(content: string): string {
         let value = content;
         this.dynamicEchoBlocks.forEach((echo: BladeEchoNode, slug: string) => {
-            const echoContent = EchoPrinter.printEcho(echo, this.phpFormatter);
+            const echoContent = EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter);
 
             value = StringUtilities.replaceAllInString(value, slug, echoContent);
         });
@@ -1306,11 +1307,11 @@ export class Transformer {
         this.inlineEchos.forEach((echo: BladeEchoNode, slug: string) => {
             const inline = this.selfClosing(slug);
 
-            value = value.replace(inline, EchoPrinter.printEcho(echo, this.phpFormatter));
+            value = value.replace(inline, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter));
         });
 
         this.spanEchos.forEach((echo: BladeEchoNode, slug: string) => {
-            value = value.replace(slug, EchoPrinter.printEcho(echo, this.phpFormatter));
+            value = value.replace(slug, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter));
         });
 
         return value;
@@ -1536,7 +1537,7 @@ export class Transformer {
         let value = content;
 
         this.embeddedEchos.forEach((echo, slug) => {
-            value = value.replace(slug, EchoPrinter.printEcho(echo, this.phpFormatter));
+            value = value.replace(slug, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter));
         });
 
         return value;

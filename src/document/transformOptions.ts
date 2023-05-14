@@ -3,5 +3,6 @@ export interface TransformOptions {
     spacesAfterControlDirective: number,
     tabSize: number,
     formatDirectivePhpParameters: boolean,
-    formatDirectiveJsonParameters: boolean
+    formatDirectiveJsonParameters: boolean,
+    formatInsideEcho: boolean,
 }
