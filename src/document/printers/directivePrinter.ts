@@ -24,7 +24,6 @@ export class DirectivePrinter {
                     }
 
                     let tResult = phpFormatter('<?php ' + params);
-                    tResult = StringUtilities.replaceAllInString(tResult, "\n", ' ');
 
                     if (directive.directiveName.toLowerCase() == 'forelse') {
                         tResult = tResult.substring(9);

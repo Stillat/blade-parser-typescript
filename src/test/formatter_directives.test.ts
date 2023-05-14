@@ -179,4 +179,19 @@ asdf
 `;
         assert.strictEqual(formatBladeString(input), out);
     });
+
+    test('it does not blindly remove newlines when formatting directive params', () => {
+        const input = `@class([
+            'foo' => true,
+                    'bar'       => false,
+                                 'bar2'                   => false,
+        ])`;
+        const out = `@class([
+    "foo" => true,
+    "bar" => false,
+    "bar2" => false,
+])
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    });
 });
