@@ -108,7 +108,8 @@ export class DirectivePrinter {
 
             let spacesToUse = options.spacesAfterDirective;
 
-            if (DirectivePrinter.defaultControlDirectiveNames.includes(directiveName)) {
+            if (DirectivePrinter.defaultControlDirectiveNames.includes(directiveName) ||
+                DirectivePrinter.defaultControlDirectiveNames.includes(directive.name)) {
                 spacesToUse = options.spacesAfterControlDirective;
             }
 

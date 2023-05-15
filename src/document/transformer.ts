@@ -1042,7 +1042,7 @@ export class Transformer {
                     result += "\n" + tBranch.pairOpen;
                     const virtualBreakSlug = this.makeSlug(25);
 
-                    if (branch.head.containsChildStructures == false && branch.head.containsAnyFragments == false) {
+                    if (branch.head.containsChildStructures == false && branch.head.containsAnyFragments == false && (branch.head?.children.length <= 2 || branch.head?.children.length > 4)) {
                         tBranch.virtualBreakOpen = this.open(virtualBreakSlug);
                         tBranch.virtualBreakClose = this.close(virtualBreakSlug);
                         result += "\n" + tBranch.virtualBreakOpen + "\n";

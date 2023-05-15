@@ -173,7 +173,7 @@ asdf
                 {!! $something_here !!}
                 @endcan
 `;
-        const out = `@can('create', App\\Models\\User::class)
+        const out = `@can ('create', App\\Models\\User::class)
     {!! $something_here !!}
 @endcan
 `;

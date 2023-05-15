@@ -214,4 +214,23 @@ Another Thing
         assert.strictEqual(formatBladeString(template), out);
         assert.strictEqual(formatBladeString(out), out);
     });
+
+    test('it treats echos as text inside else blocks', () => {
+        const input = `@something('test') {{ $one }}
+    @elsesomething ('something else?') 
+    {{ $two }} 
+    @else
+ {{ $three }}
+@endsomething`;
+        const out = `@something ("test")
+    {{ $one }}
+@elsesomething ("something else?")
+    {{ $two }}
+@else
+    {{ $three }}
+@endsomething
+`;
+        assert.strictEqual(formatBladeString(input), out);
+        assert.strictEqual(formatBladeString(out), out);
+    });
 });
