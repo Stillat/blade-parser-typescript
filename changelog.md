@@ -2,6 +2,15 @@
 
 A list of what's changed, and more.
 
+## 1.1.2
+
+- Corrects an issue where NOT operator reflow breaks up inequality
+- Improves relative indentation inside `@php` blocks (#16)
+- Corrects an issue where `@php` and `@verbatim` block content is lost inside nested child documents (#15)
+- Improves formatting of conditions when the branch contains a single node, without any HTML fragments (#14)
+- Improves formatting behavior of very long echo lines (#13)
+- Prevents indentation of blank lines inside block structures (#12)
+
 ## 1.0.0
 
 - Improves results of `DirectiveNode.getImmediateChildren()`
