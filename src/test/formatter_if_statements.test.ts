@@ -164,4 +164,18 @@ Another Thing
 @endif`
         );
     });
+
+    test('it indents child documents nicely if its just an echo', () => {
+        const template = `@if ('foo')
+        {{ $actions }}
+        @elseif ('bar')
+        @endif
+        `;
+        const out = `@if ("foo")
+    {{ $actions }}
+@elseif ("bar")
+@endif
+`;
+        assert.strictEqual(formatBladeString(template), out);
+    });
 });

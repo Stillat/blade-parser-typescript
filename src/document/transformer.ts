@@ -1042,7 +1042,9 @@ export class Transformer {
                     }
                 } else {
 
-                    if (branch.head?.containsAnyFragments == false && branch.head?.containsChildStructures == false) {
+                    if (branch.head?.containsAnyFragments == false &&
+                        branch.head?.containsChildStructures == false &&
+                        (branch.head?.children.length <= 2 || branch.head?.children.length > 4)) {
                         const ifBreakSlug = this.makeSlug(25);
 
                         tBranch.virtualBreakOpen = this.open(ifBreakSlug);
