@@ -41,4 +41,13 @@ suite('Operator Formatting Tests', () => {
 `;
         assert.strictEqual(formatBladeString(template), out);
     });
+
+    test('it does not break up inequality', () => {
+        const template = `@if ($foo !== 'bar')
+@endif`;
+        const out = `@if ($foo !== "bar")
+@endif
+`;
+        assert.strictEqual(formatBladeString(template), out);
+    });
 });

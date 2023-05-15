@@ -114,7 +114,7 @@ export class PhpOperatorReflow implements StringIterator {
             }
 
             if (this.cur != null) {
-                if (PhpOperatorReflow.breakOperators.includes(this.cur)) {
+                if (this.cur === '!' && this.next !== '=') {
                     if (this.currentContent.length > 0) {
                         const literal = new LiteralNode();
                         literal.content = this.currentContent.join('');
