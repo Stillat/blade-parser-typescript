@@ -49,4 +49,29 @@ suite('Verbatim Formatting', () => {
 </div>`
         );
     });
+
+    test('verbatim content is not lost', () => {
+        const template = `@if (true)
+        @if (false)
+        @if ('something')
+        @verbatim
+            some content.
+    @endverbatim
+        @endif
+        @endif
+    @endif
+    
+    `;
+        const out = `@if (true)
+    @if (false)
+        @if ("something")
+            @verbatim
+                some content.
+            @endverbatim
+        @endif
+    @endif
+@endif
+`;
+        assert.strictEqual(formatBladeString(template), out);
+    });
 });

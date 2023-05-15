@@ -24,7 +24,13 @@ export class DirectivePrinter {
                         params = params.substring(0, params.length - 1);
                     }
 
-                    let tResult = phpFormatter('<?php ' + params);
+                    let tResult = params;
+
+                    try {
+                        tResult = phpFormatter('<?php ' + params)
+                    } catch (err) {
+                        // Prevent PHP errors from crashing formatter.
+                    }
 
                     if (directive.directiveName.toLowerCase() == 'forelse') {
                         tResult = tResult.substring(9);

@@ -2120,6 +2120,19 @@ export class DocumentParser implements StringIterator {
                     text += node.nodeContent;
                 } else if (node instanceof ConditionNode) {
                     text += node.nodeContent;
+                } else if (node instanceof DirectiveNode) {
+                    if ((node.name == 'php' || node.name == 'verbatim') && node.isClosedBy != null) {
+                        if (node.documentContent.trim().length == 0) {
+                            const content = node.getParser()?.getText(
+                                (node.endPosition?.index ?? 0),
+                                (node.isClosedBy.startPosition?.index ?? 0) - 1
+                            );
+                            text += node.sourceContent;
+                            text += content;
+                        }
+                    } else {
+                        text += node.sourceContent;
+                    }
                 } else {
                     text += node.sourceContent;
                 }

@@ -91,4 +91,29 @@ $data = [
 `;
         assert.strictEqual(formatBladeString(template), out);
     });
+
+    test('php block content is not lost', () => {
+        const template = `@if (true)
+    @if (false)
+    @if ('something')
+    @php
+    $foo = 'foo';
+@endphp
+    @endif
+    @endif
+@endif
+
+`;
+        const out = `@if (true)
+    @if (false)
+        @if ("something")
+            @php
+                $foo = "foo";
+            @endphp
+        @endif
+    @endif
+@endif
+`;
+        assert.strictEqual(formatBladeString(template), out);
+    });
 });
