@@ -125,6 +125,7 @@ export class Transformer {
     private structureLines: string[] = [];
     private directiveParameters: Map<string, ParameterNode> = new Map();
     private expressionParameters: Map<string, ParameterNode> = new Map();
+    private echoParameters: Map<string, ParameterNode> = new Map();
     private slugs: string[] = [];
     private extractedEmbeddedDocuments: Map<string, EmbeddedDocument> = new Map();
     private propDirectives: Map<string, DirectiveNode> = new Map();
@@ -253,6 +254,14 @@ export class Transformer {
             this.parentTransformer.registerDirectiveParameter(slug, param);
         } else {
             this.directiveParameters.set(slug, param);
+        }
+    }
+
+    private registerEchoParameter(slug: string, param:ParameterNode) {
+        if (this.parentTransformer != null) {
+            this.parentTransformer.registerEchoParameter(slug, param);
+        } else {
+            this.echoParameters.set(slug, param);
         }
     }
 
@@ -844,6 +853,10 @@ export class Transformer {
                     const directiveSlug = this.makeSlug(param.directive?.sourceContent.length ?? 0);
                     this.registerDirectiveParameter(directiveSlug, param);
                     value += directiveSlug + ' ';
+                } else if (param.type == ParameterType.InlineEcho && param.inlineEcho != null) {
+                    const echoSlug = this.makeSlug(param.inlineEcho.content.length);
+                    this.registerEchoParameter(echoSlug, param);
+                    value += echoSlug + ' ';
                 }
             });
         }
@@ -1538,6 +1551,20 @@ export class Transformer {
         return value;
     }
 
+    private transformEchoParameters(content: string): string {
+        let value = content;
+
+        this.echoParameters.forEach((param, slug) => {
+            if (param.inlineEcho != null) {
+                value = value.replace(slug, EchoPrinter.printEcho(param.inlineEcho, this.transformOptions, this.phpFormatter, 0));
+            } else {
+                value = value.replace(slug, '');
+            }
+        });
+
+        return value;
+    }
+
     private transformEmbeddedEcho(content: string): string {
         let value = content;
 
@@ -1710,6 +1737,7 @@ export class Transformer {
         results = this.transformVirtualComments(results);
         results = this.transformDirectiveParameters(results);
         results = this.transformExpressionParameters(results);
+        results = this.transformEchoParameters(results);
         results = this.transformDynamicDirectives(results);
         results = this.cleanVirtualStructures(results);
         results = this.removeVirtualStructures(results);

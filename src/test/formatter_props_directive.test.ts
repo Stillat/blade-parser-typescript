@@ -165,4 +165,18 @@ suite('Props Directive', () => {
         assert.strictEqual(formatBladeString(input), out);
         assert.strictEqual(formatBladeString(out), out);
     });
+
+    test('it doesnt wrap empty arrays', () => {
+        const input = `@props([
+            'actions' => [],
+            'url',
+        ])`;
+        const out = `@props([
+    "actions" => [],
+    "url",
+])
+`;
+        assert.strictEqual(formatBladeString(input), out);
+        assert.strictEqual(formatBladeString(out), out);
+    })
 });

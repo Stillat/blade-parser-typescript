@@ -171,6 +171,7 @@ suite('Component Tags', () => {
             `<x-alert
     attribute
     param="{{ $title }}"
+    {{ $title }}
     @directiveName
     @directiveWithParams("test")
 />`
@@ -216,5 +217,19 @@ suite('Component Tags', () => {
         const result = formatBladeString(template);
 
         assert.strictEqual(result.trim(), template);
+    });
+
+    test('it preserves inline echo', () => {
+        const input = `<x-filament::avatar
+        :src="filament()->getTenantAvatarUrl($tenant)"
+        {{ $attributes }}
+        />`;
+        const out = `<x-filament::avatar
+    :src="filament()->getTenantAvatarUrl($tenant)"
+    {{ $attributes }}
+/>
+`;
+        assert.strictEqual(formatBladeString(input), out);
+        assert.strictEqual(formatBladeString(out), out);
     });
 });

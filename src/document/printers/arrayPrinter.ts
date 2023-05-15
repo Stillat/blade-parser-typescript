@@ -22,7 +22,11 @@ export class ArrayPrinter {
 
                     if (element.value != null) {
                         if (element.value instanceof ArrayNode) {
-                            arrayBuffer.append(ArrayPrinter.print(element.value, tabSize, level + 1));
+                            if (element.value.elements.length == 0) {
+                                arrayBuffer.append('[],');
+                            } else {
+                                arrayBuffer.append(ArrayPrinter.print(element.value, tabSize, level + 1));
+                            }
                         } else {
                             arrayBuffer.append(element.value.sourceContent);
                         }
