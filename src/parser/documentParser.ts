@@ -1,3 +1,4 @@
+import {StringRemover} from './stringRemover';
 import { ConditionalRewriteAnalyzer } from '../analyzers/conditionalRewriteAnalyzer';
 import { DirectivePairAnalyzer } from '../analyzers/directivePairAnalyzer';
 import { DirectiveStack } from '../analyzers/directiveStack';
@@ -326,6 +327,12 @@ export class DocumentParser implements StringIterator {
         return false;
     }
 
+    private endsWithTld(s: string): boolean {
+        const regex = /\.[a-z]{2,63}$/i;
+    
+        return regex.test(s);
+    }
+
     private processInputText(input: string) {
         this.originalContent = input;
         this.content = StringUtilities.normalizeLineEndings(input);
@@ -444,6 +451,15 @@ export class DocumentParser implements StringIterator {
             }
 
             const preFetch = this.fetchAt(offset, prefetchLength);
+
+            if (preFetch.includes('.') && !preFetch.includes("\n")) {
+                const rmResults = StringRemover.fromText(preFetch);
+                
+                if (rmResults.includes('.') && this.endsWithTld(rmResults)) {
+                    return;
+                }
+            }
+
             if (preFetch.startsWith('@{') == false) {
                 const firstChar = preFetch.substring(0, 1),
                     secondChar = preFetch.substring(1, 2);

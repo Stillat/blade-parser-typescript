@@ -364,4 +364,23 @@ suite('General Template Formatting', () => {
 `;
         assert.strictEqual(formatBladeString(template), out);
     });
+
+    test('it does not eat email addresses', () => {
+        let input = `someone@example.com`;
+        assert.strictEqual(formatBladeString(input).trim(), input);
+
+        input = `<a 
+
+        href="mailto:someone@example.com">@someone('.com')
+            <p>Test</p>
+        @endsomeone</a>`;
+        
+        const out = `<a href="mailto:someone@example.com">
+    @someone('.com')
+    <p>Test</p>
+    @endsomeone
+</a>
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    });
 });
