@@ -2,6 +2,11 @@
 
 A list of what's changed, and more.
 
+## 1.1.4
+
+- Prevents email addresses from becoming directives (#21)
+- Improves formatting of multi-line echos (#20, #19, #18)
+
 ## 1.1.3
 
 - Improves formatting of `@props` (#17)
