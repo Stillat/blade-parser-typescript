@@ -1,3 +1,4 @@
+import { StringUtilities } from '../utilities/stringUtilities';
 import { isStartOfString } from './scanners/isStartOfString';
 import { skipToEndOfStringTraced } from './scanners/skipToEndOfString';
 import { StringIterator } from './stringIterator';
@@ -86,7 +87,24 @@ export class StringRemover implements StringIterator {
             this.currentContent.push(this.cur as string);
         }
 
-        return this.currentContent.join('');
+        const cleanedChars:string[] = [];
+
+        for (let i = 0; i < this.currentContent.length; i++) {
+            const char = this.currentContent[i];
+
+            if (i == 0 && char == '@') {
+                cleanedChars.push(char);
+                continue;
+            }
+
+            if (char != '.' && StringUtilities.ctypePunct(char)) {
+                break;
+            }
+
+            cleanedChars.push(char);
+        }
+
+        return cleanedChars.join('');
     }
 
 }

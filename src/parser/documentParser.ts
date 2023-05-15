@@ -452,8 +452,14 @@ export class DocumentParser implements StringIterator {
 
             const preFetch = this.fetchAt(offset, prefetchLength);
 
-            if (preFetch.includes('.') && !preFetch.includes("\n")) {
-                const rmResults = StringRemover.fromText(preFetch);
+            if (preFetch.includes('.')) {
+                let preFetchCheck = preFetch;
+
+                if (preFetch.includes("\n")) {
+                    preFetchCheck = StringUtilities.breakByNewLine(preFetchCheck)[0];
+                }
+
+                const rmResults = StringRemover.fromText(preFetchCheck);
                 
                 if (rmResults.includes('.') && this.endsWithTld(rmResults)) {
                     return;

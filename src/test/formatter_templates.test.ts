@@ -383,4 +383,14 @@ suite('General Template Formatting', () => {
 `;
         assert.strictEqual(formatBladeString(input), out);
     });
+
+    test('it does not eat email addresses 2', () => {
+        const template =  `<a>
+        test@example.com
+        </a>`;
+        const expected = `<a>test@example.com</a>
+`;
+        assert.strictEqual(formatBladeString(template), expected);
+        assert.strictEqual(formatBladeString(expected), expected);
+    });
 });

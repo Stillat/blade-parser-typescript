@@ -2,6 +2,10 @@
 
 A list of what's changed, and more.
 
+## 1.1.5
+
+- Prevents email addresses from becoming directives (#21)
+
 ## 1.1.4
 
 - Prevents email addresses from becoming directives (#21)
