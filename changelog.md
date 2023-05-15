@@ -2,6 +2,10 @@
 
 A list of what's changed, and more.
 
+## 1.1.3
+
+- Improves formatting of `@props` (#17)
+
 ## 1.1.2
 
 - Corrects an issue where NOT operator reflow breaks up inequality

@@ -136,4 +136,17 @@ suite('Props Directive', () => {
 `;
         assert.strictEqual(formatBladeString(template), out);
     });
+
+    test('it detects assoc arrays 2', () => {
+        const template = `@props([
+    'foo' => [],
+    'foobarbaz' => false,
+])`;
+        const out = `@props([
+    "foo" => [],
+    "foobarbaz" => false,
+])
+`;
+        assert.strictEqual(formatBladeString(template), out);
+    });
 });

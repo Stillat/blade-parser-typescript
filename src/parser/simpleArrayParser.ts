@@ -130,7 +130,6 @@ export class SimpleArrayParser implements StringIterator {
                 this.checkCurrentContent();
                 this.currentIndex += 1;
                 this.tokens.push(new ArrayKeyValueNode());
-                this.keyValueTokens += 1;
                 continue;
             } else {
                 this.currentContent.push(this.cur as string);
@@ -139,6 +138,19 @@ export class SimpleArrayParser implements StringIterator {
 
         const array = this.parseArrays(this.tokens);
         this.fillArrayDetails();
+
+        array?.elements.filter(function (el) {
+            if (el.value instanceof ArrayElementSeparatorNode) {
+                return false;
+            }
+
+            return true;
+        }).forEach((el) => {
+            this.elements += 1;
+            if (el.key != null && el.value != null) {
+                this.keyValueTokens += 1;
+            }
+        });
 
         return array;
     }
@@ -193,10 +205,6 @@ export class SimpleArrayParser implements StringIterator {
                 element.value = token;
                 returnArray.elements.push(element);
 
-                if (isRoot) {
-                    this.elements += 1;
-                }
-
                 i += 1;
                 continue;
             } else if (nextToken instanceof ArrayKeyValueNode) {
@@ -207,10 +215,6 @@ export class SimpleArrayParser implements StringIterator {
                     element.key = token;
                     element.value = valueNode;
                     returnArray.elements.push(element);
-
-                    if (isRoot) {
-                        this.elements += 1;
-                    }
 
                     i += 3;
                     continue;
@@ -232,10 +236,6 @@ export class SimpleArrayParser implements StringIterator {
                     element = new ArrayElementNode();
                 i += arrayNodes.length;
                 
-                if (isRoot) {
-                    this.elements += 1;
-                }
-
                 arrayNodes.shift();
                 arrayNodes.pop();
 
