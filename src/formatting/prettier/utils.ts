@@ -69,7 +69,7 @@ export function setOptions(options: ParserOptions) {
         Object.assign({}, options, {
             parser: 'php',
             plugins: [php],
-            printWidth: 300,
+            printWidth: Infinity,
         })
     );
 }

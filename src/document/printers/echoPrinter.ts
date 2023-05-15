@@ -1,6 +1,5 @@
 import { PhpOperatorReflow } from '../../formatting/phpOperatorReflow';
 import { BladeEchoNode, BladeEntitiesEchoNode, BladeEscapedEchoNode } from '../../nodes/nodes';
-import { StringUtilities } from '../../utilities/stringUtilities';
 import { PhpFormatter } from '../formatters';
 import { TransformOptions } from '../transformOptions';
 
@@ -24,7 +23,6 @@ export class EchoPrinter {
         if (formattingOptions.formatInsideEcho) {
             if (phpFormatter != null && echo.hasValidPhp()) {
                 let tResult = phpFormatter('<?php ' + innerContent);
-                tResult = StringUtilities.replaceAllInString(tResult, "\n", ' ');
     
                 if (PhpOperatorReflow.couldReflow(tResult)) {
                     tResult = PhpOperatorReflow.instance.reflow(tResult);
