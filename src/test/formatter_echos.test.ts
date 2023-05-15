@@ -106,4 +106,27 @@ Some link
 `;
         assert.strictEqual(formatBladeString(input), out);
     });
+
+    test('it respects line placement2', () => {
+        const input = `<div>
+{{
+$foo->bar([
+'foo' => $foo,
+'bar' => $bar,
+'baz' => $baz,
+])
+}}
+</div>`;
+        const out = `<div>
+    {{ 
+        $foo->bar([
+            "foo" => $foo,
+            "bar" => $bar,
+            "baz" => $baz,
+        ])
+     }}
+</div>
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    });
 });
