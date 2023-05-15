@@ -194,4 +194,18 @@ asdf
 `;
         assert.strictEqual(formatBladeString(input), out);
     });
+
+    test('it respects newline placement', () => {
+        const input = `@class([
+            'filament antialiased min-h-screen js-focus-visible',
+            'dark' => filament()->hasDarkModeForced(),
+        ])`;
+        const out = `@class([
+    "filament antialiased min-h-screen js-focus-visible",
+    "dark" => filament()->hasDarkModeForced(),
+])
+`;
+        assert.strictEqual(formatBladeString(input), out);
+        assert.strictEqual(formatBladeString(out), out);
+    });
 });

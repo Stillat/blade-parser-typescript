@@ -1,11 +1,14 @@
 import { PhpOperatorReflow } from '../../formatting/phpOperatorReflow';
 import { DirectiveNode } from '../../nodes/nodes';
+import { SimpleArrayParser } from '../../parser/simpleArrayParser';
 import { StringUtilities } from '../../utilities/stringUtilities';
 import { JsonFormatter, PhpFormatter } from '../formatters';
 import { TransformOptions } from '../transformOptions';
+import { ArrayPrinter } from './arrayPrinter';
+import { IndentLevel } from './indentLevel';
 
 export class DirectivePrinter {
-    private static defaultControlDirectiveNames:string[] = [
+    private static defaultControlDirectiveNames: string[] = [
         'if', 'elseif', 'unless', 'while', 'for', 'foreach', 'forelse'
     ];
 
@@ -26,10 +29,34 @@ export class DirectivePrinter {
 
                     let tResult = params;
 
-                    try {
-                        tResult = phpFormatter('<?php ' + params, null)
-                    } catch (err) {
-                        // Prevent PHP errors from crashing formatter.
+                    if (params.startsWith('[') && params.endsWith(']') && directive.startPosition?.line != directive.endPosition?.line) {
+                        tResult = phpFormatter('<?php ' + params, null);
+
+                        const arrayParser = new SimpleArrayParser(),
+                            array = arrayParser.parse(StringUtilities.replaceAllInString(tResult, "\n", ' ')),
+                            targetIndent = 0;
+
+                        if (arrayParser.getIsAssoc()) {
+                            tResult = '@' + directiveName + ' '.repeat(options.spacesAfterDirective) + '(' + tResult + ')';
+                        } else {
+                            if (array != null) {
+                                tResult = ArrayPrinter.print(array, options.tabSize, 1);
+
+                                if (targetIndent > 0) {
+                                    tResult = StringUtilities.removeEmptyNewLines(IndentLevel.shiftIndent(tResult, targetIndent, true));
+                                }
+
+                                tResult = '@' + directiveName + ' '.repeat(options.spacesAfterDirective) + '(' + tResult + ')';
+                            }
+                        }
+
+                        return tResult;
+                    } else {
+                        try {
+                            tResult = phpFormatter('<?php ' + params, null)
+                        } catch (err) {
+                            // Prevent PHP errors from crashing formatter.
+                        }
                     }
 
                     if (directive.directiveName.toLowerCase() == 'forelse') {
