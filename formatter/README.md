@@ -54,7 +54,7 @@ You may optionally configure the Blade parser by creating a file named `.blade.f
 }
 ```
 
-The following are currently consider control directives: `if`, `elseif`, `unless`, `foreach`, and `for`.
+The following are currently consider control directives: `if`, `elseif`, `unless`, `while`, `foreach`, `forelse`, and `for`.
 
 The internal formatters will only format PHP and JSON content if their contents are considered to be valid when configured to do so. The formatter will not throw an error, and will simply leave the JSON/PHP content unformatted and continue with the rest of the document.
 

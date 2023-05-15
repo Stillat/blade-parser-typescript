@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.1.1
+
+- Adds additional control directives
+- Corrects issue with some `@props` formatting
+
+## 1.1.0
+
+- General formatting improvements
+
 ## 1.0.0
 
 - General improvements to formatting
