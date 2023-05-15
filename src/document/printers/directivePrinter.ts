@@ -27,7 +27,7 @@ export class DirectivePrinter {
                     let tResult = params;
 
                     try {
-                        tResult = phpFormatter('<?php ' + params)
+                        tResult = phpFormatter('<?php ' + params, null)
                     } catch (err) {
                         // Prevent PHP errors from crashing formatter.
                     }

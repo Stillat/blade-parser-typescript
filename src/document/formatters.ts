@@ -1,6 +1,7 @@
+import { ParserOptions } from 'prettier';
 import { BladeDocument } from './bladeDocument';
 
-export type PhpFormatter = (input: string) => string;
+export type PhpFormatter = (input: string, options: ParserOptions|null) => string;
 export type BlockPhpFormatter = (input: string) => string;
 export type PhpTagFormatter = (input: string) => string;
 export type JsonFormatter = (input: string) => string;

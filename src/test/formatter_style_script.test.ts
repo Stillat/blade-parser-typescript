@@ -38,13 +38,17 @@ suite('Basic <style> and <script> Formatting', () => {
             `<html>
     <style>
         .thing {
-            background-color: {{ $color }};
+            background-color: {{ 
+                $color
+             }};
         }
     </style>
     {{ $color }}
     <style>
         .thing {
-            background-color: {{ $color + $something + $otherThing }};
+            background-color: {{ 
+                $color + $something + $otherThing
+             }};
         }
     </style>
     <body>

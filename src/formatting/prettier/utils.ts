@@ -12,6 +12,10 @@ let phpOptions: ParserOptions,
     htmlOptions: ParserOptions,
     echoPhpOptions: ParserOptions;
 
+export function getEchoPhpOptions() {
+    return echoPhpOptions;
+}
+
 export function cleanOptions(options: ParserOptions): ParserOptions {
     [
         "cursorOffset",
@@ -79,8 +83,14 @@ export function formatAsHtml(text: string) {
     return prettier.format(text, htmlOptions);
 }
 
-export function inlineFormatPhp(text: string) {
-    let result = prettier.format(text, echoPhpOptions).trim();
+export function inlineFormatPhp(text: string, options: ParserOptions | null = null) {
+    let opts = echoPhpOptions;
+
+    if (options != null) {
+        opts = options;
+    }
+
+    let result = prettier.format(text, opts).trim();
 
     result = result.substring(5);
 

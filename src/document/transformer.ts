@@ -1184,7 +1184,7 @@ export class Transformer {
     private transformDynamicEcho(content: string): string {
         let value = content;
         this.dynamicEchoBlocks.forEach((echo: BladeEchoNode, slug: string) => {
-            const echoContent = EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter);
+            const echoContent = EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug));
 
             value = StringUtilities.replaceAllInString(value, slug, echoContent);
         });
@@ -1309,11 +1309,11 @@ export class Transformer {
         this.inlineEchos.forEach((echo: BladeEchoNode, slug: string) => {
             const inline = this.selfClosing(slug);
 
-            value = value.replace(inline, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter));
+            value = value.replace(inline, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug)));
         });
 
         this.spanEchos.forEach((echo: BladeEchoNode, slug: string) => {
-            value = value.replace(slug, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter));
+            value = value.replace(slug, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug)));
         });
 
         return value;
@@ -1402,7 +1402,7 @@ export class Transformer {
                         params = params.substring(1);
                         params = params.substring(0, params.length - 1);
                     }
-                    let tResult = this.phpFormatter('<?php ' + params);
+                    let tResult = this.phpFormatter('<?php ' + params, null);
 
 
                     const arrayParser = new SimpleArrayParser(),
@@ -1542,7 +1542,7 @@ export class Transformer {
         let value = content;
 
         this.embeddedEchos.forEach((echo, slug) => {
-            value = value.replace(slug, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter));
+            value = value.replace(slug, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug)));
         });
 
         return value;

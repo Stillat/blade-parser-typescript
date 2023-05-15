@@ -85,4 +85,25 @@ Some link
         const out = `{{ $attributes->class(["text-gray-900 border-gray-300 invalid:text-gray-400 block w-full h-9 py-1 transition duration-75 rounded-lg shadow-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-inset focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:focus:border-primary-500"]) }}`;
         assert.strictEqual(formatBladeString(input).trim(), out);
     });
+
+    test('it respects echo line choices', () => {
+        const input = `<label
+{{
+    $attributes
+        ->whereDoesntStartWith('wire:model')
+        ->class(['flex gap-3 text-sm'])
+}}
+>
+</label>`;
+
+        const out = `<label
+    {{ 
+        $attributes
+            ->whereDoesntStartWith("wire:model")
+            ->class(["flex gap-3 text-sm"])
+     }}
+></label>
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    });
 });
