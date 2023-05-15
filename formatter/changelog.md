@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.7
+
+- Preserves inline echos as text (#25)
+
 ## 1.1.6
 
 - Improves wrapping behavior inside conditions (#26)

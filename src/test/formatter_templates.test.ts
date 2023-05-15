@@ -393,4 +393,14 @@ suite('General Template Formatting', () => {
         assert.strictEqual(formatBladeString(template), expected);
         assert.strictEqual(formatBladeString(expected), expected);
     });
+
+    test('it preserves inline echos as text', () => {
+        const input = `<span>
+    {{ 'foo' }}:
+</span>`;
+        const output = `<span>{{ "foo" }}:</span>
+`;
+        assert.strictEqual(formatBladeString(input), output);
+        assert.strictEqual(formatBladeString(output), output);
+    });
 });

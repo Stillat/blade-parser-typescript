@@ -27,8 +27,7 @@ One
         <ul></ul>
 
         @for ($i = 0; $i < 10; $i++)
-            The current value is
-            {{ $i }}
+            The current value is {{ $i }}
         @endfor
         Something here.
     @else

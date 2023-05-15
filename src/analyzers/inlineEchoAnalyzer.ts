@@ -28,7 +28,7 @@ export class InlineEchoAnalyzer {
                     }
                 }
 
-                node.isInlineEcho = (isRightInline && isLeftInline);
+                node.isInlineEcho = (isRightInline || isLeftInline);
             }
         });
     }

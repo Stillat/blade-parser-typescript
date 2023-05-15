@@ -56,10 +56,7 @@ Default case...
             `@switch($i)
     {{-- Leading node test. --}}
 
-    <p>
-        Test
-        {{ $title }}
-    </p>
+    <p>Test {{ $title }}</p>
     @case(1)
         First case...
 
@@ -97,10 +94,7 @@ Default case...
             `@switch($i)
     {{-- Leading node test. --}}
 
-    <p>
-        Test
-        {{ $title }}
-    </p>
+    <p>Test {{ $title }}</p>
     @case(1)
         <p>First case...</p>
 
@@ -207,10 +201,7 @@ Default case...
             `@switch($i)
     {{-- Leading node test. --}}
 
-    <p>
-        Test
-        {{ $title }}
-    </p>
+    <p>Test {{ $title }}</p>
     @case(1)
         <p>First case...</p>
 
