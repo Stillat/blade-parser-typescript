@@ -14,7 +14,7 @@ export class ArrayPrinter {
 
             array.elements.forEach((element) => {
                 if (array.maxKeyLength > 0 && element.key != null) {
-                    trailingWs = ' '.repeat(array.maxKeyLength - element.key.sourceContent.length);
+                    trailingWs = '';
                 }
 
                 if (element.key != null) {

@@ -149,4 +149,20 @@ suite('Props Directive', () => {
 `;
         assert.strictEqual(formatBladeString(template), out);
     });
+
+    test('it does not force align mixed arrays', () => {
+        const input = `@props([
+    'foobarbaz' => true,
+    'bar',
+    'baz' => true,
+])`;
+        const out = `@props([
+    "foobarbaz" => true,
+    "bar",
+    "baz" => true,
+])
+`;
+        assert.strictEqual(formatBladeString(input), out);
+        assert.strictEqual(formatBladeString(out), out);
+    });
 });

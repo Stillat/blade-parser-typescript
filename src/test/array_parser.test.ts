@@ -21,7 +21,7 @@ suite('Simple Array Parser', () => {
             `[
     'hello',
     'world',
-    'this'   => 'that',
+    'this' => 'that',
     'nested' => [
         'array',
         'here',
@@ -33,7 +33,7 @@ suite('Simple Array Parser', () => {
     'test',
     'test',
     $variable,
-    'test'   => \\Something\\Test\\Here::class,
+    'test' => \\Something\\Test\\Here::class,
 ]`
         );
     });
