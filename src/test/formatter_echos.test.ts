@@ -128,5 +128,60 @@ $foo->bar([
 </div>
 `;
         assert.strictEqual(formatBladeString(input), out);
+        assert.strictEqual(formatBladeString(out), out);
+    });
+
+    test('it respects line placement 3', () => {
+        const input = `<div {{ $attributes->class([
+            'some classes',
+            match ($someCondition) {
+                true => 'more classes foo bar baz',
+                default => 'even more classes foo bar baz',
+            },
+        ]) }}>
+        </div>`;
+        const out = `<div
+    {{ 
+        $attributes->class([
+            "some classes",
+            match ($someCondition) {
+                true => "more classes foo bar baz",
+                default => "even more classes foo bar baz"
+            },
+        ])
+     }}
+></div>
+`;
+        assert.strictEqual(formatBladeString(input), out);
+        assert.strictEqual(formatBladeString(out), out);
+    });
+
+    test('it respects line placement 4', () => {
+        const input = `<div {{ $attributes->class([
+            'some classes',
+            match ($someCondition) {
+                true => 'more classes foo bar baz',
+                default => 'even more classes foo bar baz',
+            },
+        ]) }} more attributes class="one two three" something="else">
+        </div>`;
+        const out = `<div
+    {{ 
+        $attributes->class([
+            "some classes",
+            match ($someCondition) {
+                true => "more classes foo bar baz",
+                default => "even more classes foo bar baz"
+            },
+        ])
+     }}
+    more
+    attributes
+    class="one two three"
+    something="else"
+></div>
+`;
+        assert.strictEqual(formatBladeString(input), out);
+        assert.strictEqual(formatBladeString(out), out);
     });
 });
