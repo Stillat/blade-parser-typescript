@@ -2,6 +2,13 @@
 
 A list of what's changed, and more.
 
+## 1.1.6
+
+- Improves wrapping behavior inside conditions (#26)
+- Improves formatting of empty arrays inside `@props` and other directives (#23)
+- Fixes a bug where `{{ $echo }}` echos inside component tags were missed (#22)
+- Improves wrapping behavior of array arguments inside directives (#24)
+
 ## 1.1.5
 
 - Prevents email addresses from becoming directives (#21)
