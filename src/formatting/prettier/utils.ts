@@ -16,6 +16,10 @@ export function getEchoPhpOptions() {
     return echoPhpOptions;
 }
 
+export function getPhpOptions() {
+    return phpOptions;
+}
+
 export function cleanOptions(options: ParserOptions): ParserOptions {
     [
         "cursorOffset",

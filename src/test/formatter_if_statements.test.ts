@@ -178,4 +178,40 @@ Another Thing
 `;
         assert.strictEqual(formatBladeString(template), out);
     });
+
+    test('it preserves line placement inside conditions', () => {
+        const template=  `<div>
+    @if (count($tenants = filament()->getUserTenants(filament()->auth()->user())))
+    @endif
+</div>`;
+        const out = `<div>
+    @if (count($tenants = filament()->getUserTenants(filament()->auth()->user())))
+    @endif
+</div>
+`;
+
+        assert.strictEqual(formatBladeString(template), out);
+        assert.strictEqual(formatBladeString(out), out);
+    });
+
+    test('it indents conditions in a sane way', () => {
+        const template = `<div>
+        @if (count($tenants = filament()->getUserTenants(filament()->auth()->user()))
+        )
+        @endif
+        </div>`;
+        const out = `<div>
+    @if (count(
+        $tenants = filament()->getUserTenants(
+            filament()
+                ->auth()
+                ->user()
+        )
+    ))
+    @endif
+</div>
+`;
+        assert.strictEqual(formatBladeString(template), out);
+        assert.strictEqual(formatBladeString(out), out);
+    });
 });

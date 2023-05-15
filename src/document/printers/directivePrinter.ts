@@ -1,4 +1,5 @@
 import { PhpOperatorReflow } from '../../formatting/phpOperatorReflow';
+import { getPhpOptions } from '../../formatting/prettier/utils';
 import { DirectiveNode } from '../../nodes/nodes';
 import { SimpleArrayParser } from '../../parser/simpleArrayParser';
 import { StringUtilities } from '../../utilities/stringUtilities';
@@ -12,7 +13,7 @@ export class DirectivePrinter {
         'if', 'elseif', 'unless', 'while', 'for', 'foreach', 'forelse'
     ];
 
-    static printDirective(directive: DirectiveNode, options: TransformOptions, phpFormatter: PhpFormatter | null, jsonFormatter: JsonFormatter | null): string {
+    static printDirective(directive: DirectiveNode, options: TransformOptions, phpFormatter: PhpFormatter | null, jsonFormatter: JsonFormatter | null, indentLevel: number): string {
         let directiveName = directive.directiveName.trim(),
             result = '@' + directiveName;
 
@@ -27,7 +28,8 @@ export class DirectivePrinter {
                         params = params.substring(0, params.length - 1);
                     }
 
-                    let tResult = params;
+                    let tResult = params,
+                        removeLines = false;
 
                     if (params.startsWith('[') && params.endsWith(']') && directive.startPosition?.line != directive.endPosition?.line) {
                         tResult = phpFormatter('<?php ' + params, null);
@@ -53,7 +55,16 @@ export class DirectivePrinter {
                         return tResult;
                     } else {
                         try {
-                            tResult = phpFormatter('<?php ' + params, null)
+                            let formatOptions = getPhpOptions();
+                            if (directive.startPosition?.line == directive.endPosition?.line) {
+                                formatOptions = {
+                                    ...getPhpOptions(),
+                                    printWidth: Infinity
+                                };
+                                removeLines = true;
+                            }
+
+                            tResult = phpFormatter('<?php ' + params, formatOptions)
                         } catch (err) {
                             // Prevent PHP errors from crashing formatter.
                         }
@@ -68,7 +79,18 @@ export class DirectivePrinter {
                         tResult = PhpOperatorReflow.instance.reflow(tResult);
                     }
 
-                    paramContent = '(' + tResult + ')';
+                    if (tResult.includes("\n") && !removeLines) {
+                        paramContent = '(' + IndentLevel.shiftIndent(
+                            tResult,
+                            indentLevel,
+                            true
+                        ) + ')';
+                    } else {
+                        if (removeLines) {
+                            tResult = removeContentLines(tResult);
+                        }
+                        paramContent = '(' + tResult + ')';
+                    }
                 }
             } else {
                 if (options.formatDirectiveJsonParameters && jsonFormatter && directive.hasValidJson()) {
@@ -95,4 +117,17 @@ export class DirectivePrinter {
 
         return result;
     }
+}
+
+function removeContentLines(content: string): string {
+    let newContent = '';
+    const lines = StringUtilities.breakByNewLine(content);
+    
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+
+        newContent += line.trim();
+    }
+
+    return newContent;
 }

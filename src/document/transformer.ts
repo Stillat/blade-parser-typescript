@@ -215,12 +215,13 @@ export class Transformer {
         return '<' + value + '>' + innerContent + '</' + value + '>';
     }
 
-    private printDirective(directive: DirectiveNode): string {
+    private printDirective(directive: DirectiveNode, indentLevel: number): string {
         return DirectivePrinter.printDirective(
             directive,
             this.transformOptions,
             this.phpFormatter,
-            this.jsonFormatter
+            this.jsonFormatter,
+            indentLevel
         );
     }
 
@@ -1176,7 +1177,7 @@ export class Transformer {
         let value = content;
         this.inlineDirectiveBlocks.forEach((directive, slug) => {
             const search = this.selfClosing(slug),
-                replace = this.printDirective(directive);
+                replace = this.printDirective(directive, this.indentLevel(search));
 
             value = value.replace(search, replace);
         });
@@ -1188,7 +1189,7 @@ export class Transformer {
         let value = content;
 
         this.contentDirectives.forEach((directive: DirectiveNode, slug: string) => {
-            value = value.replace(slug, this.printDirective(directive));
+            value = value.replace(slug, this.printDirective(directive, this.indentLevel(slug)));
         });
 
         return value;
@@ -1209,7 +1210,7 @@ export class Transformer {
         let value = content;
 
         this.dynamicElementDirectiveNodes.forEach((directive, slug) => {
-            const directiveContent = this.printDirective(directive);
+            const directiveContent = this.printDirective(directive, this.indentLevel(slug));
 
             value = StringUtilities.replaceAllInString(value, slug, directiveContent);
         });
@@ -1270,7 +1271,7 @@ export class Transformer {
                 );
                 value = value.replace(open, replaceVerbatim);
             } else {
-                value = value.replace(open, this.printDirective(directive.directive));
+                value = value.replace(open, this.printDirective(directive.directive, this.indentLevel(open)));
             }
 
             value = value.replace(close, directive.directive.isClosedBy?.sourceContent as string);
@@ -1290,7 +1291,7 @@ export class Transformer {
             const construction = forElse.forElse.constructedFrom as DirectiveNode,
                 open = this.open(forElse.truthSlug),
                 close = this.close(forElse.truthSlug),
-                openContent = this.printDirective(construction),
+                openContent = this.printDirective(construction, this.indentLevel(open)),
                 closeContent = construction.isClosedBy?.sourceContent as string;
             value = value.replace(open, openContent);
             value = value.replace(close, closeContent);
@@ -1305,7 +1306,7 @@ export class Transformer {
         this.forElseWithEmpty.forEach((forElse: TransformedForElse) => {
             const truthOpen = this.open(forElse.truthSlug),
                 construction = forElse.forElse.constructedFrom as DirectiveNode,
-                constructionContent = this.printDirective(construction);
+                constructionContent = this.printDirective(construction, this.indentLevel(truthOpen));
 
             value = value.replace(truthOpen, constructionContent);
             value = value.replace(forElse.pairClose, construction.isClosedBy?.sourceContent as string);
@@ -1354,11 +1355,11 @@ export class Transformer {
 
                 if (!structure.isLast) {
                     this.removeLines.push(structure.pairClose);
-                    value = value.replace(structure.pairOpen, this.printDirective(structureDirective));
+                    value = value.replace(structure.pairOpen, this.printDirective(structureDirective, this.indentLevel(structure.pairOpen)));
                 } else {
-                    value = value.replace(structure.pairOpen, this.printDirective(structureDirective));
+                    value = value.replace(structure.pairOpen, this.printDirective(structureDirective, this.indentLevel(structure.pairOpen)));
                     const closeDirective = structureDirective.isClosedBy as DirectiveNode;
-                    value = value.replace(structure.pairClose, this.printDirective(closeDirective));
+                    value = value.replace(structure.pairClose, this.printDirective(closeDirective, this.indentLevel(structure.pairClose)));
                 }
             });
         });
@@ -1372,7 +1373,7 @@ export class Transformer {
         this.switchStatements.forEach((switchStatement) => {
             const open = switchStatement.switchNode.constructedFrom as DirectiveNode;
 
-            value = value.replace(switchStatement.virtualSwitchOpen, this.printDirective(open));
+            value = value.replace(switchStatement.virtualSwitchOpen, this.printDirective(open, this.indentLevel(switchStatement.virtualSwitchOpen)));
             const closeDirective = open.isClosedBy as DirectiveNode;
             value = value.replace(switchStatement.virtualSwitchClose, closeDirective.sourceContent);
 
@@ -1383,13 +1384,13 @@ export class Transformer {
                 if (!structure.isLast) {
                     if (structure.isFirst) {
                         this.removeLines.push(structure.pairClose);
-                        value = value.replace(structure.pairOpen, this.printDirective(structureDirective));
+                        value = value.replace(structure.pairOpen, this.printDirective(structureDirective, this.indentLevel(structure.pairOpen)));
                     } else {
                         this.removeLines.push(structure.pairClose);
-                        value = value.replace(structure.pairOpen, this.printDirective(structureDirective));
+                        value = value.replace(structure.pairOpen, this.printDirective(structureDirective, this.indentLevel(structure.pairOpen)));
                     }
                 } else {
-                    value = value.replace(structure.pairOpen, this.printDirective(structureDirective));
+                    value = value.replace(structure.pairOpen, this.printDirective(structureDirective, this.indentLevel(structure.pairOpen)));
                     this.removeLines.push(structure.pairClose);
                 }
             });
@@ -1535,7 +1536,7 @@ export class Transformer {
         this.directiveParameters.forEach((param, slug) => {
             const paramDirective = param.directive as DirectiveNode;
 
-            value = value.replace(slug, this.printDirective(paramDirective));
+            value = value.replace(slug, this.printDirective(paramDirective, this.indentLevel(slug)));
         });
 
         return value;
@@ -1579,7 +1580,7 @@ export class Transformer {
         let value = content;
 
         this.embeddedDirectives.forEach((directive, slug) => {
-            value = value.replace(slug, this.printDirective(directive));
+            value = value.replace(slug, this.printDirective(directive, this.indentLevel(slug)));
         });
 
         return value;
