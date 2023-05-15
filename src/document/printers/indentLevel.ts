@@ -75,7 +75,11 @@ export class IndentLevel {
             if (i == 0 && skipFirst) { reflowedLines.push(lines[i]); continue; }
             const line = lines[i];
 
-            reflowedLines.push(' '.repeat(targetIndent) + line);
+            if (line.trim().length == 0) {
+                reflowedLines.push('');
+            } else {
+                reflowedLines.push(' '.repeat(targetIndent) + line);
+            }
         }
 
         return reflowedLines.join("\n");
@@ -94,7 +98,11 @@ export class IndentLevel {
 
             if (!hasFoundContent) { return; }
 
-            reflowedLines.push(pad + line);
+            if (line.trim().length == 0) {
+                reflowedLines.push('');
+            } else {
+                reflowedLines.push(pad + line);
+            }
         })
 
         return reflowedLines.join("\n");

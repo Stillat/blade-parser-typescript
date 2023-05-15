@@ -59,4 +59,21 @@ $data = [
 </main>`
         );
     });
+
+    test('it does not indent empty lines', () => {
+        const input =  `@php
+    $foo = 'foo';
+
+    $bar = 'bar';
+@endphp`;
+
+        const out = `@php
+    $foo = "foo";
+
+    $bar = "bar";
+@endphp
+`;
+
+        assert.strictEqual(formatBladeString(input), out);
+    });
 });
