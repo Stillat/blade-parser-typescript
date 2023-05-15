@@ -39,11 +39,11 @@ export class EchoPrinter {
                         tResult = PhpOperatorReflow.instance.reflow(tResult);
                     }
 
-                    const relativeIndent = start + "\n" + IndentLevel.shiftIndent(
+                    const relativeIndent = start.trim() + "\n" + IndentLevel.shiftIndent(
                         tResult,
                         indentLevel + formattingOptions.tabSize,
                         false
-                    ) + "\n" + ' '.repeat(indentLevel) + end;
+                    ) + "\n" + ' '.repeat(indentLevel) + end.trim();
 
                     return relativeIndent;
                 } else {

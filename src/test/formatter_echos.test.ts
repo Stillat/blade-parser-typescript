@@ -97,11 +97,11 @@ Some link
 </label>`;
 
         const out = `<label
-    {{ 
+    {{
         $attributes
             ->whereDoesntStartWith("wire:model")
             ->class(["flex gap-3 text-sm"])
-     }}
+    }}
 ></label>
 `;
         assert.strictEqual(formatBladeString(input), out);
@@ -118,13 +118,13 @@ $foo->bar([
 }}
 </div>`;
         const out = `<div>
-    {{ 
+    {{
         $foo->bar([
             "foo" => $foo,
             "bar" => $bar,
             "baz" => $baz,
         ])
-     }}
+    }}
 </div>
 `;
         assert.strictEqual(formatBladeString(input), out);
@@ -141,7 +141,7 @@ $foo->bar([
         ]) }}>
         </div>`;
         const out = `<div
-    {{ 
+    {{
         $attributes->class([
             "some classes",
             match ($someCondition) {
@@ -149,7 +149,7 @@ $foo->bar([
                 default => "even more classes foo bar baz"
             },
         ])
-     }}
+    }}
 ></div>
 `;
         assert.strictEqual(formatBladeString(input), out);
@@ -166,7 +166,7 @@ $foo->bar([
         ]) }} more attributes class="one two three" something="else">
         </div>`;
         const out = `<div
-    {{ 
+    {{
         $attributes->class([
             "some classes",
             match ($someCondition) {
@@ -174,7 +174,7 @@ $foo->bar([
                 default => "even more classes foo bar baz"
             },
         ])
-     }}
+    }}
     more
     attributes
     class="one two three"
