@@ -76,4 +76,19 @@ $data = [
 
         assert.strictEqual(formatBladeString(input), out);
     });
+
+    test('it does not indent already indented code', () => {
+        const template = `@php
+    /**
+    * @deprecated Override \`logo.blade.php\` instead.
+    */
+@endphp`;
+        const out = `@php
+    /**
+    * @deprecated Override \`logo.blade.php\` instead.
+    */
+@endphp
+`;
+        assert.strictEqual(formatBladeString(template), out);
+    });
 });
