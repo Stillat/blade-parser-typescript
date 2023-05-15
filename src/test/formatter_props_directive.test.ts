@@ -23,7 +23,28 @@ suite('Props Directive', () => {
 
 <div>
     <div>
-        @props(["hello", "world", "test" => [1, 2, 3, 4, 5, "more" => ["hello", "world", "test" => [1, 2, 3, 4, 5]]]])
+        @props([
+            "hello",
+            "world",
+            "test" => [
+                1,
+                2,
+                3,
+                4,
+                5,
+                "more" => [
+                    "hello",
+                    "world",
+                    "test" => [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                    ],
+                ],
+            ],
+        ])
     </div>
 </div>
 
@@ -100,6 +121,17 @@ suite('Props Directive', () => {
         const out = `@props([
     "heading",
     "footer",
+])
+`;
+        assert.strictEqual(formatBladeString(template), out);
+    });
+
+    test('it detects associative arrays', () => {
+        const template = `@props([
+    "foo" => [],
+])`;
+        const out = `@props([
+    "foo" => [],
 ])
 `;
         assert.strictEqual(formatBladeString(template), out);

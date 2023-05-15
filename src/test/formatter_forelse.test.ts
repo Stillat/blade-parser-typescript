@@ -12,7 +12,7 @@ suite('Forelse Formatting', () => {
 @endforelse
             </div>`).trim(),
             `<div>
-    @forelse($users as $user)
+    @forelse ($users as $user)
         <li>{{ $user->name }}</li>
     @empty
         <p>No users</p>
@@ -25,7 +25,7 @@ suite('Forelse Formatting', () => {
         assert.strictEqual(
             formatBladeString(`<div> @forelse ($users as $user) <li>{{ $user->name }}</li> @empty <p>No users</p> @endforelse</div> `).trim(),
             `<div>
-    @forelse($users as $user)
+    @forelse ($users as $user)
         <li>{{ $user->name }}</li>
     @empty
         <p>No users</p>
@@ -49,12 +49,12 @@ suite('Forelse Formatting', () => {
     </li>
 @endforelse`).trim(),
             `<div>
-    @forelse($users as $user)
+    @forelse ($users as $user)
         <li>{{ $user->name }}</li>
     @endforelse
 </div>
 
-@forelse($users as $user)
+@forelse ($users as $user)
     <li>{{ $user->name }}</li>
 @endforelse`
         );
@@ -70,7 +70,7 @@ suite('Forelse Formatting', () => {
 @endforelse
             </div>`).trim(),
             `<div>
-    @forelse($users as $user)
+    @forelse ($users as $user)
         <li>{{ $user->name }}</li>
     @empty
         <p>No users</p>
@@ -89,7 +89,7 @@ suite('Forelse Formatting', () => {
 @endforelse
             </div>`).trim(),
             `<div>
-    @forelse($users as       ++++$           $user)
+    @forelse ($users as       ++++$           $user)
         <li>{{ $user->name }}</li>
     @empty
         <p>No users</p>

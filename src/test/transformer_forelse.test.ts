@@ -17,14 +17,14 @@ suite('Forelse Transformer', () => {
 </li>
 @endforelse`).trim(),
             `<div>
-@forelse($users as $user)
+@forelse ($users as $user)
 <li>{{ $user->name }}</li>
 @endforelse
 </div>
 
 
 
-@forelse($users as $user)
+@forelse ($users as $user)
 <li>{{ $user->name }}
 </li>
 @endforelse`
@@ -41,7 +41,7 @@ suite('Forelse Transformer', () => {
 @endforelse
 </div>`).trim(),
             `<div>
-@forelse($users as $user)
+@forelse ($users as $user)
 <li>{{ $user->name }}</li>
 @empty
 
@@ -54,7 +54,7 @@ suite('Forelse Transformer', () => {
     test('it can transform forelse from a single line', () => {
         assert.strictEqual(
             transformString(`<div> @forelse ($users as $user) <li>{{ $user->name }}</li> @empty <p>No users</p> @endforelse</div> `).trim(),
-            `<div> @forelse($users as $user) <li>{{ $user->name }}</li> 
+            `<div> @forelse ($users as $user) <li>{{ $user->name }}</li> 
 @empty
  <p>No users</p> @endforelse</div>`
         );

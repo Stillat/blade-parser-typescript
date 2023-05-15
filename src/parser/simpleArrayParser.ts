@@ -220,9 +220,7 @@ export class SimpleArrayParser implements StringIterator {
                     i += arrayNodes.length + 1;
                     arrayNodes.shift();
                     arrayNodes.pop();
-                    if (isRoot) {
-                        this.elements += 1;
-                    }
+                    
                     element.key = token;
                     element.value = this.createArray(arrayNodes, false);
                     returnArray.elements.push(element);
