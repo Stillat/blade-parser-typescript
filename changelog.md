@@ -2,6 +2,13 @@
 
 A list of what's changed, and more.
 
+## 1.1.12
+
+- Improves formatting and indentation of certain condition-like directives (such as `@guest`) (#36)
+- Improves formatting of if statements containing echos (#35)
+- Improves indentation of long arrays inside directives (#34)
+- Improves formatting of match statements inside directive arguments (#33)
+
 ## 1.1.11
 
 - Improves formatting of match statements (#31)
