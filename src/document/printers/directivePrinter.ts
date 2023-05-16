@@ -72,6 +72,14 @@ export class DirectivePrinter {
                                 );
                             }
 
+                            if (PhpOperatorReflow.couldReflow(tResult)) {
+                                tResult = PhpOperatorReflow.instance.reflow(tResult);
+                            }
+        
+                            if (SyntaxReflow.couldReflow(tResult)) {
+                                tResult = SyntaxReflow.instance.reflow(tResult);
+                            }
+
                             tResult = '@' + directiveName + ' '.repeat(options.spacesAfterDirective) + '(' + tResult + ')';
                         } else {
                             if (array != null) {

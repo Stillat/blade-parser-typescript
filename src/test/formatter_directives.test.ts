@@ -443,4 +443,17 @@ asdf
 `;
         assert.strictEqual(formatBladeString(input), out);
     });
+
+    test('it reflows operators inside directive simple arrays', () => {
+        const input = `
+@class([
+    'foo' => ! true,
+])
+`;
+        const output = `@class([
+    "foo" => ! true,
+])
+`;
+        assert.strictEqual(formatBladeString(input), output);
+    });
 });
