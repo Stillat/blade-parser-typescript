@@ -26,7 +26,7 @@ $status =           $kernel->
 
     $status = $kernel->handle(
         $input = new Symfony\\Component\\Console\\Input\\ArgvInput(),
-        new Symfony\\Component\\Console\\Output\\ConsoleOutput()
+        new Symfony\\Component\\Console\\Output\\ConsoleOutput(),
     );
 
     ?>

@@ -1,3 +1,5 @@
+import { ParserOptions } from "prettier";
+
 export interface TransformOptions {
     spacesAfterDirective: number,
     spacesAfterControlDirective: number,
@@ -5,4 +7,5 @@ export interface TransformOptions {
     formatDirectivePhpParameters: boolean,
     formatDirectiveJsonParameters: boolean,
     formatInsideEcho: boolean,
+    phpOptions: any|undefined
 }

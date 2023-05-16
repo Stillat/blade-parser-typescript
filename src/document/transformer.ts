@@ -142,6 +142,7 @@ export class Transformer {
         formatDirectiveJsonParameters: true,
         formatDirectivePhpParameters: true,
         formatInsideEcho: true,
+        phpOptions: null
     }
 
     constructor(doc: BladeDocument) {
@@ -442,7 +443,7 @@ export class Transformer {
             let result = php.sourceContent;
 
             if (this.phpTagFormatter != null && php.hasValidPhp()) {
-                result = this.phpTagFormatter(result);
+                result = this.phpTagFormatter(result, this.transformOptions, null);
 
                 result = IndentLevel.shiftIndent(
                     result,
@@ -469,7 +470,7 @@ export class Transformer {
         let phpContent = php.sourceContent;
 
         if (this.phpTagFormatter && php.hasValidPhp()) {
-            phpContent = this.phpTagFormatter(phpContent);
+            phpContent = this.phpTagFormatter(phpContent, this.transformOptions, null);
 
             phpContent = StringUtilities.replaceAllInString(phpContent, "\n", ' ');
         }
@@ -1226,7 +1227,7 @@ export class Transformer {
             value = '<?php ' + value;
         }
 
-        value = this.blockPhpFormatter(value);
+        value = this.blockPhpFormatter(value, this.transformOptions, null);
 
         if (withNewLine) {
             value = "\n" + value + "\n";
@@ -1416,7 +1417,7 @@ export class Transformer {
                         params = params.substring(1);
                         params = params.substring(0, params.length - 1);
                     }
-                    let tResult = this.phpFormatter('<?php ' + params, null);
+                    let tResult = this.phpFormatter('<?php ' + params, this.transformOptions, null);
 
 
                     const arrayParser = new SimpleArrayParser(),

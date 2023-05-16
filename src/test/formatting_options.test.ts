@@ -146,4 +146,41 @@ suite('Formatting Options', () => {
             formatDirectivePhpParameters: false,
         }), out);
     });
+
+    test('custom prettier options can be set', () => {
+        const input = `{{
+    someFunction(
+        "foobarbaz",
+        "barbazfoo",
+        "baz",
+    )
+}}
+`;
+        const output = `{{
+    someFunction(
+        'foobarbaz',
+        'barbazfoo',
+        'baz',
+    )
+}}
+`
+        assert.strictEqual(formatBladeString(input, {
+    ...defaultSettings,
+    phpOptions: {
+        singleQuote: true,
+        phpVersion: "8.0"
+    }
+}), output);
+
+const output2 = `{{
+    someFunction(
+        "foobarbaz",
+        "barbazfoo",
+        "baz",
+    )
+}}
+`
+        // PHP 8 should now be the default.
+        assert.strictEqual(formatBladeString(input), output2);
+    });
 });

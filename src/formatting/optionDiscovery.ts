@@ -66,7 +66,8 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         formatDirectiveJsonParameters = true,
         formatInsideEcho = true,
         customIfs: string[] = [],
-        directives: string[] = [];
+        directives: string[] = [],
+        phpOptions:any|null = null;
 
     if (typeof configObject.ignoreDirectives !== 'undefined' && configObject.ignoreDirectives !== null) {
         ignoreDirectives = configObject.ignoreDirectives as string[];
@@ -104,6 +105,10 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         formatInsideEcho = configObject.formatInsideEcho as boolean;
     }
 
+    if (typeof configObject.phpOptions !== 'undefined') {
+        phpOptions = configObject.phpOptions;
+    }
+
     if (spacesAfterDirective < 0) {
         spacesAfterDirective = 0;
     }
@@ -129,7 +134,8 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         formatDirectiveJsonParameters: formatDirectiveJsonParameters,
         formatInsideEcho: formatInsideEcho,
         customIfs: customIfs,
-        directives: directives
+        directives: directives,
+        phpOptions: phpOptions
     };
 }
 

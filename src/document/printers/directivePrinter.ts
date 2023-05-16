@@ -7,6 +7,7 @@ import { JsonFormatter, PhpFormatter } from '../formatters';
 import { TransformOptions } from '../transformOptions';
 import { ArrayPrinter } from './arrayPrinter';
 import { IndentLevel } from './indentLevel';
+import { ParserOptions } from "prettier";
 
 export class DirectivePrinter {
     private static defaultControlDirectiveNames: string[] = [
@@ -20,6 +21,21 @@ export class DirectivePrinter {
     private static ignoreSpeculativeConditions: string[] = [
         'can', 'canany', 'elsecan', 'elsecanany', 'cannot',
     ];
+
+    private static getReasonableDirectivePhpOptions(directive: DirectiveNode, phpOptions:ParserOptions): ParserOptions {
+        // We will override the traillingCommaPHP setting within condition-like
+        // directives; if we don't we end up with rather ugly @if(...) blocks
+        // all over the place. However, we can't override this on all of
+        // the directives, otherwise directives like @class look weird.
+        if (DirectivePrinter.defaultControlDirectiveNames.includes(directive.name)) {
+            return {
+                ...phpOptions,
+                trailingCommaPHP: false
+            } as ParserOptions;
+        }
+
+        return phpOptions;        
+    }
 
     static printDirective(directive: DirectiveNode, options: TransformOptions, phpFormatter: PhpFormatter | null, jsonFormatter: JsonFormatter | null, indentLevel: number): string {
         let directiveName = directive.directiveName.trim(),
@@ -40,7 +56,7 @@ export class DirectivePrinter {
                         removeLines = false;
 
                     if (params.startsWith('[') && params.endsWith(']') && directive.startPosition?.line != directive.endPosition?.line) {
-                        tResult = phpFormatter('<?php ' + params, null);
+                        tResult = phpFormatter('<?php ' + params, options, DirectivePrinter.getReasonableDirectivePhpOptions(directive, getPhpOptions()));
 
                         const arrayParser = new SimpleArrayParser(),
                             array = arrayParser.parse(StringUtilities.replaceAllInString(tResult, "\n", ' ')),
@@ -72,7 +88,7 @@ export class DirectivePrinter {
                                 removeLines = true;
                             }
 
-                            tResult = phpFormatter('<?php ' + params, formatOptions)
+                            tResult = phpFormatter('<?php ' + params, options, DirectivePrinter.getReasonableDirectivePhpOptions(directive, formatOptions))
                         } catch (err) {
                             // Prevent PHP errors from crashing formatter.
                         }

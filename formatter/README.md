@@ -50,9 +50,34 @@ You may optionally configure the Blade parser by creating a file named `.blade.f
     "formatDirectiveJsonParameters": true,
     "formatInsideEcho": true,
     "spacesAfterDirective": 0,
-    "spacesAfterControlDirective": 1
+    "spacesAfterControlDirective": 1,
+    "phpOptions": {
+        "phpVersion": "8.0"
+    }
 }
 ```
+
+### Configuring PHP Options
+
+By default, PHP version `8.0` is configured when formatting directives, `@php` blocks, etc. You may change this by adding a `phpOptions` configuration object within your `.blade.format.json` file. For example, to change the PHP version, disable single quotes, you could do this:
+
+```json
+{
+    "ignoreDirectives": [],
+    "customIfs": [],
+    "formatDirectivePhpParameters": true,
+    "formatDirectiveJsonParameters": true,
+    "formatInsideEcho": true,
+    "spacesAfterDirective": 0,
+    "spacesAfterControlDirective": 1,
+    "phpOptions": {
+        "singleQuote": false,
+        "phpVersion": "7.0"
+    }
+}
+```
+
+### Configuring Other Options
 
 The following are currently consider control directives: `if`, `elseif`, `unless`, `while`, `foreach`, `forelse`, and `for`.
 

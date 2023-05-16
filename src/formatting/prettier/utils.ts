@@ -7,6 +7,7 @@ import php from "@prettier/plugin-php/standalone";
 import { formatJsonata } from "@stedi/prettier-plugin-jsonata/dist/lib";
 import { FormattingOptions } from '../formattingOptions';
 import { setEnvSettings } from '../optionDiscovery';
+import { TransformOptions } from '../../document/transformOptions';
 
 let phpOptions: ParserOptions,
     htmlOptions: ParserOptions,
@@ -87,12 +88,32 @@ export function formatAsHtml(text: string) {
     return prettier.format(text, htmlOptions);
 }
 
-export function inlineFormatPhp(text: string, options: ParserOptions | null = null) {
-    let opts = echoPhpOptions;
+function resolvePhpOptions(defaultOptions:ParserOptions, transformOptions: TransformOptions, options: ParserOptions | null = null) {
+    let opts = defaultOptions;
 
     if (options != null) {
         opts = options;
     }
+
+    if (typeof transformOptions.phpOptions !== 'undefined' && transformOptions.phpOptions != null) {
+        let phpOpts = transformOptions.phpOptions;
+
+        opts = {
+            ...opts,
+            ...phpOpts
+        } as ParserOptions;
+    } else {
+        opts = {
+            ...opts,
+            "phpVersion": "8.0"
+        } as ParserOptions;
+    }
+
+    return opts;
+}
+
+export function inlineFormatPhp(text: string, transformOptions: TransformOptions, options: ParserOptions | null = null) {
+    const opts = resolvePhpOptions(echoPhpOptions, transformOptions, options);
 
     let result = prettier.format(text, opts).trim();
 
@@ -105,8 +126,9 @@ export function inlineFormatPhp(text: string, options: ParserOptions | null = nu
     return result.trim();
 }
 
-export function formatPhp(text: string) {
-    let result = prettier.format(text, phpOptions).trim();
+export function formatPhp(text: string, transformOptions: TransformOptions, options: ParserOptions | null = null) {
+    const opts = resolvePhpOptions(phpOptions, transformOptions, options);
+    let result = prettier.format(text, opts).trim();
 
     result = result.substring(5);
 
@@ -117,8 +139,9 @@ export function formatPhp(text: string) {
     return result.trim();
 }
 
-export function formatTagPhp(text: string) {
-    const result = prettier.format(text, phpOptions).trim();
+export function formatTagPhp(text: string, transformOptions: TransformOptions, options: ParserOptions | null = null) {
+    const opts = resolvePhpOptions(phpOptions, transformOptions, options);
+    const result = prettier.format(text, opts).trim();
 
     return result.trim();
 }
