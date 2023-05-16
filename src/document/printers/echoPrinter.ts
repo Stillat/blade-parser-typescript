@@ -1,5 +1,6 @@
 import { PhpOperatorReflow } from '../../formatting/phpOperatorReflow';
 import { getEchoPhpOptions } from '../../formatting/prettier/utils';
+import { SyntaxReflow } from '../../formatting/syntaxReflow';
 import { BladeEchoNode, BladeEntitiesEchoNode, BladeEscapedEchoNode } from '../../nodes/nodes';
 import { PhpFormatter } from '../formatters';
 import { TransformOptions } from '../transformOptions';
@@ -39,6 +40,10 @@ export class EchoPrinter {
                         tResult = PhpOperatorReflow.instance.reflow(tResult);
                     }
 
+                    if (SyntaxReflow.couldReflow(tResult)) {
+                        tResult = SyntaxReflow.instance.reflow(tResult);
+                    }
+
                     const relativeIndent = start.trim() + "\n" + IndentLevel.shiftIndent(
                         tResult,
                         indentLevel + formattingOptions.tabSize,
@@ -51,6 +56,10 @@ export class EchoPrinter {
     
                     if (PhpOperatorReflow.couldReflow(tResult)) {
                         tResult = PhpOperatorReflow.instance.reflow(tResult);
+                    }
+
+                    if (SyntaxReflow.couldReflow(tResult)) {
+                        tResult = SyntaxReflow.instance.reflow(tResult);
                     }
                 }
 

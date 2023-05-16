@@ -1,5 +1,6 @@
 import { PhpOperatorReflow } from '../../formatting/phpOperatorReflow';
 import { getPhpOptions } from '../../formatting/prettier/utils';
+import { SyntaxReflow } from '../../formatting/syntaxReflow';
 import { DirectiveNode } from '../../nodes/nodes';
 import { SimpleArrayParser } from '../../parser/simpleArrayParser';
 import { StringUtilities } from '../../utilities/stringUtilities';
@@ -101,6 +102,10 @@ export class DirectivePrinter {
 
                     if (PhpOperatorReflow.couldReflow(tResult)) {
                         tResult = PhpOperatorReflow.instance.reflow(tResult);
+                    }
+
+                    if (SyntaxReflow.couldReflow(tResult)) {
+                        tResult = SyntaxReflow.instance.reflow(tResult);
                     }
 
                     if (tResult.includes("\n") && !removeLines) {
