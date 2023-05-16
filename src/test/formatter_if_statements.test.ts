@@ -250,4 +250,21 @@ Another Thing
 `;
         assert.strictEqual(formatBladeString(input), output);
     });
+
+    test('it formats nicely if contains just components', () => {
+        const input = `
+        @guest
+            <x-foo></x-foo>
+        @else
+            <x-foo></x-foo>
+        @endguest
+        `;
+        const output = `@guest
+    <x-foo></x-foo>
+@else
+    <x-foo></x-foo>
+@endguest
+`;
+        assert.strictEqual(formatBladeString(input), output);
+    });
 });

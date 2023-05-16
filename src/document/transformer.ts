@@ -1029,6 +1029,15 @@ export class Transformer {
         }
     }
 
+    private containsComponents(nodes:AbstractNode[]):boolean {
+        for (let i = 0; i < nodes.length; i++) {
+            if (nodes[i] instanceof BladeComponentNode) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private isAllInlineNodes(nodes: AbstractNode[]): boolean {
         let echoCount = 0;
         for (let i = 0; i < nodes.length; i++) {
@@ -1096,7 +1105,8 @@ export class Transformer {
 
                     if (branch.head.containsChildStructures == false && branch.head.containsAnyFragments == false &&
                         ((branch.head?.children.length <= 2 || branch.head?.children.length > 4) &&
-                            !this.isAllInlineNodes(branch.head.children))) {
+                            !this.isAllInlineNodes(branch.head.children) &&
+                            !this.containsComponents(branch.head.children) )) {
                         tBranch.virtualBreakOpen = this.open(virtualBreakSlug);
                         tBranch.virtualBreakClose = this.close(virtualBreakSlug);
                         result += "\n" + tBranch.virtualBreakOpen + "\n";
@@ -1109,11 +1119,12 @@ export class Transformer {
                         result += "\n" + tBranch.pairClose;
                     }
                 } else {
-                    const branchContainsAllInline = this.isAllInlineNodes(branch.head?.children ?? []);
+                    const branchContainsAllInline = this.isAllInlineNodes(branch.head?.children ?? []),
+                        containsComponents = this.containsComponents(branch.head?.children ?? []);
                     if (branch.head?.containsAnyFragments == false &&
                         branch.head?.containsChildStructures == false &&
                         (branch.head?.children.length <= 2 || branch.head?.children.length > 4) &&
-                        !branchContainsAllInline) {
+                        !branchContainsAllInline && !containsComponents) {
                         const ifBreakSlug = this.makeSlug(25);
 
                         tBranch.virtualBreakOpen = this.open(ifBreakSlug);

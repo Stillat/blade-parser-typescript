@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.15
+
+- Improves directive spacing consistency (#39)
+- Improves formatting of components inside conditions (#37)
+- Improves operator reflow (#38)
+
+
 ## 1.1.14
 
 - Improves formatting of if statements inside HTML elements
