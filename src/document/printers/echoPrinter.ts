@@ -53,8 +53,8 @@ export class EchoPrinter {
 
                     return relativeIndent;
                 } else {
-                    tResult = phpFormatter('<?php ' + innerContent, formattingOptions, {...echoOptions, printWidth: Infinity});
-    
+                    tResult = phpFormatter('<?php ' + innerContent +';', formattingOptions, {...echoOptions, printWidth: Infinity});
+                    tResult = tResult.trimRight().substring(0, tResult.trimRight().length - 1);
                     if (PhpOperatorReflow.couldReflow(tResult)) {
                         tResult = PhpOperatorReflow.instance.reflow(tResult);
                     }

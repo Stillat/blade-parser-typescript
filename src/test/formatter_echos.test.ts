@@ -37,6 +37,12 @@ suite('Echo Formatting', () => {
         );
     });
 
+    test('it formats php without crashing', () => {
+        const input = `{{ str_pad($loop->index + 1, 2, '0', STR_PAD_LEFT) }}`;
+        const out = `{{ str_pad($loop->index + 1, 2, "0", STR_PAD_LEFT) }}`;
+        assert.strictEqual(formatBladeString(input).trim(), out);
+    });
+
     test('it ignores invalid PHP code in {{{', () => {
         assert.strictEqual(
             formatBladeString('{{{$test   $+++$that}}}').trim(),

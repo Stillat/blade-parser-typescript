@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.17
+
+- Improves formatting of code inside echos
+
 ## 1.1.16
 
 - Fixes an issue where expressions inside directive arrays were formatted incorrectly
