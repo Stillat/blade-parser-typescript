@@ -2,6 +2,14 @@
 
 A list of what's changed, and more.
 
+## 1.1.10
+
+- Makes it possible to customize prettier PHP options via the `.blade.format.json` file (#27)
+- Internal prettier PHP version is now 8.0 by default (#27)
+- Improves formatting of PHP arrow functions (#27)
+- Improves formatting of some directives, such as `@can` (#28)
+- Improves formatting of directives inside HTML elements (#29)
+
 ## 1.1.9
 
 - Updated dependencies to correct package installation (#30)
