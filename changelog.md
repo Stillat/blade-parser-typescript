@@ -2,6 +2,10 @@
 
 A list of what's changed, and more.
 
+## 1.1.9
+
+- Updated dependencies to correct package installation (#30)
+
 ## 1.1.8
 
 - Detected custom if statements are now treated as control structures

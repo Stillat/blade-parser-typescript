@@ -5,7 +5,7 @@
     "description": "Parses Laravel Blade template files, and provides static analysis features.",
     "author": "John Koster",
     "license": "MIT",
-    "version": "1.1.8",
+    "version": "1.1.9",
     "engines": {
         "node": "*"
     },
@@ -25,17 +25,17 @@
         "esbuild": "^0.14.14",
         "eslint": "^8.19.0",
         "mocha": "^10.0.0",
-        "typescript": "^4.4.2",
+        "typescript": "^4.4.2"
+    },
+    "dependencies": {
+        "camelize": "^1.0.0",
+        "sha1": "^1.1.1",
+        "uuid": "^8.3.2",
         "prettier": "^2.5.1",
         "@prettier/plugin-php": "^0.17.6",
         "@types/prettier": "^2.6.3",
         "@stedi/prettier-plugin-jsonata": "^1.10.0",
         "jsonata": "1.8.6",
         "php-parser": "3.1.0-beta.10"
-    },
-    "dependencies": {
-        "camelize": "^1.0.0",
-        "sha1": "^1.1.1",
-        "uuid": "^8.3.2"
     }
 }
