@@ -217,14 +217,14 @@ Another Thing
 
     test('it treats echos as text inside else blocks', () => {
         const input = `@something('test') {{ $one }}
-    @elsesomething ('something else?') 
+    @elsesomething('something else?') 
     {{ $two }} 
     @else
  {{ $three }}
 @endsomething`;
-        const out = `@something ("test")
+        const out = `@something("test")
     {{ $one }}
-@elsesomething ("something else?")
+@elsesomething("something else?")
     {{ $two }}
 @else
     {{ $three }}

@@ -18,13 +18,13 @@ suite('Speculative Unless', () => {
             @enddisk
             @enddisk
             @enddisk`).trim(),
-            `@unlessdisk ("local1")
+            `@unlessdisk("local1")
     <!-- The application is not using the local disk1... -->
-    @unlessdisk ("local2")
+    @unlessdisk("local2")
         <!-- The application is not using the local disk2... -->
-        @unlessdisk ("local3")
+        @unlessdisk("local3")
             <!-- The application is not using the local disk3... -->
-            @unlessdisk ("local4")
+            @unlessdisk("local4")
                 <div>
                     <p>Hello {{ $world }}</p>
                 </div>
