@@ -2,6 +2,7 @@ import { PhpOperatorReflow } from '../../formatting/phpOperatorReflow';
 import { getEchoPhpOptions } from '../../formatting/prettier/utils';
 import { SyntaxReflow } from '../../formatting/syntaxReflow';
 import { BladeEchoNode, BladeEntitiesEchoNode, BladeEscapedEchoNode } from '../../nodes/nodes';
+import { StringUtilities } from '../../utilities/stringUtilities';
 import { PhpFormatter } from '../formatters';
 import { TransformOptions } from '../transformOptions';
 import { IndentLevel } from './indentLevel';
@@ -52,7 +53,7 @@ export class EchoPrinter {
 
                     return relativeIndent;
                 } else {
-                    tResult = phpFormatter('<?php ' + innerContent, formattingOptions, echoOptions);
+                    tResult = phpFormatter('<?php ' + innerContent, formattingOptions, {...echoOptions, printWidth: Infinity});
     
                     if (PhpOperatorReflow.couldReflow(tResult)) {
                         tResult = PhpOperatorReflow.instance.reflow(tResult);
@@ -60,6 +61,11 @@ export class EchoPrinter {
 
                     if (SyntaxReflow.couldReflow(tResult)) {
                         tResult = SyntaxReflow.instance.reflow(tResult);
+                    }
+
+                    // Handle the case if prettier added newlines anyway.
+                    if (tResult.includes("\n")) {
+                       tResult = StringUtilities.collapse(tResult);
                     }
                 }
 

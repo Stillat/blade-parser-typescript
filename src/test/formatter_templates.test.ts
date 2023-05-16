@@ -403,4 +403,25 @@ suite('General Template Formatting', () => {
         assert.strictEqual(formatBladeString(input), output);
         assert.strictEqual(formatBladeString(output), output);
     });
+
+    test('it unwraps really long echos', () => {
+        const template = `                  <div><div><div>  <x-something::component-name.here :action="$hintAction" :color="$hintColor" :icon="$hintIcon">
+        {{ filled($hint) ? ($hint instanceof \\Illuminate\\Support\\HtmlString ? $hint : \\Illuminate\\Support\\Str::of($hint)->markdown()->sanitizeHtml()->toHtmlString()) : null }}
+        </x-something::component-name.here></div></div></div>`;
+        const output = `<div>
+    <div>
+        <div>
+            <x-something::component-name.here
+                :action="$hintAction"
+                :color="$hintColor"
+                :icon="$hintIcon"
+            >
+                {{ filled($hint) ? ($hint instanceof \\Illuminate\\Support\\HtmlString ? $hint : \\Illuminate\\Support\\Str::of($hint)->markdown()->sanitizeHtml()->toHtmlString()) : null }}
+            </x-something::component-name.here>
+        </div>
+    </div>
+</div>
+`;
+        assert.strictEqual(formatBladeString(template), output);
+    })
 });

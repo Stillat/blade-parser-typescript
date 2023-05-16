@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.13
+
+- Improves formatting of very long echos when start/ends were left on the same line
+
 ## 1.1.11
 
 - Improves arrow function reflowing inside PHP content (#32)

@@ -138,4 +138,32 @@ export class StringUtilities {
 
         return lines[0];
     }
+
+    static collapse(content: string): string {
+        const lines = StringUtilities.breakByNewLine(content);
+        let newContent = '';
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+
+            if (i + 1 < lines.length) {
+                const nextLine = lines[i + 1].trim();
+
+                if (nextLine.length > 0 && StringUtilities.ctypePunct(nextLine[0])) {
+                    const char = nextLine[0];
+                    newContent += line;
+
+                    if (char == '?' || char == ':') {
+                        newContent += ' ';
+                    }
+                } else {
+                    newContent += line + ' ';
+                }
+            } else {
+                newContent += line;
+            }
+        }
+
+        return newContent.trimRight();;
+    }
 }
