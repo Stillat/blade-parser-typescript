@@ -13,6 +13,14 @@ export class DirectivePrinter {
         'if', 'elseif', 'unless', 'while', 'for', 'foreach', 'forelse'
     ];
 
+    // Speculative conditions are those that are discovered
+    // while analyzing how the directives are used within
+    // a template. This list helps prevent some Core
+    // directives from having additional spaces.
+    private static ignoreSpeculativeConditions: string[] = [
+        'can', 'canany', 'elsecan', 'elsecanany', 'cannot',
+    ];
+
     static printDirective(directive: DirectiveNode, options: TransformOptions, phpFormatter: PhpFormatter | null, jsonFormatter: JsonFormatter | null, indentLevel: number): string {
         let directiveName = directive.directiveName.trim(),
             result = '@' + directiveName;
@@ -109,7 +117,8 @@ export class DirectivePrinter {
             let spacesToUse = options.spacesAfterDirective;
 
             if (DirectivePrinter.defaultControlDirectiveNames.includes(directiveName) ||
-                DirectivePrinter.defaultControlDirectiveNames.includes(directive.name)) {
+                (! DirectivePrinter.ignoreSpeculativeConditions.includes(directiveName) &&
+                    DirectivePrinter.defaultControlDirectiveNames.includes(directive.name))) {
                 spacesToUse = options.spacesAfterControlDirective;
             }
 

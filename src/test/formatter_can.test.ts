@@ -20,7 +20,7 @@ any
     "model",
 ])
 
-@can ('update', $model)
+@can('update', $model)
     update
 @else
     any
