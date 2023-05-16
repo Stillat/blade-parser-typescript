@@ -376,4 +376,24 @@ asdf
 `;
         assert.strictEqual(formatBladeString(input), out);
     });
+
+    test('it formats class with match nicely', () => {
+        const input = `
+@class([
+    'foo',
+    match ($color) {
+        'blue' => 'text-blue-500',
+        'green' => 'text-green-500',
+    },
+])`;
+        const output = `@class([
+    "foo",
+    match ($color) {
+        "blue" => "text-blue-500",
+        "green" => "text-green-500",
+    },
+])
+`;
+        assert.strictEqual(formatBladeString(input), output);
+    });
 });
