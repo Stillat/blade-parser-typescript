@@ -153,7 +153,7 @@ export class StringUtilities {
                     const char = nextLine[0];
                     newContent += line;
 
-                    if (char == '?' || char == ':') {
+                    if (char == '?' || char == ':' || char == '&') {
                         newContent += ' ';
                     }
                 } else {

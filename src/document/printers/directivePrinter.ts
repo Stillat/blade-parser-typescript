@@ -55,7 +55,7 @@ export class DirectivePrinter {
                             array = arrayParser.parse(StringUtilities.replaceAllInString(tResult, "\n", ' ')),
                             targetIndent = 0;
 
-                        if (arrayParser.getIsAssoc() || tResult.includes('match')) {
+                        if (arrayParser.getIsAssoc() || tResult.includes('match') || tResult.includes('=>' || tResult.includes('&&'))) {
                             if (tResult.includes("\n") && !removeLines) {
                                 tResult = IndentLevel.shiftIndent(
                                     tResult,

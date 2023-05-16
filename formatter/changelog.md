@@ -1,11 +1,14 @@
 # Changelog
 
+## 1.1.16
+
+- Fixes an issue where expressions inside directive arrays were formatted incorrectly
+
 ## 1.1.15
 
 - Improves directive spacing consistency (#39)
 - Improves formatting of components inside conditions (#37)
 - Improves operator reflow (#38)
-
 
 ## 1.1.14
 
