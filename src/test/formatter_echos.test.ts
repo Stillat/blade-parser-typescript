@@ -146,7 +146,8 @@ $foo->bar([
             "some classes",
             match ($someCondition) {
                 true => "more classes foo bar baz",
-                default => "even more classes foo bar baz"
+                default
+                    => "even more classes foo bar baz",
             },
         ])
     }}
@@ -161,7 +162,8 @@ $foo->bar([
             'some classes',
             match ($someCondition) {
                 true => 'more classes foo bar baz',
-                default => 'even more classes foo bar baz',
+                default
+                    => 'even more classes foo bar baz'
             },
         ]) }} more attributes class="one two three" something="else">
         </div>`;
@@ -171,7 +173,8 @@ $foo->bar([
             "some classes",
             match ($someCondition) {
                 true => "more classes foo bar baz",
-                default => "even more classes foo bar baz"
+                default
+                    => "even more classes foo bar baz",
             },
         ])
     }}
@@ -183,5 +186,25 @@ $foo->bar([
 `;
         assert.strictEqual(formatBladeString(input), out);
         assert.strictEqual(formatBladeString(out), out);
+    });
+
+    test('it preserves trailing comma on match', () => {
+        const template = `<div
+{{
+    match ($foo) {
+        'foo' => 'foo',
+        default => 'bar',
+    }
+}}
+></div>`;
+        const out = `<div
+    {{
+        match ($foo) {
+            "foo" => "foo",
+            default => "bar",
+        }
+    }}
+></div>`;
+        assert.strictEqual(formatBladeString(template).trim(), out);
     });
 });

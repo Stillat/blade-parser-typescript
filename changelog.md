@@ -2,6 +2,10 @@
 
 A list of what's changed, and more.
 
+## 1.1.11
+
+- Improves formatting of match statements (#31)
+
 ## 1.1.10
 
 - Makes it possible to customize prettier PHP options via the `.blade.format.json` file (#27)
