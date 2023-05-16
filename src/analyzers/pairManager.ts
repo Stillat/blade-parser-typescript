@@ -4,7 +4,7 @@ export class PairManager {
     private static possibleClosingNode: Map<string, number> = new Map();
 
     // A list of all Blade directives that act like a beginning if statement.
-    private static alwaysRewrite: string[] = [
+    public static alwaysRewrite: string[] = [
         'unless',
         'sectionMissing',
         'hasSection',

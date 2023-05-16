@@ -11,7 +11,7 @@ export class ConditionalRewriteAnalyzer {
             return BladeKeywords.If;
         }
 
-        if (node.name == 'can') {
+        if (PairManager.alwaysRewrite.includes(node.name)) {
             return BladeKeywords.If;
         }
 

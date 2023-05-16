@@ -1,6 +1,6 @@
 import assert = require('assert');
 import { BladeDocument } from '../document/bladeDocument';
-import { DirectiveNode, LiteralNode } from '../nodes/nodes';
+import { ConditionNode, DirectiveNode, LiteralNode } from '../nodes/nodes';
 import { assertCount, assertInstanceOf, assertLiteralContent } from './testUtils/assertions';
 
 suite('Child Nodes', () => {
@@ -24,17 +24,19 @@ Test
 something
 @endfor`).getRenderNodes();
         assertCount(5, nodes);
-        assertInstanceOf(DirectiveNode, nodes[0]);
+        assertInstanceOf(ConditionNode, nodes[0]);
         assertInstanceOf(LiteralNode, nodes[1]);
-        assertInstanceOf(DirectiveNode, nodes[2]);
+        assertInstanceOf(ConditionNode, nodes[2]);
         assertInstanceOf(LiteralNode, nodes[3]);
         assertInstanceOf(DirectiveNode, nodes[4]);
 
         assertLiteralContent("\n\n\n", nodes[1]);
         assertLiteralContent("\n\n", nodes[3]);
 
-        const d1 = nodes[0] as DirectiveNode,
-            d2 = nodes[2] as DirectiveNode,
+        const dc1 = nodes[0] as ConditionNode,
+            dc2 = nodes[2] as ConditionNode,
+            d1 = dc1.logicBranches[0].head as DirectiveNode,
+            d2 = dc2.logicBranches[0].head as DirectiveNode,
             d3 = nodes[4] as DirectiveNode;
 
         assert.strictEqual(d1.directiveName, 'isset');
@@ -53,7 +55,9 @@ something
         assertLiteralContent("\n\n\n    ", d2.children[0]);
         assertInstanceOf(DirectiveNode, d2.children[1]);
 
-        const d2d1 = d2.children[1] as DirectiveNode;
+        const cd2d1 = d2.children[1] as ConditionNode,
+            d2d1 = cd2d1.logicBranches[0].head as DirectiveNode;
+
         assert.strictEqual(d2d1.directiveName, 'isset');
         assertCount(2, d2d1.children);
         assertInstanceOf(LiteralNode, d2d1.children[0]);

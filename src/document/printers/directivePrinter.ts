@@ -64,6 +64,14 @@ export class DirectivePrinter {
                             targetIndent = 0;
 
                         if (arrayParser.getIsAssoc()) {
+                            if (tResult.includes("\n") && !removeLines) {
+                                tResult = IndentLevel.shiftIndent(
+                                    tResult,
+                                    indentLevel,
+                                    true
+                                );
+                            }
+
                             tResult = '@' + directiveName + ' '.repeat(options.spacesAfterDirective) + '(' + tResult + ')';
                         } else {
                             if (array != null) {
@@ -71,6 +79,14 @@ export class DirectivePrinter {
 
                                 if (targetIndent > 0) {
                                     tResult = StringUtilities.removeEmptyNewLines(IndentLevel.shiftIndent(tResult, targetIndent, true));
+                                }
+
+                                if (tResult.includes("\n") && !removeLines) {
+                                    tResult = IndentLevel.shiftIndent(
+                                        tResult,
+                                        indentLevel,
+                                        true
+                                    );
                                 }
 
                                 tResult = '@' + directiveName + ' '.repeat(options.spacesAfterDirective) + '(' + tResult + ')';

@@ -238,4 +238,142 @@ asdf
         
         assert.strictEqual(formatBladeString(input2), out);
     });
+
+    test('it indents class directives nicely2', () => {
+        const input = `<x-foo
+@class([
+    'foo',
+    'foo bar baz something long very very long',
+])
+/>`;
+        const output = `<x-foo
+    @class([
+        "foo",
+        "foo bar baz something long very very long",
+    ])
+/>
+`;
+        assert.strictEqual(formatBladeString(input), output);
+    });
+
+    test('it pairs guest', () => {
+        const input = `@guest
+<div></div>
+@endguest`
+        const out = `@guest
+    <div></div>
+@endguest
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    });
+
+    test('it pairs unless', () => {
+        const input = `@unless
+<div></div>
+@endunless`
+        const out = `@unless
+    <div></div>
+@endunless
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    });
+
+    test('it pairs sectionMissing', () => {
+        const input = `@sectionMissing
+<div></div>
+@endsectionMissing`
+        const out = `@sectionMissing
+    <div></div>
+@endsectionMissing
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    });
+
+    test('it pairs hasSection', () => {
+        const input = `@hasSection
+<div></div>
+@endhasSection`
+        const out = `@hasSection
+    <div></div>
+@endhasSection
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    });
+
+    test('it pairs auth', () => {
+        const input = `@auth
+<div></div>
+@endauth`
+        const out = `@auth
+    <div></div>
+@endauth
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    });
+
+    test('it pairs env', () => {
+        const input = `@env
+<div></div>
+@endenv`
+        const out = `@env
+    <div></div>
+@endenv
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    });
+
+    test('it pairs isset', () => {
+        const input = `@isset
+<div></div>
+@endisset`
+        const out = `@isset
+    <div></div>
+@endisset
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    });
+
+    test('it pairs cannot', () => {
+        const input = `@cannot
+<div></div>
+@endcannot`
+        const out = `@cannot
+    <div></div>
+@endcannot
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    });
+    
+    test('it pairs canany', () => {
+        const input = `@canany
+<div></div>
+@endcanany`
+        const out = `@canany
+    <div></div>
+@endcanany
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    });
+    
+    test('it pairs hasSection', () => {
+        const input = `@hasSection
+<div></div>
+@endhasSection`
+        const out = `@hasSection
+    <div></div>
+@endhasSection
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    });
+    
+    test('it pairs production', () => {
+        const input = `@production
+<div></div>
+@endproduction`
+        const out = `@production
+    <div></div>
+@endproduction
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    });
 });
