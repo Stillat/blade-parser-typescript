@@ -565,7 +565,12 @@ export class Transformer {
                     result += innerDoc;
                 }
             }
-            result += `${this.close(slug)}\n`;
+            
+            if (result.includes(this.open(slug))) {
+                result += `${this.close(slug)}\n`;
+            } else {
+                var asdf = 'asdf';
+            }
 
             this.virtualStructureOpens.push(this.open(virtualSlug));
             this.virtualStructureClose.push(this.close(virtualSlug));
@@ -1053,7 +1058,7 @@ export class Transformer {
     }
 
     private prepareConditions(condition: ConditionNode): string {
-        if (condition.fragmentPosition == FragmentPosition.Unresolved || condition.fragmentPosition == FragmentPosition.InsideFragment) {
+        if (condition.fragmentPosition == FragmentPosition.Unresolved) {
             if (condition.chain.length == 1 && condition.constructedFrom != null) {
                 const construction = (condition.constructedFrom as DirectiveNode).clone();
 

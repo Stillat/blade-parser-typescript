@@ -1008,6 +1008,38 @@ export class DocumentParser implements StringIterator {
                         } else {
                             const literalLength = nextBladeStart - this.lastBladeEndIndex - 1;
 
+                            if (literalLength < 0 && this.lastNode instanceof BladeComponentNode) {
+                                let allInsideComponent = true;
+                                for (let j = i; j < this.bladeStartIndex.length; j++) {
+                                    const checkIndex = this.bladeStartIndex[j];
+
+                                    if (checkIndex > this.lastBladeEndIndex) {
+                                        nextBladeStart = checkIndex;
+                                        allInsideComponent = false;
+                                        break;
+                                    }
+                                }
+
+                                if (allInsideComponent) {
+                                    const literalStart = this.currentIndex + offset;
+
+                                    if (literalStart < this.inputLen && !this.isVerbatim) {
+                                        const literalNode = new LiteralNode();
+                                        literalNode.withParser(this);
+
+                                        literalNode.content = this.prepareLiteralContent(this.content.substr(literalStart));
+
+                                        if (literalNode.content.length > 0) {
+                                            literalNode.startPosition = this.positionFromOffset(literalStart, literalStart);
+                                            literalNode.endPosition = this.positionFromOffset(this.inputLen - 1, this.inputLen - 1);
+                                            this.nodes.push(literalNode);
+                                        }
+
+                                        break;
+                                    }
+                                }
+                            }
+
                             if (literalLength == 0 || this.isVerbatim) {
                                 continue;
                             }

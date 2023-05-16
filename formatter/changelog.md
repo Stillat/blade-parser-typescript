@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.14
+
+- Improves formatting of if statements inside HTML elements
+- Improves formatting of nested directive documents
+
 ## 1.1.13
 
 - Improves formatting of very long echos when start/ends were left on the same line

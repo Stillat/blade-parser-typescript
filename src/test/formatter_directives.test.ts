@@ -396,4 +396,51 @@ asdf
 `;
         assert.strictEqual(formatBladeString(input), output);
     });
+
+    test('it formats subdocuments correctly', () => {
+        const input = `
+
+               @once
+               <li>
+               <button
+                   type="button"
+                   wire:loading.attr="disabled"
+               >
+                   <x-component::name
+                       class="w-4 h-4 text-primary-500"
+                       wire:loading.delay
+                       wire:target="{{ one }} {{ two }}"
+                   />
+               </button>
+           </li>
+               @endonce
+`;
+        const output = `@once
+    <li>
+        <button type="button" wire:loading.attr="disabled">
+            <x-component::name
+                class="w-4 h-4 text-primary-500"
+                wire:loading.delay
+                wire:target="{{ one }} {{ two }}"
+            />
+        </button>
+    </li>
+@endonce
+`;
+        assert.strictEqual(formatBladeString(input), output);
+    });
+
+    test('it does not trash ifs inside elements', () => {
+        const input = `
+
+@if ($that)
+    <div @if ($somethingElse) this! @endif>Hello, world.</div>
+@endif
+`;
+        const out = `@if ($that)
+    <div @if ($somethingElse) this! @endif>Hello, world.</div>
+@endif
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    });
 });
