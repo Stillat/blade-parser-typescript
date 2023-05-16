@@ -1190,7 +1190,21 @@ export class Transformer {
         let value = content;
 
         this.contentDirectives.forEach((directive: DirectiveNode, slug: string) => {
-            value = value.replace(slug, this.printDirective(directive, this.indentLevel(slug)));
+            let directiveResult = this.printDirective(directive, 0);
+
+            if (directiveResult.includes("\n")) {
+                const relativeIndent = this.indentLevel(slug);
+
+                if (relativeIndent > 0) {
+                    directiveResult = IndentLevel.shiftIndent(
+                        directiveResult,
+                        relativeIndent,
+                        true
+                    );
+                }
+            }
+
+            value = value.replace(slug, directiveResult);
         });
 
         return value;

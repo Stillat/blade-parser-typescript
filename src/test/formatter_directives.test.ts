@@ -208,4 +208,34 @@ asdf
         assert.strictEqual(formatBladeString(input), out);
         assert.strictEqual(formatBladeString(out), out);
     });
+
+    test('it indents class directives nicely', () => {
+        const input = `<div>
+    <span @class([
+        'some classes',
+    ])>
+        {{ $foo }}
+    </span>
+</div>`;
+        const out = `<div>
+    <span @class([
+        "some classes",
+    ])>
+        {{ $foo }}
+    </span>
+</div>
+`;
+        assert.strictEqual(formatBladeString(input), out);
+        assert.strictEqual(formatBladeString(out), out);
+
+        const input2 = `<div>
+    <span @class([
+        'some classes',
+    ])>
+        {{ $foo }}
+        
+        </span> </div>`;
+        
+        assert.strictEqual(formatBladeString(input2), out);
+    });
 });
