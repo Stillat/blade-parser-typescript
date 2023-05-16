@@ -74,9 +74,7 @@ Some link
         </p>`).trim(),
             `<p>test {{ $title }} test asdfasdf</p>
 
-<p>
-    {{ $test }}
-</p>`
+<p>{{ $test }}</p>`
         );
     });
 

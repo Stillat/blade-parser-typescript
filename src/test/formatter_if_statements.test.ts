@@ -233,4 +233,21 @@ Another Thing
         assert.strictEqual(formatBladeString(input), out);
         assert.strictEqual(formatBladeString(out), out);
     });
+
+    test('it indents ifs containing only echos nicely', () => {
+        const input = `@if (true)
+{{ 'foo' }}
+{{ 'bar' }}
+@else
+{{ 'bar' }}
+{{ 'baz' }}
+@endif`;
+        const output = `@if (true)
+    {{ "foo" }} {{ "bar" }}
+@else
+    {{ "bar" }} {{ "baz" }}
+@endif
+`;
+        assert.strictEqual(formatBladeString(input), output);
+    });
 });

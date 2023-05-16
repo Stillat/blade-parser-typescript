@@ -15,6 +15,10 @@ export class InlineEchoAnalyzer {
 
                     if (StringUtilities.trimLeft(firstLine, " \t").startsWith("\n") == false && firstLine.trim().length > 0) {
                         isRightInline = true;
+                    } else {
+                        if (node.nextNode.nextNode instanceof BladeEchoNode) {
+                            isRightInline = true;
+                        }
                     }
                 }
 
@@ -25,6 +29,10 @@ export class InlineEchoAnalyzer {
 
                     if (StringUtilities.trimRight(lastLine, " \t").endsWith("\n") == false && lastLine.trim().length > 0) {
                         isLeftInline = true;
+                    } else {
+                        if (node.prevNode.prevNode instanceof BladeEchoNode) {
+                            isLeftInline = true;
+                        }
                     }
                 }
 

@@ -261,7 +261,7 @@ export class Transformer {
         }
     }
 
-    private registerEchoParameter(slug: string, param:ParameterNode) {
+    private registerEchoParameter(slug: string, param: ParameterNode) {
         if (this.parentTransformer != null) {
             this.parentTransformer.registerEchoParameter(slug, param);
         } else {
@@ -446,11 +446,11 @@ export class Transformer {
 
             if (this.phpTagFormatter != null && php.hasValidPhp()) {
                 result = this.phpTagFormatter(result, this.transformOptions, null);
-              
+
                 if (PhpOperatorReflow.couldReflow(result)) {
                     result = PhpOperatorReflow.instance.reflow(result);
                 }
-    
+
                 if (SyntaxReflow.couldReflow(result)) {
                     result = SyntaxReflow.instance.reflow(result);
                 }
@@ -1024,6 +1024,34 @@ export class Transformer {
         }
     }
 
+    private isAllInlineNodes(nodes: AbstractNode[]): boolean {
+        let echoCount = 0;
+        for (let i = 0; i < nodes.length; i++) {
+            const node = nodes[i];
+
+            if (node instanceof LiteralNode) { continue; }
+            if (node instanceof BladeEchoNode) {
+                if (!node.isInlineEcho) {
+                    return false;
+                }
+                echoCount += 1;
+            } else {
+                if (node instanceof DirectiveNode) {
+                    if (node.isClosingDirective || node.name == 'elseif' || node.name == 'else') {
+                        continue;
+                    }
+                    return false;
+                } else {
+                    return false;
+                }
+            }
+        }
+        if (echoCount == 0) {
+            return false;
+        }
+        return true;
+    }
+
     private prepareConditions(condition: ConditionNode): string {
         if (condition.fragmentPosition == FragmentPosition.Unresolved || condition.fragmentPosition == FragmentPosition.InsideFragment) {
             if (condition.chain.length == 1 && condition.constructedFrom != null) {
@@ -1061,7 +1089,9 @@ export class Transformer {
                     result += "\n" + tBranch.pairOpen;
                     const virtualBreakSlug = this.makeSlug(25);
 
-                    if (branch.head.containsChildStructures == false && branch.head.containsAnyFragments == false && (branch.head?.children.length <= 2 || branch.head?.children.length > 4)) {
+                    if (branch.head.containsChildStructures == false && branch.head.containsAnyFragments == false &&
+                        ((branch.head?.children.length <= 2 || branch.head?.children.length > 4) &&
+                            !this.isAllInlineNodes(branch.head.children))) {
                         tBranch.virtualBreakOpen = this.open(virtualBreakSlug);
                         tBranch.virtualBreakClose = this.close(virtualBreakSlug);
                         result += "\n" + tBranch.virtualBreakOpen + "\n";
@@ -1074,15 +1104,15 @@ export class Transformer {
                         result += "\n" + tBranch.pairClose;
                     }
                 } else {
-
+                    const branchContainsAllInline = this.isAllInlineNodes(branch.head?.children ?? []);
                     if (branch.head?.containsAnyFragments == false &&
                         branch.head?.containsChildStructures == false &&
-                        (branch.head?.children.length <= 2 || branch.head?.children.length > 4)) {
+                        (branch.head?.children.length <= 2 || branch.head?.children.length > 4) &&
+                        !branchContainsAllInline) {
                         const ifBreakSlug = this.makeSlug(25);
 
                         tBranch.virtualBreakOpen = this.open(ifBreakSlug);
                         tBranch.virtualBreakClose = this.close(ifBreakSlug);
-
 
                         result += tBranch.pairOpen;
                         result += "\n" + tBranch.virtualBreakOpen;
@@ -1090,11 +1120,20 @@ export class Transformer {
                         result += "\n" + tBranch.virtualBreakClose;
                         result += tBranch.pairClose;
                     } else {
-                        result += tBranch.pairOpen;
-                        result += "\n";
-                        result += innerDoc;
-                        result += "\n";
-                        result += tBranch.pairClose;
+                        if (branchContainsAllInline) {
+                            result += "\n" + tBranch.pairOpen;
+                            const virtualBreakSlug = this.makeSlug(25);
+                            tBranch.virtualBreakOpen = this.selfClosing(virtualBreakSlug);
+                            result += tBranch.virtualBreakOpen + "\n";
+                            result += innerDoc;
+                            result += "\n" + tBranch.pairClose;
+                        } else {
+                            result += tBranch.pairOpen;
+                            result += "\n";
+                            result += innerDoc;
+                            result += "\n";
+                            result += tBranch.pairClose;
+                        }
                     }
                 }
 
@@ -1469,11 +1508,11 @@ export class Transformer {
                     } else {
                         if (array != null) {
                             tResult = ArrayPrinter.print(array, this.transformOptions.tabSize, 1);
-    
+
                             if (targetIndent > 0) {
                                 tResult = StringUtilities.removeEmptyNewLines(IndentLevel.shiftIndent(tResult, targetIndent, true));
                             }
-    
+
                             content = '@props' + ' '.repeat(this.transformOptions.spacesAfterDirective) + '(' + tResult + ')';
                         }
                     }
