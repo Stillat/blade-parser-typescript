@@ -116,4 +116,26 @@ $data = [
 `;
         assert.strictEqual(formatBladeString(template), out);
     });
+
+    test('it reflows arrows inside php blocks', () => {
+        const template = `@php
+    fn () => true;
+@endphp`;
+        const out = `@php
+    fn () => true;
+@endphp
+`;
+        assert.strictEqual(formatBladeString(template), out);
+    });
+
+    test('it reflows arrows inside php blocks2', () => {
+        const template = `<?php
+    fn () => true;
+?>`;
+        const out = `<?php
+fn () => true;
+?>
+`;
+        assert.strictEqual(formatBladeString(template), out);
+    });
 });

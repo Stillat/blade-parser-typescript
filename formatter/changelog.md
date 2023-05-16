@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.11
+
+- Improves arrow function reflowing inside PHP content (#32)
+
 ## 1.1.10
 
 - Improves formatting of match statements (#31)

@@ -1,3 +1,5 @@
+import { PhpOperatorReflow } from '../formatting/phpOperatorReflow';
+import { SyntaxReflow } from '../formatting/syntaxReflow';
 import { AbstractNode, BladeCommentNode, BladeComponentNode, BladeEchoNode, ConditionNode, DirectiveNode, ExecutionBranchNode, ForElseNode, FragmentPosition, InlinePhpNode, LiteralNode, ParameterNode, ParameterType, SwitchCaseNode, SwitchStatementNode } from '../nodes/nodes';
 import { SimpleArrayParser } from '../parser/simpleArrayParser';
 import { StringUtilities } from '../utilities/stringUtilities';
@@ -444,6 +446,14 @@ export class Transformer {
 
             if (this.phpTagFormatter != null && php.hasValidPhp()) {
                 result = this.phpTagFormatter(result, this.transformOptions, null);
+              
+                if (PhpOperatorReflow.couldReflow(result)) {
+                    result = PhpOperatorReflow.instance.reflow(result);
+                }
+    
+                if (SyntaxReflow.couldReflow(result)) {
+                    result = SyntaxReflow.instance.reflow(result);
+                }
 
                 result = IndentLevel.shiftIndent(
                     result,
@@ -471,6 +481,14 @@ export class Transformer {
 
         if (this.phpTagFormatter && php.hasValidPhp()) {
             phpContent = this.phpTagFormatter(phpContent, this.transformOptions, null);
+
+            if (PhpOperatorReflow.couldReflow(phpContent)) {
+                phpContent = PhpOperatorReflow.instance.reflow(phpContent);
+            }
+
+            if (SyntaxReflow.couldReflow(phpContent)) {
+                phpContent = SyntaxReflow.instance.reflow(phpContent);
+            }
 
             phpContent = StringUtilities.replaceAllInString(phpContent, "\n", ' ');
         }
@@ -1245,6 +1263,14 @@ export class Transformer {
 
         if (withNewLine) {
             value = "\n" + value + "\n";
+        }
+
+        if (PhpOperatorReflow.couldReflow(value)) {
+            value = PhpOperatorReflow.instance.reflow(value);
+        }
+
+        if (SyntaxReflow.couldReflow(value)) {
+            value = SyntaxReflow.instance.reflow(value);
         }
 
         return value;
