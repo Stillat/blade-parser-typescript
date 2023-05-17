@@ -17,7 +17,9 @@ export class InlineEchoAnalyzer {
                         isRightInline = true;
                     } else {
                         if (node.nextNode.nextNode instanceof BladeEchoNode) {
-                            isRightInline = true;
+                            if (node.nextNode.nextNode.startPosition?.line == node.endPosition?.line) {
+                                isRightInline = true;
+                            }
                         }
                     }
                 }
@@ -31,7 +33,9 @@ export class InlineEchoAnalyzer {
                         isLeftInline = true;
                     } else {
                         if (node.prevNode.prevNode instanceof BladeEchoNode) {
-                            isLeftInline = true;
+                            if (node.prevNode.prevNode.endPosition?.line == node.startPosition?.line) {
+                                isLeftInline = true;
+                            }
                         }
                     }
                 }

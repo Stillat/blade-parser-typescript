@@ -558,7 +558,12 @@ export class Transformer {
                 virtualSlug = this.makeSlug(15);
                 result += this.pair(virtualSlug);
             } else {
-                if (this.shouldCreateVirutal(directive) && directive.containsChildStructures == false && directive.containsAnyFragments == false) {
+                const contentContainsAllInline = this.isAllInlineNodes(directive.children ?? []),
+                        containsBladeStructures = this.containsBladeStructures(directive.children ?? []);
+                if ((this.shouldCreateVirutal(directive) && directive.containsChildStructures == false && 
+                    directive.containsAnyFragments == false &&
+                    !contentContainsAllInline &&
+                    !containsBladeStructures) || (!directive.containsAnyFragments && contentContainsAllInline && containsBladeStructures)) {
                     virtualSlug = this.makeSlug(15);
                     result += this.pair(virtualSlug, innerDoc);
                 } else {
@@ -566,11 +571,7 @@ export class Transformer {
                 }
             }
             
-            if (result.includes(this.open(slug))) {
-                result += `${this.close(slug)}\n`;
-            } else {
-                var asdf = 'asdf';
-            }
+            result += `${this.close(slug)}\n`;
 
             this.virtualStructureOpens.push(this.open(virtualSlug));
             this.virtualStructureClose.push(this.close(virtualSlug));
@@ -1038,8 +1039,24 @@ export class Transformer {
         return false;
     }
 
+    private containsBladeStructures(nodes:AbstractNode[]): boolean {
+        for (let i = 0; i < nodes.length; i++) {
+            const node = nodes[i];
+
+            if (! (node instanceof LiteralNode)) {
+                if (node instanceof DirectiveNode && (node.isClosingDirective || node.isClosingDirective || node.name == 'elseif' || node.name == 'else')) {
+                    continue;
+                }
+
+                return true;
+            }
+        }
+        return false;
+    }
+
     private isAllInlineNodes(nodes: AbstractNode[]): boolean {
         let echoCount = 0;
+        
         for (let i = 0; i < nodes.length; i++) {
             const node = nodes[i];
 
@@ -1101,12 +1118,13 @@ export class Transformer {
 
                 if (branch.head?.directiveName == 'else') {
                     result += "\n" + tBranch.pairOpen;
-                    const virtualBreakSlug = this.makeSlug(25);
+                    const virtualBreakSlug = this.makeSlug(25),
+                        containsBladeStructures = this.containsBladeStructures(branch.head.children ?? []);
 
                     if (branch.head.containsChildStructures == false && branch.head.containsAnyFragments == false &&
                         ((branch.head?.children.length <= 2 || branch.head?.children.length > 4) &&
                             !this.isAllInlineNodes(branch.head.children) &&
-                            !this.containsComponents(branch.head.children) )) {
+                            !containsBladeStructures)) {
                         tBranch.virtualBreakOpen = this.open(virtualBreakSlug);
                         tBranch.virtualBreakClose = this.close(virtualBreakSlug);
                         result += "\n" + tBranch.virtualBreakOpen + "\n";
@@ -1120,11 +1138,11 @@ export class Transformer {
                     }
                 } else {
                     const branchContainsAllInline = this.isAllInlineNodes(branch.head?.children ?? []),
-                        containsComponents = this.containsComponents(branch.head?.children ?? []);
+                        containsBladeStructures = this.containsBladeStructures(branch.head?.children ?? []);
                     if (branch.head?.containsAnyFragments == false &&
                         branch.head?.containsChildStructures == false &&
                         (branch.head?.children.length <= 2 || branch.head?.children.length > 4) &&
-                        !branchContainsAllInline && !containsComponents) {
+                        !branchContainsAllInline && !containsBladeStructures) {
                         const ifBreakSlug = this.makeSlug(25);
 
                         tBranch.virtualBreakOpen = this.open(ifBreakSlug);

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.18
+
+- Formatting of echos will now respect manual newline placement, while preserving inline echos as text (#41)
+- Improved condition and paired directive formatting to handle more nuanced situations (#40)
+
 ## 1.1.17
 
 - Improves formatting of code inside echos

@@ -243,9 +243,11 @@ Another Thing
 {{ 'baz' }}
 @endif`;
         const output = `@if (true)
-    {{ "foo" }} {{ "bar" }}
+    {{ "foo" }}
+    {{ "bar" }}
 @else
-    {{ "bar" }} {{ "baz" }}
+    {{ "bar" }}
+    {{ "baz" }}
 @endif
 `;
         assert.strictEqual(formatBladeString(input), output);
@@ -266,5 +268,86 @@ Another Thing
 @endguest
 `;
         assert.strictEqual(formatBladeString(input), output);
+    });
+
+    test('it formats nicely without any else block if just contains components', () => {
+        const input = `@if (filament()->hasRegistration())
+<x-slot name="subheading">
+    {{ __('filament::pages/auth/login.buttons.register.before') }}
+    {{ $this->registerAction }}
+</x-slot>
+@endif`;
+        const output = `@if (filament()->hasRegistration())
+    <x-slot name="subheading">
+        {{ __("filament::pages/auth/login.buttons.register.before") }}
+        {{ $this->registerAction }}
+    </x-slot>
+@endif
+`;
+        assert.strictEqual(formatBladeString(input), output);
+    });
+
+    test('layout engine detects different types of situations and formats nicely', () => {
+        const input = `
+
+@if (true)
+{{ 'foo' }}
+{{ 'bar' }}
+@else
+{{ 'bar' }}
+{{ 'baz' }}
+@endif
+
+
+@if (true)
+{{ 'foo' }} {{ 'bar' }}
+@else
+{{ 'bar' }} {{ 'baz' }}
+@endif
+
+@if (true)
+{{ 'foo' }} {{ 'bar' }}
+@endif
+
+@if (true)
+{{ 'foo' }} {{ 'bar' }}
+@else
+A
+@endif
+
+@if (true)
+A
+@endif
+`;
+        const output = `@if (true)
+    {{ "foo" }}
+    {{ "bar" }}
+@else
+    {{ "bar" }}
+    {{ "baz" }}
+@endif
+
+@if (true)
+    {{ "foo" }} {{ "bar" }}
+@else
+    {{ "bar" }} {{ "baz" }}
+@endif
+
+@if (true)
+    {{ "foo" }} {{ "bar" }}
+@endif
+
+@if (true)
+    {{ "foo" }} {{ "bar" }}
+@else
+    A
+@endif
+
+@if (true)
+    A
+@endif
+`;
+        assert.strictEqual(formatBladeString(input), output);
+        assert.strictEqual(formatBladeString(output), output);
     });
 });

@@ -75,9 +75,7 @@ Some link
             
             asdfasdf </p>
 
-            <p>
-        {{ $test }}
-        </p>`).trim(),
+            <p>{{ $test }}</p>`).trim(),
             `<p>test {{ $title }} test asdfasdf</p>
 
 <p>{{ $test }}</p>`
@@ -210,5 +208,20 @@ $foo->bar([
     }}
 ></div>`;
         assert.strictEqual(formatBladeString(template).trim(), out);
+    });
+
+    test('it respects line placement when blocking echos', () => {
+        const input = `<form wire:submit.prevent="authenticate" class="grid gap-y-8">
+{{ $this->form }}
+
+{{ $this->authenticateAction }}
+</form>`;
+        const output = `<form wire:submit.prevent="authenticate" class="grid gap-y-8">
+    {{ $this->form }}
+
+    {{ $this->authenticateAction }}
+</form>
+`;
+        assert.strictEqual(formatBladeString(input), output);
     });
 });
