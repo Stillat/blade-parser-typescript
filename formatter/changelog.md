@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.0
+
+- Adds support for ignoring entire sections of a template
+
 ## 1.1.18
 
 - Formatting of echos will now respect manual newline placement, while preserving inline echos as text (#41)

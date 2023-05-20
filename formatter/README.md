@@ -30,6 +30,18 @@ After installing, add the following to your `.prettierrc` file:
 }
 ```
 
+## Ignoring Parts of a Template
+
+Entire sections of a Blade template can be ignored by surrounding it with two special comments:
+
+```blade
+<div>
+{{-- format-ignore-start --}}
+    The template code inside this section will be ignored when formatting.
+{{-- format-ignore-end --}}
+</div>
+```
+
 ## Configuring the Blade Parser (Optional)
 
 You may optionally configure the Blade parser by creating a file named `.blade.format.json` at the root of your project. The options that can be used currently are:

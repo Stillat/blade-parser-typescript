@@ -89,6 +89,11 @@ interface VirtualBlockStructure {
 }
 
 export class Transformer {
+    private formatIgnoreStart = 'format-ignore-start';
+    private formatIgnoreEnd = 'format-ignore-end';
+    private isInsideIgnoreFormatter: boolean = false;
+    private ignoredLiteralBlocks: Map<string, AbstractNode[]> = new Map();
+    private activeLiteralSlug: string = '';
     private doc: BladeDocument;
     private inlineDirectiveBlocks: Map<string, DirectiveNode> = new Map();
     private contentDirectives: Map<string, DirectiveNode> = new Map();
@@ -1204,6 +1209,18 @@ export class Transformer {
         let result = '';
 
         this.doc.getRenderNodes().forEach((node) => {
+            if (this.isInsideIgnoreFormatter) {
+                this.ignoredLiteralBlocks.get(this.activeLiteralSlug)?.push(node);
+
+                if (node instanceof BladeCommentNode) {
+                    if (node.innerContent.trim().toLowerCase() == this.formatIgnoreEnd) {
+                        this.isInsideIgnoreFormatter = false;
+                        return;
+                    }
+                }
+                return;
+            }
+
             if (node instanceof LiteralNode) {
                 result += node.content;
             } else if (node instanceof SwitchStatementNode) {
@@ -1221,7 +1238,16 @@ export class Transformer {
             } else if (node instanceof ForElseNode) {
                 result += this.prepareForElse(node);
             } else if (node instanceof BladeCommentNode) {
-                result += this.prepareComment(node);
+                if (node.innerContent.trim() == this.formatIgnoreStart) {
+                    this.isInsideIgnoreFormatter = true;
+                    this.activeLiteralSlug = this.makeSlug(16);
+                    this.ignoredLiteralBlocks.set(this.activeLiteralSlug, []);
+                    this.ignoredLiteralBlocks.get(this.activeLiteralSlug)?.push(node);
+
+                    result += this.selfClosing(this.activeLiteralSlug);
+                } else {
+                    result += this.prepareComment(node);
+                }
             } else if (node instanceof BladeComponentNode) {
                 result += this.prepareComponent(node);
             } else if (node instanceof InlinePhpNode) {
@@ -1861,6 +1887,41 @@ export class Transformer {
         results = this.transformExtractedDocuments(results);
         results = this.transformPhpBlock(results);
 
+        this.ignoredLiteralBlocks.forEach((nodes, slug) => {
+            const replace = this.selfClosing(slug),
+                startIndent = this.indentLevel(replace);
+
+            results = results.replace(replace, this.dumpPreservedNodes(nodes, startIndent));
+        });
+
         return results;
+    }
+
+    private dumpPreservedNodes(nodes: AbstractNode[], finalIndent: number): string {
+        let stringResults = '';
+
+        nodes.forEach((node) => {
+            if (node instanceof LiteralNode) {
+                stringResults += node.content;
+            } else if (node instanceof SwitchStatementNode) {
+                stringResults += node.nodeContent;
+            } else if (node instanceof ConditionNode) {
+                stringResults += node.nodeContent;
+            } else if (node instanceof DirectiveNode) {
+                stringResults += node.sourceContent;
+            } else if (node instanceof BladeEchoNode) {
+                stringResults += node.sourceContent;
+            } else if (node instanceof ForElseNode) {
+                stringResults += node.nodeContent;
+            } else if (node instanceof BladeCommentNode) {
+                stringResults += node.sourceContent;
+            } else if (node instanceof BladeComponentNode) {
+                stringResults += node.sourceContent;
+            } else if (node instanceof InlinePhpNode) {
+                stringResults += node.sourceContent;
+            }
+        });
+
+        return stringResults;
     }
 }
