@@ -224,4 +224,13 @@ $foo->bar([
 `;
         assert.strictEqual(formatBladeString(input), output);
     });
+
+    test('it inlines adjacent echos', () => {
+        const input = `<div>
+    {{ $foo }}{{ $bar }}
+</div>`;
+        const out = `<div>{{ $foo }}{{ $bar }}</div>
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    });
 });

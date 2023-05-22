@@ -48,8 +48,12 @@ export class DirectivePrinter {
                     let tResult = params,
                         removeLines = false;
 
+                    const phpOptions = getPhpOptions();
                     if (params.startsWith('[') && params.endsWith(']') && directive.startPosition?.line != directive.endPosition?.line) {
-                        tResult = phpFormatter('<?php ' + params, options, DirectivePrinter.getReasonableDirectivePhpOptions(directive, getPhpOptions()));
+                        tResult = phpFormatter('<?php ' + params, options, DirectivePrinter.getReasonableDirectivePhpOptions(directive, {
+                            ...phpOptions,
+                            printWidth: getPrintWidth(params, phpOptions.printWidth)
+                        }));
 
                         const arrayParser = new SimpleArrayParser(),
                             array = arrayParser.parse(StringUtilities.replaceAllInString(tResult, "\n", ' ')),
@@ -175,4 +179,24 @@ function removeContentLines(content: string): string {
     }
 
     return newContent;
+}
+
+function getPrintWidth(content:string, defaultWidth:number): number {
+    if (content.includes("\n") && (
+        content.includes('match') || content.includes('=>' || content.includes('&&')
+    ))) {
+        const lines = StringUtilities.breakByNewLine(content);
+        let maxW = 0;
+
+        lines.forEach((line) => {
+            const lineL = line.trim().length;
+            if (lineL > maxW) {
+                maxW = lineL;
+            }
+        });
+
+        return maxW + Math.ceil(maxW / 2);
+    }
+
+    return defaultWidth;
 }

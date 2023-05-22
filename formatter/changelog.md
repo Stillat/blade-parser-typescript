@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.1
+
+- Improves inline echo analyzer and formatted output (#42)
+- Improves formatting of array directive arguments (#43)
+
 ## 1.2.0
 
 - Adds support for ignoring entire sections of a template

@@ -22,6 +22,8 @@ export class InlineEchoAnalyzer {
                             }
                         }
                     }
+                } else if (node.nextNode instanceof BladeEchoNode) {
+                    isRightInline = true;
                 }
 
                 if (node.prevNode == null) {
@@ -38,6 +40,8 @@ export class InlineEchoAnalyzer {
                             }
                         }
                     }
+                } else if (node.prevNode instanceof BladeEchoNode) {
+                    isLeftInline = true;
                 }
 
                 node.isInlineEcho = (isRightInline || isLeftInline);

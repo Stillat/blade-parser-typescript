@@ -475,4 +475,18 @@ asdf
 `;
         assert.strictEqual(formatBladeString(input), output);
     });
+
+    test('it can format mixed directive arg arrays', () => {
+        const input = `@class([
+    'grid auto-cols-fr grid-flow-col gap-2 text-sm',
+    'ms-8' => $active,
+])
+`;
+        const out = `@class([
+    "grid auto-cols-fr grid-flow-col gap-2 text-sm",
+    "ms-8" => $active,
+])
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    });
 });
