@@ -1,7 +1,7 @@
 import { StringUtilities } from '../../utilities/stringUtilities';
 
 export class IndentLevel {
-    static indentRelative(value: string, targetIndent: number): string {
+    static indentRelative(value: string, targetIndent: number, tabSize:number): string {
         const sourceLines: string[] = StringUtilities.breakByNewLine(value);
         let reflowedLines: string[] = [];
 
@@ -34,6 +34,10 @@ export class IndentLevel {
                 checkLine = thisLine.trimLeft(),
                 wsDiff = thisLine.length - checkLine.length;
 
+            if (thisLine.trim().length == 0) {
+                continue;
+            }
+
             if (i == 0) {
                 leastIndentChange = wsDiff;
                 thatLine = thisLine;
@@ -43,6 +47,10 @@ export class IndentLevel {
                     thatLine = thisLine;
                 }
             }
+        }
+
+        if (leastIndentChange == tabSize) {
+            leastIndentChange = 0;
         }
 
         // Remove the discovered leading whitespace and then apply our new (relative) indent level.

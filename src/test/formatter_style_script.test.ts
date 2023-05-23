@@ -96,4 +96,54 @@ suite('Basic <style> and <script> Formatting', () => {
             assert.strictEqual(out, expected);
         }
     });
+
+    test('it does not do really dumb things if already indented nicely', () => {
+        const input = `
+<style>
+    :root {
+        --foo: red;
+
+        @if (true)
+            --bar: blue;
+        @endif
+    }
+</style>
+
+<div>
+    <style>
+        :root {
+            --foo: red;
+
+            @if (true)
+                --bar: blue;
+            @endif
+        }
+    </style>
+</div>
+`;
+        const out = `<style>
+    :root {
+        --foo: red;
+
+        @if (true)
+            --bar: blue;
+        @endif
+    }
+</style>
+
+<div>
+    <style>
+        :root {
+            --foo: red;
+
+            @if (true)
+                --bar: blue;
+            @endif
+        }
+    </style>
+</div>
+`;
+        assert.strictEqual(formatBladeString(input), out);
+        assert.strictEqual(formatBladeString(out), out);
+    });
 });

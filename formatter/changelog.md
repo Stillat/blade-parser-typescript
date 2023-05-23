@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.1
+
+- Improves formatting of nested documents (style, script)
+- Improves newline management when formatting really long lines inside echos
+
 ## 1.3.0
 
 - Adds a new `echoStyle` configuration option, with support for either `block` (default) or `inline` mode

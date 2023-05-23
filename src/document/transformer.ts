@@ -1770,7 +1770,7 @@ export class Transformer {
             }
 
             if (value.includes(target)) {
-                value = value.replace(target, IndentLevel.indentRelative(document.content, indent));
+                value = value.replace(target, IndentLevel.indentRelative(document.content, indent, this.transformOptions.tabSize));
             }
         });
 

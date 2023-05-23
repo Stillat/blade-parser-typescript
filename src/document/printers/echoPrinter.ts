@@ -36,7 +36,17 @@ export class EchoPrinter {
                         printWidth: getPrintWidth(innerContent, echoOptions.printWidth)
                     };
                     
+                    const lineWrapWorkaround = preparePrettierWorkaround(innerContent);
+
+                    if (lineWrapWorkaround.addedHack) {
+                        innerContent = lineWrapWorkaround.content;
+                    }
+
                     tResult = phpFormatter('<?php ' + innerContent, formattingOptions, echoOptions);
+
+                    if (lineWrapWorkaround.addedHack) {
+                        tResult = undoPrettierWorkaround(tResult);
+                    }
     
                     if (PhpOperatorReflow.couldReflow(tResult)) {
                         tResult = PhpOperatorReflow.instance.reflow(tResult);
@@ -92,4 +102,72 @@ export class EchoPrinter {
 
         return result;
     }
+}
+
+function undoPrettierWorkaround(content:string): string {
+    const lines = StringUtilities.breakByNewLine(content),
+        newContent:string[] = [];
+
+    let alreadyReversed = false;
+
+    for (let i = 0; i < lines.length;i++){ 
+        const line = lines[i];
+
+        if (line.trimRight().endsWith('//') && !alreadyReversed) {
+            newContent.push(line.trimRight().substring(0, line.trimRight().length - 2).trimRight());
+            alreadyReversed = true;
+            continue;
+        }
+
+        newContent.push(line);
+    }
+
+    return newContent.join("\n");
+}
+
+function preparePrettierWorkaround(content:string): ILineWorkAroundResult {
+    const lines = StringUtilities.breakByNewLine(content);
+    let newContent:string[] = [],
+        addedHack = false,
+        addHack = false,
+        doContinue = true;
+
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+
+        if (!addedHack && line.trimRight().endsWith('[')) {
+            addHack = true;
+            newContent.push(line);
+            continue;
+        }
+
+        if (line.trimRight().endsWith(',') && addHack && !addedHack) {
+            if (line.trimRight().endsWith('//')) {
+                doContinue = false;
+                break;
+            } else {
+                newContent.push(line + '//');
+                addedHack = true;
+            }
+        } else {
+            newContent.push(line);
+        }
+    }
+
+    if (!doContinue) {
+        return {
+            content: content,
+            addedHack: false
+        };
+    }
+    
+    return {
+        content: newContent.join("\n"),
+        addedHack: addedHack
+    };
+}
+
+interface ILineWorkAroundResult {
+    content:string,
+    addedHack: boolean
 }
