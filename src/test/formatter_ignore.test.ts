@@ -380,4 +380,21 @@ $status = $kernel->handle(
         assert.strictEqual(formatBladeString(template), output);
         assert.strictEqual(formatBladeString(output), output);
     });
+
+    test('it restores ignored parts inside child documents', () => {
+        const input = `
+@if (true)
+    {{-- format-ignore-start --}}
+    <div></div>
+    {{-- format-ignore-end --}}
+@endif
+`;
+        const out = `@if (true)
+    {{-- format-ignore-start --}}
+    <div></div>
+    {{-- format-ignore-end --}}
+@endif
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    })
 });

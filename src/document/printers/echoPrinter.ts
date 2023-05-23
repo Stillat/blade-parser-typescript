@@ -6,6 +6,7 @@ import { StringUtilities } from '../../utilities/stringUtilities';
 import { PhpFormatter } from '../formatters';
 import { TransformOptions } from '../transformOptions';
 import { IndentLevel } from './indentLevel';
+import { getPrintWidth } from './printWidthUtils';
 
 export class EchoPrinter {
     static printEcho(echo: BladeEchoNode, formattingOptions:TransformOptions, phpFormatter: PhpFormatter | null, indentLevel: number): string {
@@ -32,7 +33,7 @@ export class EchoPrinter {
                 if (echo.startPosition?.line != echo.endPosition?.line) {
                     echoOptions = {
                         ...echoOptions,
-                        printWidth: 45
+                        printWidth: getPrintWidth(innerContent, echoOptions.printWidth)
                     };
                     
                     tResult = phpFormatter('<?php ' + innerContent, formattingOptions, echoOptions);
@@ -43,6 +44,20 @@ export class EchoPrinter {
 
                     if (SyntaxReflow.couldReflow(tResult)) {
                         tResult = SyntaxReflow.instance.reflow(tResult);
+                    }
+
+                    if (formattingOptions.echoStyle == 'inline') {
+
+                        const inlineIndentResult = IndentLevel.shiftIndentWithLastLineInline(
+                            tResult,
+                            formattingOptions.tabSize,
+                            indentLevel + formattingOptions.tabSize,
+                            true
+                        ).trim();
+
+                        const inlineRelativeIndent = start.trimRight() + ' ' + inlineIndentResult  + ' ' + end.trim();
+    
+                        return inlineRelativeIndent;
                     }
 
                     const relativeIndent = start.trim() + "\n" + IndentLevel.shiftIndent(

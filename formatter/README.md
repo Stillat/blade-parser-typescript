@@ -63,10 +63,48 @@ You may optionally configure the Blade parser by creating a file named `.blade.f
     "formatInsideEcho": true,
     "spacesAfterDirective": 0,
     "spacesAfterControlDirective": 1,
+    "echoStyle": "block",
     "phpOptions": {
         "phpVersion": "8.0"
     }
 }
+```
+
+The valid options for the `echoStyle` option are `block` (the default) and `inline`. To illustrate what these options do, lets consider the following Blade template:
+
+```blade
+<div
+{{
+    match ($foo) {
+        'foo' => 'foo',
+        default => 'bar',
+    }
+}}
+></div>
+```
+
+With the option `inline`, the formatted result becomes:
+
+```blade
+<div
+    {{ match ($foo) {
+        "foo" => "foo",
+        default => "bar",
+    } }}
+></div>
+```
+
+With the option `block`, the formatted result is:
+
+```blade
+<div
+    {{
+        match ($foo) {
+            "foo" => "foo",
+            default => "bar",
+        }
+    }}
+></div>
 ```
 
 ### Configuring PHP Options

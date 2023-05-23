@@ -63,4 +63,37 @@ suite('Basic <style> and <script> Formatting', () => {
 </html>`
         );
     });
+
+    test('it does not continue to indent', () => {
+        const input = `
+<style>
+    :root {
+        --foo: red;
+
+        @if (true)
+            --bar: blue;
+        @endif
+    }
+</style>
+`;
+        const expected = `<style>
+    :root {
+        --foo: red;
+
+        @if (true)
+            --bar: blue;
+        @endif
+    }
+</style>
+`;
+
+        let out = formatBladeString(input);
+        assert.strictEqual(out, expected);
+
+        for (let i = 0; i < 5; i++) {
+            out = formatBladeString(out);
+            
+            assert.strictEqual(out, expected);
+        }
+    });
 });

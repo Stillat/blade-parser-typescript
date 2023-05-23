@@ -1,38 +1,48 @@
 import assert from 'assert';
 import { formatBladeString } from '../formatting/prettier/utils';
+import { defaultSettings } from '../formatting/optionDiscovery';
 
-suite('Echo Formatting', () => {
+function formatBladeStringInlineEcho(content:string): string {
+    const options = defaultSettings;
+
+    return formatBladeString(content, {
+        ...options,
+        echoStyle: 'inline'
+    });
+}
+
+suite('Inline Echo Formatting', () => {
     test('it formats valid PHP code', () => {
         assert.strictEqual(
-            formatBladeString('{{$test   +$that}}').trim(),
+            formatBladeStringInlineEcho('{{$test   +$that}}').trim(),
             '{{ $test + $that }}'
         );
     });
 
     test('it formats valid PHP code in {!!', () => {
         assert.strictEqual(
-            formatBladeString('{!!$test   +$that!!}').trim(),
+            formatBladeStringInlineEcho('{!!$test   +$that!!}').trim(),
             '{!! $test + $that !!}'
         );
     });
 
     test('it formats valid PHP code in {{{', () => {
         assert.strictEqual(
-            formatBladeString('{{{$test   +$that}}}').trim(),
+            formatBladeStringInlineEcho('{{{$test   +$that}}}').trim(),
             '{{{ $test + $that }}}'
         );
     });
 
     test('it ingores invalid PHP code', () => {
         assert.strictEqual(
-            formatBladeString('{{$test   $+++$that}}').trim(),
+            formatBladeStringInlineEcho('{{$test   $+++$that}}').trim(),
             '{{ $test   $+++$that }}'
         );
     });
 
     test('it ignores invalid PHP code in {!!', () => {
         assert.strictEqual(
-            formatBladeString('{!!$test   $+++$that!!}').trim(),
+            formatBladeStringInlineEcho('{!!$test   $+++$that!!}').trim(),
             '{!! $test   $+++$that !!}'
         );
     });
@@ -40,12 +50,12 @@ suite('Echo Formatting', () => {
     test('it formats php without crashing', () => {
         const input = `{{ str_pad($loop->index + 1, 2, '0', STR_PAD_LEFT) }}`;
         const out = `{{ str_pad($loop->index + 1, 2, "0", STR_PAD_LEFT) }}`;
-        assert.strictEqual(formatBladeString(input).trim(), out);
+        assert.strictEqual(formatBladeStringInlineEcho(input).trim(), out);
     });
 
     test('it ignores invalid PHP code in {{{', () => {
         assert.strictEqual(
-            formatBladeString('{{{$test   $+++$that}}}').trim(),
+            formatBladeStringInlineEcho('{{{$test   $+++$that}}}').trim(),
             '{{{ $test   $+++$that }}}'
         );
     });
@@ -65,12 +75,12 @@ Some link
 >
     Some link
 </a>`;
-        assert.strictEqual(formatBladeString(input).trim(), expected);
+        assert.strictEqual(formatBladeStringInlineEcho(input).trim(), expected);
     });
 
     test('it can format inline echos as text', () => {
         assert.strictEqual(
-            formatBladeString(`
+            formatBladeStringInlineEcho(`
             <p>test {{ $title }} test
             
             asdfasdf </p>
@@ -85,7 +95,7 @@ Some link
     test('it does not force wrap long echos', () => {
         const input = `{{ $attributes->class(["text-gray-900 border-gray-300 invalid:text-gray-400 block w-full h-9 py-1 transition duration-75 rounded-lg shadow-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-inset focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:focus:border-primary-500"]) }}`;
         const out = `{{ $attributes->class(["text-gray-900 border-gray-300 invalid:text-gray-400 block w-full h-9 py-1 transition duration-75 rounded-lg shadow-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-inset focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:focus:border-primary-500"]) }}`;
-        assert.strictEqual(formatBladeString(input).trim(), out);
+        assert.strictEqual(formatBladeStringInlineEcho(input).trim(), out);
     });
 
     test('it respects echo line choices', () => {
@@ -99,14 +109,12 @@ Some link
 </label>`;
 
         const out = `<label
-    {{
-        $attributes
-            ->whereDoesntStartWith("wire:model")
-            ->class(["flex gap-3 text-sm"])
-    }}
+    {{ $attributes
+        ->whereDoesntStartWith("wire:model")
+        ->class(["flex gap-3 text-sm"]) }}
 ></label>
 `;
-        assert.strictEqual(formatBladeString(input), out);
+        assert.strictEqual(formatBladeStringInlineEcho(input), out);
     });
 
     test('it respects line placement2', () => {
@@ -120,17 +128,15 @@ $foo->bar([
 }}
 </div>`;
         const out = `<div>
-    {{
-        $foo->bar([
-            "foo" => $foo,
-            "bar" => $bar,
-            "baz" => $baz,
-        ])
-    }}
+    {{ $foo->bar([
+        "foo" => $foo,
+        "bar" => $bar,
+        "baz" => $baz,
+    ]) }}
 </div>
 `;
-        assert.strictEqual(formatBladeString(input), out);
-        assert.strictEqual(formatBladeString(out), out);
+        assert.strictEqual(formatBladeStringInlineEcho(input), out);
+        assert.strictEqual(formatBladeStringInlineEcho(out), out);
     });
 
     test('it respects line placement 3', () => {
@@ -143,19 +149,17 @@ $foo->bar([
         ]) }}>
         </div>`;
         const out = `<div
-    {{
-        $attributes->class([
-            "some classes",
-            match ($someCondition) {
-                true => "more classes foo bar baz",
-                default => "even more classes foo bar baz",
-            },
-        ])
-    }}
+    {{ $attributes->class([
+        "some classes",
+        match ($someCondition) {
+            true => "more classes foo bar baz",
+            default => "even more classes foo bar baz",
+        },
+    ]) }}
 ></div>
 `;
-        assert.strictEqual(formatBladeString(input), out);
-        assert.strictEqual(formatBladeString(out), out);
+        assert.strictEqual(formatBladeStringInlineEcho(input), out);
+        assert.strictEqual(formatBladeStringInlineEcho(out), out);
     });
 
     test('it respects line placement 4', () => {
@@ -169,23 +173,21 @@ $foo->bar([
         ]) }} more attributes class="one two three" something="else">
         </div>`;
         const out = `<div
-    {{
-        $attributes->class([
-            "some classes",
-            match ($someCondition) {
-                true => "more classes foo bar baz",
-                default => "even more classes foo bar baz",
-            },
-        ])
-    }}
+    {{ $attributes->class([
+        "some classes",
+        match ($someCondition) {
+            true => "more classes foo bar baz",
+            default => "even more classes foo bar baz",
+        },
+    ]) }}
     more
     attributes
     class="one two three"
     something="else"
 ></div>
 `;
-        assert.strictEqual(formatBladeString(input), out);
-        assert.strictEqual(formatBladeString(out), out);
+        assert.strictEqual(formatBladeStringInlineEcho(input), out);
+        assert.strictEqual(formatBladeStringInlineEcho(out), out);
     });
 
     test('it preserves trailing comma on match', () => {
@@ -198,14 +200,12 @@ $foo->bar([
 }}
 ></div>`;
         const out = `<div
-    {{
-        match ($foo) {
-            "foo" => "foo",
-            default => "bar",
-        }
-    }}
+    {{ match ($foo) {
+        "foo" => "foo",
+        default => "bar",
+    } }}
 ></div>`;
-        assert.strictEqual(formatBladeString(template).trim(), out);
+        assert.strictEqual(formatBladeStringInlineEcho(template).trim(), out);
     });
 
     test('it respects line placement when blocking echos', () => {
@@ -220,7 +220,7 @@ $foo->bar([
     {{ $this->authenticateAction }}
 </form>
 `;
-        assert.strictEqual(formatBladeString(input), output);
+        assert.strictEqual(formatBladeStringInlineEcho(input), output);
     });
 
     test('it inlines adjacent echos', () => {
@@ -229,6 +229,6 @@ $foo->bar([
 </div>`;
         const out = `<div>{{ $foo }}{{ $bar }}</div>
 `;
-        assert.strictEqual(formatBladeString(input), out);
+        assert.strictEqual(formatBladeStringInlineEcho(input), out);
     });
 });

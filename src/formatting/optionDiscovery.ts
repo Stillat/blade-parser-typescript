@@ -18,7 +18,8 @@ const defaultSettings: FormattingOptions = {
     formatDirectivePhpParameters: true,
     formatInsideEcho: true,
     customIfs: [],
-    directives: []
+    directives: [],
+    echoStyle: 'block',
 };
 
 export {defaultSettings};
@@ -67,7 +68,8 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         formatInsideEcho = true,
         customIfs: string[] = [],
         directives: string[] = [],
-        phpOptions:any|null = null;
+        phpOptions:any|null = null,
+        echoStyle: string = 'block';
 
     if (typeof configObject.ignoreDirectives !== 'undefined' && configObject.ignoreDirectives !== null) {
         ignoreDirectives = configObject.ignoreDirectives as string[];
@@ -99,6 +101,10 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
 
     if (typeof configObject.directives !== 'undefined' && configObject.directives !== null) {
         directives = configObject.directives as string[];
+    }
+
+    if (typeof configObject.echoStyle !== 'undefined' && configObject.echoStyle === 'inline') {
+        echoStyle = 'inline';
     }
 
     if (typeof configObject.formatInsideEcho !== 'undefined' && configObject.formatInsideEcho !== null) {
@@ -135,7 +141,8 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         formatInsideEcho: formatInsideEcho,
         customIfs: customIfs,
         directives: directives,
-        phpOptions: phpOptions
+        phpOptions: phpOptions,
+        echoStyle: echoStyle
     };
 }
 

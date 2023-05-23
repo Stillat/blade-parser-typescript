@@ -67,6 +67,44 @@ export class IndentLevel {
         return reflowedLines.join("\n");
     }
 
+    
+    static shiftIndentWithLastLineInline(value: string, tabSize:number, targetIndent: number, skipFirst: boolean = false): string {
+        const lines = StringUtilities.breakByNewLine(value.trim()),
+            reflowedLines: string[] = [];
+
+        if (lines.length > 1) {
+            let isAlreadyIndentedRelative = true;
+
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i],
+                    diff = line.length - line.trim().length,
+                    iDiff = targetIndent - diff;
+
+                if (iDiff != 0) {
+                    isAlreadyIndentedRelative = false;
+                    break;
+                }
+            }
+
+            if (isAlreadyIndentedRelative) {
+                return value.trim();
+            }
+        }
+
+        for (let i = 0; i < lines.length; i++) {
+            if (i == 0 && skipFirst) { reflowedLines.push(lines[i]); continue; }
+            const line = lines[i];
+
+            if (line.trim().length == 0) {
+                reflowedLines.push('');
+            } else {
+                reflowedLines.push(' '.repeat(Math.max(0, targetIndent - tabSize)) + line);
+            }
+        }
+
+        return reflowedLines.join("\n");
+    }
+
     static shiftIndent(value: string, targetIndent: number, skipFirst: boolean = false): string {
         const lines = StringUtilities.breakByNewLine(value.trim()),
             reflowedLines: string[] = [];

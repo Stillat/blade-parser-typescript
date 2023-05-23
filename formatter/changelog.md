@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.0
+
+- Adds a new `echoStyle` configuration option, with support for either `block` (default) or `inline` mode
+- Corrects an issue where `{{-- format-ignore-start --}}` behaves incorrectly with nested documents (#44)
+- Improves management of print width settings internally (#46)
+- Corrects an issue that caused style blocks to be repeatedly indented (#45)
+
 ## 1.2.1
 
 - Improves inline echo analyzer and formatted output (#42)

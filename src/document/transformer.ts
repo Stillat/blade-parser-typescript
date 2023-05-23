@@ -1,4 +1,5 @@
 import { PhpOperatorReflow } from '../formatting/phpOperatorReflow';
+import { getPhpOptions } from '../formatting/prettier/utils';
 import { SyntaxReflow } from '../formatting/syntaxReflow';
 import { AbstractNode, BladeCommentNode, BladeComponentNode, BladeEchoNode, ConditionNode, DirectiveNode, ExecutionBranchNode, ForElseNode, FragmentPosition, InlinePhpNode, LiteralNode, ParameterNode, ParameterType, SwitchCaseNode, SwitchStatementNode } from '../nodes/nodes';
 import { SimpleArrayParser } from '../parser/simpleArrayParser';
@@ -10,6 +11,7 @@ import { CommentPrinter } from './printers/commentPrinter';
 import { DirectivePrinter } from './printers/directivePrinter';
 import { EchoPrinter } from './printers/echoPrinter';
 import { IndentLevel } from './printers/indentLevel';
+import { getPrintWidth } from './printers/printWidthUtils';
 import { TransformOptions } from './transformOptions';
 
 interface EmbeddedDocument {
@@ -149,7 +151,8 @@ export class Transformer {
         formatDirectiveJsonParameters: true,
         formatDirectivePhpParameters: true,
         formatInsideEcho: true,
-        phpOptions: null
+        phpOptions: null,
+        echoStyle: 'block',
     }
 
     constructor(doc: BladeDocument) {
@@ -1210,7 +1213,7 @@ export class Transformer {
 
         this.doc.getRenderNodes().forEach((node) => {
             if (this.isInsideIgnoreFormatter) {
-                this.ignoredLiteralBlocks.get(this.activeLiteralSlug)?.push(node);
+                this.pushLiteralBlock(this.activeLiteralSlug, node);
 
                 if (node instanceof BladeCommentNode) {
                     if (node.innerContent.trim().toLowerCase() == this.formatIgnoreEnd) {
@@ -1241,8 +1244,7 @@ export class Transformer {
                 if (node.innerContent.trim() == this.formatIgnoreStart) {
                     this.isInsideIgnoreFormatter = true;
                     this.activeLiteralSlug = this.makeSlug(16);
-                    this.ignoredLiteralBlocks.set(this.activeLiteralSlug, []);
-                    this.ignoredLiteralBlocks.get(this.activeLiteralSlug)?.push(node);
+                    this.pushStartLiteralBlock(this.activeLiteralSlug, node);
 
                     result += this.selfClosing(this.activeLiteralSlug);
                 } else {
@@ -1358,7 +1360,12 @@ export class Transformer {
             value = '<?php ' + value;
         }
 
-        value = this.blockPhpFormatter(value, this.transformOptions, null);
+        const phpOptions = getPhpOptions();
+
+        value = this.blockPhpFormatter(value, this.transformOptions, {
+            ...phpOptions,
+            printWidth: getPrintWidth(content, phpOptions.printWidth)
+        });
 
         if (withNewLine) {
             value = "\n" + value + "\n";
@@ -1471,6 +1478,23 @@ export class Transformer {
         });
 
         return value;
+    }
+
+    pushStartLiteralBlock(slug: string, node:AbstractNode) {
+        if (this.parentTransformer != null) {
+            this.parentTransformer.pushStartLiteralBlock(slug, node);
+        } else {
+            this.ignoredLiteralBlocks.set(slug, []);
+            this.ignoredLiteralBlocks.get(slug)?.push(node);
+        }
+    }
+
+    pushLiteralBlock(slug:string, node:AbstractNode) {
+        if (this.parentTransformer != null) {
+            this.parentTransformer.pushLiteralBlock(slug, node);
+        } else {
+            this.ignoredLiteralBlocks.get(slug)?.push(node);
+        }
     }
 
     private transformConditions(content: string): string {
@@ -1740,6 +1764,10 @@ export class Transformer {
             }
 
             indent = this.indentLevel(target);
+
+            if (indent == this.transformOptions.tabSize) {
+                indent = 0;
+            }
 
             if (value.includes(target)) {
                 value = value.replace(target, IndentLevel.indentRelative(document.content, indent));
