@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.2
+
+- Improves newline management when formatting really long lines inside directive array arguments
+
 ## 1.3.1
 
 - Improves formatting of nested documents (style, script)

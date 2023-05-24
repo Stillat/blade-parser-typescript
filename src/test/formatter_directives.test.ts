@@ -489,4 +489,33 @@ asdf
 `;
         assert.strictEqual(formatBladeString(input), out);
     });
+
+    test('really long directive array args without keys can be placed on separate lines', () => {
+        const input = `
+<div>
+<div class="relative group max-w-md">
+        <span
+            @class([
+                'absolute inset-y-0 left-0 flex items-center justify-center w-10 h-10 text-gray-500 pointer-events-none group-focus-within:text-primary-500',
+                'dark:text-gray-400' => config('filament.dark_mode'),
+            ])
+        >
+        </span>
+        </div>
+        </div>
+`;
+        const out = `<div>
+    <div class="relative group max-w-md">
+        <span
+            @class([
+                "absolute inset-y-0 left-0 flex items-center justify-center w-10 h-10 text-gray-500 pointer-events-none group-focus-within:text-primary-500",
+                "dark:text-gray-400" => config("filament.dark_mode"),
+            ])
+        ></span>
+    </div>
+</div>
+`;
+        assert.strictEqual(formatBladeString(input), out);
+        assert.strictEqual(formatBladeString(out), out);
+    });
 });

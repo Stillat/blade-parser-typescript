@@ -9,7 +9,7 @@ import { TransformOptions } from '../transformOptions';
 import { ArrayPrinter } from './arrayPrinter';
 import { IndentLevel } from './indentLevel';
 import { ParserOptions } from "prettier";
-import { getPrintWidth } from './printWidthUtils';
+import { getPrintWidth, preparePrettierWorkaround, undoPrettierWorkaround } from './printWidthUtils';
 
 export class DirectivePrinter {
     private static defaultControlDirectiveNames: string[] = [
@@ -51,10 +51,21 @@ export class DirectivePrinter {
 
                     const phpOptions = getPhpOptions();
                     if (params.startsWith('[') && params.endsWith(']') && directive.startPosition?.line != directive.endPosition?.line) {
-                        tResult = phpFormatter('<?php ' + params, options, DirectivePrinter.getReasonableDirectivePhpOptions(directive, {
+                        let phpInput = '<?php ' + params;
+                        const lineWrapWorkaround = preparePrettierWorkaround(phpInput);
+
+                        if (lineWrapWorkaround.addedHack) {
+                            phpInput = lineWrapWorkaround.content;
+                        }
+
+                        tResult = phpFormatter(phpInput, options, DirectivePrinter.getReasonableDirectivePhpOptions(directive, {
                             ...phpOptions,
                             printWidth: getPrintWidth(params, phpOptions.printWidth)
                         }));
+
+                        if (lineWrapWorkaround.addedHack) {
+                            tResult = undoPrettierWorkaround(tResult);
+                        }
 
                         const arrayParser = new SimpleArrayParser(),
                             array = arrayParser.parse(StringUtilities.replaceAllInString(tResult, "\n", ' ')),
