@@ -21,6 +21,7 @@ const defaultSettings: FormattingOptions = {
     directives: [],
     echoStyle: 'block',
     useLaravelPint: false,
+    pintCommand: '',
 };
 
 export {defaultSettings};
@@ -72,7 +73,7 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         phpOptions:any|null = null,
         echoStyle: string = 'block',
         useLaravelPint = false;
-
+    // TODO: Attempt to auto-discover pint.
     if (typeof configObject.ignoreDirectives !== 'undefined' && configObject.ignoreDirectives !== null) {
         ignoreDirectives = configObject.ignoreDirectives as string[];
     }

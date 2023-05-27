@@ -8,4 +8,5 @@ export interface TransformOptions {
     phpOptions: any|undefined,
     echoStyle: string,
     useLaravelPint: boolean,
+    pintCommand: string,
 }

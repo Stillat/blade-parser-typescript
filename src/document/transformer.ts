@@ -157,6 +157,7 @@ export class Transformer {
         phpOptions: null,
         echoStyle: 'block',
         useLaravelPint: false,
+        pintCommand: 'pint {filename}',
     }
 
     constructor(doc: BladeDocument) {
@@ -1244,7 +1245,7 @@ export class Transformer {
 
         if (this.useLaravelPint) {
             if (this.parentTransformer == null) {
-                this.pintTransformer = new PintTransformer(__dirname + '/_temp/', '');
+                this.pintTransformer = new PintTransformer(__dirname + '/_temp/', this.transformOptions.pintCommand);
                 this.pintTransformer.format(this.doc);
             }
         }

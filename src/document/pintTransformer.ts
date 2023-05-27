@@ -8,13 +8,16 @@ export class PintTransformer {
     private tmpDir: string = '';
     private resultMapping: Map<string, string> = new Map();
     private contentMapping: Map<string, string> = new Map();
+    private pintCommand: string = '';
 
-    constructor(tmpFilePath: string, pintLocation: string) {
+    constructor(tmpFilePath: string, pintCommand: string) {
         this.tmpDir = tmpFilePath;
 
         if(!fs.existsSync(this.tmpDir)) {
             fs.mkdirSync(this.tmpDir);
         }
+
+        this.pintCommand = pintCommand;
     }
 
     private makeSlug(length: number): string {
@@ -397,8 +400,9 @@ export class PintTransformer {
     }
 
     private callLaravelPint(fileName: string) {
-        const pintBinary = __dirname + '/../../pint';
-        const command = `php ${pintBinary} ${fileName}`;
+        const command = this.pintCommand.replace('{file}', `"${fileName}"`);
+        // const pintBinary = __dirname + '/../../pint';
+        // const command = `php ${pintBinary} ${fileName}`;
         
         execSync(command);
     }
