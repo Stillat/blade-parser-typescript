@@ -51,7 +51,7 @@ export function formatJson(text: string) {
 }
 
 export function formatBladeString(text: string, options: FormattingOptions | null = null) {
-    // Override settings and disable automtic option discovery. Useful for testing.
+    // Override settings and disable automatic option discovery. Useful for testing.
     setEnvSettings(options);
 
     return prettier.format(text, {
