@@ -450,8 +450,6 @@ export class PintTransformer {
         }
 
         const command = this.pintCommand.replace('{file}', `"${fileName}"`);
-        // const pintBinary = __dirname + '/../../pint';
-        // const command = `php ${pintBinary} ${fileName}`;
 
         execSync(command);
     }
