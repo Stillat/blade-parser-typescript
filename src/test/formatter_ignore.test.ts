@@ -396,5 +396,5 @@ $status = $kernel->handle(
 @endif
 `;
         assert.strictEqual(formatBladeString(input), out);
-    })
+    });
 });
