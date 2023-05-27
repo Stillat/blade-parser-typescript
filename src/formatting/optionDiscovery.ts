@@ -22,6 +22,7 @@ const defaultSettings: FormattingOptions = {
     echoStyle: 'block',
     useLaravelPint: false,
     pintCommand: '',
+    phpOptions: {}
 };
 
 export {defaultSettings};
@@ -50,9 +51,18 @@ export function getEnvSettings(startingDirectory: string): FormattingOptions {
     const optionContents = fs.readFileSync(settingsFile, { encoding: 'utf8' });
 
     try {
-        const parsedFile = JSON.parse(optionContents) as any;
+        const parsedFile = JSON.parse(optionContents) as any,
+            bladeFormattingConfig = parseBladeConfigObject(parsedFile);
 
-        return parseBladeConfigObject(parsedFile);
+        if (bladeFormattingConfig.useLaravelPint && bladeFormattingConfig.pintCommand.length == 0) {
+            let vendorPath = settingsFile.substring(0, settingsFile.length - BLADE_CONFIG_FILE.length) + '/vendor/bin/pint';
+
+            if (fs.existsSync(vendorPath)) {
+                bladeFormattingConfig.pintCommand = `php ${vendorPath} {file}`;
+            }
+        }
+
+        return bladeFormattingConfig;
     } catch (err) {
         console.log(err);
     }
@@ -72,8 +82,9 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         directives: string[] = [],
         phpOptions:any|null = null,
         echoStyle: string = 'block',
-        useLaravelPint = false;
-    // TODO: Attempt to auto-discover pint.
+        useLaravelPint = false,
+        pintCommand = '';
+
     if (typeof configObject.ignoreDirectives !== 'undefined' && configObject.ignoreDirectives !== null) {
         ignoreDirectives = configObject.ignoreDirectives as string[];
     }
@@ -122,6 +133,10 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         phpOptions = configObject.phpOptions;
     }
 
+    if (typeof configObject.pintCommand !== 'undefined') {
+        pintCommand = (configObject.pintCommand as string).trim();
+    }
+
     if (spacesAfterDirective < 0) {
         spacesAfterDirective = 0;
     }
@@ -150,7 +165,8 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         directives: directives,
         phpOptions: phpOptions,
         echoStyle: echoStyle,
-        useLaravelPint: useLaravelPint
+        useLaravelPint: useLaravelPint,
+        pintCommand
     };
 }
 
