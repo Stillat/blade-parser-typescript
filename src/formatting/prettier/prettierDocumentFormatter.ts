@@ -9,8 +9,9 @@ export class PrettierDocumentFormatter extends DocumentFormatter {
         super();
 
         setOptions(options);
-
+        
         this.withHtmlFormatter(formatAsHtml)
+            .withFilePath(options.filepath)
             .withPhpFormatter(inlineFormatPhp)
             .withBlockPhpFormatter(formatPhp)
             .withPhpTagFormatter(formatTagPhp)

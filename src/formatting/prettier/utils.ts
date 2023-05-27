@@ -61,19 +61,26 @@ export function formatBladeString(text: string, options: FormattingOptions | nul
 }
 
 export function formatBladeStringWithPint(text: string, options: FormattingOptions | null = null) {
-    const pintLocation = __dirname + '/../../../pint/pint';
+    const pintLocation = __dirname + '/../../../pint/pint',
+        pintCacheDirectory = __dirname + '/../../../_test/_cache/',
+        pintTempDirectory = __dirname + '/../../../_test/_temp/';
 
     let curOptions: FormattingOptions = {
         ...defaultSettings,
         useLaravelPint: true,
-        pintCommand: `php ${pintLocation} {file}`
+        pintCommand: `php ${pintLocation} {file}`,
+        pintCacheDirectory: pintCacheDirectory,
+        pintTempDirectory: pintTempDirectory
     };
 
     if (options != null) {
         curOptions = {
             ...curOptions,
             ...options,
-            useLaravelPint: true
+            useLaravelPint: true,
+            pintCommand: `php ${pintLocation} {file}`,
+            pintCacheDirectory: pintCacheDirectory,
+            pintTempDirectory: pintTempDirectory
         };
     }
 

@@ -22,14 +22,16 @@ const defaultSettings: FormattingOptions = {
     echoStyle: 'block',
     useLaravelPint: false,
     pintCommand: '',
-    phpOptions: {}
+    phpOptions: {},
+    pintCacheDirectory: '',
+    pintTempDirectory: '',
 };
 
-export {defaultSettings};
+export { defaultSettings };
 
 let overrideOptions: FormattingOptions | null;
 
-export function setEnvSettings(options:FormattingOptions | null) {
+export function setEnvSettings(options: FormattingOptions | null) {
     overrideOptions = options;
 }
 
@@ -54,11 +56,21 @@ export function getEnvSettings(startingDirectory: string): FormattingOptions {
         const parsedFile = JSON.parse(optionContents) as any,
             bladeFormattingConfig = parseBladeConfigObject(parsedFile);
 
-        if (bladeFormattingConfig.useLaravelPint && bladeFormattingConfig.pintCommand.length == 0) {
-            let vendorPath = settingsFile.substring(0, settingsFile.length - BLADE_CONFIG_FILE.length) + '/vendor/bin/pint';
+        if (bladeFormattingConfig.useLaravelPint) {
+            if (bladeFormattingConfig.pintCommand.length == 0) {
+                let vendorPath = settingsFile.substring(0, settingsFile.length - BLADE_CONFIG_FILE.length) + '/vendor/bin/pint';
 
-            if (fs.existsSync(vendorPath)) {
-                bladeFormattingConfig.pintCommand = `php ${vendorPath} {file}`;
+                if (fs.existsSync(vendorPath)) {
+                    bladeFormattingConfig.pintCommand = `php ${vendorPath} {file}`;
+                }
+            }
+
+            if (bladeFormattingConfig.pintTempDirectory.trim().length == 0) {
+                bladeFormattingConfig.pintTempDirectory = __dirname + '/_temp/';
+            }
+
+            if (bladeFormattingConfig.pintCacheDirectory.trim().length == 0) {
+                bladeFormattingConfig.pintCacheDirectory = __dirname + '/_cache/';
             }
         }
 
@@ -80,10 +92,12 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         formatInsideEcho = true,
         customIfs: string[] = [],
         directives: string[] = [],
-        phpOptions:any|null = null,
+        phpOptions: any | null = null,
         echoStyle: string = 'block',
         useLaravelPint = false,
-        pintCommand = '';
+        pintCommand = '',
+        pintTempDir = '',
+        pintCacheDir = '';
 
     if (typeof configObject.ignoreDirectives !== 'undefined' && configObject.ignoreDirectives !== null) {
         ignoreDirectives = configObject.ignoreDirectives as string[];
@@ -137,6 +151,14 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         pintCommand = (configObject.pintCommand as string).trim();
     }
 
+    if (typeof configObject.pintTempDirectory !== 'undefined') {
+        pintTempDir = (configObject.pintTempDirectory as string).trim();
+    }
+
+    if (typeof configObject.pintCacheDirectory !== 'undefined') {
+        pintCacheDir = (configObject.pintCacheDirectory as string).trim();
+    }
+
     if (spacesAfterDirective < 0) {
         spacesAfterDirective = 0;
     }
@@ -166,7 +188,9 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         phpOptions: phpOptions,
         echoStyle: echoStyle,
         useLaravelPint: useLaravelPint,
-        pintCommand
+        pintCommand: pintCommand,
+        pintCacheDirectory: pintCacheDir,
+        pintTempDirectory: pintTempDir,
     };
 }
 

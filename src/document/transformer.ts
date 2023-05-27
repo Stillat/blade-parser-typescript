@@ -141,6 +141,7 @@ export class Transformer {
     private propDirectives: Map<string, DirectiveNode> = new Map();
     private useLaravelPint: boolean = false;
     private pintTransformer: PintTransformer | null = null;
+    private filePath: string = '';
 
     private phpFormatter: PhpFormatter | null = null;
     private blockPhpFormatter: BlockPhpFormatter | null = null;
@@ -158,6 +159,8 @@ export class Transformer {
         echoStyle: 'block',
         useLaravelPint: false,
         pintCommand: 'pint {filename}',
+        pintTempDirectory: '',
+        pintCacheDirectory: ''
     }
 
     constructor(doc: BladeDocument) {
@@ -190,6 +193,12 @@ export class Transformer {
 
     withJsonFormatter(formatter: JsonFormatter | null) {
         this.jsonFormatter = formatter;
+
+        return this;
+    }
+
+    withFilePath(path: string) {
+        this.filePath = path;
 
         return this;
     }
@@ -1245,7 +1254,12 @@ export class Transformer {
 
         if (this.useLaravelPint) {
             if (this.parentTransformer == null) {
-                this.pintTransformer = new PintTransformer(__dirname + '/_temp/', this.transformOptions.pintCommand);
+                this.pintTransformer = new PintTransformer(
+                    this.transformOptions.pintTempDirectory,
+                    this.transformOptions.pintCacheDirectory,
+                    this.transformOptions.pintCommand
+                );
+                this.pintTransformer.setTemplateFilePath(this.filePath);
                 this.pintTransformer.format(this.doc);
             }
         }

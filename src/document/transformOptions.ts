@@ -9,4 +9,6 @@ export interface TransformOptions {
     echoStyle: string,
     useLaravelPint: boolean,
     pintCommand: string,
+    pintTempDirectory: string,
+    pintCacheDirectory: string,
 }

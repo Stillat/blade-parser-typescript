@@ -6,18 +6,33 @@ import { StringUtilities } from '../utilities/stringUtilities';
 
 export class PintTransformer {
     private tmpDir: string = '';
+    private cacheDir: string = '';
     private resultMapping: Map<string, string> = new Map();
     private contentMapping: Map<string, string> = new Map();
     private pintCommand: string = '';
+    private templateFile: string = '';
 
-    constructor(tmpFilePath: string, pintCommand: string) {
+    constructor(tmpFilePath: string, cacheDir: string, pintCommand: string) {
         this.tmpDir = tmpFilePath;
+        this.cacheDir = cacheDir;
 
-        if(!fs.existsSync(this.tmpDir)) {
+        if (!fs.existsSync(this.cacheDir)) {
+            fs.mkdirSync(this.cacheDir);
+        }
+
+        if (!fs.existsSync(this.tmpDir)) {
             fs.mkdirSync(this.tmpDir);
         }
 
         this.pintCommand = pintCommand;
+    }
+
+    setTemplateFilePath(path: string) {
+        this.templateFile = path;
+    }
+
+    getTemplateFile(): string {
+        return this.templateFile;
     }
 
     private makeSlug(length: number): string {
@@ -303,7 +318,7 @@ export class PintTransformer {
         this.callLaravelPint(fileName);
 
         const theRes = fs.readFileSync(fileName, { encoding: 'utf8' });
-        fs.unlink(fileName, () => {});
+        fs.unlink(fileName, () => { });
         const tResL = StringUtilities.breakByNewLine(theRes);
 
         let curBuffer: string[] = [],
@@ -403,7 +418,7 @@ export class PintTransformer {
         const command = this.pintCommand.replace('{file}', `"${fileName}"`);
         // const pintBinary = __dirname + '/../../pint';
         // const command = `php ${pintBinary} ${fileName}`;
-        
+
         execSync(command);
     }
 }

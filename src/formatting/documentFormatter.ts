@@ -4,6 +4,7 @@ import { BladeDocument } from '../document/bladeDocument';
 import { FormattingOptions } from './formattingOptions';
 
 export class DocumentFormatter {
+    private filePath: string = '';
     private formattingOptions: FormattingOptions | null = null;
     private transformOptions: TransformOptions | null = null;
     private htmlFormatter: HtmlFormatter | null = null;
@@ -15,6 +16,12 @@ export class DocumentFormatter {
 
     withTransformOptions(options: TransformOptions) {
         this.transformOptions = options;
+
+        return this;
+    }
+
+    withFilePath(filePath: string) {
+        this.filePath = filePath;
 
         return this;
     }
@@ -79,6 +86,7 @@ export class DocumentFormatter {
         }
 
         document.transform()
+            .withFilePath(this.filePath)
             .withBlockPhpFormatter(this.blockPhpFormatter)
             .withPhpFormatter(this.phpFormatter)
             .withPhpTagFormatter(this.phpTagFormatter)
