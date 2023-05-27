@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import * as path from 'path';
 const { execSync } = require('child_process');
 import { BladeComponentNode, BladeEchoNode, DirectiveNode, InlinePhpNode, ParameterType } from '../nodes/nodes';
 import { BladeDocument } from './bladeDocument';
@@ -449,8 +450,35 @@ export class PintTransformer {
             return;
         }
 
-        const command = this.pintCommand.replace('{file}', `"${fileName}"`);
 
-        execSync(command);
+        const command = this.pintCommand.replace('{file}', `"${fileName}"`),
+            baseFileName = path.basename(fileName),
+            output = execSync(command).toString();
+
+        if (output.includes(baseFileName)) {
+            const tempOutput = StringUtilities.breakByNewLine(output),
+                newLines: string[] = [];
+
+            for (let i = 0; i < tempOutput.length; i++) {
+                let line = tempOutput[i].trim();
+
+                if (line.length == 0 || line == '✓') {
+                    continue;
+                }
+
+                if (line.startsWith('✓')) {
+                    line = line.substring(1).trim();
+                }
+
+                if (line.includes(baseFileName)) {
+                    line = path.basename(this.templateFile) + line.substring(line.indexOf(baseFileName) + baseFileName.length);
+                }
+
+                newLines.push(line);
+            }
+
+            console.log(newLines.join("\n"));
+        }
     }
+
 }
