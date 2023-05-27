@@ -1244,7 +1244,7 @@ export class Transformer {
 
         if (this.useLaravelPint) {
             if (this.parentTransformer == null) {
-                this.pintTransformer = new PintTransformer(__dirname + '/../../temp.php', '');
+                this.pintTransformer = new PintTransformer(__dirname + '/_temp/', '');
                 this.pintTransformer.format(this.doc);
             }
         }

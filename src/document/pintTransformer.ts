@@ -5,12 +5,35 @@ import { BladeDocument } from './bladeDocument';
 import { StringUtilities } from '../utilities/stringUtilities';
 
 export class PintTransformer {
-    private file: string = '';
+    private tmpDir: string = '';
     private resultMapping: Map<string, string> = new Map();
     private contentMapping: Map<string, string> = new Map();
 
     constructor(tmpFilePath: string, pintLocation: string) {
-        this.file = tmpFilePath;
+        this.tmpDir = tmpFilePath;
+
+        if(!fs.existsSync(this.tmpDir)) {
+            fs.mkdirSync(this.tmpDir);
+        }
+    }
+
+    private makeSlug(length: number): string {
+        if (length <= 2) {
+            length = 7;
+        }
+
+        let result = '';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+            charactersLength = characters.length;
+
+        for (let i = 0; i < length - 1; i++) {
+            result += characters.charAt(Math.floor(Math.random() *
+                charactersLength));
+        }
+
+        const slug = 'B' + result + 'B';
+
+        return slug;
     }
 
     private prepareContent(input: string): string {
@@ -271,11 +294,13 @@ export class PintTransformer {
     }
 
     format(document: BladeDocument): Map<string, string> {
-        const transformResults = this.transform(document);
-        fs.writeFileSync(this.file, transformResults, { encoding: 'utf8' });
-        this.callLaravelPint(this.file);
+        const transformResults = this.transform(document),
+            fileName = this.tmpDir + this.makeSlug(12) + '.php';
+        fs.writeFileSync(fileName, transformResults, { encoding: 'utf8' });
+        this.callLaravelPint(fileName);
 
-        const theRes = fs.readFileSync(this.file, { encoding: 'utf8' });
+        const theRes = fs.readFileSync(fileName, { encoding: 'utf8' });
+        fs.unlink(fileName, () => {});
         const tResL = StringUtilities.breakByNewLine(theRes);
 
         let curBuffer: string[] = [],

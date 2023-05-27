@@ -272,5 +272,5 @@ $foo->bar([
 `;
         assert.strictEqual(formatBladeString(input), expected);
         assert.strictEqual(formatBladeString(expected), expected);
-    })
+    });
 });
