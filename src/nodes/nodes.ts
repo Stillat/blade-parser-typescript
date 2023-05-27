@@ -214,6 +214,7 @@ export class InlinePhpNode extends AbstractNode {
     private cachedPhpLastError: SyntaxError | null = null;
 
     public isInline = false;
+    public overrideContent: string | null = null;
 
     hasValidPhp() {
         if (this.cachedHasValidPhp == null) {

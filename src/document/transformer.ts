@@ -475,15 +475,23 @@ export class Transformer {
 
             let result = php.sourceContent;
 
-            if (this.phpTagFormatter != null && php.hasValidPhp()) {
-                result = this.phpTagFormatter(result, this.transformOptions, null);
+            if (php.hasValidPhp()) {
+                if (this.useLaravelPint) {
+                    if (this.pintTransformer != null) {
+                        result = this.pintTransformer.getPhpBlockContent(php);
+                    }
+                } else {
+                    if (this.phpTagFormatter != null) {
+                        result = this.phpTagFormatter(result, this.transformOptions, null);
 
-                if (PhpOperatorReflow.couldReflow(result)) {
-                    result = PhpOperatorReflow.instance.reflow(result);
-                }
+                        if (PhpOperatorReflow.couldReflow(result)) {
+                            result = PhpOperatorReflow.instance.reflow(result);
+                        }
 
-                if (SyntaxReflow.couldReflow(result)) {
-                    result = SyntaxReflow.instance.reflow(result);
+                        if (SyntaxReflow.couldReflow(result)) {
+                            result = SyntaxReflow.instance.reflow(result);
+                        }
+                    }
                 }
 
                 result = IndentLevel.shiftIndent(

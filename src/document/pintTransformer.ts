@@ -1,9 +1,8 @@
 import * as fs from 'fs';
 const { execSync } = require('child_process');
-import { BladeComponentNode, BladeEchoNode, DirectiveNode, ParameterType } from '../nodes/nodes';
+import { BladeComponentNode, BladeEchoNode, DirectiveNode, InlinePhpNode, ParameterType } from '../nodes/nodes';
 import { BladeDocument } from './bladeDocument';
 import { StringUtilities } from '../utilities/stringUtilities';
-import { Parameter } from 'php-parser';
 
 export class PintTransformer {
     private file: string = '';
@@ -29,6 +28,24 @@ export class PintTransformer {
 
     getResultMapping(): Map<string, string> {
         return this.resultMapping;
+    }
+
+    getPhpBlockContent(php: InlinePhpNode): string {
+        if (php.overrideContent != null && this.resultMapping.has(php.overrideContent)) {
+            return this.resultMapping.get(php.overrideContent) as string;
+        }
+
+        // Handle the case of nested child documents having different index values.
+        const preparedPhpContent = this.prepareContent(php.sourceContent);
+        if (this.contentMapping.has(preparedPhpContent)) {
+            const originalIndex = this.contentMapping.get(preparedPhpContent) as string;
+
+            if (this.resultMapping.has(originalIndex)) {
+                return this.resultMapping.get(originalIndex) as string;
+            }
+        }
+
+        return php.sourceContent;
     }
 
     getEchoContent(echo: BladeEchoNode): string {
@@ -92,7 +109,7 @@ export class PintTransformer {
 
         document.getAllNodes().forEach((node) => {
             if (node instanceof DirectiveNode) {
-                if (node.directiveName == 'php' && node.isClosedBy != null) {
+                if (node.directiveName == 'php' && node.isClosedBy != null && node.hasValidPhp()) {
                     const candidate = node.documentContent.trim();
                     results += replaceIndex.toString() + '=PHP' + '='.repeat(32);
                     results += "\n";
@@ -111,7 +128,7 @@ export class PintTransformer {
 
                     replaceIndex += 1;
                 } else {
-                    if (node.hasDirectiveParameters && !node.hasJsonParameters) {
+                    if (node.hasDirectiveParameters && !node.hasJsonParameters && node.hasValidPhp()) {
                         if (node.directiveName == 'php') {
                             const candidate = node.directiveParameters.substring(1, node.directiveParameters.length - 1).trim();
                             results += replaceIndex.toString() + '=IPD' + '='.repeat(32);
@@ -169,7 +186,7 @@ export class PintTransformer {
                         }
                     }
                 }
-            } else if (node instanceof BladeEchoNode) {
+            } else if (node instanceof BladeEchoNode && node.hasValidPhp()) {
                 const candidate = node.content.trim();
                 results += replaceIndex.toString() + '=ECH' + '='.repeat(32);
                 results += "\n";
@@ -190,7 +207,7 @@ export class PintTransformer {
             } else if (node instanceof BladeComponentNode) {
                 if (node.parameters.length) {
                     node.parameters.forEach((param) => {
-                        if (param.type == ParameterType.Directive && param.directive != null) {
+                        if (param.type == ParameterType.Directive && param.directive != null && !param.directive.hasJsonParameters && param.directive.hasValidPhp()) {
                             const candidate = param.directive.directiveParameters.substring(1, param.directive.directiveParameters.length - 1).trim();
                             results += replaceIndex.toString() + '=DIR' + '='.repeat(32);
                             results += "\n";
@@ -208,7 +225,7 @@ export class PintTransformer {
                             }
 
                             replaceIndex += 1;
-                        } else if (param.type == ParameterType.InlineEcho && param.inlineEcho != null) {
+                        } else if (param.type == ParameterType.InlineEcho && param.inlineEcho != null && param.inlineEcho.hasValidPhp()) {
                             const candidate = param.inlineEcho.content.trim();
                             results += replaceIndex.toString() + '=ECH' + '='.repeat(32);
                             results += "\n";
@@ -229,6 +246,24 @@ export class PintTransformer {
                         }
                     });
                 }
+            } else if (node instanceof InlinePhpNode && node.hasValidPhp()) {
+                const candidate = node.sourceContent.trim();
+                results += replaceIndex.toString() + '=BHP' + '='.repeat(32);
+                results += "\n";
+
+                StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
+                    results += cLine.trimLeft() + "\n";
+                })
+
+                results += "\n";
+                node.overrideContent = '__pint' + replaceIndex.toString();
+
+                const preparedContent = this.prepareContent(node.sourceContent);
+                if (!this.contentMapping.has(preparedContent)) {
+                    this.contentMapping.set(preparedContent, node.overrideContent);
+                }
+
+                replaceIndex += 1;
             }
         });
 
@@ -329,22 +364,9 @@ export class PintTransformer {
             if (tResult.endsWith('?')) {
                 tResult = tResult.substring(0, tResult.length - 1).trimRight()
             }
+        } else if (type == 'BHP') {
+            tResult = result.trim();
         }
-
-        /*if (tResult.startsWith('[') && tResult.endsWith(']')) {
-            const lineRes = StringUtilities.breakByNewLine(tResult);
-            let nTResult = '';
-
-            for (let i = 0; i < lineRes.length; i++) {
-                if (i ==0 || i == lineRes.length - 1) {
-                    nTResult += lineRes[i] + "\n";
-                } else {
-                    nTResult += ' '.repeat(this.tabSize) + lineRes[i] + "\n";
-                }
-            }
-
-            tResult = nTResult;
-        }*/
 
         return tResult;
     }
