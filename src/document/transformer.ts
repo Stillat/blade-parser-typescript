@@ -160,7 +160,8 @@ export class Transformer {
         useLaravelPint: false,
         pintCommand: 'pint {filename}',
         pintTempDirectory: '',
-        pintCacheDirectory: ''
+        pintCacheDirectory: '',
+        pintCacheEnabled:true,
     }
 
     constructor(doc: BladeDocument) {

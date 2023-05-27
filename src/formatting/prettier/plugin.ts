@@ -4,7 +4,7 @@ import { TransformOptions } from '../../document/transformOptions';
 import { ParserOptions } from '../../parser/parserOptions';
 import { PhpParserPhpValidator } from '../../parser/php/phpParserPhpValidator';
 import { FormattingOptions } from '../formattingOptions';
-import { getEnvSettings } from '../optionDiscovery';
+import { getEnvSettings, getPrettierFilePath } from '../optionDiscovery';
 import { PrettierDocumentFormatter } from './prettierDocumentFormatter';
 import { getHtmlOptions, setOptions } from './utils';
 
@@ -25,6 +25,13 @@ const plugin: prettier.Plugin = {
     parsers: {
         blade: {
             parse: function (text: string, _, options) {
+                const overridePath = getPrettierFilePath();
+
+                // Provides a way to override this setting.
+                if (overridePath != null) {
+                    options.filepath = overridePath;
+                }
+
                 setOptions(options);
                 prettierOptions = options;
 

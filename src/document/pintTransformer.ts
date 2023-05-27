@@ -3,6 +3,7 @@ const { execSync } = require('child_process');
 import { BladeComponentNode, BladeEchoNode, DirectiveNode, InlinePhpNode, ParameterType } from '../nodes/nodes';
 import { BladeDocument } from './bladeDocument';
 import { StringUtilities } from '../utilities/stringUtilities';
+import { PintCache } from './pintCache';
 
 export class PintTransformer {
     private tmpDir: string = '';
@@ -11,6 +12,8 @@ export class PintTransformer {
     private contentMapping: Map<string, string> = new Map();
     private pintCommand: string = '';
     private templateFile: string = '';
+    private cache: PintCache;
+    private wasCached = false;
 
     constructor(tmpFilePath: string, cacheDir: string, pintCommand: string) {
         this.tmpDir = tmpFilePath;
@@ -19,6 +22,8 @@ export class PintTransformer {
         if (!fs.existsSync(this.cacheDir)) {
             fs.mkdirSync(this.cacheDir);
         }
+
+        this.cache = new PintCache(this.cacheDir);
 
         if (!fs.existsSync(this.tmpDir)) {
             fs.mkdirSync(this.tmpDir);
@@ -312,8 +317,29 @@ export class PintTransformer {
     }
 
     format(document: BladeDocument): Map<string, string> {
-        const transformResults = this.transform(document),
-            fileName = this.tmpDir + this.makeSlug(12) + '.php';
+        const transformResults = this.transform(document);
+
+        this.wasCached = false;
+        if (this.cache.canCache(this.templateFile)) {
+            if (this.cache.has(this.templateFile)) {
+                try {
+                    const restoredCache = this.cache.get(this.templateFile);
+
+                    if (this.cache.isValid(restoredCache.contentMapping, this.contentMapping)) {
+                        this.contentMapping = restoredCache.contentMapping;
+                        this.resultMapping = restoredCache.resultMapping;
+
+                        this.wasCached = true;
+
+                        return this.resultMapping;
+                    }
+                } catch (err) {
+                    // Prevent cache failure from crashing process.
+                }
+            }
+        }
+
+        const fileName = this.tmpDir + this.makeSlug(12) + '.php';
         fs.writeFileSync(fileName, transformResults, { encoding: 'utf8' });
         this.callLaravelPint(fileName);
 
@@ -354,6 +380,10 @@ export class PintTransformer {
             this.resultMapping.set('__pint' + curIndex.toString(), this.cleanPintOutput(curBuffer.join("\n"), activeType));
             curBuffer = [];
             curIndex = -1;
+        }
+
+        if (this.cache.canCache(this.templateFile)) {
+            this.cache.put(this.templateFile, this.resultMapping, this.contentMapping);
         }
 
         return this.resultMapping;
@@ -415,6 +445,10 @@ export class PintTransformer {
     }
 
     private callLaravelPint(fileName: string) {
+        if (this.wasCached) {
+            return;
+        }
+
         const command = this.pintCommand.replace('{file}', `"${fileName}"`);
         // const pintBinary = __dirname + '/../../pint';
         // const command = `php ${pintBinary} ${fileName}`;

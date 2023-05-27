@@ -27,14 +27,24 @@ const defaultSettings: FormattingOptions = {
     },
     pintCacheDirectory: '',
     pintTempDirectory: '',
+    pintCacheEnabled: true,
 };
 
 export { defaultSettings };
 
-let overrideOptions: FormattingOptions | null;
+let overrideOptions: FormattingOptions | null,
+    overrideFilePath: string | null;
 
 export function setEnvSettings(options: FormattingOptions | null) {
     overrideOptions = options;
+}
+
+export function setPrettierFilePath(path: string | null) {
+    overrideFilePath = path;
+}
+
+export function getPrettierFilePath(): string | null {
+    return overrideFilePath;
 }
 
 export function getEnvSettings(startingDirectory: string): FormattingOptions {
@@ -99,7 +109,8 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         useLaravelPint = false,
         pintCommand = '',
         pintTempDir = '',
-        pintCacheDir = '';
+        pintCacheDir = '',
+        pintCacheEnabled = true;
 
     if (typeof configObject.ignoreDirectives !== 'undefined' && configObject.ignoreDirectives !== null) {
         ignoreDirectives = configObject.ignoreDirectives as string[];
@@ -161,6 +172,10 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         pintCacheDir = (configObject.pintCacheDirectory as string).trim();
     }
 
+    if (typeof configObject.pintCacheEnabled !== 'undefined') {
+        pintCacheEnabled = configObject.pintCacheEnabled as boolean;
+    }
+
     if (spacesAfterDirective < 0) {
         spacesAfterDirective = 0;
     }
@@ -193,6 +208,7 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         pintCommand: pintCommand,
         pintCacheDirectory: pintCacheDir,
         pintTempDirectory: pintTempDir,
+        pintCacheEnabled: pintCacheEnabled,
     };
 }
 

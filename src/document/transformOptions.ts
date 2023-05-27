@@ -5,10 +5,11 @@ export interface TransformOptions {
     formatDirectivePhpParameters: boolean,
     formatDirectiveJsonParameters: boolean,
     formatInsideEcho: boolean,
-    phpOptions: any|undefined,
+    phpOptions: any | undefined,
     echoStyle: string,
     useLaravelPint: boolean,
     pintCommand: string,
     pintTempDirectory: string,
     pintCacheDirectory: string,
+    pintCacheEnabled: boolean,
 }
