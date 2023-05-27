@@ -107,7 +107,7 @@ With the option `block`, the formatted result is:
 ></div>
 ```
 
-### Configuring PHP Options
+### Configuring Prettier PHP Options
 
 By default, PHP version `8.0` is configured when formatting directives, `@php` blocks, etc. You may change this by adding a `phpOptions` configuration object within your `.blade.format.json` file. For example, to change the PHP version, disable single quotes, you could do this:
 
@@ -126,6 +126,37 @@ By default, PHP version `8.0` is configured when formatting directives, `@php` b
     }
 }
 ```
+
+### Configuring Laravel Pint
+
+If you would like to use [Laravel Pint](https://github.com/laravel/pint) as the PHP formatter, you will need to create a `.blade.format.json` file at the root of your project (within a typical Laravel application, this will be the same location as your `composer.json` file).
+
+Inside this file, you will need to enable support for Laravel Pint:
+
+```json
+{
+    "useLaravelPint": true
+}
+```
+
+By default, the Blade formatter will look for Pint at the following location:
+
+```
+project_root/vendor/bin/pint
+```
+
+If you running Pint elsewhere, or need to customize how it is called, you can add a `pintCommand` configuration option to your `.blade.format.json` file:
+
+```json
+{
+    "useLaravelPint": true,
+    "pintCommand": "your-pint-command {file}"
+}
+```
+
+Make sure to include the `{file}` as part of your custom command, as the Blade formatter will supply the path to a temporary path it using to invoke Pint. This path will already be wrapped in double quotes - do not add these yourself.
+
+> The Blade formatter does not check what exactly it is you have added to the `pintCommand` configuration option. If you add some really dumb shell commands, it will attempt to run those.
 
 ### Configuring Other Options
 
