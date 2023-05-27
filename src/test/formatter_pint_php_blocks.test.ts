@@ -50,10 +50,10 @@ $data = [
     </div>
     @php
         $data = [
-            [
-                'href' => '#',
-                'title' => 'The Title',
-            ],
+           [
+               'href' => '#',
+               'title' => 'The Title',
+           ],
         ];
     @endphp
 </main>`
