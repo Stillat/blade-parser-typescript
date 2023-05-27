@@ -1,8 +1,9 @@
 import * as fs from 'fs';
 const { execSync } = require('child_process');
-import { DirectiveNode } from '../nodes/nodes';
+import { BladeComponentNode, BladeEchoNode, DirectiveNode, ParameterType } from '../nodes/nodes';
 import { BladeDocument } from './bladeDocument';
 import { StringUtilities } from '../utilities/stringUtilities';
+import { Parameter } from 'php-parser';
 
 export class PintTransformer {
     private file: string = '';
@@ -28,6 +29,24 @@ export class PintTransformer {
 
     getResultMapping(): Map<string, string> {
         return this.resultMapping;
+    }
+
+    getEchoContent(echo: BladeEchoNode): string {
+        if (echo.overrideContent != null && this.resultMapping.has(echo.overrideContent)) {
+            return this.resultMapping.get(echo.overrideContent) as string;
+        }
+
+        // Handle the case of nested child documents having different index values.
+        const preparedEchoContent = this.prepareContent(echo.content);
+        if (this.contentMapping.has(preparedEchoContent)) {
+            const originalIndex = this.contentMapping.get(preparedEchoContent) as string;
+
+            if (this.resultMapping.has(originalIndex)) {
+                return this.resultMapping.get(originalIndex) as string;
+            }
+        }
+
+        return echo.content;
     }
 
     getDirectiveContent(directive: DirectiveNode): string {
@@ -150,6 +169,66 @@ export class PintTransformer {
                         }
                     }
                 }
+            } else if (node instanceof BladeEchoNode) {
+                const candidate = node.content.trim();
+                results += replaceIndex.toString() + '=ECH' + '='.repeat(32);
+                results += "\n";
+                results += '<?php ';
+                StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
+                    results += cLine.trimLeft() + "\n";
+                })
+                results += ' ?>';
+                results += "\n";
+                node.overrideContent = '__pint' + replaceIndex.toString();
+
+                const preparedParameters = this.prepareContent(node.content);
+                if (!this.contentMapping.has(preparedParameters)) {
+                    this.contentMapping.set(preparedParameters, node.overrideContent);
+                }
+
+                replaceIndex += 1;
+            } else if (node instanceof BladeComponentNode) {
+                if (node.parameters.length) {
+                    node.parameters.forEach((param) => {
+                        if (param.type == ParameterType.Directive && param.directive != null) {
+                            const candidate = param.directive.directiveParameters.substring(1, param.directive.directiveParameters.length - 1).trim();
+                            results += replaceIndex.toString() + '=DIR' + '='.repeat(32);
+                            results += "\n";
+                            results += '<?php $tVar = pintFn(';
+                            StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
+                                results += cLine.trimLeft() + "\n";
+                            })
+                            results += '); ?>';
+                            results += "\n";
+                            param.directive.overrideParams = '__pint' + replaceIndex.toString();
+
+                            const preparedParameters = this.prepareContent(param.directive.directiveParameters);
+                            if (!this.contentMapping.has(preparedParameters)) {
+                                this.contentMapping.set(preparedParameters, param.directive.overrideParams);
+                            }
+
+                            replaceIndex += 1;
+                        } else if (param.type == ParameterType.InlineEcho && param.inlineEcho != null) {
+                            const candidate = param.inlineEcho.content.trim();
+                            results += replaceIndex.toString() + '=ECH' + '='.repeat(32);
+                            results += "\n";
+                            results += '<?php ';
+                            StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
+                                results += cLine.trimLeft() + "\n";
+                            })
+                            results += ' ?>';
+                            results += "\n";
+                            param.inlineEcho.overrideContent = '__pint' + replaceIndex.toString();
+
+                            const preparedParameters = this.prepareContent(param.inlineEcho.content);
+                            if (!this.contentMapping.has(preparedParameters)) {
+                                this.contentMapping.set(preparedParameters, param.inlineEcho.overrideContent);
+                            }
+
+                            replaceIndex += 1;
+                        }
+                    });
+                }
             }
         });
 
@@ -232,7 +311,6 @@ export class PintTransformer {
                 tResult = tResult.substring(0, tResult.length - 1).trimRight()
             }
         } else if (type == 'FRL') {
-
             tResult = result.substring(5).trimLeft();
             tResult = tResult.trimLeft().substring(8).trimLeft().substring(1).trimLeft();
             tResult = tResult.trimRight().substring(0, tResult.length - 2).trimRight();
@@ -245,6 +323,12 @@ export class PintTransformer {
             tResult = tResult.substring(0, tResult.length - 1).trimRight();
             tResult = tResult.substring(0, tResult.length - 1).trimRight();
             tResult = tResult.substring(0, tResult.length - 1).trimRight();
+        } else if (type == 'ECH') {
+            tResult = result.substring(5).trimLeft();
+            tResult = tResult.trimRight().substring(0, tResult.length - 2).trimRight();
+            if (tResult.endsWith('?')) {
+                tResult = tResult.substring(0, tResult.length - 1).trimRight()
+            }
         }
 
         /*if (tResult.startsWith('[') && tResult.endsWith(']')) {

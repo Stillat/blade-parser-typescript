@@ -40,7 +40,7 @@ suite('Pint Transformer: General Templates', () => {
         <title>@yield('title', 'Default Title')</title>
 
         <!-- Styles -->
-        <link href="{{ asset("css/app.css") }}" rel="stylesheet" />
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet" />
     </head>
     <body>
         <header>
@@ -54,7 +54,7 @@ suite('Pint Transformer: General Templates', () => {
         </footer>
 
         <!-- Scripts -->
-        <script src="{{ asset("js/app.js") }}"></script>
+        <script src="{{ asset('js/app.js') }}"></script>
     </body>
 </html>
 `
@@ -160,7 +160,7 @@ suite('Pint Transformer: General Templates', () => {
 @section('content')
     <h1>Contact Us</h1>
 
-    <form method="POST" action="{{ route("contact.submit") }}">
+    <form method="POST" action="{{ route('contact.submit') }}">
         @csrf
 
         <label for="name">Name</label>
@@ -269,7 +269,7 @@ suite('Pint Transformer: General Templates', () => {
     @else
         <p>
             Please
-            <a href="{{ route("login") }}">log in</a>
+            <a href="{{ route('login') }}">log in</a>
             to continue.
         </p>
     @endif
@@ -398,7 +398,7 @@ suite('Pint Transformer: General Templates', () => {
         const input = `<span>
     {{ 'foo' }}:
 </span>`;
-        const output = `<span>{{ "foo" }}:</span>
+        const output = `<span>{{ 'foo' }}:</span>
 `;
         assert.strictEqual(formatBladeStringWithPint(input), output);
         assert.strictEqual(formatBladeStringWithPint(output), output);

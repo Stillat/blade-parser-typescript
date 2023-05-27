@@ -243,7 +243,7 @@ export class DirectiveNode extends AbstractNode {
     public namePosition: Range | null = null;
     public hasDirectiveParameters = false;
     public directiveParameters = '';
-    public overrideParams:string|null = null;
+    public overrideParams: string | null = null;
     public directiveParametersPosition: Range | null = null;
     public children: AbstractNode[] = [];
     public childrenDocument: ChildDocument | null = null;
@@ -293,7 +293,7 @@ export class DirectiveNode extends AbstractNode {
             this.cachedHasValidPhp = false;
         }
 
-        if (this.cachedHasValidPhp == null) {            
+        if (this.cachedHasValidPhp == null) {
             const validator = this.getParser()?.getPhpValidator();
 
             if (validator != null) {
@@ -552,6 +552,8 @@ export class BladeEchoNode extends AbstractNode {
     private cachedHasValidPhp: boolean | null = null;
     private cachedPhpLastError: SyntaxError | null = null;
     public isInlineEcho = false;
+
+    public overrideContent: string | null = null;
 
     hasValidPhp() {
         if (this.cachedHasValidPhp == null) {

@@ -178,5 +178,5 @@ suite('Props Directive', () => {
 `;
         assert.strictEqual(formatBladeString(input), out);
         assert.strictEqual(formatBladeString(out), out);
-    })
+    });
 });

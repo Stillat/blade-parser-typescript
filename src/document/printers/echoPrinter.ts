@@ -4,12 +4,19 @@ import { SyntaxReflow } from '../../formatting/syntaxReflow';
 import { BladeEchoNode, BladeEntitiesEchoNode, BladeEscapedEchoNode } from '../../nodes/nodes';
 import { StringUtilities } from '../../utilities/stringUtilities';
 import { PhpFormatter } from '../formatters';
+import { PintTransformer } from '../pintTransformer';
 import { TransformOptions } from '../transformOptions';
 import { IndentLevel } from './indentLevel';
 import { getPrintWidth, preparePrettierWorkaround, undoPrettierWorkaround } from './printWidthUtils';
 
 export class EchoPrinter {
-    static printEcho(echo: BladeEchoNode, formattingOptions:TransformOptions, phpFormatter: PhpFormatter | null, indentLevel: number): string {
+    static printEcho(
+        echo: BladeEchoNode,
+        formattingOptions: TransformOptions,
+        phpFormatter: PhpFormatter | null,
+        indentLevel: number,
+        pintTransformer: PintTransformer | null
+    ): string {
         let start = '{{ ',
             end = ' }}';
 
@@ -35,25 +42,31 @@ export class EchoPrinter {
                         ...echoOptions,
                         printWidth: getPrintWidth(innerContent, echoOptions.printWidth)
                     };
-                    
-                    const lineWrapWorkaround = preparePrettierWorkaround(innerContent);
 
-                    if (lineWrapWorkaround.addedHack) {
-                        innerContent = lineWrapWorkaround.content;
-                    }
+                    if (formattingOptions.useLaravelPint) {
+                        if (pintTransformer != null) {
+                            tResult = pintTransformer.getEchoContent(echo);
+                        }
+                    } else {
+                        const lineWrapWorkaround = preparePrettierWorkaround(innerContent);
 
-                    tResult = phpFormatter('<?php ' + innerContent, formattingOptions, echoOptions);
+                        if (lineWrapWorkaround.addedHack) {
+                            innerContent = lineWrapWorkaround.content;
+                        }
 
-                    if (lineWrapWorkaround.addedHack) {
-                        tResult = undoPrettierWorkaround(tResult);
-                    }
-    
-                    if (PhpOperatorReflow.couldReflow(tResult)) {
-                        tResult = PhpOperatorReflow.instance.reflow(tResult);
-                    }
+                        tResult = phpFormatter('<?php ' + innerContent, formattingOptions, echoOptions);
 
-                    if (SyntaxReflow.couldReflow(tResult)) {
-                        tResult = SyntaxReflow.instance.reflow(tResult);
+                        if (lineWrapWorkaround.addedHack) {
+                            tResult = undoPrettierWorkaround(tResult);
+                        }
+
+                        if (PhpOperatorReflow.couldReflow(tResult)) {
+                            tResult = PhpOperatorReflow.instance.reflow(tResult);
+                        }
+
+                        if (SyntaxReflow.couldReflow(tResult)) {
+                            tResult = SyntaxReflow.instance.reflow(tResult);
+                        }
                     }
 
                     if (formattingOptions.echoStyle == 'inline') {
@@ -65,8 +78,8 @@ export class EchoPrinter {
                             true
                         ).trim();
 
-                        const inlineRelativeIndent = start.trimRight() + ' ' + inlineIndentResult  + ' ' + end.trim();
-    
+                        const inlineRelativeIndent = start.trimRight() + ' ' + inlineIndentResult + ' ' + end.trim();
+
                         return inlineRelativeIndent;
                     }
 
@@ -78,25 +91,31 @@ export class EchoPrinter {
 
                     return relativeIndent;
                 } else {
-                    tResult = phpFormatter('<?php ' + innerContent +';', formattingOptions, {...echoOptions, printWidth: Infinity});
-                    tResult = tResult.trimRight().substring(0, tResult.trimRight().length - 1);
-                    if (PhpOperatorReflow.couldReflow(tResult)) {
-                        tResult = PhpOperatorReflow.instance.reflow(tResult);
-                    }
+                    if (formattingOptions.useLaravelPint) {
+                        if (pintTransformer != null) {
+                            tResult = pintTransformer.getEchoContent(echo);
+                        }
+                    } else {
+                        tResult = phpFormatter('<?php ' + innerContent + ';', formattingOptions, { ...echoOptions, printWidth: Infinity });
+                        tResult = tResult.trimRight().substring(0, tResult.trimRight().length - 1);
+                        if (PhpOperatorReflow.couldReflow(tResult)) {
+                            tResult = PhpOperatorReflow.instance.reflow(tResult);
+                        }
 
-                    if (SyntaxReflow.couldReflow(tResult)) {
-                        tResult = SyntaxReflow.instance.reflow(tResult);
+                        if (SyntaxReflow.couldReflow(tResult)) {
+                            tResult = SyntaxReflow.instance.reflow(tResult);
+                        }
                     }
 
                     // Handle the case if prettier added newlines anyway.
                     if (tResult.includes("\n")) {
-                       tResult = StringUtilities.collapse(tResult);
+                        tResult = StringUtilities.collapse(tResult);
                     }
                 }
 
                 innerContent = tResult;
             }
-        }        
+        }
 
         result += innerContent + end;
 

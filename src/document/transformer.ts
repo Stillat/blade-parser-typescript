@@ -1364,7 +1364,7 @@ export class Transformer {
     private transformDynamicEcho(content: string): string {
         let value = content;
         this.dynamicEchoBlocks.forEach((echo: BladeEchoNode, slug: string) => {
-            const echoContent = EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug));
+            const echoContent = EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug), this.pintTransformer);
 
             value = StringUtilities.replaceAllInString(value, slug, echoContent);
         });
@@ -1516,11 +1516,11 @@ export class Transformer {
         this.inlineEchos.forEach((echo: BladeEchoNode, slug: string) => {
             const inline = this.selfClosing(slug);
 
-            value = value.replace(inline, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug)));
+            value = value.replace(inline, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug), this.pintTransformer));
         });
 
         this.spanEchos.forEach((echo: BladeEchoNode, slug: string) => {
-            value = value.replace(slug, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug)));
+            value = value.replace(slug, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug), this.pintTransformer));
         });
 
         return value;
@@ -1771,7 +1771,7 @@ export class Transformer {
 
         this.echoParameters.forEach((param, slug) => {
             if (param.inlineEcho != null) {
-                value = value.replace(slug, EchoPrinter.printEcho(param.inlineEcho, this.transformOptions, this.phpFormatter, 0));
+                value = value.replace(slug, EchoPrinter.printEcho(param.inlineEcho, this.transformOptions, this.phpFormatter, 0, this.pintTransformer));
             } else {
                 value = value.replace(slug, '');
             }
@@ -1784,7 +1784,7 @@ export class Transformer {
         let value = content;
 
         this.embeddedEchos.forEach((echo, slug) => {
-            value = value.replace(slug, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug)));
+            value = value.replace(slug, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug), this.pintTransformer));
         });
 
         return value;
