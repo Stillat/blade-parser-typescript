@@ -399,20 +399,7 @@ export class PintTransformer {
     private callLaravelPint(fileName: string) {
         const pintBinary = __dirname + '/../../pint';
         const command = `php ${pintBinary} ${fileName}`;
-        try {
-            const out = execSync(command, { stdio: 'pipe' });
-            //console.log(out.toString());
-        } catch (e: unknown) {
-            let ee = e as any;
-            if (typeof ee.stdout !== 'undefined') {
-                const debugMsg = (ee.stdout).toString();
-                //console.error(debugMsg)
-            }
-            
-            if (typeof ee.stderr !== 'undefined') {
-                const debugMsg = (ee.stderr).toString();
-                //console.error(debugMsg)
-            }
-        }
+        
+        execSync(command);
     }
 }
