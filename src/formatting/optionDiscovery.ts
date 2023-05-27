@@ -22,7 +22,9 @@ const defaultSettings: FormattingOptions = {
     echoStyle: 'block',
     useLaravelPint: false,
     pintCommand: '',
-    phpOptions: {},
+    phpOptions: {
+        phpVersion: '8.0'
+    },
     pintCacheDirectory: '',
     pintTempDirectory: '',
 };
