@@ -10,13 +10,14 @@ import { ArrayPrinter } from './arrayPrinter';
 import { IndentLevel } from './indentLevel';
 import { ParserOptions } from "prettier";
 import { getPrintWidth, preparePrettierWorkaround, undoPrettierWorkaround } from './printWidthUtils';
+import { PintTransformer } from '../pintTransformer';
 
 export class DirectivePrinter {
     private static defaultControlDirectiveNames: string[] = [
         'if', 'elseif', 'unless', 'while', 'for', 'foreach', 'forelse'
     ];
 
-    private static getReasonableDirectivePhpOptions(directive: DirectiveNode, phpOptions:ParserOptions): ParserOptions {
+    private static getReasonableDirectivePhpOptions(directive: DirectiveNode, phpOptions: ParserOptions): ParserOptions {
         // We will override the traillingCommaPHP setting within condition-like
         // directives; if we don't we end up with rather ugly @if(...) blocks
         // all over the place. However, we can't override this on all of
@@ -28,10 +29,17 @@ export class DirectivePrinter {
             } as ParserOptions;
         }
 
-        return phpOptions;        
+        return phpOptions;
     }
 
-    static printDirective(directive: DirectiveNode, options: TransformOptions, phpFormatter: PhpFormatter | null, jsonFormatter: JsonFormatter | null, indentLevel: number): string {
+    static printDirective(
+        directive: DirectiveNode,
+        options: TransformOptions,
+        phpFormatter: PhpFormatter | null,
+        jsonFormatter: JsonFormatter | null,
+        indentLevel: number,
+        pintTransformer: PintTransformer | null
+    ): string {
         let directiveName = directive.directiveName.trim(),
             result = '@' + directiveName;
 
@@ -40,6 +48,25 @@ export class DirectivePrinter {
 
             if (!directive.hasJsonParameters) {
                 if (options.formatDirectivePhpParameters && phpFormatter != null && directive.hasValidPhp()) {
+
+                    if (pintTransformer != null) {
+                        let tResult = pintTransformer.getDirectiveContent(directive);
+
+                        tResult = IndentLevel.shiftIndent(
+                            tResult,
+                            indentLevel,
+                            true
+                        );
+
+                        let spacesToUse = options.spacesAfterDirective;
+
+                        if (DirectivePrinter.defaultControlDirectiveNames.includes(directiveName)) {
+                            spacesToUse = options.spacesAfterControlDirective;
+                        }
+
+                        return '@' + directiveName + ' '.repeat(spacesToUse) + '(' + tResult + ')';
+                    }
+
                     let params = directive.getPhpContent().trim();
                     if (params.startsWith('(') && params.endsWith(')')) {
                         params = params.substring(1);
@@ -83,7 +110,7 @@ export class DirectivePrinter {
                             if (PhpOperatorReflow.couldReflow(tResult)) {
                                 tResult = PhpOperatorReflow.instance.reflow(tResult);
                             }
-        
+
                             if (SyntaxReflow.couldReflow(tResult)) {
                                 tResult = SyntaxReflow.instance.reflow(tResult);
                             }
@@ -183,7 +210,7 @@ export class DirectivePrinter {
 function removeContentLines(content: string): string {
     let newContent = '';
     const lines = StringUtilities.breakByNewLine(content);
-    
+
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
 

@@ -423,5 +423,5 @@ suite('General Template Formatting', () => {
 </div>
 `;
         assert.strictEqual(formatBladeString(template), output);
-    })
+    });
 });

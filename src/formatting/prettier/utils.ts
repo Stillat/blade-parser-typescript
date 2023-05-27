@@ -6,7 +6,7 @@ import * as plugin from './plugin';
 import php from "@prettier/plugin-php/standalone";
 import { formatJsonata } from "@stedi/prettier-plugin-jsonata/dist/lib";
 import { FormattingOptions } from '../formattingOptions';
-import { setEnvSettings } from '../optionDiscovery';
+import { defaultSettings, setEnvSettings } from '../optionDiscovery';
 import { TransformOptions } from '../../document/transformOptions';
 
 let phpOptions: ParserOptions,
@@ -60,6 +60,23 @@ export function formatBladeString(text: string, options: FormattingOptions | nul
     });
 }
 
+export function formatBladeStringWithPint(text: string, options: FormattingOptions | null = null) {
+    let curOptions: FormattingOptions = {
+        ...defaultSettings,
+        useLaravelPint: true
+    };
+
+    if (options != null) {
+        curOptions = {
+            ...curOptions,
+            ...options,
+            useLaravelPint: true
+        };
+    }
+
+    return formatBladeString(text, curOptions);
+}
+
 export function setOptions(options: ParserOptions) {
     htmlOptions = cleanOptions(
         Object.assign({}, options,
@@ -88,7 +105,7 @@ export function formatAsHtml(text: string) {
     return prettier.format(text, htmlOptions);
 }
 
-function resolvePhpOptions(defaultOptions:ParserOptions, transformOptions: TransformOptions, options: ParserOptions | null = null) {
+function resolvePhpOptions(defaultOptions: ParserOptions, transformOptions: TransformOptions, options: ParserOptions | null = null) {
     let opts = defaultOptions;
 
     if (options != null) {

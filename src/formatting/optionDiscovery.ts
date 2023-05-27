@@ -20,6 +20,7 @@ const defaultSettings: FormattingOptions = {
     customIfs: [],
     directives: [],
     echoStyle: 'block',
+    useLaravelPint: false,
 };
 
 export {defaultSettings};
@@ -69,7 +70,8 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         customIfs: string[] = [],
         directives: string[] = [],
         phpOptions:any|null = null,
-        echoStyle: string = 'block';
+        echoStyle: string = 'block',
+        useLaravelPint = false;
 
     if (typeof configObject.ignoreDirectives !== 'undefined' && configObject.ignoreDirectives !== null) {
         ignoreDirectives = configObject.ignoreDirectives as string[];
@@ -97,6 +99,10 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
 
     if (typeof configObject.customIfs !== 'undefined' && configObject.customIfs !== null) {
         customIfs = configObject.customIfs as string[];
+    }
+
+    if (typeof configObject.useLaravelPint !== 'undefined' && configObject.useLaravelPint !== null) {
+        useLaravelPint = configObject.useLaravelPint as boolean;
     }
 
     if (typeof configObject.directives !== 'undefined' && configObject.directives !== null) {
@@ -142,7 +148,8 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         customIfs: customIfs,
         directives: directives,
         phpOptions: phpOptions,
-        echoStyle: echoStyle
+        echoStyle: echoStyle,
+        useLaravelPint: useLaravelPint
     };
 }
 

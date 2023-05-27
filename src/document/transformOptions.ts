@@ -6,5 +6,6 @@ export interface TransformOptions {
     formatDirectiveJsonParameters: boolean,
     formatInsideEcho: boolean,
     phpOptions: any|undefined,
-    echoStyle: string
+    echoStyle: string,
+    useLaravelPint: boolean,
 }

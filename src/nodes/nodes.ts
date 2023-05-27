@@ -243,6 +243,7 @@ export class DirectiveNode extends AbstractNode {
     public namePosition: Range | null = null;
     public hasDirectiveParameters = false;
     public directiveParameters = '';
+    public overrideParams:string|null = null;
     public directiveParametersPosition: Range | null = null;
     public children: AbstractNode[] = [];
     public childrenDocument: ChildDocument | null = null;
@@ -444,6 +445,7 @@ export class DirectiveNode extends AbstractNode {
         clone.refId = this.refId;
         clone.sourceContent = this.sourceContent;
         clone.startPosition = this.startPosition;
+        clone.overrideParams = this.overrideParams;
 
         const parser = this.getParser();
 
