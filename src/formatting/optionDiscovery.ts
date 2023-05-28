@@ -84,6 +84,14 @@ export function getEnvSettings(startingDirectory: string): FormattingOptions {
             if (bladeFormattingConfig.pintCacheDirectory.trim().length == 0) {
                 bladeFormattingConfig.pintCacheDirectory = __dirname + '/_cache/';
             }
+
+            if (bladeFormattingConfig.pintTempDirectory.trim().length > 0) {
+                bladeFormattingConfig.pintTempDirectory = normalizeFilePath(bladeFormattingConfig.pintTempDirectory.trim());
+            }
+
+            if (bladeFormattingConfig.pintCacheDirectory.trim().length > 0) {
+                bladeFormattingConfig.pintCacheDirectory = normalizeFilePath(bladeFormattingConfig.pintCacheDirectory.trim());
+            }
         }
 
         return bladeFormattingConfig;
@@ -210,6 +218,17 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         pintTempDirectory: pintTempDir,
         pintCacheEnabled: pintCacheEnabled,
     };
+}
+
+function normalizeFilePath(filePath: string): string {
+    const separatorPattern = /[\\/]+/g;
+    let normalizedPath = filePath.replace(separatorPattern, '/');
+
+    if (!normalizedPath.endsWith('/')) {
+        normalizedPath += '/';
+    }
+
+    return normalizedPath;
 }
 
 function findSettingsFile(startingDirectory: string): string | null {
