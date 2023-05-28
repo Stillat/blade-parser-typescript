@@ -285,7 +285,7 @@ $foo->bar([
             A
             <?php echo $something; ?>
             B
-            @php($why->not)
+            @php($why->not->that)
             C
             @directive($attributes->merge($getExtraAttributes()))
             D
@@ -303,7 +303,7 @@ $foo->bar([
     A
     <?php echo $something; ?>
     B
-    @php($why->not)
+    @php($why->not->that)
     C
     @directive($attributes->merge($getExtraAttributes()))
     D

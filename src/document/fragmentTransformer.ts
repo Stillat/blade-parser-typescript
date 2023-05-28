@@ -18,10 +18,8 @@ export class FragmentsTransformer {
         return result;
     }
 
-    private static transformContent(content: string) {
-        let newContent = content.replace('>', 'B');
-        newContent = newContent.replace('<', 'B');
-
-        return newContent;
+    private static transformContent(content: string): string {
+        const replacedContent = content.replace(/>/g, 'B').replace(/</g, 'B');
+        return replacedContent;
     }
 }
