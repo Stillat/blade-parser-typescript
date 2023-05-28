@@ -2119,8 +2119,15 @@ export class DocumentParser implements StringIterator {
                     this.currentContent = [];
                     this.currentIndex = (nextNonWs.index as number);
                     this.checkCurrentOffsets();
-                    const logicGroupResults = scanToEndOfLogicGroup(this),
+                    const logicGroupResults = scanToEndOfLogicGroup(this);
+
+                    let directive:DirectiveNode;
+
+                    if (logicGroupResults.foundEnd) {
                         directive = this.makeDirectiveWithParameters(directiveName.trim(), directiveNameStartsOn, directiveNameEndsOn, logicGroupResults);
+                    } else {
+                        directive = this.makeDirective(directiveName.trim(), directiveNameStartsOn, directiveNameEndsOn);
+                    }
 
                     this.lastNode = directive;
                     this.nodes.push(directive);
@@ -2143,8 +2150,14 @@ export class DocumentParser implements StringIterator {
                 directiveNameEndsOn = this.currentIndex - 1;
                 directiveName = this.currentContent.join('');
                 this.currentContent = [];
-                const logicGroupResults = scanToEndOfLogicGroup(this),
-                    directive = this.makeDirectiveWithParameters(directiveName.trim(), directiveNameStartsOn, directiveNameEndsOn, logicGroupResults);
+                const logicGroupResults = scanToEndOfLogicGroup(this);
+                let directive:DirectiveNode;
+
+                if (logicGroupResults.foundEnd) {
+                    directive = this.makeDirectiveWithParameters(directiveName.trim(), directiveNameStartsOn, directiveNameEndsOn, logicGroupResults)
+                } else {
+                    directive = this.makeDirective(directiveName.trim(), directiveNameStartsOn, directiveNameEndsOn);
+                }
 
                 this.lastNode = directive;
                 this.nodes.push(directive);

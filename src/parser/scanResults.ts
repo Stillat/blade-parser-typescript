@@ -8,5 +8,6 @@ export interface SeekResults {
 export interface LogicGroupScanResults {
     start: number,
     end: number,
-    content: string
+    content: string,
+    foundEnd: boolean
 }

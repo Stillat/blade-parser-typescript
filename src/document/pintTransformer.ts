@@ -455,29 +455,31 @@ export class PintTransformer {
             baseFileName = path.basename(fileName),
             output = execSync(command).toString();
 
-        if (output.includes(baseFileName)) {
-            const tempOutput = StringUtilities.breakByNewLine(output),
-                newLines: string[] = [];
+        if (typeof this.templateFile !== 'undefined' && this.templateFile != null) {
+            if (output.includes(baseFileName)) {
+                const tempOutput = StringUtilities.breakByNewLine(output),
+                    newLines: string[] = [];
 
-            for (let i = 0; i < tempOutput.length; i++) {
-                let line = tempOutput[i].trim();
+                for (let i = 0; i < tempOutput.length; i++) {
+                    let line = tempOutput[i].trim();
 
-                if (line.length == 0 || line == '✓') {
-                    continue;
+                    if (line.length == 0 || line == '✓') {
+                        continue;
+                    }
+
+                    if (line.startsWith('✓')) {
+                        line = line.substring(1).trim();
+                    }
+
+                    if (line.includes(baseFileName)) {
+                        line = path.basename(this.templateFile) + line.substring(line.indexOf(baseFileName) + baseFileName.length);
+                    }
+
+                    newLines.push(line);
                 }
 
-                if (line.startsWith('✓')) {
-                    line = line.substring(1).trim();
-                }
-
-                if (line.includes(baseFileName)) {
-                    line = path.basename(this.templateFile) + line.substring(line.indexOf(baseFileName) + baseFileName.length);
-                }
-
-                newLines.push(line);
+                console.log(newLines.join("\n"));
             }
-
-            console.log(newLines.join("\n"));
         }
     }
 

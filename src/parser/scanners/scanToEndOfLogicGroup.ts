@@ -7,9 +7,11 @@ import { skipToEndOfMultilineComment } from './skipToEndOfMultilineComment';
 import { skipToEndOfString } from './skipToEndOfString';
 
 export function scanToEndOfLogicGroup(iterator: StringIterator): LogicGroupScanResults {
-    const groupStartedOn = iterator.getCurrentIndex() + iterator.getSeedOffset();
+    const groupStartedOn = iterator.getCurrentIndex() + iterator.getSeedOffset(),
+        recoveryIndex = iterator.getCurrentIndex();
     let groupEndsOn = 0,
-        groupOpenCount = 0;
+        groupOpenCount = 0,
+        foundEnd = false;
 
     // Advance over the initial "(".
     iterator.incrementIndex();
@@ -18,7 +20,13 @@ export function scanToEndOfLogicGroup(iterator: StringIterator): LogicGroupScanR
         iterator.checkCurrentOffsets();
 
         if (isStartOfString(iterator.getCurrent())) {
+            const stringStart = iterator.getCurrent(),
+                recoveryIndex = iterator.getCurrentIndex();
             skipToEndOfString(iterator);
+
+            if (iterator.getNext() === null && iterator.getCurrent() !== stringStart) {
+                iterator.updateIndex(recoveryIndex + 1);
+            }
             continue;
         }
 
@@ -44,6 +52,7 @@ export function scanToEndOfLogicGroup(iterator: StringIterator): LogicGroupScanR
             }
 
             groupEndsOn = iterator.getCurrentIndex() + iterator.getSeedOffset() + 1;
+            foundEnd = true;
             break;
         }
 
@@ -52,9 +61,14 @@ export function scanToEndOfLogicGroup(iterator: StringIterator): LogicGroupScanR
 
     const groupContent = iterator.getContentSubstring(groupStartedOn, groupEndsOn - groupStartedOn);
 
+    if (! foundEnd) {
+        iterator.updateIndex(recoveryIndex - 1);
+    }
+
     return {
         start: groupStartedOn,
         end: groupEndsOn,
-        content: groupContent
+        content: groupContent,
+        foundEnd: foundEnd
     };
 }

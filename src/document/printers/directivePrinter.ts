@@ -188,7 +188,15 @@ export class DirectivePrinter {
                         params = params.substring(0, params.length - 1);
                     }
 
-                    const tResult = jsonFormatter(params);
+                    let tResult = jsonFormatter(params);
+
+                    if (tResult.includes("\n")) {
+                        tResult = IndentLevel.shiftIndent(
+                            tResult,
+                            indentLevel,
+                            true
+                        );
+                    }
 
                     paramContent = '(' + tResult + ')';
                 }
