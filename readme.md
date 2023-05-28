@@ -188,6 +188,37 @@ const options:ParserOptions = {
 
 In most situations you do *not* need to supply any value for this configuration option. The parser is capable of analyzing your Blade templates and detecting custom if statements automatically.
 
+## Formatting Conditional Element Open/Close Tags
+
+Because of the formatter works internally, you will need to take a few steps if you need to format templates containing Blade code similar to the following:
+
+```blade
+@if ($someCondition)
+    <x-slot:the_slot>
+@endif
+
+    <!-- More content here. -->
+
+@if ($someCondition)
+    </x-slot>
+@endif
+```
+
+The above template will result in a Prettier error stating it encountered an unexpected closing tag. This can be resolved by wrapping the fragmented open/close tags with ignore comments:
+
+```blade
+@if ($someCondition)
+    {{-- format-ignore-start --}}<x-slot:the_slot>{{-- format-ignore-end --}}
+@endif
+
+    <!-- More content here. -->
+
+@if ($someCondition)
+    {{-- format-ignore-start --}}</x-slot>{{-- format-ignore-end --}}
+@endif
+```
+
+
 ## Reporting Issues
 
 Please use the issues feature on GitHub to report bugs/issues. For general questions on how to use this library, please use the Discussions feature. Be considerate when interacting with others :)
