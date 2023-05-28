@@ -218,7 +218,6 @@ The above template will result in a Prettier error stating it encountered an une
 @endif
 ```
 
-
 ## Reporting Issues
 
 Please use the issues feature on GitHub to report bugs/issues. For general questions on how to use this library, please use the Discussions feature. Be considerate when interacting with others :)
