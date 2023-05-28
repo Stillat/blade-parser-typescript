@@ -15,6 +15,7 @@ export class PintTransformer {
     private templateFile: string = '';
     private cache: PintCache;
     private wasCached = false;
+    private outputPintResults = false;
 
     constructor(tmpFilePath: string, cacheDir: string, pintCommand: string) {
         this.tmpDir = tmpFilePath;
@@ -460,12 +461,11 @@ export class PintTransformer {
             return;
         }
 
-
         const command = this.pintCommand.replace('{file}', `"${fileName}"`),
             baseFileName = path.basename(fileName),
             output = execSync(command).toString();
 
-        if (typeof this.templateFile !== 'undefined' && this.templateFile != null) {
+        if (this.outputPintResults && typeof this.templateFile !== 'undefined' && this.templateFile != null) {
             if (output.includes(baseFileName)) {
                 const tempOutput = StringUtilities.breakByNewLine(output),
                     newLines: string[] = [];
