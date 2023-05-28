@@ -60,18 +60,28 @@ export class PintTransformer {
         return slug;
     }
 
+    /**
+     * Prepares the content for the internal result mapping and cache.
+     * 
+     * All whitespace except for newlines will be removed from the
+     * input string. Before Laravel Pint is invoked, we have to
+     * check the incoming document content with what is we
+     * have in the cache. Newlines are excluded as they
+     * can change the output/results of Pint a lot.
+     * 
+     * @param input
+     * @returns 
+     */
     private prepareContent(input: string): string {
-        const whitespacePattern = /\s/g; // Matches all whitespace characters
-        const quotePattern = /['"`]/g; // Matches single quotes, double quotes, and backticks
-
-        // Remove whitespace characters
+        const whitespacePattern = /[^\S\n]/g;
+        const quotePattern = /['"`]/g;
+      
         let result = input.replace(whitespacePattern, '');
-
-        // Remove quotes
+      
         result = result.replace(quotePattern, '');
-
+      
         return result;
-    }
+      }
 
     getResultMapping(): Map<string, string> {
         return this.resultMapping;
