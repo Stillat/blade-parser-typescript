@@ -161,7 +161,7 @@ export class Transformer {
         pintCommand: 'pint {filename}',
         pintTempDirectory: '',
         pintCacheDirectory: '',
-        pintCacheEnabled:true,
+        pintCacheEnabled: true,
     }
 
     constructor(doc: BladeDocument) {
@@ -473,7 +473,7 @@ export class Transformer {
 
             let result = php.sourceContent;
 
-            if (php.hasValidPhp()) {
+            if (this.transformOptions.formatDirectivePhpParameters && php.hasValidPhp()) {
                 if (this.useLaravelPint) {
                     if (this.pintTransformer != null) {
                         result = this.pintTransformer.getPhpBlockContent(php);
@@ -1449,21 +1449,23 @@ export class Transformer {
 
                 let formattedPhp = originalDirective.documentContent;
 
-                if (!this.useLaravelPint) {
-                    formattedPhp = IndentLevel.shiftIndent(
-                        this.transformBlockPhp(originalDirective.innerContent, true),
-                        targetIndent,
-                        true
-                    );
-                } else {
-                    if (this.pintTransformer != null) {
-                        const pintResult = IndentLevel.shiftIndent(
-                            this.pintTransformer.getDirectivePhpContent(originalDirective),
+                if (this.transformOptions.formatDirectivePhpParameters) {
+                    if (!this.useLaravelPint) {
+                        formattedPhp = IndentLevel.shiftIndent(
+                            this.transformBlockPhp(originalDirective.innerContent, true),
                             targetIndent,
                             true
                         );
+                    } else {
+                        if (this.pintTransformer != null) {
+                            const pintResult = IndentLevel.shiftIndent(
+                                this.pintTransformer.getDirectivePhpContent(originalDirective),
+                                targetIndent,
+                                true
+                            );
 
-                        formattedPhp = pintResult;
+                            formattedPhp = pintResult;
+                        }
                     }
                 }
 
@@ -1631,36 +1633,38 @@ export class Transformer {
             let content = directive.sourceContent;
 
             try {
-                if (!this.useLaravelPint) {
-                    if (this.transformOptions.formatDirectivePhpParameters && this.phpFormatter != null && directive.hasValidPhp()) {
-                        let params = directive.getPhpContent().trim();
-                        if (params.startsWith('(') && params.endsWith(')')) {
-                            params = params.substring(1);
-                            params = params.substring(0, params.length - 1);
-                        }
-                        let tResult = this.phpFormatter('<?php ' + params, this.transformOptions, null);
+                if (this.transformOptions.formatDirectivePhpParameters) {
+                    if (!this.useLaravelPint) {
+                        if (this.phpFormatter != null && directive.hasValidPhp()) {
+                            let params = directive.getPhpContent().trim();
+                            if (params.startsWith('(') && params.endsWith(')')) {
+                                params = params.substring(1);
+                                params = params.substring(0, params.length - 1);
+                            }
+                            let tResult = this.phpFormatter('<?php ' + params, this.transformOptions, null);
 
 
-                        const arrayParser = new SimpleArrayParser(),
-                            array = arrayParser.parse(StringUtilities.replaceAllInString(tResult, "\n", ' ')),
-                            targetIndent = this.indentLevel(open);
+                            const arrayParser = new SimpleArrayParser(),
+                                array = arrayParser.parse(StringUtilities.replaceAllInString(tResult, "\n", ' ')),
+                                targetIndent = this.indentLevel(open);
 
-                        if (arrayParser.getIsAssoc()) {
-                            content = '@props' + ' '.repeat(this.transformOptions.spacesAfterDirective) + '(' + tResult + ')';
-                        } else {
-                            if (array != null) {
-                                tResult = ArrayPrinter.print(array, this.transformOptions.tabSize, 1);
-
-                                if (targetIndent > 0) {
-                                    tResult = StringUtilities.removeEmptyNewLines(IndentLevel.shiftIndent(tResult, targetIndent, true));
-                                }
-
+                            if (arrayParser.getIsAssoc()) {
                                 content = '@props' + ' '.repeat(this.transformOptions.spacesAfterDirective) + '(' + tResult + ')';
+                            } else {
+                                if (array != null) {
+                                    tResult = ArrayPrinter.print(array, this.transformOptions.tabSize, 1);
+
+                                    if (targetIndent > 0) {
+                                        tResult = StringUtilities.removeEmptyNewLines(IndentLevel.shiftIndent(tResult, targetIndent, true));
+                                    }
+
+                                    content = '@props' + ' '.repeat(this.transformOptions.spacesAfterDirective) + '(' + tResult + ')';
+                                }
                             }
                         }
+                    } else {
+                        content = this.printDirective(directive, this.indentLevel(open));
                     }
-                } else {
-                    content = this.printDirective(directive, this.indentLevel(open));
                 }
             } catch (err) {
                 content = directive.sourceContent;
