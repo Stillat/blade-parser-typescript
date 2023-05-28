@@ -30,6 +30,110 @@ After installing, add the following to your `.prettierrc` file:
 }
 ```
 
+## Working with Other Plugins, such as the Prettier Plugin for Tailwind CSS
+
+The Blade formatter does not ship with third-party plugins, like the [Prettier Plugin for Tailwind CSS](https://github.com/tailwindlabs/prettier-plugin-tailwindcss).
+
+> Technically the formatter does ship with built-in JSON and PHP formatters, but these are to handle some internal formatting under special circumstances, and are not applied to your entire template.
+
+You are free to install and configure whichever versions of these plugins you would like. However, if you are unable to get them to work in conjunction with the Blade formatter, you can update the `.prettierrc` file and include them in the plugins list.
+
+For example, if we had installed the `prettier-plugin-tailwindcss` plugin, we could update our `.prettierrc` file like so:
+
+```json
+{
+    "tailwindConfig": "path/to/tailwind.config.js",
+    "plugins": [
+        "./node_modules/prettier-plugin-blade/",
+        "./node_modules/prettier-plugin-tailwindcss/"
+    ],
+    "overrides": [
+        {
+            "files": [
+                "*.blade.php"
+            ],
+            "options": {
+                "parser": "blade"
+            }
+        }
+    ]
+}
+```
+
+> Note: If you are using VS Code you may have to restart the editor after installing/changing Prettier plugins for them to take effect.
+
+### Which Plugins are Compatible?
+
+The Blade formatter will utilize Prettier's HTML parser when formatting your Blade document. Your Prettier plugin configuration is passed along to the Blade formatter and will be used when formatting your Blade document - you do not need to wait for it to be supported by the formatting library.
+
+When the Blade formatter invokes Prettier's HTML formatter, the PHP and Blade code will be safely removed from the document to prevent the Blade and PHP content from being mangled by other front-end plugins with similar syntax. Once the layout of the template has been established by the HTML formatter using your project's configuration, the layout engine will start assembling the Blade and PHP content (utilizing the built-in PHP formatter or Laravel Pint, if configured).
+
+## Configuring Laravel Pint
+
+If you would like to use [Laravel Pint](https://github.com/laravel/pint) as the PHP formatter, you will need to create a `.blade.format.json` file at the root of your project (within a typical Laravel application, this will be the same location as your `composer.json` file). The location of this file is important if you do *not* configure a custom Pint command (details below). If no custom Pint command has been configured, the formatting library will use the location of the `.blade.format.json` as the root of your project, and will look for the `vendor/bin/pint` file relative to it's location.
+
+Inside the `.blade.format.json` file, you will need to enable support for Laravel Pint:
+
+```json
+{
+    "useLaravelPint": true
+}
+```
+
+By default, the Blade formatter will look for Pint at the following location:
+
+```text
+project_root/vendor/bin/pint
+```
+
+If you running Pint elsewhere, or need to customize how it is called, you can add a `pintCommand` configuration option to your `.blade.format.json` file:
+
+```json
+{
+    "useLaravelPint": true,
+    "pintCommand": "your-pint-command {file}"
+}
+```
+
+Make sure to include the `{file}` as part of your custom command, as the Blade formatter will supply the path to a temporary path it using when invoking Pint. This path will already be wrapped in double quotes - do not add these yourself.
+
+> ⚠️ The Blade formatter does not check what exactly it is you have added to the `pintCommand` configuration option. If you add some really dumb shell commands, it will attempt to run those.
+
+### Pint Result Cache
+
+The Blade formatter will cache Pint output on a per-file basis. By default this cache is stored in `node_modules/prettier-plugin-blade/_cache`.
+
+The location of the cache can be changed by updating the `.blade.format.json` file and specifying a path for the `pintCacheDirectory`:
+
+```json
+{
+    "useLaravelPint": true,
+    "pintCacheDirectory": "../directory/"
+}
+```
+
+The cache may also be disabled entirely by setting the `pintCacheEnabled` value to `false`:
+
+```json
+{
+    "useLaravelPint": true,
+    "pintCacheEnabled": false
+}
+```
+
+### Pint Temporary Directory
+
+The Blade formatter will extract the relevant PHP from Blade templates and place them in a temporary file to supply to Laravel Pint. By default this directory is located at `node_modules/prettier-plugin-blade/_temp`.
+
+Temporary files are automatically cleaned up after formatting each Blade template. However, if you would like to move this temporary directory you may specify a value for the `pintTempDirectory` configuration option within your `.blade.format.json` file:
+
+```json
+{
+    "useLaravelPint": true,
+    "pintCacheDirectory": "../path/"
+}
+```
+
 ## Ignoring Parts of a Template
 
 Entire sections of a Blade template can be ignored by surrounding it with two special comments:
@@ -126,37 +230,6 @@ By default, PHP version `8.0` is configured when formatting directives, `@php` b
     }
 }
 ```
-
-### Configuring Laravel Pint
-
-If you would like to use [Laravel Pint](https://github.com/laravel/pint) as the PHP formatter, you will need to create a `.blade.format.json` file at the root of your project (within a typical Laravel application, this will be the same location as your `composer.json` file).
-
-Inside this file, you will need to enable support for Laravel Pint:
-
-```json
-{
-    "useLaravelPint": true
-}
-```
-
-By default, the Blade formatter will look for Pint at the following location:
-
-```
-project_root/vendor/bin/pint
-```
-
-If you running Pint elsewhere, or need to customize how it is called, you can add a `pintCommand` configuration option to your `.blade.format.json` file:
-
-```json
-{
-    "useLaravelPint": true,
-    "pintCommand": "your-pint-command {file}"
-}
-```
-
-Make sure to include the `{file}` as part of your custom command, as the Blade formatter will supply the path to a temporary path it using to invoke Pint. This path will already be wrapped in double quotes - do not add these yourself.
-
-> The Blade formatter does not check what exactly it is you have added to the `pintCommand` configuration option. If you add some really dumb shell commands, it will attempt to run those.
 
 ### Configuring Other Options
 
