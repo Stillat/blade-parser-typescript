@@ -184,14 +184,14 @@ suite('Pint Transformer: Ignoring Templates', () => {
                                                                 @forelse ($users as $user)
                                                                     <li>{{ $user->name }}</li>
                                                                 @endforelse
-                                                                <?php
+<?php
 
-                                                                $kernel = $app->                make(Illuminate\\Contracts\\Console\\Kernel::class);
-                                                                
-                                                                $status = $kernel->handle($input = new Symfony\\Component\\Console\\Input\\ArgvInput, new Symfony\\Component\\Console\\Output\\ConsoleOutput);
+$kernel = $app->                make(Illuminate\\Contracts\\Console\\Kernel::class);
 
-                                                                
-                                                                ?>
+$status = $kernel->handle($input = new Symfony\\Component\\Console\\Input\\ArgvInput, new Symfony\\Component\\Console\\Output\\ConsoleOutput);
+
+
+?>
 `;
         const output = `{{-- format-ignore-start --}}
 

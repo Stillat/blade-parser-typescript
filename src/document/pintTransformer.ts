@@ -171,7 +171,7 @@ export class PintTransformer {
                     results += "\n";
                     results += '<?php ';
                     StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
-                        results += cLine.trimLeft() + "\n";
+                        results += cLine + "\n";
                     })
                     results += '; ?>';
                     results += "\n";
@@ -308,7 +308,7 @@ export class PintTransformer {
                 results += "\n";
 
                 StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
-                    results += cLine.trimLeft() + "\n";
+                    results += cLine + "\n";
                 })
 
                 results += "\n";

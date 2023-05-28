@@ -10,9 +10,7 @@ suite('Pint Transformer: Inline PHP', () => {
 
 $kernel = $app->                make(Illuminate\\Contracts\\Console\\Kernel::class);
 
-$status =           $kernel->
-
-                        handle(
+$status =           $kernel->handle(
                                     $input = new Symfony\\Component\\Console\\Input\\ArgvInput,
                                     new Symfony\\Component\\Console\\Output\\ConsoleOutput
 );
@@ -24,9 +22,7 @@ $status =           $kernel->
 
     $kernel = $app->make(Illuminate\\Contracts\\Console\\Kernel::class);
 
-    $status = $kernel->
-
-    handle(
+    $status = $kernel->handle(
         $input = new Symfony\\Component\\Console\\Input\\ArgvInput,
         new Symfony\\Component\\Console\\Output\\ConsoleOutput
     );

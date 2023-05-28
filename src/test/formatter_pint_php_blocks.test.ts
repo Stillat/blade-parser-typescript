@@ -2,6 +2,38 @@ import assert from 'assert';
 import { formatBladeStringWithPint } from '../formatting/prettier/utils';
 
 suite('Pint Transformer: PHP Blocks', () => {
+    test('pint: it preserves relative indents within PHP', () => {
+        const input = `@php
+$wireClickAction =
+    $action->getAction() && ! $action->getUrl()
+        ? "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')"
+        : null;
+@endphp
+
+<?php
+$wireClickAction =
+    $action->getAction() && ! $action->getUrl()
+        ? "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')"
+        : null;
+?>
+`;
+        const expected = `@php
+    $wireClickAction =
+        $action->getAction() && ! $action->getUrl()
+            ? "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')"
+            : null;
+@endphp
+
+<?php
+$wireClickAction =
+   $action->getAction() && ! $action->getUrl()
+       ? "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')"
+       : null;
+?>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), expected);
+    });
+
     test('pint: it indents php blocks', () => {
         assert.strictEqual(
             formatBladeStringWithPint(`<main class="index">
@@ -133,7 +165,7 @@ $data = [
     fn () => true;
 ?>`;
         const out = `<?php
-fn () => true;
+    fn () => true;
 ?>
 `;
         assert.strictEqual(formatBladeStringWithPint(template), out);
