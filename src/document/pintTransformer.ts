@@ -42,25 +42,6 @@ export class PintTransformer {
         return this.templateFile;
     }
 
-    private makeSlug(length: number): string {
-        if (length <= 2) {
-            length = 7;
-        }
-
-        let result = '';
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
-            charactersLength = characters.length;
-
-        for (let i = 0; i < length - 1; i++) {
-            result += characters.charAt(Math.floor(Math.random() *
-                charactersLength));
-        }
-
-        const slug = 'B' + result + 'B';
-
-        return slug;
-    }
-
     /**
      * Prepares the content for the internal result mapping and cache.
      * 
@@ -351,7 +332,7 @@ export class PintTransformer {
             }
         }
 
-        const fileName = this.tmpDir + this.makeSlug(12) + '.php';
+        const fileName = this.tmpDir + StringUtilities.makeSlug(12) + '.php';
         fs.writeFileSync(fileName, transformResults, { encoding: 'utf8' });
         this.callLaravelPint(fileName);
 

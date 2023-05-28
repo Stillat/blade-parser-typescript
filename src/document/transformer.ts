@@ -271,20 +271,7 @@ export class Transformer {
     }
 
     private makeSlug(length: number): string {
-        if (length <= 2) {
-            length = 7;
-        }
-
-        let result = '';
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
-            charactersLength = characters.length;
-
-        for (let i = 0; i < length - 1; i++) {
-            result += characters.charAt(Math.floor(Math.random() *
-                charactersLength));
-        }
-
-        const slug = 'B' + result + 'B';
+        const slug = StringUtilities.makeSlug(length);
 
         if (this.slugs.includes(slug)) {
             return this.makeSlug(length + 1);
