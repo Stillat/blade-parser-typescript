@@ -6,6 +6,20 @@ import { BladeDocument } from './bladeDocument';
 import { StringUtilities } from '../utilities/stringUtilities';
 import { PintCache } from './pintCache';
 
+/**
+ * The PintTransformer class will take an input document
+ * and extract PHP from directive arguments, inline PHP
+ * and from @php(...), @php/@endphp blocks and create
+ * a temporary file with special markers that is
+ * then supplied to Laravel Pint for formatting.
+ * 
+ * Each type of language construct (like @foreach, @forelse)
+ * is handled in a special way to make sure Laravel Pint
+ * receives valid PHP input to format. Once Laravel Pint
+ * has finished its formatting and fixing, the output
+ * is re-processed and the formatting PHP code is
+ * then extracted based on the file's markers.
+ */
 export class PintTransformer {
     private tmpDir: string = '';
     private cacheDir: string = '';
