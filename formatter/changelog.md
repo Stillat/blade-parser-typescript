@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.0
+
+- Adds support for Laravel Pint
+- Tons of bug fixes, minor improvements, test coverage :)
+
 ## 1.3.2
 
 - Improves newline management when formatting really long lines inside directive array arguments
