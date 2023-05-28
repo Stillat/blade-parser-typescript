@@ -30,10 +30,13 @@ export class PintTransformer {
     private cache: PintCache;
     private wasCached = false;
     private outputPintResults = false;
+    private markerSuffix = '';
 
     constructor(tmpFilePath: string, cacheDir: string, pintCommand: string) {
         this.tmpDir = tmpFilePath;
         this.cacheDir = cacheDir;
+
+        this.markerSuffix = this.markerSuffix + StringUtilities.makeSlug(27);
 
         if (!fs.existsSync(this.cacheDir)) {
             fs.mkdirSync(this.cacheDir);
@@ -164,7 +167,7 @@ export class PintTransformer {
             if (node instanceof DirectiveNode) {
                 if (node.directiveName == 'php' && node.isClosedBy != null && node.hasValidPhp()) {
                     const candidate = node.documentContent.trim();
-                    results += replaceIndex.toString() + '=PHP' + '='.repeat(32);
+                    results += replaceIndex.toString() + '=PHP' + this.markerSuffix;
                     results += "\n";
                     results += '<?php ';
                     StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
@@ -184,7 +187,7 @@ export class PintTransformer {
                     if (node.hasDirectiveParameters && !node.hasJsonParameters && node.hasValidPhp()) {
                         if (node.directiveName == 'php') {
                             const candidate = node.directiveParameters.substring(1, node.directiveParameters.length - 1).trim();
-                            results += replaceIndex.toString() + '=IPD' + '='.repeat(32);
+                            results += replaceIndex.toString() + '=IPD' + this.markerSuffix;
                             results += "\n";
                             results += '<?php ';
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
@@ -202,7 +205,7 @@ export class PintTransformer {
                             replaceIndex += 1;
                         } else if (node.directiveName == 'forelse' || node.directiveName == 'foreach') {
                             const candidate = node.directiveParameters.substring(1, node.directiveParameters.length - 1).trim();
-                            results += replaceIndex.toString() + '=FRL' + '='.repeat(32);
+                            results += replaceIndex.toString() + '=FRL' + this.markerSuffix;
                             results += "\n";
                             results += '<?php foreach(';
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
@@ -220,7 +223,7 @@ export class PintTransformer {
                             replaceIndex += 1;
                         } else {
                             const candidate = node.directiveParameters.substring(1, node.directiveParameters.length - 1).trim();
-                            results += replaceIndex.toString() + '=DIR' + '='.repeat(32);
+                            results += replaceIndex.toString() + '=DIR' + this.markerSuffix;
                             results += "\n";
                             results += '<?php $tVar = pintFn(';
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
@@ -241,7 +244,7 @@ export class PintTransformer {
                 }
             } else if (node instanceof BladeEchoNode && node.hasValidPhp()) {
                 const candidate = node.content.trim();
-                results += replaceIndex.toString() + '=ECH' + '='.repeat(32);
+                results += replaceIndex.toString() + '=ECH' + this.markerSuffix;
                 results += "\n";
                 results += '<?php ';
                 StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
@@ -262,7 +265,7 @@ export class PintTransformer {
                     node.parameters.forEach((param) => {
                         if (param.type == ParameterType.Directive && param.directive != null && !param.directive.hasJsonParameters && param.directive.hasValidPhp()) {
                             const candidate = param.directive.directiveParameters.substring(1, param.directive.directiveParameters.length - 1).trim();
-                            results += replaceIndex.toString() + '=DIR' + '='.repeat(32);
+                            results += replaceIndex.toString() + '=DIR' + this.markerSuffix;
                             results += "\n";
                             results += '<?php $tVar = pintFn(';
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
@@ -280,7 +283,7 @@ export class PintTransformer {
                             replaceIndex += 1;
                         } else if (param.type == ParameterType.InlineEcho && param.inlineEcho != null && param.inlineEcho.hasValidPhp()) {
                             const candidate = param.inlineEcho.content.trim();
-                            results += replaceIndex.toString() + '=ECH' + '='.repeat(32);
+                            results += replaceIndex.toString() + '=ECH' + this.markerSuffix;
                             results += "\n";
                             results += '<?php ';
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
@@ -301,7 +304,7 @@ export class PintTransformer {
                 }
             } else if (node instanceof InlinePhpNode && node.hasValidPhp()) {
                 const candidate = node.sourceContent.trim();
-                results += replaceIndex.toString() + '=BHP' + '='.repeat(32);
+                results += replaceIndex.toString() + '=BHP' + this.markerSuffix;
                 results += "\n";
 
                 StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
@@ -355,7 +358,7 @@ export class PintTransformer {
         const tResL = StringUtilities.breakByNewLine(theRes);
 
         let curBuffer: string[] = [],
-            checkEnd = '='.repeat(32),
+            checkEnd = this.markerSuffix,
             curIndex = -1,
             activeType = '';
 
