@@ -482,5 +482,4 @@ export class PintTransformer {
             }
         }
     }
-
 }
