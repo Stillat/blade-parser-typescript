@@ -183,4 +183,15 @@ export class StringUtilities {
 
         return 'B' + result + 'B';
     }
+
+    static replaceWithFillerExceptNewlines(input: string): string {
+        const result = input.replace(/./g, (match) => {
+            if (match === '\n') {
+                return match;
+            }
+            return 'P';
+        });
+
+        return result;
+    }
 }

@@ -273,4 +273,43 @@ $foo->bar([
         assert.strictEqual(formatBladeString(input), expected);
         assert.strictEqual(formatBladeString(expected), expected);
     });
+
+    test('fragments do not stop early on arrows inside echos', () => {
+        const input = `
+        <div
+            {{
+                $attributes
+                    ->merge($getExtraAttributes())
+            }}
+            {{ that="this" }}
+            A
+            <?php echo $something; ?>
+            B
+            @php($why->not)
+            C
+            @directive($attributes->merge($getExtraAttributes()))
+            D
+            {{ $getExtraAlpineAttributeBag() }}
+        >
+        </div>
+    `;
+        const out = `<div
+    {{
+        $attributes->merge(
+            $getExtraAttributes(),
+        )
+    }}
+    {{ that = "this" }}
+    A
+    <?php echo $something; ?>
+    B
+    @php($why->not)
+    C
+    @directive($attributes->merge($getExtraAttributes()))
+    D
+    {{ $getExtraAlpineAttributeBag() }}
+></div>
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    });
 });

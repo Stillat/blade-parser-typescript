@@ -450,7 +450,7 @@ export class Transformer {
             return this.prepareConditionalPhpBlock(php);
         }
 
-        if (php.isInline) {
+        if (php.isInline || php.fragmentPosition == FragmentPosition.InsideFragment || php.fragmentPosition == FragmentPosition.InsideFragmentParameter) {
             return this.prepareInlinePhpBlock(php);
         }
 

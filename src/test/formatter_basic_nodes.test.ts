@@ -68,4 +68,29 @@ suite('Basic Node Formatting', () => {
 </div>`
         );
     });
+
+    test('ignored fragmented elements are actually ignored', () => {
+        const input = `
+@if ($someCondition)
+    {{-- format-ignore-start --}}<x-slot:the_slot>{{-- format-ignore-end --}}
+@endif
+
+    <!-- More content here. -->
+
+@if ($someCondition)
+    {{-- format-ignore-start --}}</x-slot>{{-- format-ignore-end --}}
+@endif
+`;
+        const out = `@if ($someCondition)
+    {{-- format-ignore-start --}}<x-slot:the_slot>{{-- format-ignore-end --}}
+@endif
+
+<!-- More content here. -->
+
+@if ($someCondition)
+    {{-- format-ignore-start --}}</x-slot>{{-- format-ignore-end --}}
+@endif
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    });
 });

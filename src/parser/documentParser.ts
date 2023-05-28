@@ -31,6 +31,7 @@ import { skipToEndOfMultilineComment } from './scanners/skipToEndOfMultilineComm
 import { skipToEndOfString, skipToEndOfStringTraced } from './scanners/skipToEndOfString';
 import { LogicGroupScanResults } from './scanResults';
 import { StringIterator } from './stringIterator';
+import { FragmentsTransformer } from '../document/fragmentTransformer';
 
 export class DocumentParser implements StringIterator {
     static readonly K_CHAR = 'char';
@@ -1243,7 +1244,7 @@ export class DocumentParser implements StringIterator {
         if (this.content.length > 0) {
             this.fragmentsParser
                 .setIndexRanges(this.getNodeIndexRanges())
-                .parse(this.content);
+                .parse(FragmentsTransformer.transform(this.nodes, this.content));
         }
 
         this.fragmentsAnalyzer.analyze();

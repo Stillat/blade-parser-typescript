@@ -195,4 +195,69 @@ $data = [
         assert.strictEqual(formatBladeStringWithPint(input), out);
         assert.strictEqual(formatBladeStringWithPint(out), out);
     });
+
+    test('it can do reasonable things with deeply indented code', () => {
+        // This requiresmoving the `match` part to the line with the assignment.
+        // Otherwise things get confused when transitioning between Pint/Prettier.
+        const input = `
+<div>
+    <div>
+         <div>
+            <div
+                x-cloak
+                x-ref="panel"
+                x-float.placement.bottom-start.offset.flip.shift="{ offset: 8 }"
+                wire:ignore.self
+                wire:key="{{ $this->id }}.{{ $getStatePath() }}.{{ $field::class }}.panel"
+                @class([
+                    'hidden absolute z-10 shadow-lg',
+                    'opacity-70 pointer-events-none' => $isDisabled(),
+                ])
+            >
+                @php
+                    $tag = match ($getFormat()) {
+                            'hsl' => 'hsl-string',
+                            'rgb' => 'rgb-string',
+                            'rgba' => 'rgba-string',
+                            default => 'hex',
+                        } . '-color-picker';
+                @endphp
+
+                <{{ $tag }} color="{{ $getState() }}" />
+            </div>
+        </div>
+    </div>
+</div>
+`;
+        const out = `<div>
+    <div>
+        <div>
+            <div
+                x-cloak
+                x-ref="panel"
+                x-float.placement.bottom-start.offset.flip.shift="{ offset: 8 }"
+                wire:ignore.self
+                wire:key="{{ $this->id }}.{{ $getStatePath() }}.{{ $field::class }}.panel"
+                @class([
+                   'hidden absolute z-10 shadow-lg',
+                   'opacity-70 pointer-events-none' => $isDisabled(),
+                ])
+            >
+                @php
+                    $tag = match ($getFormat()) {
+                        'hsl' => 'hsl-string',
+                        'rgb' => 'rgb-string',
+                        'rgba' => 'rgba-string',
+                        default => 'hex',
+                    }.'-color-picker';
+                @endphp
+
+                <{{ $tag }} color="{{ $getState() }}" />
+            </div>
+        </div>
+    </div>
+</div>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), out);
+    });
 });
