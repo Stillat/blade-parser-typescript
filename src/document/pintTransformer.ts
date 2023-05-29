@@ -74,13 +74,13 @@ export class PintTransformer {
     private prepareContent(input: string): string {
         const whitespacePattern = /[^\S\n]/g;
         const quotePattern = /['"`]/g;
-      
+
         let result = input.replace(whitespacePattern, '');
-      
+
         result = result.replace(quotePattern, '');
-      
+
         return result;
-      }
+    }
 
     getResultMapping(): Map<string, string> {
         return this.resultMapping;
@@ -167,6 +167,9 @@ export class PintTransformer {
             if (node instanceof DirectiveNode) {
                 if (node.directiveName == 'php' && node.isClosedBy != null && node.hasValidPhp()) {
                     const candidate = node.documentContent.trim();
+
+                    if (candidate.length == 0) { return; }
+
                     results += replaceIndex.toString() + '=PHP' + this.markerSuffix;
                     results += "\n";
                     results += '<?php ';
@@ -187,6 +190,9 @@ export class PintTransformer {
                     if (node.hasDirectiveParameters && !node.hasJsonParameters && node.hasValidPhp()) {
                         if (node.directiveName == 'php') {
                             const candidate = node.directiveParameters.substring(1, node.directiveParameters.length - 1).trim();
+
+                            if (candidate.length == 0) { return; }
+
                             results += replaceIndex.toString() + '=IPD' + this.markerSuffix;
                             results += "\n";
                             results += '<?php ';
@@ -205,6 +211,9 @@ export class PintTransformer {
                             replaceIndex += 1;
                         } else if (node.directiveName == 'forelse' || node.directiveName == 'foreach') {
                             const candidate = node.directiveParameters.substring(1, node.directiveParameters.length - 1).trim();
+
+                            if (candidate.length == 0) { return; }
+
                             results += replaceIndex.toString() + '=FRL' + this.markerSuffix;
                             results += "\n";
                             results += '<?php foreach(';
@@ -223,6 +232,9 @@ export class PintTransformer {
                             replaceIndex += 1;
                         } else {
                             const candidate = node.directiveParameters.substring(1, node.directiveParameters.length - 1).trim();
+
+                            if (candidate.length == 0) { return; }
+
                             results += replaceIndex.toString() + '=DIR' + this.markerSuffix;
                             results += "\n";
                             results += '<?php $tVar = pintFn(';
@@ -244,13 +256,17 @@ export class PintTransformer {
                 }
             } else if (node instanceof BladeEchoNode && node.hasValidPhp()) {
                 const candidate = node.content.trim();
+
+                if (candidate.length == 0) { return; }
+
                 results += replaceIndex.toString() + '=ECH' + this.markerSuffix;
                 results += "\n";
-                results += '<?php ';
+                results += '<?php echo ';
                 StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
                     results += cLine.trimLeft() + "\n";
                 })
-                results += ' ?>';
+                results = results.trimRight();
+                results += '; ?>';
                 results += "\n";
                 node.overrideContent = '__pint' + replaceIndex.toString();
 
@@ -285,11 +301,12 @@ export class PintTransformer {
                             const candidate = param.inlineEcho.content.trim();
                             results += replaceIndex.toString() + '=ECH' + this.markerSuffix;
                             results += "\n";
-                            results += '<?php ';
+                            results += '<?php echo ';
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
                                 results += cLine.trimLeft() + "\n";
                             })
-                            results += ' ?>';
+                            results = results.trimRight();
+                            results += '; ?>';
                             results += "\n";
                             param.inlineEcho.overrideContent = '__pint' + replaceIndex.toString();
 
@@ -304,6 +321,12 @@ export class PintTransformer {
                 }
             } else if (node instanceof InlinePhpNode && node.hasValidPhp()) {
                 const candidate = node.sourceContent.trim();
+
+                let checkCandidate = candidate.substring(5).trimLeft();
+                checkCandidate = checkCandidate.trimRight().substring(0, checkCandidate.length - 2).trim();
+
+                if (checkCandidate.length == 0) { return; }
+
                 results += replaceIndex.toString() + '=BHP' + this.markerSuffix;
                 results += "\n";
 
@@ -443,8 +466,12 @@ export class PintTransformer {
             tResult = tResult.substring(0, tResult.length - 1).trimRight();
         } else if (type == 'ECH') {
             tResult = result.substring(5).trimLeft();
+            tResult = tResult.substring(4).trimLeft();
             tResult = tResult.trimRight().substring(0, tResult.length - 2).trimRight();
             if (tResult.endsWith('?')) {
+                tResult = tResult.substring(0, tResult.length - 1).trimRight()
+            }
+            if (tResult.endsWith(';')) {
                 tResult = tResult.substring(0, tResult.length - 1).trimRight()
             }
         } else if (type == 'BHP') {
