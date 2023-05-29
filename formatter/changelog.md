@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.3
+
+- Improves the Pint transformation process to help prevent incorrect indentation levels (more #47)
+
 ## 1.4.2
 
 - Improves the Pint transformation process to help prevent incorrect indentation levels (more #47)

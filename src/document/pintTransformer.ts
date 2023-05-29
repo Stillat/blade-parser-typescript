@@ -31,6 +31,7 @@ export class PintTransformer {
     private wasCached = false;
     private outputPintResults = false;
     private markerSuffix = '';
+    private forceDoublePint = false;
 
     constructor(tmpFilePath: string, cacheDir: string, pintCommand: string) {
         this.tmpDir = tmpFilePath;
@@ -170,6 +171,8 @@ export class PintTransformer {
 
                     if (candidate.length == 0) { return; }
 
+                    this.forceDoublePint = true;
+
                     results += replaceIndex.toString() + '=PHP' + this.markerSuffix;
                     results += "\n";
                     results += '<?php ';
@@ -193,6 +196,8 @@ export class PintTransformer {
                             const candidate = node.directiveParameters.substring(1, node.directiveParameters.length - 1).trim();
 
                             if (candidate.length == 0) { return; }
+
+                            this.forceDoublePint = true;
 
                             results += replaceIndex.toString() + '=IPD' + this.markerSuffix;
                             results += "\n";
@@ -329,6 +334,7 @@ export class PintTransformer {
 
                 if (checkCandidate.length == 0) { return; }
 
+                this.forceDoublePint = true;
                 results += replaceIndex.toString() + '=BHP' + this.markerSuffix;
                 results += "\n";
 
@@ -440,7 +446,8 @@ export class PintTransformer {
             }
         } else if (type == 'PHP') {
             tResult = result.substring(5).trimLeft();
-            tResult = tResult.trimRight().substring(0, tResult.length - 2).trimRight();
+            tResult = tResult.trimRight();
+            tResult = tResult.substring(0, tResult.length - 2).trimRight();
             if (tResult.endsWith('?')) {
                 tResult = tResult.substring(0, tResult.length - 1).trimRight()
             }
@@ -456,7 +463,8 @@ export class PintTransformer {
         } else if (type == 'FRL') {
             tResult = result.substring(5).trimLeft();
             tResult = tResult.trimLeft().substring(8).trimLeft().substring(1).trimLeft();
-            tResult = tResult.trimRight().substring(0, tResult.length - 2).trimRight();
+            tResult = tResult.trimRight();
+            tResult = tResult.substring(0, tResult.length - 2).trimRight();
             if (tResult.endsWith('?')) {
                 tResult = tResult.substring(0, tResult.length - 1).trimRight()
             }
@@ -469,7 +477,8 @@ export class PintTransformer {
         } else if (type == 'ECH') {
             tResult = result.substring(5).trimLeft();
             tResult = tResult.substring(4).trimLeft();
-            tResult = tResult.trimRight().substring(0, tResult.length - 2).trimRight();
+            tResult = tResult.trimRight();
+            tResult = tResult.substring(0, tResult.length - 2).trimRight();
             if (tResult.endsWith('?')) {
                 tResult = tResult.substring(0, tResult.length - 1).trimRight()
             }
@@ -489,8 +498,17 @@ export class PintTransformer {
         }
 
         const command = this.pintCommand.replace('{file}', `"${fileName}"`),
-            baseFileName = path.basename(fileName),
-            output = execSync(command).toString();
+            baseFileName = path.basename(fileName);
+
+        if (this.forceDoublePint) {
+            // Need to run Pint again.
+            // It is likely the output is weird after the initial formatting
+            // if the document contains PHP stuff in addition to echos, etc.
+            execSync(command);
+            fs.writeFileSync(fileName, fs.readFileSync(fileName, { encoding: 'utf8'}) + ' ');
+        }
+        
+        const output = execSync(command).toString();
 
         if (this.outputPintResults && typeof this.templateFile !== 'undefined' && this.templateFile != null) {
             if (output.includes(baseFileName)) {

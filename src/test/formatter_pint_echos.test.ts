@@ -350,4 +350,183 @@ $foo = 'foo';
 `;
         assert.strictEqual(formatBladeStringWithPint(input), expected);
     });
+
+    test('pint: it does not do dumb things when there are php nodes too', () => {
+        const input = `
+@php
+    $foo = 'foo';
+    $bar = 'bar';
+@endphp
+
+<div
+    {{
+        $attributes->class([
+           'foo',
+           'bar',
+        ])
+    }}
+></div>
+`;
+        const out = `@php
+    $foo = 'foo';
+    $bar = 'bar';
+@endphp
+
+<div
+    {{
+        $attributes->class([
+            'foo',
+            'bar',
+        ])
+    }}
+></div>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(formatBladeStringWithPint(out), out);
+    });
+
+    
+    test('pint: it does not do dumb things when there are php nodes too #2', () => {
+        const input = `
+@php
+    $foo = 'foo';
+    $foo = 'foo';
+    $foo = 'foo';
+    $foo = 'foo';
+    $foo = 'foo';
+    $bar = 'bar';
+@endphp
+
+
+<div
+    {{
+        $attributes->class([
+           'foo',
+           'bar',
+        ])
+    }}
+></div>
+
+@php
+    $foo = 'foo';
+    $foo = 'foo';
+    $foo = 'foo';
+    $foo = 'foo';
+    $foo = 'foo';
+    $bar = 'bar';
+
+    $iconClasses = \\Illuminate\\Support\\Arr::toCssClasses([
+        'filament-button-icon',
+        'w-4 h-4' => $size === 'sm',
+        'w-5 h-5' => $size === 'md',
+        'w-6 h-6' => $size === 'lg',
+        'mr-1 -ml-2 rtl:ml-1 rtl:-mr-2' => ($iconPosition === 'before') && ($size === 'md') && (! $labelSrOnly),
+        'mr-2 -ml-3 rtl:ml-2 rtl:-mr-3' => ($iconPosition === 'before') && ($size === 'lg') && (! $labelSrOnly),
+        'mr-1 -ml-1.5 rtl:ml-1 rtl:-mr-1.5' => ($iconPosition === 'before') && ($size === 'sm') && (! $labelSrOnly),
+        'ml-1 -mr-2 rtl:mr-1 rtl:-ml-2' => ($iconPosition === 'after') && ($size === 'md') && (! $labelSrOnly),
+        'ml-2 -mr-3 rtl:mr-2 rtl:-ml-3' => ($iconPosition === 'after') && ($size === 'lg') && (! $labelSrOnly),
+        'ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5' => ($iconPosition === 'after') && ($size === 'sm') && (! $labelSrOnly),
+    ]);
+@endphp
+
+
+
+<div
+    {{
+        $attributes->class([
+           'foo',
+           'bar',
+        ])
+    }}
+></div>
+
+
+<div
+    {{
+        $attributes->class([
+           'foo',
+           'bar',
+        ])
+    }}
+></div>
+
+<div
+    {{
+        $attributes->class([
+           'foo',
+           'bar',
+        ])
+    }}
+></div>
+`;
+        const out = `@php
+    $foo = 'foo';
+    $foo = 'foo';
+    $foo = 'foo';
+    $foo = 'foo';
+    $foo = 'foo';
+    $bar = 'bar';
+@endphp
+
+<div
+    {{
+        $attributes->class([
+            'foo',
+            'bar',
+        ])
+    }}
+></div>
+
+@php
+    $foo = 'foo';
+    $foo = 'foo';
+    $foo = 'foo';
+    $foo = 'foo';
+    $foo = 'foo';
+    $bar = 'bar';
+
+    $iconClasses = \\Illuminate\\Support\\Arr::toCssClasses([
+        'filament-button-icon',
+        'w-4 h-4' => $size === 'sm',
+        'w-5 h-5' => $size === 'md',
+        'w-6 h-6' => $size === 'lg',
+        'mr-1 -ml-2 rtl:ml-1 rtl:-mr-2' => ($iconPosition === 'before') && ($size === 'md') && (! $labelSrOnly),
+        'mr-2 -ml-3 rtl:ml-2 rtl:-mr-3' => ($iconPosition === 'before') && ($size === 'lg') && (! $labelSrOnly),
+        'mr-1 -ml-1.5 rtl:ml-1 rtl:-mr-1.5' => ($iconPosition === 'before') && ($size === 'sm') && (! $labelSrOnly),
+        'ml-1 -mr-2 rtl:mr-1 rtl:-ml-2' => ($iconPosition === 'after') && ($size === 'md') && (! $labelSrOnly),
+        'ml-2 -mr-3 rtl:mr-2 rtl:-ml-3' => ($iconPosition === 'after') && ($size === 'lg') && (! $labelSrOnly),
+        'ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5' => ($iconPosition === 'after') && ($size === 'sm') && (! $labelSrOnly),
+    ]);
+@endphp
+
+<div
+    {{
+        $attributes->class([
+            'foo',
+            'bar',
+        ])
+    }}
+></div>
+
+<div
+    {{
+        $attributes->class([
+            'foo',
+            'bar',
+        ])
+    }}
+></div>
+
+<div
+    {{
+        $attributes->class([
+            'foo',
+            'bar',
+        ])
+    }}
+></div>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(formatBladeStringWithPint(out), out);
+    }).timeout(5000);
 });

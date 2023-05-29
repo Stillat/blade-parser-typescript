@@ -13,7 +13,7 @@ export interface IRestoredCacheResults {
 
 export class PintCache {
     private cacheDir: string = '';
-    private cacheVersion = '2';
+    private cacheVersion = '3';
 
     constructor(cacheDir: string) {
         this.cacheDir = cacheDir;

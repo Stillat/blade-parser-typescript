@@ -372,7 +372,7 @@ $status = $kernel->handle($input = new Symfony\\Component\\Console\\Input\\ArgvI
 `;
         assert.strictEqual(formatBladeStringWithPint(template), output);
         assert.strictEqual(formatBladeStringWithPint(output), output);
-    });
+    }).timeout(5000);
 
     test('pint: it restores ignored parts inside child documents', () => {
         const input = `
