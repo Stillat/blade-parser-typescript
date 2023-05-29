@@ -13,6 +13,7 @@ export interface IRestoredCacheResults {
 
 export class PintCache {
     private cacheDir: string = '';
+    private cacheVersion = '2';
 
     constructor(cacheDir: string) {
         this.cacheDir = cacheDir;
@@ -22,7 +23,7 @@ export class PintCache {
         const hash = crypto.createHash('sha1');
         hash.update(input);
 
-        return '_pint' + hash.digest('hex');
+        return '_pint' + this.cacheVersion + '_' + hash.digest('hex');
     }
 
     private getCachePath(path: string): string {
