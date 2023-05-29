@@ -26,9 +26,9 @@ $wireClickAction =
 
 <?php
 $wireClickAction =
-   $action->getAction() && ! $action->getUrl()
-       ? "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')"
-       : null;
+    $action->getAction() && ! $action->getUrl()
+        ? "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')"
+        : null;
 ?>
 `;
         assert.strictEqual(formatBladeStringWithPint(input), expected);
@@ -82,10 +82,10 @@ $data = [
     </div>
     @php
         $data = [
-           [
-               'href' => '#',
-               'title' => 'The Title',
-           ],
+            [
+                'href' => '#',
+                'title' => 'The Title',
+            ],
         ];
     @endphp
 </main>`

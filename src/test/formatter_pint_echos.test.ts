@@ -323,4 +323,31 @@ E
         // Run it twice to ensure we don't introduce a double-indentation issue.
         assert.strictEqual(formatBladeStringWithPint(expected), expected);
     });
+
+    test('pint: it uses consistent indentation', () => {
+        const input = `@php
+$foo = 'foo';
+@endphp
+
+<div
+{{
+    $attributes->class([
+       'foo',
+       'bar',
+    ])
+}}
+></div>`;
+        const expected = `@php
+    $foo = 'foo';
+@endphp
+
+<div {{
+    $attributes->class([
+        'foo',
+        'bar',
+    ])
+}}></div>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), expected);
+    });
 });

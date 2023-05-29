@@ -175,7 +175,8 @@ export class PintTransformer {
                     results += '<?php ';
                     StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
                         results += cLine + "\n";
-                    })
+                    });
+                    results = results.trimRight();
                     results += '; ?>';
                     results += "\n";
                     node.overrideParams = '__pint' + replaceIndex.toString();
@@ -198,7 +199,8 @@ export class PintTransformer {
                             results += '<?php ';
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
                                 results += cLine.trimLeft() + "\n";
-                            })
+                            });
+                            results = results.trimRight();
                             results += '; ?>';
                             results += "\n";
                             node.overrideParams = '__pint' + replaceIndex.toString();
