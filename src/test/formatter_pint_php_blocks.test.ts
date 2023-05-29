@@ -239,8 +239,8 @@ $data = [
                 wire:ignore.self
                 wire:key="{{ $this->id }}.{{ $getStatePath() }}.{{ $field::class }}.panel"
                 @class([
-                   'hidden absolute z-10 shadow-lg',
-                   'opacity-70 pointer-events-none' => $isDisabled(),
+                    'hidden absolute z-10 shadow-lg',
+                    'opacity-70 pointer-events-none' => $isDisabled(),
                 ])
             >
                 @php

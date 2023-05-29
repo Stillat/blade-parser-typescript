@@ -55,7 +55,8 @@ export class DirectivePrinter {
                         tResult = IndentLevel.shiftIndent(
                             tResult,
                             indentLevel,
-                            true
+                            true,
+                            options
                         );
 
                         let spacesToUse = options.spacesAfterDirective;
@@ -103,7 +104,8 @@ export class DirectivePrinter {
                                 tResult = IndentLevel.shiftIndent(
                                     tResult,
                                     indentLevel,
-                                    true
+                                    true,
+                                    options
                                 );
                             }
 
@@ -121,14 +123,15 @@ export class DirectivePrinter {
                                 tResult = ArrayPrinter.print(array, options.tabSize, 1);
 
                                 if (targetIndent > 0) {
-                                    tResult = StringUtilities.removeEmptyNewLines(IndentLevel.shiftIndent(tResult, targetIndent, true));
+                                    tResult = StringUtilities.removeEmptyNewLines(IndentLevel.shiftIndent(tResult, targetIndent, true, options));
                                 }
 
                                 if (tResult.includes("\n") && !removeLines) {
                                     tResult = IndentLevel.shiftIndent(
                                         tResult,
                                         indentLevel,
-                                        true
+                                        true,
+                                        options
                                     );
                                 }
 
@@ -171,7 +174,8 @@ export class DirectivePrinter {
                         paramContent = '(' + IndentLevel.shiftIndent(
                             tResult,
                             indentLevel,
-                            true
+                            true,
+                            options
                         ) + ')';
                     } else {
                         if (removeLines) {
@@ -194,7 +198,8 @@ export class DirectivePrinter {
                         tResult = IndentLevel.shiftIndent(
                             tResult,
                             indentLevel,
-                            true
+                            true,
+                            options
                         );
                     }
 

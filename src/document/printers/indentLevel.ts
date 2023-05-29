@@ -1,7 +1,8 @@
 import { StringUtilities } from '../../utilities/stringUtilities';
+import { TransformOptions } from '../transformOptions';
 
 export class IndentLevel {
-    static indentRelative(value: string, targetIndent: number, tabSize:number): string {
+    static indentRelative(value: string, targetIndent: number, tabSize: number): string {
         const sourceLines: string[] = StringUtilities.breakByNewLine(value);
         let reflowedLines: string[] = [];
 
@@ -75,8 +76,8 @@ export class IndentLevel {
         return reflowedLines.join("\n");
     }
 
-    
-    static shiftIndentWithLastLineInline(value: string, tabSize:number, targetIndent: number, skipFirst: boolean = false): string {
+
+    static shiftIndentWithLastLineInline(value: string, tabSize: number, targetIndent: number, skipFirst: boolean = false): string {
         const lines = StringUtilities.breakByNewLine(value.trim()),
             reflowedLines: string[] = [];
 
@@ -113,7 +114,7 @@ export class IndentLevel {
         return reflowedLines.join("\n");
     }
 
-    static shiftIndent(value: string, targetIndent: number, skipFirst: boolean = false): string {
+    static shiftIndent(value: string, targetIndent: number, skipFirst: boolean = false, options: TransformOptions, reflowRelative:boolean = false): string {
         const lines = StringUtilities.breakByNewLine(value.trim()),
             reflowedLines: string[] = [];
 
@@ -132,6 +133,15 @@ export class IndentLevel {
             }
 
             if (isAlreadyIndentedRelative) {
+                if (lines[0].trimLeft().length == lines[0].length && targetIndent == options.tabSize && reflowRelative) {
+                    const relativePadding = ' '.repeat(options.tabSize);
+                    
+                    lines.forEach((line) => {
+                        reflowedLines.push(relativePadding + line);
+                    });
+
+                    return reflowedLines.join("\n");
+                }
                 return value.trim();
             }
         }

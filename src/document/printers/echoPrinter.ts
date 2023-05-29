@@ -86,7 +86,9 @@ export class EchoPrinter {
                     const relativeIndent = start.trim() + "\n" + IndentLevel.shiftIndent(
                         tResult,
                         indentLevel + formattingOptions.tabSize,
-                        false
+                        false,
+                        formattingOptions,
+                        true
                     ) + "\n" + ' '.repeat(indentLevel) + end.trim();
 
                     return relativeIndent;

@@ -495,7 +495,8 @@ export class Transformer {
                 result = IndentLevel.shiftIndent(
                     result,
                     targetIndent,
-                    true
+                    true,
+                    this.transformOptions
                 );
             }
 
@@ -1361,7 +1362,8 @@ export class Transformer {
                     directiveResult = IndentLevel.shiftIndent(
                         directiveResult,
                         relativeIndent,
-                        true
+                        true,
+                        this.transformOptions
                     );
                 }
             }
@@ -1454,14 +1456,16 @@ export class Transformer {
                         formattedPhp = IndentLevel.shiftIndent(
                             this.transformBlockPhp(originalDirective.innerContent, true),
                             targetIndent,
-                            true
+                            true,
+                            this.transformOptions
                         );
                     } else {
                         if (this.pintTransformer != null) {
                             const pintResult = IndentLevel.shiftIndent(
                                 this.pintTransformer.getDirectivePhpContent(originalDirective),
                                 targetIndent,
-                                true
+                                true,
+                                this.transformOptions
                             );
 
                             formattedPhp = pintResult;
@@ -1655,7 +1659,7 @@ export class Transformer {
                                     tResult = ArrayPrinter.print(array, this.transformOptions.tabSize, 1);
 
                                     if (targetIndent > 0) {
-                                        tResult = StringUtilities.removeEmptyNewLines(IndentLevel.shiftIndent(tResult, targetIndent, true));
+                                        tResult = StringUtilities.removeEmptyNewLines(IndentLevel.shiftIndent(tResult, targetIndent, true, this.transformOptions));
                                     }
 
                                     content = '@props' + ' '.repeat(this.transformOptions.spacesAfterDirective) + '(' + tResult + ')';
