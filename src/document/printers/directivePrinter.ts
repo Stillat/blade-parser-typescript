@@ -65,6 +65,10 @@ export class DirectivePrinter {
                             spacesToUse = options.spacesAfterControlDirective;
                         }
 
+                        if (tResult.startsWith('(') && tResult.endsWith(')')) {
+                            tResult = tResult.substring(1, tResult.length - 1);
+                        }
+
                         return '@' + directiveName + ' '.repeat(spacesToUse) + '(' + tResult + ')';
                     }
 

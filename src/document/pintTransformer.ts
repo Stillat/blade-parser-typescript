@@ -581,7 +581,7 @@ export class PintTransformer {
                 this.cleanupFiles.push(docFname);
             });
 
-            const dirCommand = this.pintCommand.replace('{file}', this.tmpDir) + ` --cofnig "${PintTransformer.processConfigPath}"`;
+            const dirCommand = this.pintCommand.replace('{file}', this.tmpDir) + ` --config "${PintTransformer.processConfigPath}"`;
             output = execSync(dirCommand).toString();
 
             this.phpDocs.forEach((doc, key) => {
