@@ -601,7 +601,7 @@ export class Transformer {
 
         if (directive.fragmentPosition != FragmentPosition.IsDynamicFragmentName) {
 
-            if (directive.originalAbstractNode != null && directive.originalAbstractNode.prevNode instanceof BladeEchoNode) {
+            if (directive.originalAbstractNode != null && directive.originalAbstractNode.prevNode instanceof BladeEchoNode && directive.originalAbstractNode instanceof DirectiveNode && directive.originalAbstractNode.directiveName == 'if') {
                 const distance = (directive.originalAbstractNode.startPosition?.index ?? 0) - (directive.originalAbstractNode.prevNode.endPosition?.index ?? 0);
 
                 if (distance > 0 && distance < 3) {
