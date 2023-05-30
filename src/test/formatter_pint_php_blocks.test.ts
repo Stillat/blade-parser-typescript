@@ -165,7 +165,7 @@ $data = [
     fn () => true;
 ?>`;
         const out = `<?php
-    fn () => true;
+fn () => true;
 ?>
 `;
         assert.strictEqual(formatBladeStringWithPint(template), out);

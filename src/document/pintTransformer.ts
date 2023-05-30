@@ -350,7 +350,7 @@ export class PintTransformer {
                     this.contentMapping.set(preparedContent, node.overrideContent);
                 }
 
-                this.phpTagDocs.set(node.overrideContent, node.sourceContent);
+                this.phpTagDocs.set(node.overrideContent, node.sourceContent + 'KEEP');
 
                 replaceIndex += 1;
             }
@@ -536,7 +536,7 @@ export class PintTransformer {
                 const docFname = this.tmpDir + fileSlug + 'tag_php_' + key + '.php';
                 const phpDocRes = fs.readFileSync(docFname, { encoding: 'utf8' });
                 let fResults = phpDocRes.trim();
-                fResults += "?>";
+                fResults = fResults.substring(0, fResults.length - 4);
                 this.resultMapping.set(key, fResults);
             });
         } else {
