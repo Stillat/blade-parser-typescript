@@ -563,7 +563,7 @@ export class PintTransformer {
             return;
         }
 
-        const command = this.pintCommand.replace('{file}', `"${fileName}"`) + `--cofnig "${PintTransformer.processConfigPath}"`,
+        const command = this.pintCommand.replace('{file}', `"${fileName}"`) + ` --config "${PintTransformer.processConfigPath}"`,
             baseFileName = path.basename(fileName);
 
         let output = '';
@@ -581,7 +581,7 @@ export class PintTransformer {
                 this.cleanupFiles.push(docFname);
             });
 
-            const dirCommand = this.pintCommand.replace('{file}', this.tmpDir) + `--cofnig "${PintTransformer.processConfigPath}"`;
+            const dirCommand = this.pintCommand.replace('{file}', this.tmpDir) + ` --cofnig "${PintTransformer.processConfigPath}"`;
             output = execSync(dirCommand).toString();
 
             this.phpDocs.forEach((doc, key) => {
