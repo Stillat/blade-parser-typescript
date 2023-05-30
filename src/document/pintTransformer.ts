@@ -384,9 +384,24 @@ export class PintTransformer {
 
         const fSlug = StringUtilities.makeSlug(12), fileName = this.tmpDir + fSlug + '.php';
         fs.writeFileSync(fileName, transformResults, { encoding: 'utf8' });
-        this.callLaravelPint(fileName, fSlug);
+        
+        try {
+            this.callLaravelPint(fileName, fSlug);
+        } catch (err) {
+            fs.unlinkSync(fileName);
+            this.cleanupFiles.forEach((fileName) => {
+                fs.unlinkSync(fileName);
+            });
+
+            if (this.outputPintResults) {
+                console.error(err);
+            }
+
+            return this.resultMapping;
+        }
 
         const theRes = fs.readFileSync(fileName, { encoding: 'utf8' });
+
         fs.unlinkSync(fileName);
         this.cleanupFiles.forEach((fileName) => {
             fs.unlinkSync(fileName);
