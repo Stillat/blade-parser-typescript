@@ -1,3 +1,4 @@
+import { ClassStringEmulation } from '../formatting/classStringEmulation';
 import { PhpOperatorReflow } from '../formatting/phpOperatorReflow';
 import { getPhpOptions } from '../formatting/prettier/utils';
 import { SyntaxReflow } from '../formatting/syntaxReflow';
@@ -1990,6 +1991,9 @@ export class Transformer {
 
             results = results.replace(replace, this.dumpPreservedNodes(nodes, startIndent));
         });
+
+
+        results = (new ClassStringEmulation()).transform(results);
 
         return results;
     }

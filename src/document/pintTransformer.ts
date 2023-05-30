@@ -434,6 +434,7 @@ export class PintTransformer {
         let tResult = result;
 
         if (type == 'DIR') {
+            result = result.trim();
             tResult = result.substring(5).trimLeft().substring(5).trimLeft().substring(1).trimLeft();
             tResult = tResult.substring(0, tResult.length - 2).trimRight();
             tResult = tResult.substring(0, tResult.length - 1).trimRight()
@@ -445,6 +446,7 @@ export class PintTransformer {
                 tResult = tResult.substring(0, tResult.length - 1).trimRight();
             }
         } else if (type == 'PHP') {
+            result = result.trim();
             tResult = result.substring(5).trimLeft();
             tResult = tResult.trimRight();
             tResult = tResult.substring(0, tResult.length - 2).trimRight();
@@ -452,6 +454,7 @@ export class PintTransformer {
                 tResult = tResult.substring(0, tResult.length - 1).trimRight()
             }
         } else if (type == 'IPD') {
+            result = result.trim();
             tResult = result.substring(5).trimLeft();
             tResult = tResult.trimRight().substring(0, tResult.length - 2).trimRight();
             if (tResult.endsWith('?')) {
@@ -475,6 +478,7 @@ export class PintTransformer {
             tResult = tResult.substring(0, tResult.length - 1).trimRight();
             tResult = tResult.substring(0, tResult.length - 1).trimRight();
         } else if (type == 'ECH') {
+            result = result.trim();
             tResult = result.substring(5).trimLeft();
             tResult = tResult.substring(4).trimLeft();
             tResult = tResult.trimRight();

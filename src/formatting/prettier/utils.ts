@@ -112,7 +112,10 @@ export function setOptions(options: ParserOptions) {
 
 
 export function formatAsHtml(text: string) {
-    return prettier.format(text, htmlOptions);
+    return prettier.format(text, {
+        ...htmlOptions,
+        parser: 'html'
+    });
 }
 
 function resolvePhpOptions(defaultOptions: ParserOptions, transformOptions: TransformOptions, options: ParserOptions | null = null) {

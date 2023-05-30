@@ -11,6 +11,7 @@ export class StringRemover implements StringIterator {
     private currentIndex = 0;
     private inputLen = 0;
     private currentContent: string[] = [];
+    private strings: string[] = [];
 
     updateIndex(index: number): void {
         this.currentIndex = index;
@@ -66,7 +67,12 @@ export class StringRemover implements StringIterator {
         return splitter.remove(value);
     }
 
+    getStrings(): string[] {
+        return this.strings;
+    }
+
     remove(value: string): string {
+        this.strings = [];
         this.chars = value.split('');
         this.inputLen = this.chars.length;
 
@@ -75,6 +81,8 @@ export class StringRemover implements StringIterator {
 
             if (isStartOfString(this.cur)) {
                 const results = skipToEndOfStringTraced(this);
+
+                this.strings.push(results.value);
 
                 this.currentIndex = results.endedOn;
 
@@ -87,7 +95,7 @@ export class StringRemover implements StringIterator {
             this.currentContent.push(this.cur as string);
         }
 
-        const cleanedChars:string[] = [];
+        const cleanedChars: string[] = [];
 
         for (let i = 0; i < this.currentContent.length; i++) {
             const char = this.currentContent[i];
