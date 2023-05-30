@@ -12,4 +12,5 @@ export interface TransformOptions {
     pintTempDirectory: string,
     pintCacheDirectory: string,
     pintCacheEnabled: boolean,
+    pintConfigPath: string,
 }

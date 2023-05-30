@@ -164,6 +164,7 @@ export class Transformer {
         pintTempDirectory: '',
         pintCacheDirectory: '',
         pintCacheEnabled: true,
+        pintConfigPath: ''
     }
 
     constructor(doc: BladeDocument) {
@@ -1272,7 +1273,8 @@ export class Transformer {
                 this.pintTransformer = new PintTransformer(
                     this.transformOptions.pintTempDirectory,
                     this.transformOptions.pintCacheDirectory,
-                    this.transformOptions.pintCommand
+                    this.transformOptions.pintCommand,
+                    this.transformOptions.pintConfigPath
                 );
                 this.pintTransformer.setTemplateFilePath(this.filePath);
                 this.pintTransformer.format(this.doc);

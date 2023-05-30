@@ -1,4 +1,5 @@
 out
 node_modules
 _test/_temp/*.php
+_test/_temp/*.json
 _test/_cache/*.json

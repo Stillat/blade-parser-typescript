@@ -31,16 +31,62 @@ export class PintTransformer {
     private wasCached = false;
     private outputPintResults = false;
     private markerSuffix = '';
-    private forceDoublePint = false;
+    private pintConfigPath = '';
+    private static processConfigPath: string | null = null;
     private phpDocs: Map<string, string> = new Map();
     private phpTagDocs: Map<string, string> = new Map();
     private cleanupFiles: string[] = [];
+    private defaultConfig: object = {
+        "preset": "laravel",
+        "rules": {
+            "blank_line_before_statement": false,
+            "concat_space": {
+                "spacing": "one"
+            },
+            "no_unused_imports": false,
+            "method_argument_space": true,
+            "single_trait_insert_per_statement": true,
+            "types_spaces": {
+                "space": "single"
+            }
+        }
+    };
 
-    constructor(tmpFilePath: string, cacheDir: string, pintCommand: string) {
+    constructor(tmpFilePath: string, cacheDir: string, pintCommand: string, pintConfigurationPath: string) {
         this.tmpDir = tmpFilePath;
         this.cacheDir = cacheDir;
 
+        this.pintConfigPath = pintConfigurationPath;
         this.markerSuffix = this.markerSuffix + StringUtilities.makeSlug(27);
+
+        const internalConfigPath = this.tmpDir + '/pint.json';
+
+        if (PintTransformer.processConfigPath == null) {
+            if (this.pintConfigPath.trim().length == 0 || !fs.existsSync(this.pintConfigPath)) {
+                // Need to write a default config.
+                fs.writeFileSync(internalConfigPath, JSON.stringify(this.defaultConfig), { encoding: 'utf8' });
+                PintTransformer.processConfigPath = internalConfigPath;
+            } else {
+                try {
+                    const existingConfig = JSON.parse(fs.readFileSync(this.pintConfigPath, { encoding: 'utf8' }));
+                    if (typeof existingConfig.rules !== 'undefined') {
+                        // We won't have everything available all the time, so need to set this.
+                        existingConfig.rules.no_unused_imports = false;
+                    } else {
+                        existingConfig.rules = {
+                            no_unused_imports: false
+                        };
+                    }
+
+                    fs.writeFileSync(internalConfigPath, JSON.stringify(existingConfig), { encoding: 'utf8' });
+                    PintTransformer.processConfigPath = internalConfigPath;
+                } catch (err) {
+                    // Need to write a default config.
+                    fs.writeFileSync(internalConfigPath, JSON.stringify(this.defaultConfig), { encoding: 'utf8' });
+                    PintTransformer.processConfigPath = internalConfigPath;
+                }
+            }
+        }
 
         if (!fs.existsSync(this.cacheDir)) {
             fs.mkdirSync(this.cacheDir);
@@ -384,7 +430,7 @@ export class PintTransformer {
 
         const fSlug = StringUtilities.makeSlug(12), fileName = this.tmpDir + fSlug + '.php';
         fs.writeFileSync(fileName, transformResults, { encoding: 'utf8' });
-        
+
         try {
             this.callLaravelPint(fileName, fSlug);
         } catch (err) {
@@ -517,27 +563,25 @@ export class PintTransformer {
             return;
         }
 
-        const command = this.pintCommand.replace('{file}', `"${fileName}"`),
+        const command = this.pintCommand.replace('{file}', `"${fileName}"`) + `--cofnig "${PintTransformer.processConfigPath}"`,
             baseFileName = path.basename(fileName);
 
         let output = '';
 
         if (this.phpDocs.size > 0 || this.phpTagDocs.size > 0) {
             this.phpDocs.forEach((doc, key) => {
-                const docFname = this.tmpDir + fileSlug + 'php_' + key + '.php',
-                    phpCommand = this.pintCommand.replace('{file}', `"${docFname}"`);
+                const docFname = this.tmpDir + fileSlug + 'php_' + key + '.php';
                 fs.writeFileSync(docFname, doc, { encoding: 'utf8' });
                 this.cleanupFiles.push(docFname);
             });
 
             this.phpTagDocs.forEach((doc, key) => {
-                const docFname = this.tmpDir + fileSlug + 'tag_php_' + key + '.php',
-                    phpCommand = this.pintCommand.replace('{file}', `"${docFname}"`);
+                const docFname = this.tmpDir + fileSlug + 'tag_php_' + key + '.php';
                 fs.writeFileSync(docFname, doc, { encoding: 'utf8' });
                 this.cleanupFiles.push(docFname);
             });
 
-            const dirCommand = this.pintCommand.replace('{file}', this.tmpDir);
+            const dirCommand = this.pintCommand.replace('{file}', this.tmpDir) + `--cofnig "${PintTransformer.processConfigPath}"`;
             output = execSync(dirCommand).toString();
 
             this.phpDocs.forEach((doc, key) => {
@@ -557,38 +601,6 @@ export class PintTransformer {
         } else {
             output = execSync(command).toString();
         }
-
-        /*
-        this.phpDocs.forEach((doc, key) => {
-            const docFname = this.tmpDir + fileSlug + 'php_' + key + '.php',
-                phpCommand = this.pintCommand.replace('{file}', `"${docFname}"`);
-            fs.writeFileSync(docFname, doc, { encoding: 'utf8' });
-            const fsOut = execSync(phpCommand).toString();
-
-            if (this.outputPintResults) {
-                console.log(fsOut);
-            }
-
-            const phpDocRes = fs.readFileSync(docFname, { encoding: 'utf8' });
-            const fResults = phpDocRes.trim().substring(5);
-            this.resultMapping.set(key, fResults);
-        });
-
-        this.phpTagDocs.forEach((doc, key) => {
-            const docFname = this.tmpDir + fileSlug + 'tag_php_' + key + '.php',
-                phpCommand = this.pintCommand.replace('{file}', `"${docFname}"`);
-            fs.writeFileSync(docFname, doc, { encoding: 'utf8' });
-            const fsOut = execSync(phpCommand).toString();
-
-            if (this.outputPintResults) {
-                console.log(fsOut);
-            }
-
-            const phpDocRes = fs.readFileSync(docFname, { encoding: 'utf8' });
-            const fResults = phpDocRes.trim().substring(5);
-            this.resultMapping.set(key, fResults);
-        });
-        */
 
         if (this.outputPintResults && typeof this.templateFile !== 'undefined' && this.templateFile != null) {
             if (output.includes(baseFileName)) {
