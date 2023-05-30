@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.4
+
+- Improves management of Pint output to help prevent placeholder characters from appearing in output
+
 ## 1.4.3
 
 - Improves the Pint transformation process to help prevent incorrect indentation levels (more #47)
