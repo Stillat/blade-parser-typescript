@@ -114,7 +114,7 @@ export class IndentLevel {
         return reflowedLines.join("\n");
     }
 
-    static shiftIndent(value: string, targetIndent: number, skipFirst: boolean = false, options: TransformOptions, reflowRelative:boolean = false): string {
+    static shiftIndent(value: string, targetIndent: number, skipFirst: boolean = false, options: TransformOptions, reflowRelative:boolean = false, dedentLast: boolean = false): string {
         const lines = StringUtilities.breakByNewLine(value.trim()),
             reflowedLines: string[] = [];
 
@@ -153,7 +153,11 @@ export class IndentLevel {
             if (line.trim().length == 0) {
                 reflowedLines.push('');
             } else {
-                reflowedLines.push(' '.repeat(targetIndent) + line);
+                if (dedentLast && i == lines.length - 1) {
+                    reflowedLines.push(' '.repeat(targetIndent - options.tabSize) + line);
+                } else {
+                    reflowedLines.push(' '.repeat(targetIndent) + line);
+                }
             }
         }
 

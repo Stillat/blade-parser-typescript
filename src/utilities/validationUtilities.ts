@@ -31,15 +31,13 @@ export function formatBladeFilesInDirecetory(directory: string) {
 
     bladeFiles.forEach((file) => {
         try {
-            console.clear();
             formatted += 1;
             console.log(`Formatting ${formatted}/${bladeFiles.length}: ${path.basename(file)}`);
             const contents = fs.readFileSync(file, { encoding: 'utf8' });
             setPrettierFilePath(file);
-            console.log(formatBladeStringWithPint(contents));
+            fs.writeFileSync(file, formatBladeStringWithPint(contents), { encoding: 'utf8' });
         } catch (err) {
             console.error(err);
-            debugger;
         }
     });
 }

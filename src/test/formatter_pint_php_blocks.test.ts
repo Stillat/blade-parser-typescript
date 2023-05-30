@@ -249,7 +249,7 @@ $data = [
                         'rgb' => 'rgb-string',
                         'rgba' => 'rgba-string',
                         default => 'hex',
-                    }.'-color-picker';
+                    } . '-color-picker';
                 @endphp
 
                 <{{ $tag }} color="{{ $getState() }}" />

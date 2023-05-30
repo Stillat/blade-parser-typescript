@@ -1,5 +1,6 @@
 import { PhpOperatorReflow } from '../formatting/phpOperatorReflow';
-import { getPhpOptions } from '../formatting/prettier/utils';
+import { PrettierDocumentFormatter } from '../formatting/prettier/prettierDocumentFormatter';
+import { getOriginalOptions, getPhpOptions } from '../formatting/prettier/utils';
 import { SyntaxReflow } from '../formatting/syntaxReflow';
 import { AbstractNode, BladeCommentNode, BladeComponentNode, BladeEchoNode, ConditionNode, DirectiveNode, ExecutionBranchNode, ForElseNode, FragmentPosition, InlinePhpNode, LiteralNode, ParameterNode, ParameterType, SwitchCaseNode, SwitchStatementNode } from '../nodes/nodes';
 import { SimpleArrayParser } from '../parser/simpleArrayParser';
@@ -104,6 +105,7 @@ export class Transformer {
     private pairedDirectives: Map<string, TransformedPairedDirective> = new Map();
     private dynamicInlineDirectives: Map<string, string> = new Map();
     private inlineDirectives: Map<string, TransformedPairedDirective> = new Map();
+    private attachedDirectives: Map<string, TransformedPairedDirective> = new Map();
     private inlineEchos: Map<string, BladeEchoNode> = new Map();
     private spanEchos: Map<string, BladeEchoNode> = new Map();
     private inlinePhpNodes: Map<string, InlinePhpNode> = new Map();
@@ -332,6 +334,14 @@ export class Transformer {
                 this.inlineDirectives.set(directive.slug, directive);
                 this.dynamicInlineDirectives.set(directive.directive.nodeContent, directive.slug);
             }
+        }
+    }
+
+    private registerAttachedDirective(slug: string, directive: TransformedPairedDirective) {
+        if (this.parentTransformer != null) {
+            this.parentTransformer.registerAttachedDirective(slug, directive);
+        } else {
+            this.attachedDirectives.set(slug, directive);
         }
     }
 
@@ -590,6 +600,22 @@ export class Transformer {
             innerDoc = directive.childrenDocument?.document.transform().setParentTransformer(this).toStructure() as string;
 
         if (directive.fragmentPosition != FragmentPosition.IsDynamicFragmentName) {
+
+            if (directive.originalAbstractNode != null && directive.originalAbstractNode.prevNode instanceof BladeEchoNode) {
+                const distance = (directive.originalAbstractNode.startPosition?.index ?? 0) - (directive.originalAbstractNode.prevNode.endPosition?.index ?? 0);
+
+                if (distance > 0 && distance < 3) {
+                    this.registerAttachedDirective(slug, {
+                        directive: directive,
+                        innerDoc: innerDoc,
+                        slug: slug,
+                        isInline: false,
+                        virtualElementSlug: ''
+                    });
+                    return slug;
+                }
+            }
+
             let virtualSlug = '';
             let result = `${this.open(slug)}\n`;
             if (directiveName == 'php' || directiveName == 'verbatim') {
@@ -1427,8 +1453,44 @@ export class Transformer {
         return value;
     }
 
+    private removeLeadingWhitespace(source: string, substring: string): string {
+        const index = source.indexOf(substring);
+        if (index === -1) {
+            return source;
+        }
+
+        const beforeSubstring = source.slice(0, index);
+        const afterSubstring = source.slice(index + substring.length);
+        const trimmedBefore = beforeSubstring.replace(/[\s\uFEFF\xA0]+$/g, '');
+        return trimmedBefore + substring + afterSubstring;
+    }
+
+    private findNewLeadingStart(content: string, substring: string): number {
+        const lines = StringUtilities.breakByNewLine(content);
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+
+            if (line.includes(substring)) {
+                return line.length - line.trim().length;
+            }
+        }
+        return -1;
+    }
+
     private transformPairedDirectives(content: string): string {
         let value = content;
+
+        this.attachedDirectives.forEach((directive: TransformedPairedDirective, slug: string) => {
+            value = this.removeLeadingWhitespace(value, slug);
+            const attachedDoc = (new PrettierDocumentFormatter(getOriginalOptions(), this.transformOptions)).formatDocument(BladeDocument.fromText(directive.innerDoc)).trim(),
+                dirResult = this.printDirective(directive.directive, this.indentLevel(slug)).trim(),
+                relIndent = this.findNewLeadingStart(value, slug),
+                tmpDoc = dirResult + attachedDoc + "\n" + directive.directive.isClosedBy?.sourceContent ?? '';
+
+            let insertResult = IndentLevel.shiftIndent(tmpDoc, relIndent + this.transformOptions.tabSize, true, this.transformOptions, false, true);
+            value = value.replace(slug, insertResult);
+        });
 
         this.pairedDirectives.forEach((directive: TransformedPairedDirective, slug: string) => {
             const originalDirective = directive.directive;

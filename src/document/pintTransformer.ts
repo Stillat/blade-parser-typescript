@@ -32,6 +32,9 @@ export class PintTransformer {
     private outputPintResults = false;
     private markerSuffix = '';
     private forceDoublePint = false;
+    private phpDocs: Map<string, string> = new Map();
+    private phpTagDocs: Map<string, string> = new Map();
+    private cleanupFiles: string[] = [];
 
     constructor(tmpFilePath: string, cacheDir: string, pintCommand: string) {
         this.tmpDir = tmpFilePath;
@@ -171,23 +174,23 @@ export class PintTransformer {
 
                     if (candidate.length == 0) { return; }
 
-                    this.forceDoublePint = true;
-
-                    results += replaceIndex.toString() + '=PHP' + this.markerSuffix;
-                    results += "\n";
-                    results += '<?php ';
+                    //this.forceDoublePint = true;
+                    let phpDoc = '';
+                    //results += replaceIndex.toString() + '=PHP' + this.markerSuffix;
+                    //results += "\n";
+                    phpDoc += '<?php ' + "\n";
                     StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
-                        results += cLine + "\n";
+                        phpDoc += cLine + "\n";
                     });
-                    results = results.trimRight();
-                    results += '; ?>';
-                    results += "\n";
+                    phpDoc += "\n";
                     node.overrideParams = '__pint' + replaceIndex.toString();
 
                     const preparedContent = this.prepareContent(node.documentContent);
                     if (!this.contentMapping.has(preparedContent)) {
                         this.contentMapping.set(preparedContent, node.overrideParams);
                     }
+
+                    this.phpDocs.set(node.overrideParams, phpDoc);
 
                     replaceIndex += 1;
                 } else {
@@ -197,7 +200,7 @@ export class PintTransformer {
 
                             if (candidate.length == 0) { return; }
 
-                            this.forceDoublePint = true;
+                            // this.forceDoublePint = true;
 
                             results += replaceIndex.toString() + '=IPD' + this.markerSuffix;
                             results += "\n";
@@ -244,11 +247,11 @@ export class PintTransformer {
 
                             results += replaceIndex.toString() + '=DIR' + this.markerSuffix;
                             results += "\n";
-                            results += '<?php $tVar = pintFn(';
+                            results += '<?php $tVar = ';
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
                                 results += cLine.trimLeft() + "\n";
                             })
-                            results += '); ?>';
+                            results += '; ?>';
                             results += "\n";
                             node.overrideParams = '__pint' + replaceIndex.toString();
 
@@ -288,13 +291,16 @@ export class PintTransformer {
                     node.parameters.forEach((param) => {
                         if (param.type == ParameterType.Directive && param.directive != null && !param.directive.hasJsonParameters && param.directive.hasValidPhp()) {
                             const candidate = param.directive.directiveParameters.substring(1, param.directive.directiveParameters.length - 1).trim();
+
+                            if (candidate.length == 0) { return; }
+
                             results += replaceIndex.toString() + '=DIR' + this.markerSuffix;
                             results += "\n";
-                            results += '<?php $tVar = pintFn(';
+                            results += '<?php $tVar = ';
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
                                 results += cLine.trimLeft() + "\n";
                             })
-                            results += '); ?>';
+                            results += ' ?>';
                             results += "\n";
                             param.directive.overrideParams = '__pint' + replaceIndex.toString();
 
@@ -334,21 +340,17 @@ export class PintTransformer {
 
                 if (checkCandidate.length == 0) { return; }
 
-                this.forceDoublePint = true;
-                results += replaceIndex.toString() + '=BHP' + this.markerSuffix;
-                results += "\n";
+                //this.forceDoublePint = true;
 
-                StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
-                    results += cLine + "\n";
-                })
 
-                results += "\n";
                 node.overrideContent = '__pint' + replaceIndex.toString();
 
                 const preparedContent = this.prepareContent(node.sourceContent);
                 if (!this.contentMapping.has(preparedContent)) {
                     this.contentMapping.set(preparedContent, node.overrideContent);
                 }
+
+                this.phpTagDocs.set(node.overrideContent, node.sourceContent);
 
                 replaceIndex += 1;
             }
@@ -380,12 +382,15 @@ export class PintTransformer {
             }
         }
 
-        const fileName = this.tmpDir + StringUtilities.makeSlug(12) + '.php';
+        const fSlug = StringUtilities.makeSlug(12), fileName = this.tmpDir + fSlug + '.php';
         fs.writeFileSync(fileName, transformResults, { encoding: 'utf8' });
-        this.callLaravelPint(fileName);
+        this.callLaravelPint(fileName, fSlug);
 
         const theRes = fs.readFileSync(fileName, { encoding: 'utf8' });
-        fs.unlink(fileName, () => { });
+        fs.unlinkSync(fileName);
+        this.cleanupFiles.forEach((fileName) => {
+            fs.unlinkSync(fileName);
+        });
         const tResL = StringUtilities.breakByNewLine(theRes);
 
         let curBuffer: string[] = [],
@@ -435,15 +440,11 @@ export class PintTransformer {
 
         if (type == 'DIR') {
             result = result.trim();
-            tResult = result.substring(5).trimLeft().substring(5).trimLeft().substring(1).trimLeft();
+            tResult = result.substring(5).trimLeft();
             tResult = tResult.substring(0, tResult.length - 2).trimRight();
-            tResult = tResult.substring(0, tResult.length - 1).trimRight()
             tResult = tResult.substring(7).trimLeft();
             if (tResult.endsWith(';')) {
                 tResult = tResult.substring(0, tResult.length - 1).trimRight()
-            }
-            if (tResult.endsWith(')')) {
-                tResult = tResult.substring(0, tResult.length - 1).trimRight();
             }
         } else if (type == 'PHP') {
             result = result.trim();
@@ -496,7 +497,7 @@ export class PintTransformer {
         return tResult;
     }
 
-    private callLaravelPint(fileName: string) {
+    private callLaravelPint(fileName: string, fileSlug: string) {
         if (this.wasCached) {
             return;
         }
@@ -504,15 +505,75 @@ export class PintTransformer {
         const command = this.pintCommand.replace('{file}', `"${fileName}"`),
             baseFileName = path.basename(fileName);
 
-        if (this.forceDoublePint) {
-            // Need to run Pint again.
-            // It is likely the output is weird after the initial formatting
-            // if the document contains PHP stuff in addition to echos, etc.
-            execSync(command);
-            fs.writeFileSync(fileName, fs.readFileSync(fileName, { encoding: 'utf8'}) + ' ');
+        let output = '';
+
+        if (this.phpDocs.size > 0 || this.phpTagDocs.size > 0) {
+            this.phpDocs.forEach((doc, key) => {
+                const docFname = this.tmpDir + fileSlug + 'php_' + key + '.php',
+                    phpCommand = this.pintCommand.replace('{file}', `"${docFname}"`);
+                fs.writeFileSync(docFname, doc, { encoding: 'utf8' });
+                this.cleanupFiles.push(docFname);
+            });
+
+            this.phpTagDocs.forEach((doc, key) => {
+                const docFname = this.tmpDir + fileSlug + 'tag_php_' + key + '.php',
+                    phpCommand = this.pintCommand.replace('{file}', `"${docFname}"`);
+                fs.writeFileSync(docFname, doc, { encoding: 'utf8' });
+                this.cleanupFiles.push(docFname);
+            });
+
+            const dirCommand = this.pintCommand.replace('{file}', this.tmpDir);
+            output = execSync(dirCommand).toString();
+
+            this.phpDocs.forEach((doc, key) => {
+                const docFname = this.tmpDir + fileSlug + 'php_' + key + '.php';
+                const phpDocRes = fs.readFileSync(docFname, { encoding: 'utf8' });
+                const fResults = phpDocRes.trim().substring(5);
+                this.resultMapping.set(key, fResults);
+            });
+
+            this.phpTagDocs.forEach((doc, key) => {
+                const docFname = this.tmpDir + fileSlug + 'tag_php_' + key + '.php';
+                const phpDocRes = fs.readFileSync(docFname, { encoding: 'utf8' });
+                let fResults = phpDocRes.trim();
+                fResults += "?>";
+                this.resultMapping.set(key, fResults);
+            });
+        } else {
+            output = execSync(command).toString();
         }
-        
-        const output = execSync(command).toString();
+
+        /*
+        this.phpDocs.forEach((doc, key) => {
+            const docFname = this.tmpDir + fileSlug + 'php_' + key + '.php',
+                phpCommand = this.pintCommand.replace('{file}', `"${docFname}"`);
+            fs.writeFileSync(docFname, doc, { encoding: 'utf8' });
+            const fsOut = execSync(phpCommand).toString();
+
+            if (this.outputPintResults) {
+                console.log(fsOut);
+            }
+
+            const phpDocRes = fs.readFileSync(docFname, { encoding: 'utf8' });
+            const fResults = phpDocRes.trim().substring(5);
+            this.resultMapping.set(key, fResults);
+        });
+
+        this.phpTagDocs.forEach((doc, key) => {
+            const docFname = this.tmpDir + fileSlug + 'tag_php_' + key + '.php',
+                phpCommand = this.pintCommand.replace('{file}', `"${docFname}"`);
+            fs.writeFileSync(docFname, doc, { encoding: 'utf8' });
+            const fsOut = execSync(phpCommand).toString();
+
+            if (this.outputPintResults) {
+                console.log(fsOut);
+            }
+
+            const phpDocRes = fs.readFileSync(docFname, { encoding: 'utf8' });
+            const fResults = phpDocRes.trim().substring(5);
+            this.resultMapping.set(key, fResults);
+        });
+        */
 
         if (this.outputPintResults && typeof this.templateFile !== 'undefined' && this.templateFile != null) {
             if (output.includes(baseFileName)) {
