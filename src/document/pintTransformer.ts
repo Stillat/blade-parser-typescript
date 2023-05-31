@@ -211,7 +211,7 @@ export class PintTransformer {
     }
 
     transform(document: BladeDocument): string {
-        let results = '',
+        let results = '<?php ' + "\n",
             replaceIndex = 0;
 
         document.getAllNodes().forEach((node) => {
@@ -226,9 +226,7 @@ export class PintTransformer {
                     //results += replaceIndex.toString() + '=PHP' + this.markerSuffix;
                     //results += "\n";
                     phpDoc += '<?php ' + "\n";
-                    StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
-                        phpDoc += cLine + "\n";
-                    });
+                    phpDoc += node.documentContent;
                     phpDoc += "\n";
                     node.overrideParams = '__pint' + replaceIndex.toString();
 
@@ -249,14 +247,13 @@ export class PintTransformer {
 
                             // this.forceDoublePint = true;
 
-                            results += replaceIndex.toString() + '=IPD' + this.markerSuffix;
+                            results += '// ' + replaceIndex.toString() + '=IPD' + this.markerSuffix;
                             results += "\n";
-                            results += '<?php ';
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
                                 results += cLine.trimLeft() + "\n";
                             });
                             results = results.trimRight();
-                            results += '; ?>';
+                            results += ';';
                             results += "\n";
                             node.overrideParams = '__pint' + replaceIndex.toString();
 
@@ -271,13 +268,13 @@ export class PintTransformer {
 
                             if (candidate.length == 0) { return; }
 
-                            results += replaceIndex.toString() + '=FRL' + this.markerSuffix;
+                            results += '// ' + replaceIndex.toString() + '=FRL' + this.markerSuffix;
                             results += "\n";
-                            results += '<?php foreach(';
+                            results += 'foreach(';
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
                                 results += cLine.trimLeft() + "\n";
                             })
-                            results += ') {} ?>';
+                            results += ') {}';
                             results += "\n";
                             node.overrideParams = '__pint' + replaceIndex.toString();
 
@@ -292,13 +289,13 @@ export class PintTransformer {
 
                             if (candidate.length == 0) { return; }
 
-                            results += replaceIndex.toString() + '=DIR' + this.markerSuffix;
+                            results += '// ' + replaceIndex.toString() + '=DIR' + this.markerSuffix;
                             results += "\n";
-                            results += '<?php $tVar = ';
+                            results += '$tVar = ';
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
                                 results += cLine.trimLeft() + "\n";
                             })
-                            results += '; ?>';
+                            results += ';';
                             results += "\n";
                             node.overrideParams = '__pint' + replaceIndex.toString();
 
@@ -316,14 +313,14 @@ export class PintTransformer {
 
                 if (candidate.length == 0) { return; }
 
-                results += replaceIndex.toString() + '=ECH' + this.markerSuffix;
+                results += '// ' + replaceIndex.toString() + '=ECH' + this.markerSuffix;
                 results += "\n";
-                results += '<?php echo ';
+                results += 'echo ';
                 StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
                     results += cLine.trimLeft() + "\n";
                 })
                 results = results.trimRight();
-                results += '; ?>';
+                results += ';';
                 results += "\n";
                 node.overrideContent = '__pint' + replaceIndex.toString();
 
@@ -341,13 +338,13 @@ export class PintTransformer {
 
                             if (candidate.length == 0) { return; }
 
-                            results += replaceIndex.toString() + '=DIR' + this.markerSuffix;
+                            results += '// ' + replaceIndex.toString() + '=DIR' + this.markerSuffix;
                             results += "\n";
-                            results += '<?php $tVar = ';
+                            results += '$tVar = ';
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
                                 results += cLine.trimLeft() + "\n";
                             })
-                            results += ' ?>';
+                            results += ';';
                             results += "\n";
                             param.directive.overrideParams = '__pint' + replaceIndex.toString();
 
@@ -359,14 +356,14 @@ export class PintTransformer {
                             replaceIndex += 1;
                         } else if (param.type == ParameterType.InlineEcho && param.inlineEcho != null && param.inlineEcho.hasValidPhp()) {
                             const candidate = param.inlineEcho.content.trim();
-                            results += replaceIndex.toString() + '=ECH' + this.markerSuffix;
+                            results += '// ' + replaceIndex.toString() + '=ECH' + this.markerSuffix;
                             results += "\n";
-                            results += '<?php echo ';
+                            results += 'echo ';
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
                                 results += cLine.trimLeft() + "\n";
                             })
                             results = results.trimRight();
-                            results += '; ?>';
+                            results += ';';
                             results += "\n";
                             param.inlineEcho.overrideContent = '__pint' + replaceIndex.toString();
 
@@ -386,9 +383,6 @@ export class PintTransformer {
                 checkCandidate = checkCandidate.trimRight().substring(0, checkCandidate.length - 2).trim();
 
                 if (checkCandidate.length == 0) { return; }
-
-                //this.forceDoublePint = true;
-
 
                 node.overrideContent = '__pint' + replaceIndex.toString();
 
@@ -458,11 +452,13 @@ export class PintTransformer {
         let curBuffer: string[] = [],
             checkEnd = this.markerSuffix,
             curIndex = -1,
-            activeType = '';
+            activeType = '',
+            hasObservedMarker = false;
 
         tResL.forEach((line) => {
             if (line.endsWith(checkEnd)) {
-                var lIndex = parseInt(line.substring(0, line.indexOf('='))),
+                hasObservedMarker = true;
+                var lIndex = parseInt(line.substring(2).trim().substring(0, line.indexOf('='))),
                     type = line.substring(line.indexOf('=') + 1, line.indexOf('=') + 4);
 
                 if (activeType == '') {
@@ -481,7 +477,9 @@ export class PintTransformer {
                 }
             }
 
-            curBuffer.push(line);
+            if (hasObservedMarker) {
+                curBuffer.push(line);
+            }
         });
 
         if (curBuffer.length > 0) {
@@ -501,25 +499,20 @@ export class PintTransformer {
         let tResult = result;
 
         if (type == 'DIR') {
-            result = result.trim();
-            tResult = result.substring(5).trimLeft();
-            tResult = tResult.substring(0, tResult.length - 2).trimRight();
+            tResult = tResult.trim().trimRight();
             tResult = tResult.substring(7).trimLeft();
             if (tResult.endsWith(';')) {
                 tResult = tResult.substring(0, tResult.length - 1).trimRight()
             }
         } else if (type == 'PHP') {
-            result = result.trim();
-            tResult = result.substring(5).trimLeft();
+            tResult = result.trim().substring(5).trimLeft();
             tResult = tResult.trimRight();
-            tResult = tResult.substring(0, tResult.length - 2).trimRight();
+            tResult = tResult.trimRight();
             if (tResult.endsWith('?')) {
                 tResult = tResult.substring(0, tResult.length - 1).trimRight()
             }
         } else if (type == 'IPD') {
-            result = result.trim();
-            tResult = result.substring(5).trimLeft();
-            tResult = tResult.trimRight().substring(0, tResult.length - 2).trimRight();
+            tResult = result.trim().trimRight();
             if (tResult.endsWith('?')) {
                 tResult = tResult.substring(0, tResult.length - 1).trimRight()
             }
@@ -527,10 +520,9 @@ export class PintTransformer {
                 tResult = tResult.substring(0, tResult.length - 1).trimRight()
             }
         } else if (type == 'FRL') {
-            tResult = result.substring(5).trimLeft();
             tResult = tResult.trimLeft().substring(8).trimLeft().substring(1).trimLeft();
             tResult = tResult.trimRight();
-            tResult = tResult.substring(0, tResult.length - 2).trimRight();
+            tResult = tResult.trimRight();
             if (tResult.endsWith('?')) {
                 tResult = tResult.substring(0, tResult.length - 1).trimRight()
             }
@@ -541,11 +533,10 @@ export class PintTransformer {
             tResult = tResult.substring(0, tResult.length - 1).trimRight();
             tResult = tResult.substring(0, tResult.length - 1).trimRight();
         } else if (type == 'ECH') {
-            result = result.trim();
-            tResult = result.substring(5).trimLeft();
+            tResult = result.trim();
             tResult = tResult.substring(4).trimLeft();
             tResult = tResult.trimRight();
-            tResult = tResult.substring(0, tResult.length - 2).trimRight();
+            tResult = tResult.trimRight();
             if (tResult.endsWith('?')) {
                 tResult = tResult.substring(0, tResult.length - 1).trimRight()
             }

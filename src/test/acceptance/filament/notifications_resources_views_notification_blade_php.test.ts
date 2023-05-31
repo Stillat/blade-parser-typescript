@@ -147,23 +147,23 @@ suite('Pint Transformer Accpetance: notifications_resources_views_notification_b
 >
     <div
         @class([
-           'flex gap-3 w-full',
-           ...match ($isInline) {
-               true => ['py-2 ps-6 pe-2'],
-               false => [
-                   'p-4 rounded-xl',
-                   match ($color) {
-                       'danger' => 'bg-danger-500/10 dark:bg-danger-500/20',
-                       'gray' => 'bg-gray-500/10 dark:bg-gray-500/20',
-                       'info' => 'bg-info-500/10 dark:bg-info-500/20',
-                       'primary' => 'bg-primary-500/10 dark:bg-primary-500/20',
-                       'secondary' => 'bg-secondary-500/10 dark:bg-secondary-500/20',
-                       'success' => 'bg-success-500/10 dark:bg-success-500/20',
-                       'warning' => 'bg-warning-500/10 dark:bg-warning-500/20',
-                       default => null,
-                   },
-               ],
-           },
+            'flex gap-3 w-full',
+            ...match ($isInline) {
+                true => ['py-2 ps-6 pe-2'],
+                false => [
+                    'p-4 rounded-xl',
+                    match ($color) {
+                        'danger' => 'bg-danger-500/10 dark:bg-danger-500/20',
+                        'gray' => 'bg-gray-500/10 dark:bg-gray-500/20',
+                        'info' => 'bg-info-500/10 dark:bg-info-500/20',
+                        'primary' => 'bg-primary-500/10 dark:bg-primary-500/20',
+                        'secondary' => 'bg-secondary-500/10 dark:bg-secondary-500/20',
+                        'success' => 'bg-success-500/10 dark:bg-success-500/20',
+                        'warning' => 'bg-warning-500/10 dark:bg-warning-500/20',
+                        default => null,
+                    },
+                ],
+            },
         ])
     >
         @if ($icon = $getIcon())

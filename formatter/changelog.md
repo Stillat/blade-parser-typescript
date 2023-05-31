@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.4.6 (Unreleased)
+
+- Improves placement of spaces after directives when content is inlined within an element or attribute (#51)
+- Improves relative indentation of directive arguments (#49)
+- Corrects an issue that would cause odd replacements inside attached conditions (#52)
+- Improves how PHP content is sent to Laravel Pint for better output results (#50)
+
 ## 1.4.5
 
 - Improves internal management of Pint cache

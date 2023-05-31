@@ -1736,9 +1736,9 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                         :xl="$contentGrid['xl'] ?? null"
                         :two-xl="$contentGrid['2xl'] ?? null"
                         @class([
-                           'dark:divide-gray-700',
-                           'divide-y' => ! $contentGrid,
-                           'p-2 gap-2' => $contentGrid,
+                            'dark:divide-gray-700',
+                            'divide-y' => ! $contentGrid,
+                            'p-2 gap-2' => $contentGrid,
                         ])
                     >
                         @php
@@ -1777,8 +1777,8 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
 
                                 <div
                                     @class([
-                                       'col-span-full bg-gray-500/5',
-                                       'rounded-xl shadow-sm' => $contentGrid,
+                                        'col-span-full bg-gray-500/5',
+                                        'rounded-xl shadow-sm' => $contentGrid,
                                     ])
                                 >
                                     @php
@@ -1849,25 +1849,25 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                                         'bg-gray-50 dark:bg-gray-500/10': isRecordSelected('{{ $recordKey }}'),
                                     }"
                                     @class([
-                                       'h-full relative px-4 transition',
-                                       'hover:bg-gray-50 dark:hover:bg-gray-500/10' => $recordUrl || $recordAction,
-                                       'dark:border-gray-600' => ! $contentGrid,
-                                       'group' => $isReordering,
-                                       'rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 dark:bg-gray-700/40' => $contentGrid,
-                                       ...$getRecordClasses($record),
+                                        'h-full relative px-4 transition',
+                                        'hover:bg-gray-50 dark:hover:bg-gray-500/10' => $recordUrl || $recordAction,
+                                        'dark:border-gray-600' => ! $contentGrid,
+                                        'group' => $isReordering,
+                                        'rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 dark:bg-gray-700/40' => $contentGrid,
+                                        ...$getRecordClasses($record),
                                     ])
                                 >
                                     <div
                                         @class([
-                                           'items-center gap-4 md:flex md:me-0' => (! $contentGrid),
-                                           'me-6' => $isSelectionEnabled || $hasCollapsibleColumnsLayout || $isReordering,
+                                            'items-center gap-4 md:flex md:me-0' => (! $contentGrid),
+                                            'me-6' => $isSelectionEnabled || $hasCollapsibleColumnsLayout || $isReordering,
                                         ])
                                     >
                                         <x-filament-tables::reorder.handle
                                             @class([
-                                               'absolute top-3 end-3',
-                                               'md:relative md:top-0 end-0' => ! $contentGrid,
-                                               'hidden' => ! $isReordering,
+                                                'absolute top-3 end-3',
+                                                'md:relative md:top-0 end-0' => ! $contentGrid,
+                                                'hidden' => ! $isReordering,
                                             ])
                                         />
 
@@ -1887,11 +1887,11 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                                         @if ($hasCollapsibleColumnsLayout)
                                             <div
                                                 @class([
-                                                   'absolute end-1',
-                                                   'top-10' => $isSelectionEnabled,
-                                                   'top-1' => ! $isSelectionEnabled,
-                                                   'md:relative md:top-0 md:end-0' => ! $contentGrid,
-                                                   'hidden' => $isReordering,
+                                                    'absolute end-1',
+                                                    'top-10' => $isSelectionEnabled,
+                                                    'top-1' => ! $isSelectionEnabled,
+                                                    'md:relative md:top-0 md:end-0' => ! $contentGrid,
+                                                    'hidden' => $isReordering,
                                                 ])
                                             >
                                                 <x-filament::icon-button
@@ -1959,11 +1959,11 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                                                 :record="$record"
                                                 wrap="-md"
                                                 @class([
-                                                   'absolute bottom-1 end-1' => $actionsPosition === ActionsPosition::BottomCorner,
-                                                   'md:relative md:bottom-0 md:end-0' => $actionsPosition === ActionsPosition::BottomCorner && (! $contentGrid),
-                                                   'mb-3' => $actionsPosition === ActionsPosition::AfterContent,
-                                                   'md:mb-0' => $actionsPosition === ActionsPosition::AfterContent && (! $contentGrid),
-                                                   'hidden' => $isReordering,
+                                                    'absolute bottom-1 end-1' => $actionsPosition === ActionsPosition::BottomCorner,
+                                                    'md:relative md:bottom-0 md:end-0' => $actionsPosition === ActionsPosition::BottomCorner && (! $contentGrid),
+                                                    'mb-3' => $actionsPosition === ActionsPosition::AfterContent,
+                                                    'md:mb-0' => $actionsPosition === ActionsPosition::AfterContent && (! $contentGrid),
+                                                    'hidden' => $isReordering,
                                                 ])
                                             />
                                         @endif
@@ -1974,10 +1974,10 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                                             x-show="! isCollapsed"
                                             x-collapse
                                             @class([
-                                               'pb-2 -mx-2',
-                                               'md:ps-20' => (! $contentGrid) && $isSelectionEnabled,
-                                               'md:ps-12' => (! $contentGrid) && (! $isSelectionEnabled),
-                                               'hidden' => $isReordering,
+                                                'pb-2 -mx-2',
+                                                'md:ps-20' => (! $contentGrid) && $isSelectionEnabled,
+                                                'md:ps-12' => (! $contentGrid) && (! $isSelectionEnabled),
+                                                'hidden' => $isReordering,
                                             ])
                                         >
                                             {{ $collapsibleColumnsLayout->viewData(['recordKey' => $recordKey]) }}
@@ -2282,13 +2282,13 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                                         'bg-gray-50 dark:bg-gray-500/10': isRecordSelected('{{ $recordKey }}'),
                                     }"
                                     @class([
-                                       'group cursor-move' => $isReordering,
-                                       ...$getRecordClasses($record),
+                                        'group cursor-move' => $isReordering,
+                                        ...$getRecordClasses($record),
                                     ])
                                 >
                                     <x-filament-tables::reorder.cell
                                         @class([
-                                           'hidden' => ! $isReordering,
+                                            'hidden' => ! $isReordering,
                                         ])
                                     >
                                         @if ($isReordering)
@@ -2299,7 +2299,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                                     @if (count($actions) && $actionsPosition === ActionsPosition::BeforeCells)
                                         <x-filament-tables::actions.cell
                                             @class([
-                                               'hidden' => $isReordering,
+                                                'hidden' => $isReordering,
                                             ])
                                         >
                                             <x-filament-tables::actions
@@ -2313,7 +2313,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                                     @if ($isSelectionEnabled && $recordCheckboxPosition === RecordCheckboxPosition::BeforeCells)
                                         <x-filament-tables::checkbox.cell
                                             @class([
-                                               'hidden' => $isReordering,
+                                                'hidden' => $isReordering,
                                             ])
                                         >
                                             @if ($isRecordSelectable($record))
@@ -2330,7 +2330,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                                     @if (count($actions) && $actionsPosition === ActionsPosition::BeforeColumns)
                                         <x-filament-tables::actions.cell
                                             @class([
-                                               'hidden' => $isReordering,
+                                                'hidden' => $isReordering,
                                             ])
                                         >
                                             <x-filament-tables::actions
@@ -2368,7 +2368,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                                     @if (count($actions) && $actionsPosition === ActionsPosition::AfterColumns)
                                         <x-filament-tables::actions.cell
                                             @class([
-                                               'hidden' => $isReordering,
+                                                'hidden' => $isReordering,
                                             ])
                                         >
                                             <x-filament-tables::actions
@@ -2382,7 +2382,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                                     @if ($isSelectionEnabled && $recordCheckboxPosition === RecordCheckboxPosition::AfterCells)
                                         <x-filament-tables::checkbox.cell
                                             @class([
-                                               'hidden' => $isReordering,
+                                                'hidden' => $isReordering,
                                             ])
                                         >
                                             @if ($isRecordSelectable($record))
@@ -2399,7 +2399,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                                     @if (count($actions) && $actionsPosition === ActionsPosition::AfterCells)
                                         <x-filament-tables::actions.cell
                                             @class([
-                                               'hidden' => $isReordering,
+                                                'hidden' => $isReordering,
                                             ])
                                         >
                                             <x-filament-tables::actions

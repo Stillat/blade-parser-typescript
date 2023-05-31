@@ -114,7 +114,7 @@ export class IndentLevel {
         return reflowedLines.join("\n");
     }
 
-    static shiftIndent(value: string, targetIndent: number, skipFirst: boolean = false, options: TransformOptions, reflowRelative:boolean = false, dedentLast: boolean = false): string {
+    static shiftIndent(value: string, targetIndent: number, skipFirst: boolean = false, options: TransformOptions, reflowRelative: boolean = false, dedentLast: boolean = false): string {
         const lines = StringUtilities.breakByNewLine(value.trim()),
             reflowedLines: string[] = [];
 
@@ -135,7 +135,7 @@ export class IndentLevel {
             if (isAlreadyIndentedRelative) {
                 if (lines[0].trimLeft().length == lines[0].length && targetIndent == options.tabSize && reflowRelative) {
                     const relativePadding = ' '.repeat(options.tabSize);
-                    
+
                     lines.forEach((line) => {
                         reflowedLines.push(relativePadding + line);
                     });

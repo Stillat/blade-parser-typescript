@@ -234,8 +234,8 @@ suite('Pint Transformer Accpetance: infolists_resources_views_components_text_en
     >
         <{{ $isListWithLineBreaks ? 'ul' : 'div' }}
             @class([
-               'list-disc list-inside' => $isBulleted(),
-               'flex flex-wrap gap-1' => $isBadge,
+                'list-disc list-inside' => $isBulleted(),
+                'flex flex-wrap gap-1' => $isBadge,
             ])
         >
             @foreach ($arrayState as $state)
@@ -248,59 +248,59 @@ suite('Pint Transformer Accpetance: infolists_resources_views_components_text_en
                     <{{ $isListWithLineBreaks ? 'li' : 'div' }}>
                         <div
                             @class([
-                               'inline-flex items-center space-x-1 rtl:space-x-reverse',
-                               'justify-center min-h-6 px-2 py-0.5 rounded-xl whitespace-nowrap' => $isBadge,
-                               'prose max-w-none dark:prose-invert' => $isProse,
-                               'whitespace-normal' => $canWrap,
-                               ($isBadge ? match ($color = $getColor($state)) {
-                                   'danger' => 'text-danger-700 bg-danger-500/10 dark:text-danger-500',
-                                   'gray', null => 'text-gray-700 bg-gray-500/10 dark:text-gray-300 dark:bg-gray-500/20',
-                                   'info' => 'text-info-700 bg-info-500/10 dark:text-info-500',
-                                   'primary' => 'text-primary-700 bg-primary-500/10 dark:text-primary-500',
-                                   'secondary' => 'text-secondary-700 bg-secondary-500/10 dark:text-secondary-500',
-                                   'success' => 'text-success-700 bg-success-500/10 dark:text-success-500',
-                                   'warning' => 'text-warning-700 bg-warning-500/10 dark:text-warning-500',
-                                   default => $color,
-                               } : null),
-                               ((! ($isBadge || $url)) ? match ($color = $getColor($state)) {
-                                   'danger' => 'text-danger-600',
-                                   'gray' => 'text-gray-600 dark:text-gray-400',
-                                   'info' => 'text-info-600',
-                                   'primary' => 'text-primary-600',
-                                   'secondary' => 'text-secondary-600',
-                                   'success' => 'text-success-600',
-                                   'warning' => 'text-warning-600',
-                                   default => $color,
-                               } : null),
-                               ($isProse ? match ($size = $getSize($state)) {
-                                   'sm' => 'prose-sm',
-                                   'base', 'md', null => 'prose-base',
-                                   'lg' => 'prose-lg',
-                                   default => $size,
-                               } : match ($size = ($isBadge ? 'sm' : $getSize($state))) {
-                                   'xs' => 'text-xs',
-                                   'sm' => 'text-sm',
-                                   'base', 'md', null => 'text-base',
-                                   'lg' => 'text-lg',
-                                   default => $size,
-                               }),
-                               match ($weight = ($isBadge ? 'medium' : $getWeight($state))) {
-                                   'thin' => 'font-thin',
-                                   'extralight' => 'font-extralight',
-                                   'light' => 'font-light',
-                                   'medium' => 'font-medium',
-                                   'semibold' => 'font-semibold',
-                                   'bold' => 'font-bold',
-                                   'extrabold' => 'font-extrabold',
-                                   'black' => 'font-black',
-                                   default => $weight,
-                               },
-                               match ($getFontFamily($state)) {
-                                   'sans' => 'font-sans',
-                                   'serif' => 'font-serif',
-                                   'mono' => 'font-mono',
-                                   default => null,
-                               },
+                                'inline-flex items-center space-x-1 rtl:space-x-reverse',
+                                'justify-center min-h-6 px-2 py-0.5 rounded-xl whitespace-nowrap' => $isBadge,
+                                'prose max-w-none dark:prose-invert' => $isProse,
+                                'whitespace-normal' => $canWrap,
+                                ($isBadge ? match ($color = $getColor($state)) {
+                                    'danger' => 'text-danger-700 bg-danger-500/10 dark:text-danger-500',
+                                    'gray', null => 'text-gray-700 bg-gray-500/10 dark:text-gray-300 dark:bg-gray-500/20',
+                                    'info' => 'text-info-700 bg-info-500/10 dark:text-info-500',
+                                    'primary' => 'text-primary-700 bg-primary-500/10 dark:text-primary-500',
+                                    'secondary' => 'text-secondary-700 bg-secondary-500/10 dark:text-secondary-500',
+                                    'success' => 'text-success-700 bg-success-500/10 dark:text-success-500',
+                                    'warning' => 'text-warning-700 bg-warning-500/10 dark:text-warning-500',
+                                    default => $color,
+                                } : null),
+                                ((! ($isBadge || $url)) ? match ($color = $getColor($state)) {
+                                    'danger' => 'text-danger-600',
+                                    'gray' => 'text-gray-600 dark:text-gray-400',
+                                    'info' => 'text-info-600',
+                                    'primary' => 'text-primary-600',
+                                    'secondary' => 'text-secondary-600',
+                                    'success' => 'text-success-600',
+                                    'warning' => 'text-warning-600',
+                                    default => $color,
+                                } : null),
+                                ($isProse ? match ($size = $getSize($state)) {
+                                    'sm' => 'prose-sm',
+                                    'base', 'md', null => 'prose-base',
+                                    'lg' => 'prose-lg',
+                                    default => $size,
+                                } : match ($size = ($isBadge ? 'sm' : $getSize($state))) {
+                                    'xs' => 'text-xs',
+                                    'sm' => 'text-sm',
+                                    'base', 'md', null => 'text-base',
+                                    'lg' => 'text-lg',
+                                    default => $size,
+                                }),
+                                match ($weight = ($isBadge ? 'medium' : $getWeight($state))) {
+                                    'thin' => 'font-thin',
+                                    'extralight' => 'font-extralight',
+                                    'light' => 'font-light',
+                                    'medium' => 'font-medium',
+                                    'semibold' => 'font-semibold',
+                                    'bold' => 'font-bold',
+                                    'extrabold' => 'font-extrabold',
+                                    'black' => 'font-black',
+                                    default => $weight,
+                                },
+                                match ($getFontFamily($state)) {
+                                    'sans' => 'font-sans',
+                                    'serif' => 'font-serif',
+                                    'mono' => 'font-mono',
+                                    default => null,
+                                },
                             ])
                         >
                             @if ($icon && $iconPosition === 'before')
@@ -346,8 +346,8 @@ suite('Pint Transformer Accpetance: infolists_resources_views_components_text_en
             @if ($limitedArrayStateCount = count($limitedArrayState ?? []))
                 <{{ $isListWithLineBreaks ? 'li' : 'div' }}
                     @class([
-                       'text-sm' => ! $isBadge,
-                       'text-xs' => $isBadge,
+                        'text-sm' => ! $isBadge,
+                        'text-xs' => $isBadge,
                     ])
                 >
                     {{ trans_choice('filament-infolists::components.text.more_list_items', $limitedArrayStateCount) }}

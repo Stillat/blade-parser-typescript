@@ -1,6 +1,6 @@
 import { PhpOperatorReflow } from '../formatting/phpOperatorReflow';
 import { PrettierDocumentFormatter } from '../formatting/prettier/prettierDocumentFormatter';
-import { getOriginalOptions, getPhpOptions } from '../formatting/prettier/utils';
+import { formatBladeString, formatBladeStringWithPint, getOriginalOptions, getPhpOptions } from '../formatting/prettier/utils';
 import { SyntaxReflow } from '../formatting/syntaxReflow';
 import { AbstractNode, BladeCommentNode, BladeComponentNode, BladeEchoNode, ConditionNode, DirectiveNode, ExecutionBranchNode, ForElseNode, FragmentPosition, InlinePhpNode, LiteralNode, ParameterNode, ParameterType, SwitchCaseNode, SwitchStatementNode } from '../nodes/nodes';
 import { SimpleArrayParser } from '../parser/simpleArrayParser';
@@ -1262,6 +1262,12 @@ export class Transformer {
         const slug = this.makeSlug(condition.nodeContent.length);
 
         this.registerDynamicElementCondition(slug, condition);
+
+        if (condition.fragmentPosition == FragmentPosition.InsideFragmentParameter ||
+            condition.fragmentPosition == FragmentPosition.InsideFragment) {
+            return slug;
+        }
+
         return slug + ' ';
     }
 
@@ -1485,11 +1491,17 @@ export class Transformer {
 
         this.attachedDirectives.forEach((directive: TransformedPairedDirective, slug: string) => {
             value = this.removeLeadingWhitespace(value, slug);
-            const attachedDoc = (new PrettierDocumentFormatter(getOriginalOptions(), this.transformOptions)).formatDocument(BladeDocument.fromText(directive.innerDoc)).trim(),
-                dirResult = this.printDirective(directive.directive, this.indentLevel(slug)).trim(),
+            let attachedDoc = directive.directive.documentContent;
+
+            if (this.transformOptions.useLaravelPint) {
+                attachedDoc = formatBladeStringWithPint(attachedDoc).trim();
+            } else {
+                attachedDoc = formatBladeString(attachedDoc).trim();
+            }
+            const dirResult = this.printDirective(directive.directive, this.indentLevel(slug)).trim(),
                 relIndent = this.findNewLeadingStart(value, slug),
                 tmpDoc = dirResult + attachedDoc + "\n" + directive.directive.isClosedBy?.sourceContent ?? '';
-
+ 
             let insertResult = IndentLevel.shiftIndent(tmpDoc, relIndent + this.transformOptions.tabSize, true, this.transformOptions, false, true);
             value = value.replace(slug, insertResult);
         });
@@ -2099,13 +2111,13 @@ export class Transformer {
             const replace = this.selfClosing(slug),
                 startIndent = this.indentLevel(replace);
 
-            results = results.replace(replace, this.dumpPreservedNodes(nodes, startIndent));
+            results = results.replace(replace, this.dumpPreservedNodes(nodes));
         });
 
         return results;
     }
 
-    private dumpPreservedNodes(nodes: AbstractNode[], finalIndent: number): string {
+    private dumpPreservedNodes(nodes: AbstractNode[]): string {
         let stringResults = '';
 
         nodes.forEach((node) => {
