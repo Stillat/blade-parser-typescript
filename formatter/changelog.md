@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.4.6 (Unreleased)
+## 1.4.6
 
 - Improves placement of spaces after directives when content is inlined within an element or attribute (#51)
 - Improves relative indentation of directive arguments (#49)
