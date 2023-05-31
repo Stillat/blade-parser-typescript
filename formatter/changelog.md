@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.4.5 (Unreleased)
+## 1.4.5
 
 - Improves internal management of Pint cache
 - Improves how nested `@php @endphp` and `<?php ?>` code blocks are formatted with Pint
