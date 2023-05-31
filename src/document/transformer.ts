@@ -1,6 +1,5 @@
 import { PhpOperatorReflow } from '../formatting/phpOperatorReflow';
-import { PrettierDocumentFormatter } from '../formatting/prettier/prettierDocumentFormatter';
-import { formatBladeString, formatBladeStringWithPint, getOriginalOptions, getPhpOptions } from '../formatting/prettier/utils';
+import { formatBladeString, formatBladeStringWithPint, getPhpOptions } from '../formatting/prettier/utils';
 import { SyntaxReflow } from '../formatting/syntaxReflow';
 import { AbstractNode, BladeCommentNode, BladeComponentNode, BladeEchoNode, ConditionNode, DirectiveNode, ExecutionBranchNode, ForElseNode, FragmentPosition, InlinePhpNode, LiteralNode, ParameterNode, ParameterType, SwitchCaseNode, SwitchStatementNode } from '../nodes/nodes';
 import { SimpleArrayParser } from '../parser/simpleArrayParser';
