@@ -92,6 +92,19 @@ export function formatBladeStringWithPint(text: string, options: FormattingOptio
     return formatBladeString(text, curOptions);
 }
 
+type PrettierOptionsAdjuster = (options: ParserOptions) => ParserOptions;
+
+let optionsAdjuster: PrettierOptionsAdjuster | null = null;
+
+export function setOptionsAdjuster(adjuster: PrettierOptionsAdjuster | null) {
+    optionsAdjuster = adjuster;
+}
+
+export function getOptionsAdjuster(): PrettierOptionsAdjuster | null {
+    return optionsAdjuster;
+}
+
+
 export function setOptions(options: ParserOptions) {
     originalOptions = options;
 
