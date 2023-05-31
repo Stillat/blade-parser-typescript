@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.7
+
+- Improves relative indentation of PHP blocks in more scenarios
+
 ## 1.4.6
 
 - Improves placement of spaces after directives when content is inlined within an element or attribute (#51)

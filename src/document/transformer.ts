@@ -1501,7 +1501,7 @@ export class Transformer {
             const dirResult = this.printDirective(directive.directive, this.indentLevel(slug)).trim(),
                 relIndent = this.findNewLeadingStart(value, slug),
                 tmpDoc = dirResult + attachedDoc + "\n" + directive.directive.isClosedBy?.sourceContent ?? '';
- 
+
             let insertResult = IndentLevel.shiftIndent(tmpDoc, relIndent + this.transformOptions.tabSize, true, this.transformOptions, false, true);
             value = value.replace(slug, insertResult);
         });
@@ -1535,22 +1535,34 @@ export class Transformer {
                             true,
                             this.transformOptions
                         );
+
+                        value = value.replace(open, replacePhp);
+                        value = value.replace(virtualOpen, formattedPhp);
                     } else {
                         if (this.pintTransformer != null) {
-                            const pintResult = IndentLevel.shiftIndent(
-                                this.pintTransformer.getDirectivePhpContent(originalDirective),
-                                targetIndent,
-                                true,
-                                this.transformOptions
-                            );
+                            formattedPhp = this.pintTransformer.getDirectivePhpContent(originalDirective).trim();
+                            const lines = StringUtilities.breakByNewLine(formattedPhp),
+                                reflow: string[] = [];
 
-                            formattedPhp = pintResult;
+                            for (let i = 0; i < lines.length; i++) {
+                                if (lines[i].trim().length == 0) {
+                                    reflow.push('');
+                                    continue;
+                                }
+                                reflow.push(' '.repeat(targetIndent) + lines[i]);
+                            }
+
+                            formattedPhp = reflow.join("\n");
+
+
+                            value = value.replace(open, replacePhp + "\n" + formattedPhp);
+                            value = value.replace(virtualOpen, '');
+                        } else {
+                            value = value.replace(open, replacePhp);
+                            value = value.replace(virtualOpen, formattedPhp);
                         }
                     }
                 }
-
-                value = value.replace(open, replacePhp);
-                value = value.replace(virtualOpen, formattedPhp);
             } else if (originalDirective.directiveName.trim().toLowerCase() == 'verbatim') {
                 const replaceVerbatim = directive.directive.sourceContent + "\n" + IndentLevel.shiftClean(
                     originalDirective.innerContent, this.transformOptions.tabSize
@@ -2031,7 +2043,7 @@ export class Transformer {
     private reflowSlugs(content: string): string {
         let result = content;
         const rLines = StringUtilities.breakByNewLine(result);
-        const newLines:string[] = [];
+        const newLines: string[] = [];
 
         for (let i = 0; i < rLines.length; i++) {
             const rLine = rLines[i].trimRight();
@@ -2053,7 +2065,7 @@ export class Transformer {
                     }
                 }
             }
-            if (! added) {
+            if (!added) {
                 newLines.push(rLine);
             }
         }

@@ -398,5 +398,104 @@ fn () => true;
 </x-dynamic-component>
 `;
         assert.strictEqual(formatBladeStringWithPint(input), output);
+    });
+
+    test('pint: it can be smart about relative indent', () => {
+        const input = `@props([
+    'action',
+    'component',
+])
+@php
+    $wireClickAction =
+        $action->getAction() && ! $action->getUrl()
+            ? "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')"
+            : null;
+@endphp
+
+@php
+    $wireClickAction = ($action->getAction() && (! $action->getUrl())) ?
+        "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')" :
+        null;
+@endphp
+
+<div>
+@php
+    $wireClickAction = ($action->getAction() && (! $action->getUrl())) ?
+        "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')" :
+        null;
+@endphp
+</div>
+
+<div><div>
+
+<div>
+@php
+    $wireClickAction = ($action->getAction() && (! $action->getUrl())) ?
+        "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')" :
+        null;
+@endphp
+</div>
+</div></div>
+
+<div><div><div>
+@php
+    $wireClickAction =
+        $action->getAction() && ! $action->getUrl()
+            ? "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')"
+            : null;
+@endphp
+</div></div></div>
+`;
+        const out = `@props([
+    'action',
+    'component',
+])
+@php
+    $wireClickAction =
+        $action->getAction() && ! $action->getUrl()
+            ? "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')"
+            : null;
+@endphp
+
+@php
+    $wireClickAction = ($action->getAction() && (! $action->getUrl())) ?
+        "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')" :
+        null;
+@endphp
+
+<div>
+    @php
+        $wireClickAction = ($action->getAction() && (! $action->getUrl())) ?
+            "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')" :
+            null;
+    @endphp
+</div>
+
+<div>
+    <div>
+        <div>
+            @php
+                $wireClickAction = ($action->getAction() && (! $action->getUrl())) ?
+                    "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')" :
+                    null;
+            @endphp
+        </div>
+    </div>
+</div>
+
+<div>
+    <div>
+        <div>
+            @php
+                $wireClickAction =
+                    $action->getAction() && ! $action->getUrl()
+                        ? "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')"
+                        : null;
+            @endphp
+        </div>
+    </div>
+</div>
+`
+        assert.strictEqual(formatBladeStringWithPint(input), out);
     })
 });
