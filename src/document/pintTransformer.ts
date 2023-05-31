@@ -221,10 +221,8 @@ export class PintTransformer {
 
                     if (candidate.length == 0) { return; }
 
-                    //this.forceDoublePint = true;
                     let phpDoc = '';
-                    //results += replaceIndex.toString() + '=PHP' + this.markerSuffix;
-                    //results += "\n";
+
                     phpDoc += '<?php ' + "\n";
                     phpDoc += node.documentContent;
                     phpDoc += "\n";
@@ -245,13 +243,13 @@ export class PintTransformer {
 
                             if (candidate.length == 0) { return; }
 
-                            // this.forceDoublePint = true;
-
                             results += '// ' + replaceIndex.toString() + '=IPD' + this.markerSuffix;
                             results += "\n";
+
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
                                 results += cLine.trimLeft() + "\n";
                             });
+
                             results = results.trimRight();
                             results += ';';
                             results += "\n";
@@ -271,14 +269,17 @@ export class PintTransformer {
                             results += '// ' + replaceIndex.toString() + '=FRL' + this.markerSuffix;
                             results += "\n";
                             results += 'foreach(';
+
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
                                 results += cLine.trimLeft() + "\n";
-                            })
+                            });
+
                             results += ') {}';
                             results += "\n";
                             node.overrideParams = '__pint' + replaceIndex.toString();
 
                             const preparedParameters = this.prepareContent(node.directiveParameters);
+
                             if (!this.contentMapping.has(preparedParameters)) {
                                 this.contentMapping.set(preparedParameters, node.overrideParams);
                             }
@@ -292,9 +293,11 @@ export class PintTransformer {
                             results += '// ' + replaceIndex.toString() + '=DIR' + this.markerSuffix;
                             results += "\n";
                             results += '$tVar = ';
+
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
                                 results += cLine.trimLeft() + "\n";
-                            })
+                            });
+
                             results += ';';
                             results += "\n";
                             node.overrideParams = '__pint' + replaceIndex.toString();
@@ -316,9 +319,11 @@ export class PintTransformer {
                 results += '// ' + replaceIndex.toString() + '=ECH' + this.markerSuffix;
                 results += "\n";
                 results += 'echo ';
+
                 StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
                     results += cLine.trimLeft() + "\n";
-                })
+                });
+
                 results = results.trimRight();
                 results += ';';
                 results += "\n";
@@ -341,9 +346,11 @@ export class PintTransformer {
                             results += '// ' + replaceIndex.toString() + '=DIR' + this.markerSuffix;
                             results += "\n";
                             results += '$tVar = ';
+
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
                                 results += cLine.trimLeft() + "\n";
-                            })
+                            });
+
                             results += ';';
                             results += "\n";
                             param.directive.overrideParams = '__pint' + replaceIndex.toString();
@@ -359,9 +366,11 @@ export class PintTransformer {
                             results += '// ' + replaceIndex.toString() + '=ECH' + this.markerSuffix;
                             results += "\n";
                             results += 'echo ';
+
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
                                 results += cLine.trimLeft() + "\n";
-                            })
+                            });
+
                             results = results.trimRight();
                             results += ';';
                             results += "\n";
