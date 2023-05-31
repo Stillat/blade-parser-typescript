@@ -132,14 +132,14 @@ Second case...
 
 {{-- Leading node test. --}}
 
-<p>Test {{ $title }} 
+<p>Test {{ $title }}
 </p>
-@case(1) <p>First case...</p> 
+@case(1) <p>First case...</p>
 
 @break@case(2) <p>Second case...</p>
 
 
-@break @default 
+@break @default
 
 
 <p>Default case...</p>

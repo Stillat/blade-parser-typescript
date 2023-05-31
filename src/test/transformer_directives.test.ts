@@ -52,8 +52,8 @@ suite('Directive Transformer', () => {
     @pair
 
     <p>Test one.</p>
-    
-    
+
+
 <div>
     @pair
 

@@ -11,7 +11,8 @@ import { TransformOptions } from '../../document/transformOptions';
 
 let phpOptions: ParserOptions,
     htmlOptions: ParserOptions,
-    echoPhpOptions: ParserOptions;
+    echoPhpOptions: ParserOptions,
+    originalOptions: ParserOptions;
 
 export function getEchoPhpOptions() {
     return echoPhpOptions;
@@ -19,6 +20,10 @@ export function getEchoPhpOptions() {
 
 export function getPhpOptions() {
     return phpOptions;
+}
+
+export function getOriginalOptions() {
+    return originalOptions;
 }
 
 export function cleanOptions(options: ParserOptions): ParserOptions {
@@ -87,7 +92,22 @@ export function formatBladeStringWithPint(text: string, options: FormattingOptio
     return formatBladeString(text, curOptions);
 }
 
+type PrettierOptionsAdjuster = (options: ParserOptions) => ParserOptions;
+
+let optionsAdjuster: PrettierOptionsAdjuster | null = null;
+
+export function setOptionsAdjuster(adjuster: PrettierOptionsAdjuster | null) {
+    optionsAdjuster = adjuster;
+}
+
+export function getOptionsAdjuster(): PrettierOptionsAdjuster | null {
+    return optionsAdjuster;
+}
+
+
 export function setOptions(options: ParserOptions) {
+    originalOptions = options;
+
     htmlOptions = cleanOptions(
         Object.assign({}, options,
             { htmlWhitespaceSensitivity: "ignore", parser: "html", plugins: options.plugins }

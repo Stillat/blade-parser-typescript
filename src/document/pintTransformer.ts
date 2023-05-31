@@ -31,13 +31,63 @@ export class PintTransformer {
     private wasCached = false;
     private outputPintResults = false;
     private markerSuffix = '';
-    private forceDoublePint = false;
+    private pintConfigPath = '';
+    private static processConfigPath: string | null = null;
+    private phpDocs: Map<string, string> = new Map();
+    private phpTagDocs: Map<string, string> = new Map();
+    private cleanupFiles: string[] = [];
+    private cleanupDirs: string[] = [];
+    private defaultConfig: object = {
+        "preset": "laravel",
+        "rules": {
+            "blank_line_before_statement": false,
+            "concat_space": {
+                "spacing": "one"
+            },
+            "no_unused_imports": false,
+            "method_argument_space": true,
+            "single_trait_insert_per_statement": true,
+            "types_spaces": {
+                "space": "single"
+            }
+        }
+    };
 
-    constructor(tmpFilePath: string, cacheDir: string, pintCommand: string) {
+    constructor(tmpFilePath: string, cacheDir: string, pintCommand: string, pintConfigurationPath: string) {
         this.tmpDir = tmpFilePath;
         this.cacheDir = cacheDir;
 
+        this.pintConfigPath = pintConfigurationPath;
         this.markerSuffix = this.markerSuffix + StringUtilities.makeSlug(27);
+
+        const internalConfigPath = this.tmpDir + '/pint.json';
+
+        if (PintTransformer.processConfigPath == null) {
+            if (this.pintConfigPath.trim().length == 0 || !fs.existsSync(this.pintConfigPath)) {
+                // Need to write a default config.
+                fs.writeFileSync(internalConfigPath, JSON.stringify(this.defaultConfig), { encoding: 'utf8' });
+                PintTransformer.processConfigPath = internalConfigPath;
+            } else {
+                try {
+                    const existingConfig = JSON.parse(fs.readFileSync(this.pintConfigPath, { encoding: 'utf8' }));
+                    if (typeof existingConfig.rules !== 'undefined') {
+                        // We won't have everything available all the time, so need to set this.
+                        existingConfig.rules.no_unused_imports = false;
+                    } else {
+                        existingConfig.rules = {
+                            no_unused_imports: false
+                        };
+                    }
+
+                    fs.writeFileSync(internalConfigPath, JSON.stringify(existingConfig), { encoding: 'utf8' });
+                    PintTransformer.processConfigPath = internalConfigPath;
+                } catch (err) {
+                    // Need to write a default config.
+                    fs.writeFileSync(internalConfigPath, JSON.stringify(this.defaultConfig), { encoding: 'utf8' });
+                    PintTransformer.processConfigPath = internalConfigPath;
+                }
+            }
+        }
 
         if (!fs.existsSync(this.cacheDir)) {
             fs.mkdirSync(this.cacheDir);
@@ -125,7 +175,7 @@ export class PintTransformer {
 
     getDirectiveContent(directive: DirectiveNode): string {
         if (directive.overrideParams != null && this.resultMapping.has(directive.overrideParams)) {
-            return this.resultMapping.get(directive.overrideParams) as string;
+            return '(' + this.resultMapping.get(directive.overrideParams) as string + ')';
         }
 
         // Handle the case of nested child documents having different index values.
@@ -134,7 +184,7 @@ export class PintTransformer {
             const originalIndex = this.contentMapping.get(preparedParams) as string;
 
             if (this.resultMapping.has(originalIndex)) {
-                return this.resultMapping.get(originalIndex) as string;
+                return '(' + this.resultMapping.get(originalIndex) as string + ')';
             }
         }
 
@@ -161,7 +211,7 @@ export class PintTransformer {
     }
 
     transform(document: BladeDocument): string {
-        let results = '',
+        let results = '<?php ' + "\n",
             replaceIndex = 0;
 
         document.getAllNodes().forEach((node) => {
@@ -171,23 +221,19 @@ export class PintTransformer {
 
                     if (candidate.length == 0) { return; }
 
-                    this.forceDoublePint = true;
+                    let phpDoc = '';
 
-                    results += replaceIndex.toString() + '=PHP' + this.markerSuffix;
-                    results += "\n";
-                    results += '<?php ';
-                    StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
-                        results += cLine + "\n";
-                    });
-                    results = results.trimRight();
-                    results += '; ?>';
-                    results += "\n";
+                    phpDoc += '<?php ' + "\n";
+                    phpDoc += node.documentContent;
+                    phpDoc += "\n";
                     node.overrideParams = '__pint' + replaceIndex.toString();
 
                     const preparedContent = this.prepareContent(node.documentContent);
                     if (!this.contentMapping.has(preparedContent)) {
                         this.contentMapping.set(preparedContent, node.overrideParams);
                     }
+
+                    this.phpDocs.set(node.overrideParams, phpDoc);
 
                     replaceIndex += 1;
                 } else {
@@ -197,16 +243,15 @@ export class PintTransformer {
 
                             if (candidate.length == 0) { return; }
 
-                            this.forceDoublePint = true;
-
-                            results += replaceIndex.toString() + '=IPD' + this.markerSuffix;
+                            results += '// ' + replaceIndex.toString() + '=IPD' + this.markerSuffix;
                             results += "\n";
-                            results += '<?php ';
+
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
                                 results += cLine.trimLeft() + "\n";
                             });
+
                             results = results.trimRight();
-                            results += '; ?>';
+                            results += ';';
                             results += "\n";
                             node.overrideParams = '__pint' + replaceIndex.toString();
 
@@ -221,17 +266,20 @@ export class PintTransformer {
 
                             if (candidate.length == 0) { return; }
 
-                            results += replaceIndex.toString() + '=FRL' + this.markerSuffix;
+                            results += '// ' + replaceIndex.toString() + '=FRL' + this.markerSuffix;
                             results += "\n";
-                            results += '<?php foreach(';
+                            results += 'foreach(';
+
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
                                 results += cLine.trimLeft() + "\n";
-                            })
-                            results += ') {} ?>';
+                            });
+
+                            results += ') {}';
                             results += "\n";
                             node.overrideParams = '__pint' + replaceIndex.toString();
 
                             const preparedParameters = this.prepareContent(node.directiveParameters);
+
                             if (!this.contentMapping.has(preparedParameters)) {
                                 this.contentMapping.set(preparedParameters, node.overrideParams);
                             }
@@ -242,13 +290,15 @@ export class PintTransformer {
 
                             if (candidate.length == 0) { return; }
 
-                            results += replaceIndex.toString() + '=DIR' + this.markerSuffix;
+                            results += '// ' + replaceIndex.toString() + '=DIR' + this.markerSuffix;
                             results += "\n";
-                            results += '<?php $tVar = pintFn(';
+                            results += '$tVar = ';
+
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
                                 results += cLine.trimLeft() + "\n";
-                            })
-                            results += '); ?>';
+                            });
+
+                            results += ';';
                             results += "\n";
                             node.overrideParams = '__pint' + replaceIndex.toString();
 
@@ -266,14 +316,16 @@ export class PintTransformer {
 
                 if (candidate.length == 0) { return; }
 
-                results += replaceIndex.toString() + '=ECH' + this.markerSuffix;
+                results += '// ' + replaceIndex.toString() + '=ECH' + this.markerSuffix;
                 results += "\n";
-                results += '<?php echo ';
+                results += 'echo ';
+
                 StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
                     results += cLine.trimLeft() + "\n";
-                })
+                });
+
                 results = results.trimRight();
-                results += '; ?>';
+                results += ';';
                 results += "\n";
                 node.overrideContent = '__pint' + replaceIndex.toString();
 
@@ -288,13 +340,18 @@ export class PintTransformer {
                     node.parameters.forEach((param) => {
                         if (param.type == ParameterType.Directive && param.directive != null && !param.directive.hasJsonParameters && param.directive.hasValidPhp()) {
                             const candidate = param.directive.directiveParameters.substring(1, param.directive.directiveParameters.length - 1).trim();
-                            results += replaceIndex.toString() + '=DIR' + this.markerSuffix;
+
+                            if (candidate.length == 0) { return; }
+
+                            results += '// ' + replaceIndex.toString() + '=DIR' + this.markerSuffix;
                             results += "\n";
-                            results += '<?php $tVar = pintFn(';
+                            results += '$tVar = ';
+
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
                                 results += cLine.trimLeft() + "\n";
-                            })
-                            results += '); ?>';
+                            });
+
+                            results += ';';
                             results += "\n";
                             param.directive.overrideParams = '__pint' + replaceIndex.toString();
 
@@ -306,14 +363,16 @@ export class PintTransformer {
                             replaceIndex += 1;
                         } else if (param.type == ParameterType.InlineEcho && param.inlineEcho != null && param.inlineEcho.hasValidPhp()) {
                             const candidate = param.inlineEcho.content.trim();
-                            results += replaceIndex.toString() + '=ECH' + this.markerSuffix;
+                            results += '// ' + replaceIndex.toString() + '=ECH' + this.markerSuffix;
                             results += "\n";
-                            results += '<?php echo ';
+                            results += 'echo ';
+
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
                                 results += cLine.trimLeft() + "\n";
-                            })
+                            });
+
                             results = results.trimRight();
-                            results += '; ?>';
+                            results += ';';
                             results += "\n";
                             param.inlineEcho.overrideContent = '__pint' + replaceIndex.toString();
 
@@ -334,21 +393,14 @@ export class PintTransformer {
 
                 if (checkCandidate.length == 0) { return; }
 
-                this.forceDoublePint = true;
-                results += replaceIndex.toString() + '=BHP' + this.markerSuffix;
-                results += "\n";
-
-                StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
-                    results += cLine + "\n";
-                })
-
-                results += "\n";
                 node.overrideContent = '__pint' + replaceIndex.toString();
 
                 const preparedContent = this.prepareContent(node.sourceContent);
                 if (!this.contentMapping.has(preparedContent)) {
                     this.contentMapping.set(preparedContent, node.overrideContent);
                 }
+
+                this.phpTagDocs.set(node.overrideContent, node.sourceContent + 'KEEP');
 
                 replaceIndex += 1;
             }
@@ -380,22 +432,42 @@ export class PintTransformer {
             }
         }
 
-        const fileName = this.tmpDir + StringUtilities.makeSlug(12) + '.php';
-        fs.writeFileSync(fileName, transformResults, { encoding: 'utf8' });
-        this.callLaravelPint(fileName);
+        let theRes = '';
 
-        const theRes = fs.readFileSync(fileName, { encoding: 'utf8' });
-        fs.unlink(fileName, () => { });
+        try {
+            theRes = this.callLaravelPint(transformResults);
+        } catch (err) {
+            const fff = err as unknown as any;
+            console.log(fff.stdout.toString());
+            this.cleanupFiles.forEach((fileName) => {
+                fs.unlinkSync(fileName);
+            });
+            this.cleanupDirs.forEach((dirName) => {
+                fs.rmdirSync(dirName, { recursive: true });
+            });
+
+            if (this.outputPintResults) {
+                console.error(err);
+            }
+
+            return this.resultMapping;
+        }
+
+        this.cleanupFiles.forEach((fileName) => {
+            fs.unlinkSync(fileName);
+        });
         const tResL = StringUtilities.breakByNewLine(theRes);
 
         let curBuffer: string[] = [],
             checkEnd = this.markerSuffix,
             curIndex = -1,
-            activeType = '';
+            activeType = '',
+            hasObservedMarker = false;
 
         tResL.forEach((line) => {
             if (line.endsWith(checkEnd)) {
-                var lIndex = parseInt(line.substring(0, line.indexOf('='))),
+                hasObservedMarker = true;
+                var lIndex = parseInt(line.substring(2).trim().substring(0, line.indexOf('='))),
                     type = line.substring(line.indexOf('=') + 1, line.indexOf('=') + 4);
 
                 if (activeType == '') {
@@ -414,7 +486,9 @@ export class PintTransformer {
                 }
             }
 
-            curBuffer.push(line);
+            if (hasObservedMarker) {
+                curBuffer.push(line);
+            }
         });
 
         if (curBuffer.length > 0) {
@@ -434,29 +508,20 @@ export class PintTransformer {
         let tResult = result;
 
         if (type == 'DIR') {
-            result = result.trim();
-            tResult = result.substring(5).trimLeft().substring(5).trimLeft().substring(1).trimLeft();
-            tResult = tResult.substring(0, tResult.length - 2).trimRight();
-            tResult = tResult.substring(0, tResult.length - 1).trimRight()
+            tResult = tResult.trim().trimRight();
             tResult = tResult.substring(7).trimLeft();
             if (tResult.endsWith(';')) {
                 tResult = tResult.substring(0, tResult.length - 1).trimRight()
             }
-            if (tResult.endsWith(')')) {
-                tResult = tResult.substring(0, tResult.length - 1).trimRight();
-            }
         } else if (type == 'PHP') {
-            result = result.trim();
-            tResult = result.substring(5).trimLeft();
+            tResult = result.trim().substring(5).trimLeft();
             tResult = tResult.trimRight();
-            tResult = tResult.substring(0, tResult.length - 2).trimRight();
+            tResult = tResult.trimRight();
             if (tResult.endsWith('?')) {
                 tResult = tResult.substring(0, tResult.length - 1).trimRight()
             }
         } else if (type == 'IPD') {
-            result = result.trim();
-            tResult = result.substring(5).trimLeft();
-            tResult = tResult.trimRight().substring(0, tResult.length - 2).trimRight();
+            tResult = result.trim().trimRight();
             if (tResult.endsWith('?')) {
                 tResult = tResult.substring(0, tResult.length - 1).trimRight()
             }
@@ -464,10 +529,9 @@ export class PintTransformer {
                 tResult = tResult.substring(0, tResult.length - 1).trimRight()
             }
         } else if (type == 'FRL') {
-            tResult = result.substring(5).trimLeft();
             tResult = tResult.trimLeft().substring(8).trimLeft().substring(1).trimLeft();
             tResult = tResult.trimRight();
-            tResult = tResult.substring(0, tResult.length - 2).trimRight();
+            tResult = tResult.trimRight();
             if (tResult.endsWith('?')) {
                 tResult = tResult.substring(0, tResult.length - 1).trimRight()
             }
@@ -478,11 +542,10 @@ export class PintTransformer {
             tResult = tResult.substring(0, tResult.length - 1).trimRight();
             tResult = tResult.substring(0, tResult.length - 1).trimRight();
         } else if (type == 'ECH') {
-            result = result.trim();
-            tResult = result.substring(5).trimLeft();
+            tResult = result.trim();
             tResult = tResult.substring(4).trimLeft();
             tResult = tResult.trimRight();
-            tResult = tResult.substring(0, tResult.length - 2).trimRight();
+            tResult = tResult.trimRight();
             if (tResult.endsWith('?')) {
                 tResult = tResult.substring(0, tResult.length - 1).trimRight()
             }
@@ -496,23 +559,70 @@ export class PintTransformer {
         return tResult;
     }
 
-    private callLaravelPint(fileName: string) {
+    private callLaravelPint(transformResults: string): string {
         if (this.wasCached) {
-            return;
+            return '';
         }
 
-        const command = this.pintCommand.replace('{file}', `"${fileName}"`),
+        const fileSlug = StringUtilities.makeSlug(26);
+
+        let baseFileName = '',
+            output = '',
+            pintResults = '';
+
+        if (this.phpDocs.size > 0 || this.phpTagDocs.size > 0) {
+            // Create a temp directory to work inside.
+            const tmpDir = this.tmpDir + '/' + StringUtilities.makeSlug(32) + '/';
+            fs.mkdirSync(tmpDir);
+
+            const fileName = tmpDir + fileSlug + '.php';
+            fs.writeFileSync(fileName, transformResults, { encoding: 'utf8' });
+
+            this.cleanupFiles.push(fileName);
+            this.cleanupDirs.push(tmpDir);
+            this.phpDocs.forEach((doc, key) => {
+                const docFname = tmpDir + fileSlug + 'php_' + key + '.php';
+                fs.writeFileSync(docFname, doc, { encoding: 'utf8' });
+                this.cleanupFiles.push(docFname);
+            });
+
+            this.phpTagDocs.forEach((doc, key) => {
+                const docFname = tmpDir + fileSlug + 'tag_php_' + key + '.php';
+                fs.writeFileSync(docFname, doc, { encoding: 'utf8' });
+                this.cleanupFiles.push(docFname);
+            });
+
+            const dirCommand = this.pintCommand.replace('{file}', `"${tmpDir}"`) + ` --config "${PintTransformer.processConfigPath}"`;
+            output = execSync(dirCommand).toString();
+
+            this.phpDocs.forEach((doc, key) => {
+                const docFname = tmpDir + fileSlug + 'php_' + key + '.php';
+                const phpDocRes = fs.readFileSync(docFname, { encoding: 'utf8' });
+                const fResults = phpDocRes.trim().substring(5);
+                this.resultMapping.set(key, fResults);
+            });
+
+            this.phpTagDocs.forEach((doc, key) => {
+                const docFname = tmpDir + fileSlug + 'tag_php_' + key + '.php';
+                const phpDocRes = fs.readFileSync(docFname, { encoding: 'utf8' });
+                let fResults = phpDocRes.trim();
+                fResults = fResults.substring(0, fResults.length - 4);
+                this.resultMapping.set(key, fResults);
+            });
+
+            pintResults = fs.readFileSync(fileName, { encoding: 'utf8' });
+        } else {
+            const fileName = this.tmpDir + fileSlug + '.php';
+            fs.writeFileSync(fileName, transformResults, { encoding: 'utf8' });
+
+            const command = this.pintCommand.replace('{file}', `"${fileName}"`) + ` --config "${PintTransformer.processConfigPath}"`;
+
             baseFileName = path.basename(fileName);
+            output = execSync(command).toString();
+            this.cleanupFiles.push(fileName);
 
-        if (this.forceDoublePint) {
-            // Need to run Pint again.
-            // It is likely the output is weird after the initial formatting
-            // if the document contains PHP stuff in addition to echos, etc.
-            execSync(command);
-            fs.writeFileSync(fileName, fs.readFileSync(fileName, { encoding: 'utf8'}) + ' ');
+            pintResults = fs.readFileSync(fileName, { encoding: 'utf8' });
         }
-        
-        const output = execSync(command).toString();
 
         if (this.outputPintResults && typeof this.templateFile !== 'undefined' && this.templateFile != null) {
             if (output.includes(baseFileName)) {
@@ -540,5 +650,7 @@ export class PintTransformer {
                 console.log(newLines.join("\n"));
             }
         }
+
+        return pintResults;
     }
 }

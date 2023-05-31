@@ -165,7 +165,7 @@ $data = [
     fn () => true;
 ?>`;
         const out = `<?php
-    fn () => true;
+fn () => true;
 ?>
 `;
         assert.strictEqual(formatBladeStringWithPint(template), out);
@@ -249,7 +249,7 @@ $data = [
                         'rgb' => 'rgb-string',
                         'rgba' => 'rgba-string',
                         default => 'hex',
-                    }.'-color-picker';
+                    } . '-color-picker';
                 @endphp
 
                 <{{ $tag }} color="{{ $getState() }}" />
@@ -260,4 +260,242 @@ $data = [
 `;
         assert.strictEqual(formatBladeStringWithPint(input), out);
     });
+
+    test('pint: placeholder characters are not in output #1', () => {
+        const template = `<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8">
+
+        <meta name="application-name" content="{{ config('app.name') }}">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>{{ config('app.name') }}</title>
+
+        <style>[x-cloak] { display: none !important; }</style>
+        @livewireStyles
+        @filamentStyles
+        @vite('resources/css/app.css')
+    </head>
+
+    <body class="antialiased">
+        {{ $slot }}
+
+        @php
+
+            $one = '';
+            $two = '';
+        @endphp
+
+        @livewireScripts
+        @filamentScripts(['something/here', 'another', 'some more', $howAboutThis])
+        @vite('resources/js/app.js')
+        <script src="//unpkg.com/alpinejs" defer></script>
+    </body>
+</html>
+`;
+        const output = `<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8" />
+
+        <meta name="application-name" content="{{ config('app.name') }}" />
+        <meta name="csrf-token" content="{{ csrf_token() }}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <title>{{ config('app.name') }}</title>
+
+        <style>
+            [x-cloak] {
+                display: none !important;
+            }
+        </style>
+        @livewireStyles
+        @filamentStyles
+        @vite('resources/css/app.css')
+    </head>
+
+    <body class="antialiased">
+        {{ $slot }}
+
+        @php
+            $one = '';
+            $two = '';
+        @endphp
+
+        @livewireScripts
+        @filamentScripts(['something/here', 'another', 'some more', $howAboutThis])
+        @vite('resources/js/app.js')
+        <script src="//unpkg.com/alpinejs" defer></script>
+    </body>
+</html>
+`;
+        assert.strictEqual(formatBladeStringWithPint(template), output);
+    });
+
+    test('pint: it doesnt needlessly indent', () => {
+        const input = `@props([
+    'action',
+    'component',
+])
+
+@php
+    $wireClickAction =
+        $action->getAction() && ! $action->getUrl()
+            ? "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')"
+            : null;
+@endphp
+
+<x-dynamic-component
+    :component="$component"
+    :dark-mode="config('forms.dark_mode')"
+    :attributes="\\Filament\\Support\\prepare_inherited_attributes($attributes)->merge($action->getExtraAttributes())"
+    :tag="$action->getUrl() ? 'a' : 'button'"
+    :wire:click="$wireClickAction"
+    :href="$action->isEnabled() ? $action->getUrl() : null"
+    :tooltip="$action->getTooltip()"
+    :target="$action->shouldOpenUrlInNewTab() ? '_blank' : null"
+    :disabled="$action->isDisabled()"
+    :color="$action->getColor()"
+    :label="$action->getLabel()"
+    :icon="$action->getIcon()"
+    :size="$action->getSize()"
+    dusk="filament.forms.action.{{ $action->getName() }}"
+>
+    {{ $slot }}
+</x-dynamic-component>
+`;
+        const output = `@props([
+    'action',
+    'component',
+])
+
+@php
+    $wireClickAction =
+        $action->getAction() && ! $action->getUrl()
+            ? "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')"
+            : null;
+@endphp
+
+<x-dynamic-component
+    :component="$component"
+    :dark-mode="config('forms.dark_mode')"
+    :attributes="\\Filament\\Support\\prepare_inherited_attributes($attributes)->merge($action->getExtraAttributes())"
+    :tag="$action->getUrl() ? 'a' : 'button'"
+    :wire:click="$wireClickAction"
+    :href="$action->isEnabled() ? $action->getUrl() : null"
+    :tooltip="$action->getTooltip()"
+    :target="$action->shouldOpenUrlInNewTab() ? '_blank' : null"
+    :disabled="$action->isDisabled()"
+    :color="$action->getColor()"
+    :label="$action->getLabel()"
+    :icon="$action->getIcon()"
+    :size="$action->getSize()"
+    dusk="filament.forms.action.{{ $action->getName() }}"
+>
+    {{ $slot }}
+</x-dynamic-component>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), output);
+    });
+
+    test('pint: it can be smart about relative indent', () => {
+        const input = `@props([
+    'action',
+    'component',
+])
+@php
+    $wireClickAction =
+        $action->getAction() && ! $action->getUrl()
+            ? "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')"
+            : null;
+@endphp
+
+@php
+    $wireClickAction = ($action->getAction() && (! $action->getUrl())) ?
+        "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')" :
+        null;
+@endphp
+
+<div>
+@php
+    $wireClickAction = ($action->getAction() && (! $action->getUrl())) ?
+        "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')" :
+        null;
+@endphp
+</div>
+
+<div><div>
+
+<div>
+@php
+    $wireClickAction = ($action->getAction() && (! $action->getUrl())) ?
+        "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')" :
+        null;
+@endphp
+</div>
+</div></div>
+
+<div><div><div>
+@php
+    $wireClickAction =
+        $action->getAction() && ! $action->getUrl()
+            ? "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')"
+            : null;
+@endphp
+</div></div></div>
+`;
+        const out = `@props([
+    'action',
+    'component',
+])
+@php
+    $wireClickAction =
+        $action->getAction() && ! $action->getUrl()
+            ? "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')"
+            : null;
+@endphp
+
+@php
+    $wireClickAction = ($action->getAction() && (! $action->getUrl())) ?
+        "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')" :
+        null;
+@endphp
+
+<div>
+    @php
+        $wireClickAction = ($action->getAction() && (! $action->getUrl())) ?
+            "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')" :
+            null;
+    @endphp
+</div>
+
+<div>
+    <div>
+        <div>
+            @php
+                $wireClickAction = ($action->getAction() && (! $action->getUrl())) ?
+                    "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')" :
+                    null;
+            @endphp
+        </div>
+    </div>
+</div>
+
+<div>
+    <div>
+        <div>
+            @php
+                $wireClickAction =
+                    $action->getAction() && ! $action->getUrl()
+                        ? "mountFormComponentAction('{$action->getComponent()->getStatePath()}', '{$action->getName()}')"
+                        : null;
+            @endphp
+        </div>
+    </div>
+</div>
+`
+        assert.strictEqual(formatBladeStringWithPint(input), out);
+    })
 });

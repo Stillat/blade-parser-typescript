@@ -95,7 +95,7 @@ If you running Pint elsewhere, or need to customize how it is called, you can ad
 }
 ```
 
-Make sure to include the `{file}` as part of your custom command, as the Blade formatter will supply the path to a temporary path it using when invoking Pint. This path will already be wrapped in double quotes - do not add these yourself.
+Make sure to include the `{file}` as part of your custom command, as the Blade formatter will supply the path to a temporary path it using when invoking Pint. This path will already be wrapped in double quotes - do not add these yourself. Do not include anything after the `{file}` part of the command. The Blade formatter will merge your Pint configuration (if available) with some internal settings that must be present for safe output.
 
 > ⚠️ The Blade formatter does not check what exactly it is you have added to the `pintCommand` configuration option. If you add some really dumb shell commands, it will attempt to run those.
 

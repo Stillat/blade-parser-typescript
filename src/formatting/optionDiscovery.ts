@@ -28,6 +28,7 @@ const defaultSettings: FormattingOptions = {
     pintCacheDirectory: '',
     pintTempDirectory: '',
     pintCacheEnabled: true,
+    pintConfigPath: '',
 };
 
 export { defaultSettings };
@@ -70,7 +71,7 @@ export function getEnvSettings(startingDirectory: string): FormattingOptions {
 
         if (bladeFormattingConfig.useLaravelPint) {
             if (bladeFormattingConfig.pintCommand.length == 0) {
-                let vendorPath = settingsFile.substring(0, settingsFile.length - BLADE_CONFIG_FILE.length) + '/vendor/bin/pint';
+                const vendorPath = settingsFile.substring(0, settingsFile.length - BLADE_CONFIG_FILE.length) + '/vendor/bin/pint';
 
                 if (fs.existsSync(vendorPath)) {
                     bladeFormattingConfig.pintCommand = `php ${vendorPath} {file}`;
@@ -91,6 +92,16 @@ export function getEnvSettings(startingDirectory: string): FormattingOptions {
 
             if (bladeFormattingConfig.pintCacheDirectory.trim().length > 0) {
                 bladeFormattingConfig.pintCacheDirectory = normalizeFilePath(bladeFormattingConfig.pintCacheDirectory.trim());
+            }
+
+            if (bladeFormattingConfig.pintConfigPath.trim().length > 0) {
+                bladeFormattingConfig.pintConfigPath = normalizeFilePath(bladeFormattingConfig.pintConfigPath.trim());
+            } else {
+                const pintConfigPath = settingsFile.substring(0, settingsFile.length - BLADE_CONFIG_FILE.length) + '/pint.json';
+
+                if (fs.existsSync(pintConfigPath)) {
+                    bladeFormattingConfig.pintConfigPath = pintConfigPath;
+                }
             }
         }
 
@@ -118,7 +129,8 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         pintCommand = '',
         pintTempDir = '',
         pintCacheDir = '',
-        pintCacheEnabled = true;
+        pintCacheEnabled = true,
+        pintConfigPath = '';
 
     if (typeof configObject.ignoreDirectives !== 'undefined' && configObject.ignoreDirectives !== null) {
         ignoreDirectives = configObject.ignoreDirectives as string[];
@@ -172,6 +184,10 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         pintCommand = (configObject.pintCommand as string).trim();
     }
 
+    if (typeof configObject.pintConfig !== 'undefined') {
+        pintConfigPath = (configObject.pintConfig as string).trim();
+    }
+
     if (typeof configObject.pintTempDirectory !== 'undefined') {
         pintTempDir = (configObject.pintTempDirectory as string).trim();
     }
@@ -217,6 +233,7 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         pintCacheDirectory: pintCacheDir,
         pintTempDirectory: pintTempDir,
         pintCacheEnabled: pintCacheEnabled,
+        pintConfigPath: pintConfigPath
     };
 }
 

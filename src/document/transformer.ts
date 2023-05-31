@@ -1,6 +1,6 @@
 import { ClassStringEmulation } from '../formatting/classStringEmulation';
 import { PhpOperatorReflow } from '../formatting/phpOperatorReflow';
-import { getPhpOptions } from '../formatting/prettier/utils';
+import { formatBladeString, formatBladeStringWithPint, getPhpOptions } from '../formatting/prettier/utils';
 import { SyntaxReflow } from '../formatting/syntaxReflow';
 import { AbstractNode, BladeCommentNode, BladeComponentNode, BladeEchoNode, ConditionNode, DirectiveNode, ExecutionBranchNode, ForElseNode, FragmentPosition, InlinePhpNode, LiteralNode, ParameterNode, ParameterType, SwitchCaseNode, SwitchStatementNode } from '../nodes/nodes';
 import { SimpleArrayParser } from '../parser/simpleArrayParser';
@@ -105,6 +105,7 @@ export class Transformer {
     private pairedDirectives: Map<string, TransformedPairedDirective> = new Map();
     private dynamicInlineDirectives: Map<string, string> = new Map();
     private inlineDirectives: Map<string, TransformedPairedDirective> = new Map();
+    private attachedDirectives: Map<string, TransformedPairedDirective> = new Map();
     private inlineEchos: Map<string, BladeEchoNode> = new Map();
     private spanEchos: Map<string, BladeEchoNode> = new Map();
     private inlinePhpNodes: Map<string, InlinePhpNode> = new Map();
@@ -163,6 +164,7 @@ export class Transformer {
         pintTempDirectory: '',
         pintCacheDirectory: '',
         pintCacheEnabled: true,
+        pintConfigPath: ''
     }
 
     constructor(doc: BladeDocument) {
@@ -333,6 +335,14 @@ export class Transformer {
                 this.inlineDirectives.set(directive.slug, directive);
                 this.dynamicInlineDirectives.set(directive.directive.nodeContent, directive.slug);
             }
+        }
+    }
+
+    private registerAttachedDirective(slug: string, directive: TransformedPairedDirective) {
+        if (this.parentTransformer != null) {
+            this.parentTransformer.registerAttachedDirective(slug, directive);
+        } else {
+            this.attachedDirectives.set(slug, directive);
         }
     }
 
@@ -591,6 +601,22 @@ export class Transformer {
             innerDoc = directive.childrenDocument?.document.transform().setParentTransformer(this).toStructure() as string;
 
         if (directive.fragmentPosition != FragmentPosition.IsDynamicFragmentName) {
+
+            if (directive.originalAbstractNode != null && directive.originalAbstractNode.prevNode instanceof BladeEchoNode && directive.originalAbstractNode instanceof DirectiveNode && directive.originalAbstractNode.directiveName == 'if') {
+                const distance = (directive.originalAbstractNode.startPosition?.index ?? 0) - (directive.originalAbstractNode.prevNode.endPosition?.index ?? 0);
+
+                if (distance > 0 && distance < 3) {
+                    this.registerAttachedDirective(slug, {
+                        directive: directive,
+                        innerDoc: innerDoc,
+                        slug: slug,
+                        isInline: false,
+                        virtualElementSlug: ''
+                    });
+                    return slug;
+                }
+            }
+
             let virtualSlug = '';
             let result = `${this.open(slug)}\n`;
             if (directiveName == 'php' || directiveName == 'verbatim') {
@@ -1236,6 +1262,12 @@ export class Transformer {
         const slug = this.makeSlug(condition.nodeContent.length);
 
         this.registerDynamicElementCondition(slug, condition);
+
+        if (condition.fragmentPosition == FragmentPosition.InsideFragmentParameter ||
+            condition.fragmentPosition == FragmentPosition.InsideFragment) {
+            return slug;
+        }
+
         return slug + ' ';
     }
 
@@ -1247,7 +1279,8 @@ export class Transformer {
                 this.pintTransformer = new PintTransformer(
                     this.transformOptions.pintTempDirectory,
                     this.transformOptions.pintCacheDirectory,
-                    this.transformOptions.pintCommand
+                    this.transformOptions.pintCommand,
+                    this.transformOptions.pintConfigPath
                 );
                 this.pintTransformer.setTemplateFilePath(this.filePath);
                 this.pintTransformer.format(this.doc);
@@ -1428,8 +1461,50 @@ export class Transformer {
         return value;
     }
 
+    private removeLeadingWhitespace(source: string, substring: string): string {
+        const index = source.indexOf(substring);
+        if (index === -1) {
+            return source;
+        }
+
+        const beforeSubstring = source.slice(0, index);
+        const afterSubstring = source.slice(index + substring.length);
+        const trimmedBefore = beforeSubstring.replace(/[\s\uFEFF\xA0]+$/g, '');
+        return trimmedBefore + substring + afterSubstring;
+    }
+
+    private findNewLeadingStart(content: string, substring: string): number {
+        const lines = StringUtilities.breakByNewLine(content);
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+
+            if (line.includes(substring)) {
+                return line.length - line.trim().length;
+            }
+        }
+        return -1;
+    }
+
     private transformPairedDirectives(content: string): string {
         let value = content;
+
+        this.attachedDirectives.forEach((directive: TransformedPairedDirective, slug: string) => {
+            value = this.removeLeadingWhitespace(value, slug);
+            let attachedDoc = directive.directive.documentContent;
+
+            if (this.transformOptions.useLaravelPint) {
+                attachedDoc = formatBladeStringWithPint(attachedDoc).trim();
+            } else {
+                attachedDoc = formatBladeString(attachedDoc).trim();
+            }
+            const dirResult = this.printDirective(directive.directive, this.indentLevel(slug)).trim(),
+                relIndent = this.findNewLeadingStart(value, slug),
+                tmpDoc = dirResult + attachedDoc + "\n" + directive.directive.isClosedBy?.sourceContent ?? '';
+
+            let insertResult = IndentLevel.shiftIndent(tmpDoc, relIndent + this.transformOptions.tabSize, true, this.transformOptions, false, true);
+            value = value.replace(slug, insertResult);
+        });
 
         this.pairedDirectives.forEach((directive: TransformedPairedDirective, slug: string) => {
             const originalDirective = directive.directive;
@@ -1460,22 +1535,34 @@ export class Transformer {
                             true,
                             this.transformOptions
                         );
+
+                        value = value.replace(open, replacePhp);
+                        value = value.replace(virtualOpen, formattedPhp);
                     } else {
                         if (this.pintTransformer != null) {
-                            const pintResult = IndentLevel.shiftIndent(
-                                this.pintTransformer.getDirectivePhpContent(originalDirective),
-                                targetIndent,
-                                true,
-                                this.transformOptions
-                            );
+                            formattedPhp = this.pintTransformer.getDirectivePhpContent(originalDirective).trim();
+                            const lines = StringUtilities.breakByNewLine(formattedPhp),
+                                reflow: string[] = [];
 
-                            formattedPhp = pintResult;
+                            for (let i = 0; i < lines.length; i++) {
+                                if (lines[i].trim().length == 0) {
+                                    reflow.push('');
+                                    continue;
+                                }
+                                reflow.push(' '.repeat(targetIndent) + lines[i]);
+                            }
+
+                            formattedPhp = reflow.join("\n");
+
+
+                            value = value.replace(open, replacePhp + "\n" + formattedPhp);
+                            value = value.replace(virtualOpen, '');
+                        } else {
+                            value = value.replace(open, replacePhp);
+                            value = value.replace(virtualOpen, formattedPhp);
                         }
                     }
                 }
-
-                value = value.replace(open, replacePhp);
-                value = value.replace(virtualOpen, formattedPhp);
             } else if (originalDirective.directiveName.trim().toLowerCase() == 'verbatim') {
                 const replaceVerbatim = directive.directive.sourceContent + "\n" + IndentLevel.shiftClean(
                     originalDirective.innerContent, this.transformOptions.tabSize
@@ -1744,10 +1831,28 @@ export class Transformer {
         return value;
     }
 
+    private removeTrailingWhitespaceAfterSubstring(source: string, substring: string): string {
+        const lines = StringUtilities.breakByNewLine(source),
+            newLines: string[] = [];
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+
+            if (line.trimRight().endsWith(substring)) {
+                newLines.push(line.trimRight());
+            } else {
+                newLines.push(line);
+            }
+        }
+
+        return newLines.join("\n");
+    }
+
     private transformDynamicElementConditions(content: string): string {
         let value = content;
 
         this.dynamicElementConditionNodes.forEach((condition, slug) => {
+            value = this.removeTrailingWhitespaceAfterSubstring(value, slug);
             value = StringUtilities.replaceAllInString(value, slug, condition.nodeContent);
         });
 
@@ -1937,6 +2042,35 @@ export class Transformer {
 
     private reflowSlugs(content: string): string {
         let result = content;
+        const rLines = StringUtilities.breakByNewLine(result);
+        const newLines: string[] = [];
+
+        for (let i = 0; i < rLines.length; i++) {
+            const rLine = rLines[i].trimRight();
+            let added = false;
+            for (let j = 0; j < this.slugs.length; j++) {
+                const slug = this.slugs[j];
+                if (rLine.endsWith('<' + slug) && i + 1 < rLines.length) {
+                    const nLine = rLines[i + 1];
+
+                    if (nLine.trimLeft().startsWith('/>')) {
+                        const breakOn = nLine.indexOf('/>');
+                        const nLineAfter = nLine.substring(breakOn + 2);
+                        newLines.push(rLine.trimRight() + ' />');
+                        const reflowCount = rLine.indexOf('<' + slug);
+                        newLines.push(' '.repeat(reflowCount) + nLineAfter.trimLeft());
+                        i += 1;
+                        added = true;
+                        break;
+                    }
+                }
+            }
+            if (!added) {
+                newLines.push(rLine);
+            }
+        }
+
+        result = newLines.join("\n");
 
         this.slugs.forEach((slug) => {
             const open = this.open(slug),
@@ -1989,7 +2123,7 @@ export class Transformer {
             const replace = this.selfClosing(slug),
                 startIndent = this.indentLevel(replace);
 
-            results = results.replace(replace, this.dumpPreservedNodes(nodes, startIndent));
+            results = results.replace(replace, this.dumpPreservedNodes(nodes));
         });
 
 
@@ -1998,7 +2132,7 @@ export class Transformer {
         return results;
     }
 
-    private dumpPreservedNodes(nodes: AbstractNode[], finalIndent: number): string {
+    private dumpPreservedNodes(nodes: AbstractNode[]): string {
         let stringResults = '';
 
         nodes.forEach((node) => {
