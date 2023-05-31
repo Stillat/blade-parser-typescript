@@ -50,6 +50,12 @@ export class DirectivePrinter {
                 if (options.formatDirectivePhpParameters && phpFormatter != null && directive.hasValidPhp()) {
 
                     if (pintTransformer != null) {
+                        let spacesToUse = options.spacesAfterDirective;
+
+                        if (DirectivePrinter.defaultControlDirectiveNames.includes(directiveName)) {
+                            spacesToUse = options.spacesAfterControlDirective;
+                        }
+                        const prefix = '@' + directiveName + ' '.repeat(spacesToUse);
                         let tResult = pintTransformer.getDirectiveContent(directive);
 
                         tResult = IndentLevel.shiftIndent(
@@ -59,13 +65,25 @@ export class DirectivePrinter {
                             options
                         );
 
-                        let spacesToUse = options.spacesAfterDirective;
+                        
+                        if (DirectivePrinter.defaultControlDirectiveNames.includes(directiveName) && tResult.includes("\n")) {
+                            const nLines = StringUtilities.breakByNewLine(tResult),
+                                reflowed:string[] = [];
 
-                        if (DirectivePrinter.defaultControlDirectiveNames.includes(directiveName)) {
-                            spacesToUse = options.spacesAfterControlDirective;
+                            for (let i = 0; i < nLines.length; i++) {
+                                const line = nLines[i];
+                                if (i == 0) {
+                                    reflowed.push(line);
+                                    continue;
+                                }
+
+                                reflowed.push(' '.repeat(prefix.length + 1) + line);
+                            }
+
+                            tResult = reflowed.join("\n");
                         }
 
-                        return '@' + directiveName + ' '.repeat(spacesToUse) + tResult;
+                        return prefix + tResult;
                     }
 
                     let params = directive.getPhpContent().trim();

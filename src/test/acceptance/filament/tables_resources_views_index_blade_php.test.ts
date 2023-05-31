@@ -2500,7 +2500,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
         </div>
 
         @if ($records instanceof \\Illuminate\\Contracts\\Pagination\\Paginator &&
-        ((! $records instanceof \\Illuminate\\Contracts\\Pagination\\LengthAwarePaginator) || $records->total()))
+             ((! $records instanceof \\Illuminate\\Contracts\\Pagination\\LengthAwarePaginator) || $records->total()))
             <div
                 class="filament-tables-pagination-container p-2 border-t dark:border-gray-700"
             >

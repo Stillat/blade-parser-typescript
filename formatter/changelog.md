@@ -3,6 +3,8 @@
 ## 1.4.7
 
 - Improves relative indentation of PHP blocks in more scenarios
+- Improves indentation of multi-line if statements
+- General layout engine improvements
 
 ## 1.4.6
 
