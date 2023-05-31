@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.4.5 (Unreleased)
+
+- Improves internal management of Pint cache
+- Improves how nested `@php @endphp` and `<?php ?>` code blocks are formatted with Pint
+- Improves recovery behavior when internal issues are detected
+- Improves relative PHP indentation when formatting using Pint
+- Improves relative echo indentation when formatting using Pint
+- Improves namespace and `use` behavior when formatting using Pint
+- Improves formatting of docblock comments and their indentation when using Pint
+- Overrides the `no_unused_imports` ruleset when using Pint to prevent namespaces from being removed (this would impact documents that imported things at the top, but used them in separate PHP regions later)
+- Improves how simple conditions are formatted when they are attached to Blade echos on their left
+- General improvements to overall layout engine
+- Pint formatting results will now utilize trailing comma configuration more consistently
+- Improved relative indentation of nested arrays and directive arguments when using Pint
+- Improved trailing whitespace after inlined condition behavior
+- Resolves an issue where directive parenthesis can be duplicated when Pint fails
+- Resolves an issue where valid trailing semicolons may be removed when formatting raw PHP blocks
+- Improves on reflowing of content when Prettier's layout breaks virtual elements onto separate lines
+- Improves trailing whitespace behavior of inline directives, echos, etc. when lines are separated
+
 ## 1.4.4
 
 - Improves management of Pint output to help prevent placeholder characters from appearing in output

@@ -12,7 +12,7 @@
     "scripts": {
         "compile": "tsc -b",
         "watch": "tsc -b -w",
-        "test:parser": "npm run compile && mocha ./out/test/*.js -- -u tdd",
+        "test:parser": "npm run compile && mocha ./out/test/**/*.test.js -- -u tdd",
         "bundle:prettier": "npm run compile && npm run esbuild:prettier",
         "esbuild:prettier": "esbuild ./src/formatting/prettier/plugin.ts --bundle --minify --outfile=./formatter/plugin.js --format=cjs --platform=node --external:prettier"
     },

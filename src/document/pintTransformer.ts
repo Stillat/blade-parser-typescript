@@ -36,6 +36,7 @@ export class PintTransformer {
     private phpDocs: Map<string, string> = new Map();
     private phpTagDocs: Map<string, string> = new Map();
     private cleanupFiles: string[] = [];
+    private cleanupDirs: string[] = [];
     private defaultConfig: object = {
         "preset": "laravel",
         "rules": {
@@ -174,7 +175,7 @@ export class PintTransformer {
 
     getDirectiveContent(directive: DirectiveNode): string {
         if (directive.overrideParams != null && this.resultMapping.has(directive.overrideParams)) {
-            return this.resultMapping.get(directive.overrideParams) as string;
+            return '(' + this.resultMapping.get(directive.overrideParams) as string + ')';
         }
 
         // Handle the case of nested child documents having different index values.
@@ -183,7 +184,7 @@ export class PintTransformer {
             const originalIndex = this.contentMapping.get(preparedParams) as string;
 
             if (this.resultMapping.has(originalIndex)) {
-                return this.resultMapping.get(originalIndex) as string;
+                return '(' + this.resultMapping.get(originalIndex) as string + ')';
             }
         }
 
@@ -428,15 +429,18 @@ export class PintTransformer {
             }
         }
 
-        const fSlug = StringUtilities.makeSlug(12), fileName = this.tmpDir + fSlug + '.php';
-        fs.writeFileSync(fileName, transformResults, { encoding: 'utf8' });
+        let theRes = '';
 
         try {
-            this.callLaravelPint(fileName, fSlug);
+            theRes = this.callLaravelPint(transformResults);
         } catch (err) {
-            fs.unlinkSync(fileName);
+            const fff = err as unknown as any;
+            console.log(fff.stdout.toString());
             this.cleanupFiles.forEach((fileName) => {
                 fs.unlinkSync(fileName);
+            });
+            this.cleanupDirs.forEach((dirName) => {
+                fs.rmdirSync(dirName, { recursive: true });
             });
 
             if (this.outputPintResults) {
@@ -446,9 +450,6 @@ export class PintTransformer {
             return this.resultMapping;
         }
 
-        const theRes = fs.readFileSync(fileName, { encoding: 'utf8' });
-
-        fs.unlinkSync(fileName);
         this.cleanupFiles.forEach((fileName) => {
             fs.unlinkSync(fileName);
         });
@@ -558,48 +559,69 @@ export class PintTransformer {
         return tResult;
     }
 
-    private callLaravelPint(fileName: string, fileSlug: string) {
+    private callLaravelPint(transformResults: string): string {
         if (this.wasCached) {
-            return;
+            return '';
         }
 
-        const command = this.pintCommand.replace('{file}', `"${fileName}"`) + ` --config "${PintTransformer.processConfigPath}"`,
-            baseFileName = path.basename(fileName);
+        const fileSlug = StringUtilities.makeSlug(26);
 
-        let output = '';
+        let baseFileName = '',
+            output = '',
+            pintResults = '';
 
         if (this.phpDocs.size > 0 || this.phpTagDocs.size > 0) {
+            // Create a temp directory to work inside.
+            const tmpDir = this.tmpDir + '/' + StringUtilities.makeSlug(32) + '/';
+            fs.mkdirSync(tmpDir);
+
+            const fileName = tmpDir + fileSlug + '.php';
+            fs.writeFileSync(fileName, transformResults, { encoding: 'utf8' });
+
+            this.cleanupFiles.push(fileName);
+            this.cleanupDirs.push(tmpDir);
             this.phpDocs.forEach((doc, key) => {
-                const docFname = this.tmpDir + fileSlug + 'php_' + key + '.php';
+                const docFname = tmpDir + fileSlug + 'php_' + key + '.php';
                 fs.writeFileSync(docFname, doc, { encoding: 'utf8' });
                 this.cleanupFiles.push(docFname);
             });
 
             this.phpTagDocs.forEach((doc, key) => {
-                const docFname = this.tmpDir + fileSlug + 'tag_php_' + key + '.php';
+                const docFname = tmpDir + fileSlug + 'tag_php_' + key + '.php';
                 fs.writeFileSync(docFname, doc, { encoding: 'utf8' });
                 this.cleanupFiles.push(docFname);
             });
 
-            const dirCommand = this.pintCommand.replace('{file}', this.tmpDir) + ` --config "${PintTransformer.processConfigPath}"`;
+            const dirCommand = this.pintCommand.replace('{file}', `"${tmpDir}"`) + ` --config "${PintTransformer.processConfigPath}"`;
             output = execSync(dirCommand).toString();
 
             this.phpDocs.forEach((doc, key) => {
-                const docFname = this.tmpDir + fileSlug + 'php_' + key + '.php';
+                const docFname = tmpDir + fileSlug + 'php_' + key + '.php';
                 const phpDocRes = fs.readFileSync(docFname, { encoding: 'utf8' });
                 const fResults = phpDocRes.trim().substring(5);
                 this.resultMapping.set(key, fResults);
             });
 
             this.phpTagDocs.forEach((doc, key) => {
-                const docFname = this.tmpDir + fileSlug + 'tag_php_' + key + '.php';
+                const docFname = tmpDir + fileSlug + 'tag_php_' + key + '.php';
                 const phpDocRes = fs.readFileSync(docFname, { encoding: 'utf8' });
                 let fResults = phpDocRes.trim();
                 fResults = fResults.substring(0, fResults.length - 4);
                 this.resultMapping.set(key, fResults);
             });
+
+            pintResults = fs.readFileSync(fileName, { encoding: 'utf8' });
         } else {
+            const fileName = this.tmpDir + fileSlug + '.php';
+            fs.writeFileSync(fileName, transformResults, { encoding: 'utf8' });
+
+            const command = this.pintCommand.replace('{file}', `"${fileName}"`) + ` --config "${PintTransformer.processConfigPath}"`;
+
+            baseFileName = path.basename(fileName);
             output = execSync(command).toString();
+            this.cleanupFiles.push(fileName);
+
+            pintResults = fs.readFileSync(fileName, { encoding: 'utf8' });
         }
 
         if (this.outputPintResults && typeof this.templateFile !== 'undefined' && this.templateFile != null) {
@@ -628,5 +650,7 @@ export class PintTransformer {
                 console.log(newLines.join("\n"));
             }
         }
+
+        return pintResults;
     }
 }

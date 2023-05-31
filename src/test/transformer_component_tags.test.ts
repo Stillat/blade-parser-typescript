@@ -21,7 +21,7 @@ param="value">
 {{ $isSelected($value) ? 'selected="selected"' : '' }} value="{{ $value }}">
 {{ $label }}
 </option>`).trim(),
-            `<option 
+            `<option
 {{ $isSelected($value) ? 'selected="selected"' : '' }} value="{{ $value }}">
 {{ $label }}
 </option>`

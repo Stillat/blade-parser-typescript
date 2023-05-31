@@ -1807,10 +1807,28 @@ export class Transformer {
         return value;
     }
 
+    private removeTrailingWhitespaceAfterSubstring(source: string, substring: string): string {
+        const lines = StringUtilities.breakByNewLine(source),
+            newLines: string[] = [];
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+
+            if (line.trimRight().endsWith(substring)) {
+                newLines.push(line.trimRight());
+            } else {
+                newLines.push(line);
+            }
+        }
+
+        return newLines.join("\n");
+    }
+
     private transformDynamicElementConditions(content: string): string {
         let value = content;
 
         this.dynamicElementConditionNodes.forEach((condition, slug) => {
+            value = this.removeTrailingWhitespaceAfterSubstring(value, slug);
             value = StringUtilities.replaceAllInString(value, slug, condition.nodeContent);
         });
 
@@ -2000,6 +2018,35 @@ export class Transformer {
 
     private reflowSlugs(content: string): string {
         let result = content;
+        const rLines = StringUtilities.breakByNewLine(result);
+        const newLines:string[] = [];
+
+        for (let i = 0; i < rLines.length; i++) {
+            const rLine = rLines[i].trimRight();
+            let added = false;
+            for (let j = 0; j < this.slugs.length; j++) {
+                const slug = this.slugs[j];
+                if (rLine.endsWith('<' + slug) && i + 1 < rLines.length) {
+                    const nLine = rLines[i + 1];
+
+                    if (nLine.trimLeft().startsWith('/>')) {
+                        const breakOn = nLine.indexOf('/>');
+                        const nLineAfter = nLine.substring(breakOn + 2);
+                        newLines.push(rLine.trimRight() + ' />');
+                        const reflowCount = rLine.indexOf('<' + slug);
+                        newLines.push(' '.repeat(reflowCount) + nLineAfter.trimLeft());
+                        i += 1;
+                        added = true;
+                        break;
+                    }
+                }
+            }
+            if (! added) {
+                newLines.push(rLine);
+            }
+        }
+
+        result = newLines.join("\n");
 
         this.slugs.forEach((slug) => {
             const open = this.open(slug),
