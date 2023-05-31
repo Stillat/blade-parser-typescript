@@ -65,10 +65,9 @@ export class DirectivePrinter {
                             options
                         );
 
-                        
                         if (DirectivePrinter.defaultControlDirectiveNames.includes(directiveName) && tResult.includes("\n")) {
                             const nLines = StringUtilities.breakByNewLine(tResult),
-                                reflowed:string[] = [];
+                                reflowed: string[] = [];
 
                             for (let i = 0; i < nLines.length; i++) {
                                 const line = nLines[i];
