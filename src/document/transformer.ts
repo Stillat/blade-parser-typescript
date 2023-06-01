@@ -1493,7 +1493,7 @@ export class Transformer {
             let attachedDoc = directive.directive.documentContent;
 
             if (this.transformOptions.useLaravelPint) {
-                attachedDoc = formatBladeStringWithPint(attachedDoc).trim();
+                attachedDoc = formatBladeStringWithPint(attachedDoc, null, this.transformOptions).trim();
             } else {
                 attachedDoc = formatBladeString(attachedDoc).trim();
             }

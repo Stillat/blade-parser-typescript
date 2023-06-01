@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.8
+
+- Corrects resolution of Pint configuration when formatting nested documents (#53)
+
 ## 1.4.7
 
 - Improves relative indentation of PHP blocks in more scenarios
