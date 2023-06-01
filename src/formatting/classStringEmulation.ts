@@ -3,6 +3,12 @@ import { StringRemover } from '../parser/stringRemover';
 import { formatAsHtml } from './prettier/utils';
 import { StringUtilities } from '../utilities/stringUtilities';
 
+export interface IClassEmulationConfig {
+    allowedDirectives: string[],
+    runInPhp: boolean,
+    excludePatterns: string[]
+}
+
 export class ClassStringEmulation {
     extractContent(input: string): string[] {
         const regex = /class-string-emulate-start([\s\S]*?)class-string-emulate-end/g;
@@ -31,10 +37,10 @@ export class ClassStringEmulation {
             remover.remove(newDoc);
             extracted = Array.from(new Set(remover.getStrings()));
 
-            const newClasses:string[] = [],
-                resultMapping:Map<string, string> = new Map();
+            const newClasses: string[] = [],
+                resultMapping: Map<string, string> = new Map();
 
-            for (let i = 0;i < extracted.length; i++) {
+            for (let i = 0; i < extracted.length; i++) {
                 let line = extracted[i];
 
                 if (line.startsWith('Emulate:')) {
@@ -49,7 +55,7 @@ export class ClassStringEmulation {
                 i += 1;
             }
 
-            
+
             newClasses.sort((a, b) => b.length - a.length).forEach((classString) => {
                 if (resultMapping.has(classString)) {
                     newContent = StringUtilities.replaceAllInString(newContent, classString, resultMapping.get(classString) as string);
