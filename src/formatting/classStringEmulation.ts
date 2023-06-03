@@ -1,13 +1,9 @@
-import { StringRemover } from '../parser/stringRemover';
-import { formatAsHtml } from './prettier/utils';
 import { StringUtilities } from '../utilities/stringUtilities';
 import { BladeDocument } from '../document/bladeDocument';
-import { LiteralNode, SwitchStatementNode, ConditionNode, DirectiveNode, BladeEchoNode, ForElseNode, BladeCommentNode, BladeComponentNode, InlinePhpNode, BladePhpNode } from '../nodes/nodes';
+import { LiteralNode, SwitchStatementNode, ConditionNode, DirectiveNode, BladeEchoNode, ForElseNode, BladeCommentNode, BladeComponentNode, InlinePhpNode } from '../nodes/nodes';
 import { ClassEmulator } from '../parser/classEmulator';
 import { PhpValidator } from '../parser/php/phpValidator';
 import { ParserOptions, getParserOptions } from '../parser/parserOptions';
-import { ILabeledRange } from '../nodes/labeledRange';
-import { JavaScriptStructuresAnalyzer } from '../analyzers/javaScriptStructuresAnalyzer';
 
 export class ClassStringEmulation {
     private ignoreDirectives: string[] = ['if', 'unless', 'elseif'];
@@ -116,8 +112,6 @@ export class ClassStringEmulation {
                     const phpEmulate = new ClassEmulator();
                     stringResults += phpEmulate.emulatePhpTag(node.sourceContent);
                 }
-            } else {
-                debugger;
             }
         }
 

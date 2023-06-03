@@ -49,7 +49,7 @@ export class ClassEmulator {
 
         stringNodes.forEach((node) => {
             if (node.type == 'string') {
-                const innerContent = node.content.substr(1, node.content.length - 1);
+                const innerContent = node.content.substring(1, node.content.length - 1);
 
                 if (!this.isSafeToProcess(innerContent)) {
                     return;
