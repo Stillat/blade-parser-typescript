@@ -44,9 +44,6 @@ export class ClassEmulator {
             }
         });
 
-        console.log(emulateDocument);
-        debugger;
-
         emulateDocument = formatAsHtmlStrings(emulateDocument);
 
         // Now that we have formatted our emulated document,
