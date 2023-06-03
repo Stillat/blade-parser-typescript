@@ -9,17 +9,11 @@ import { InlineStringParser } from './parser/inlineStringParser';
 const espree = require('espree');
 const code = `
 
-<script>
-function greet(name) {
-    console.log('Hello, ' + name + '!');
-  }
 
-  value---------;
-  
-  if (x > 5 && 'that') {
-    greet('John');
-  }
-</script>
+@php
+    $shouldIgnore = "one \${three}";
+@endphp
+
 `;
 console.log(formatBladeString(code));
 debugger;

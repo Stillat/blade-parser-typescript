@@ -9,6 +9,7 @@ export class ClassEmulator {
     private phpStructuresAnalyzer: PhpStructuresAnalyzer;
     private stringParser: InlineStringParser;
     private mergeRanges: ILabeledRange[] = [];
+    private charsToAvoid: string[] = ["\n", '$', '{',];
 
     constructor() {
         this.phpStructuresAnalyzer = new PhpStructuresAnalyzer();
@@ -17,6 +18,16 @@ export class ClassEmulator {
 
     withAdditionalRanges(mergeRanges: ILabeledRange[]) {
         this.mergeRanges = this.mergeRanges.concat(mergeRanges);
+    }
+
+    private isSafeToProcess(value: string): boolean {
+        for (let i = 0; i < this.charsToAvoid.length; i++) {
+            if (value.includes(this.charsToAvoid[i])) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     emulateString(content: string): string {
@@ -38,9 +49,15 @@ export class ClassEmulator {
 
         stringNodes.forEach((node) => {
             if (node.type == 'string') {
+                const innerContent = node.content.substr(1, node.content.length - 1);
+
+                if (!this.isSafeToProcess(innerContent)) {
+                    return;
+                }
+
                 stringStartMapping.set(node.index, node.content[0]);
                 emulateDocument += `<!-- "${prefix}${node.index}"-->\n`;
-                emulateDocument += `<div class="${node.content.substring(1, node.content.length - 1)}"></div>\n`;
+                emulateDocument += `<div class="${innerContent}"></div>\n`;
             }
         });
 
