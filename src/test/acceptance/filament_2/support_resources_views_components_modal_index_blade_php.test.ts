@@ -84,18 +84,16 @@ suite('Pint Transformer Accpetance: support_resources_views_components_modal_ind
             aria-hidden="true"
             @class([
                 'filament-modal-close-overlay fixed inset-0 w-full h-full bg-black/50',
-                'cursor-pointer' => $closeByClickingAway,
+                'cursor-pointer' => $closeByClickingAway
             ])
         ></div>
 
         <div
             x-ref="modalContainer"
-            {{
-                $attributes->class([
-                    'relative w-full cursor-pointer pointer-events-none transition',
-                    'my-auto p-4' => ! $slideOver,
-                ])
-            }}
+            {{ $attributes->class([
+                'relative w-full cursor-pointer pointer-events-none transition',
+                'my-auto p-4' => ! $slideOver,
+            ]) }}
         >
             <div
                 x-data="{ isShown: false }"
@@ -191,13 +189,11 @@ suite('Pint Transformer Accpetance: support_resources_views_components_modal_ind
                         ])
                     >
                         @if ($heading || $subheading)
-                            <div
-                                @class([
-                                    'p-4 space-y-2',
-                                    'text-center' => ! $slideOver,
-                                    'dark:text-white' => $darkMode,
-                                ])
-                            >
+                            <div @class([
+                                'p-4 space-y-2',
+                                'text-center' => ! $slideOver,
+                                'dark:text-white' => $darkMode,
+                            ])>
                                 @if ($heading)
                                     <x-dynamic-component
                                         :component="$headingComponent"
@@ -385,7 +381,7 @@ suite('Pint Transformer Accpetance: support_resources_views_components_modal_ind
                     <button
                         tabindex="-1"
                         type="button"
-                        class="absolute top-2 right-2 rtl:right-auto rtl:left-2"
+                        class="absolute right-2 top-2 rtl:left-2 rtl:right-auto"
                         @if (filled($id))
                             x-on:click="$dispatch('{{ $closeEventName }}', { id: '{{ $id }}' })"
                         @else
@@ -458,7 +454,7 @@ suite('Pint Transformer Accpetance: support_resources_views_components_modal_ind
                         @endif
 
                         @if ($slot->isNotEmpty())
-                            <div class="px-4 py-2 space-y-4">
+                            <div class="space-y-4 px-4 py-2">
                                 {{ $slot }}
                             </div>
                         @endif

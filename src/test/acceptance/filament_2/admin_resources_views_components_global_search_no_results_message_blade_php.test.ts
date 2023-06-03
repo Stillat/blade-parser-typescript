@@ -4,14 +4,10 @@ import { StringUtilities } from '../../../utilities/stringUtilities';
 
 suite('Pint Transformer Accpetance: admin_resources_views_components_global_search_no_results_message_blade_php', () => {
     test('pint: it can format admin_resources_views_components_global_search_no_results_message_blade_php', () => {
-        const input = `<div
-    {{
-        $attributes->class([
-            'filament-global-search-no-results-message px-6 py-4',
-            'dark:text-gray-200' => config('filament.dark_mode'),
-        ])
-    }}
->
+        const input = `<div {{ $attributes->class([
+    'filament-global-search-no-results-message px-6 py-4',
+    'dark:text-gray-200' => config('filament.dark_mode'),
+]) }}>
     {{ __('filament::global-search.no_results_message') }}
 </div>
 `;

@@ -60,20 +60,15 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_tags_input_
                             }
                         })"
                         x-model="newTag"
-                        {{
-                            $getExtraInputAttributeBag()->class([
-                                'webkit-calendar-picker-indicator:opacity-0 block w-full border-0',
-                                'dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-400' => config('forms.dark_mode'),
-                            ])
-                        }}
+                        {{ $getExtraInputAttributeBag()->class([
+                            'webkit-calendar-picker-indicator:opacity-0 block w-full border-0',
+                            'dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-400' => config('forms.dark_mode'),
+                        ]) }}
                     />
 
                     <datalist id="{{ $getId() }}-suggestions">
                         @foreach ($getSuggestions() as $suggestion)
-                            <template
-                                x-if="! state.includes(@js($suggestion))"
-                                x-bind:key="@js($suggestion)"
-                            >
+                            <template x-if="! state.includes(@js($suggestion))" x-bind:key="@js($suggestion)">
                                 <option value="{{ $suggestion }}" />
                             </template>
                         @endforeach
@@ -81,7 +76,11 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_tags_input_
                 </div>
             @endunless
 
-            <div x-show="state.length" x-cloak class="relative w-full p-2 overflow-hidden">
+            <div
+                x-show="state.length"
+                x-cloak
+                class="relative w-full p-2 overflow-hidden"
+            >
                 <div class="flex flex-wrap gap-1">
                     <template class="hidden" x-for="tag in state" x-bind:key="tag">
                         <button
@@ -189,7 +188,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_tags_input_
             <div
                 x-show="state.length"
                 x-cloak
-                class="relative w-full p-2 overflow-hidden"
+                class="relative w-full overflow-hidden p-2"
             >
                 <div class="flex flex-wrap gap-1">
                     <template
@@ -212,7 +211,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_tags_input_
                             <span class="text-start" x-text="tag"></span>
 
                             @unless ($isDisabled())
-                                <x-heroicon-s-x class="w-3 h-3 shrink-0" />
+                                <x-heroicon-s-x class="h-3 w-3 shrink-0" />
                             @endunless
                         </button>
                     </template>

@@ -51,15 +51,11 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_repeater_bl
         @endif
     </div>
 
-    <div
-        {{
-            $attributes->merge($getExtraAttributes())->class([
-                'filament-forms-repeater-component space-y-6 rounded-xl',
-                'bg-gray-50 p-6' => $isInset(),
-                'dark:bg-gray-500/10' => $isInset() && config('forms.dark_mode'),
-            ])
-        }}
-    >
+    <div {{ $attributes->merge($getExtraAttributes())->class([
+        'filament-forms-repeater-component space-y-6 rounded-xl',
+        'bg-gray-50 p-6' => $isInset(),
+        'dark:bg-gray-500/10' => $isInset() && config('forms.dark_mode'),
+    ]) }}>
         @if (count($containers))
             <ul>
                 <x-filament-support::grid
@@ -128,27 +124,23 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_repeater_bl
                                                 {{ __('forms::components.repeater.buttons.move_item.label') }}
                                             </span>
 
-                                            <x-heroicon-s-switch-vertical class="w-4 h-4" />
+                                            <x-heroicon-s-switch-vertical class="w-4 h-4"/>
                                         </button>
                                     @endunless
 
-                                    <p
-                                        @class([
-                                            'flex-none px-4 text-xs font-medium text-gray-600 truncate',
-                                            'dark:text-gray-400' => config('forms.dark_mode'),
-                                        ])
-                                    >
+                                    <p @class([
+                                        'flex-none px-4 text-xs font-medium text-gray-600 truncate',
+                                        'dark:text-gray-400' => config('forms.dark_mode'),
+                                    ])>
                                         {{ $getItemLabel($uuid) }}
                                     </p>
 
                                     <div class="flex-1"></div>
 
-                                    <ul
-                                        @class([
-                                            'flex divide-x rtl:divide-x-reverse',
-                                            'dark:divide-gray-700' => config('forms.dark_mode'),
-                                        ])
-                                    >
+                                    <ul @class([
+                                        'flex divide-x rtl:divide-x-reverse',
+                                        'dark:divide-gray-700' => config('forms.dark_mode'),
+                                    ])>
                                         @if ($isReorderableWithButtons)
                                             @unless ($loop->first)
                                                 <li>
@@ -267,8 +259,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_repeater_bl
                                                         {{ __('forms::components.repeater.buttons.delete_item.label') }}
                                                     </span>
 
-                                                    <x-heroicon-s-trash
-                                                        class="w-4 h-4"
+                                                    <x-heroicon-s-trash class="w-4 h-4"
                                                         wire:loading.remove.delay
                                                         wire:target="dispatchFormEvent('repeater::deleteItem', '{{ $getStatePath() }}', '{{ $uuid }}')"
                                                     />
@@ -294,29 +285,15 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_repeater_bl
                                                         'dark:focus:bg-gray-600/20' => config('forms.dark_mode'),
                                                     ])
                                                 >
-                                                    <x-heroicon-s-minus-sm
-                                                        class="w-4 h-4"
-                                                        x-show="! isCollapsed"
-                                                    />
+                                                    <x-heroicon-s-minus-sm class="w-4 h-4" x-show="! isCollapsed"/>
 
-                                                    <span
-                                                        class="sr-only"
-                                                        x-show="! isCollapsed"
-                                                    >
+                                                    <span class="sr-only" x-show="! isCollapsed">
                                                         {{ __('forms::components.repeater.buttons.collapse_item.label') }}
                                                     </span>
 
-                                                    <x-heroicon-s-plus-sm
-                                                        class="w-4 h-4"
-                                                        x-show="isCollapsed"
-                                                        x-cloak
-                                                    />
+                                                    <x-heroicon-s-plus-sm class="w-4 h-4" x-show="isCollapsed" x-cloak/>
 
-                                                    <span
-                                                        class="sr-only"
-                                                        x-show="isCollapsed"
-                                                        x-cloak
-                                                    >
+                                                    <span class="sr-only" x-show="isCollapsed" x-cloak>
                                                         {{ __('forms::components.repeater.buttons.expand_item.label') }}
                                                     </span>
                                                 </button>
@@ -326,17 +303,11 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_repeater_bl
                                 </header>
                             @endif
 
-                            <div
-                                x-bind:class="{ 'invisible h-0 !m-0 overflow-y-hidden': isCollapsed, 'p-6': !isCollapsed}"
-                            >
+                            <div x-bind:class="{ 'invisible h-0 !m-0 overflow-y-hidden': isCollapsed, 'p-6': !isCollapsed}">
                                 {{ $item }}
                             </div>
 
-                            <div
-                                class="p-2 text-xs text-center text-gray-400"
-                                x-show="isCollapsed"
-                                x-cloak
-                            >
+                            <div class="p-2 text-xs text-center text-gray-400" x-show="isCollapsed" x-cloak>
                                 {{ __('forms::components.repeater.collapsed') }}
                             </div>
                         </li>
@@ -484,7 +455,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_repeater_bl
                                             </span>
 
                                             <x-heroicon-s-switch-vertical
-                                                class="w-4 h-4"
+                                                class="h-4 w-4"
                                             />
                                         </button>
                                     @endunless
@@ -525,13 +496,13 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_repeater_bl
                                                         </span>
 
                                                         <x-heroicon-s-chevron-up
-                                                            class="w-4 h-4"
+                                                            class="h-4 w-4"
                                                             wire:loading.remove.delay
                                                             wire:target="dispatchFormEvent('repeater::moveItemUp', '{{ $getStatePath() }}', '{{ $uuid }}')"
                                                         />
 
                                                         <x-filament-support::loading-indicator
-                                                            class="w-4 h-4 text-primary-500"
+                                                            class="text-primary-500 h-4 w-4"
                                                             wire:loading.delay
                                                             wire:target="dispatchFormEvent('repeater::moveItemUp', '{{ $getStatePath() }}', '{{ $uuid }}')"
                                                             x-cloak
@@ -558,13 +529,13 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_repeater_bl
                                                         </span>
 
                                                         <x-heroicon-s-chevron-down
-                                                            class="w-4 h-4"
+                                                            class="h-4 w-4"
                                                             wire:loading.remove.delay
                                                             wire:target="dispatchFormEvent('repeater::moveItemDown', '{{ $getStatePath() }}', '{{ $uuid }}')"
                                                         />
 
                                                         <x-filament-support::loading-indicator
-                                                            class="w-4 h-4 text-primary-500"
+                                                            class="text-primary-500 h-4 w-4"
                                                             wire:loading.delay
                                                             wire:target="dispatchFormEvent('repeater::moveItemDown', '{{ $getStatePath() }}', '{{ $uuid }}')"
                                                             x-cloak
@@ -592,13 +563,13 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_repeater_bl
                                                     </span>
 
                                                     <x-heroicon-s-duplicate
-                                                        class="w-4 h-4"
+                                                        class="h-4 w-4"
                                                         wire:loading.remove.delay
                                                         wire:target="dispatchFormEvent('repeater::cloneItem', '{{ $getStatePath() }}', '{{ $uuid }}')"
                                                     />
 
                                                     <x-filament-support::loading-indicator
-                                                        class="w-4 h-4 text-primary-500"
+                                                        class="text-primary-500 h-4 w-4"
                                                         wire:loading.delay
                                                         wire:target="dispatchFormEvent('repeater::cloneItem', '{{ $getStatePath() }}', '{{ $uuid }}')"
                                                         x-cloak
@@ -625,13 +596,13 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_repeater_bl
                                                     </span>
 
                                                     <x-heroicon-s-trash
-                                                        class="w-4 h-4"
+                                                        class="h-4 w-4"
                                                         wire:loading.remove.delay
                                                         wire:target="dispatchFormEvent('repeater::deleteItem', '{{ $getStatePath() }}', '{{ $uuid }}')"
                                                     />
 
                                                     <x-filament-support::loading-indicator
-                                                        class="w-4 h-4 text-primary-500"
+                                                        class="text-primary-500 h-4 w-4"
                                                         wire:loading.delay
                                                         wire:target="dispatchFormEvent('repeater::deleteItem', '{{ $getStatePath() }}', '{{ $uuid }}')"
                                                         x-cloak
@@ -652,7 +623,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_repeater_bl
                                                     ])
                                                 >
                                                     <x-heroicon-s-minus-sm
-                                                        class="w-4 h-4"
+                                                        class="h-4 w-4"
                                                         x-show="! isCollapsed"
                                                     />
 
@@ -664,7 +635,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_repeater_bl
                                                     </span>
 
                                                     <x-heroicon-s-plus-sm
-                                                        class="w-4 h-4"
+                                                        class="h-4 w-4"
                                                         x-show="isCollapsed"
                                                         x-cloak
                                                     />
@@ -690,7 +661,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_repeater_bl
                             </div>
 
                             <div
-                                class="p-2 text-xs text-center text-gray-400"
+                                class="p-2 text-center text-xs text-gray-400"
                                 x-show="isCollapsed"
                                 x-cloak
                             >

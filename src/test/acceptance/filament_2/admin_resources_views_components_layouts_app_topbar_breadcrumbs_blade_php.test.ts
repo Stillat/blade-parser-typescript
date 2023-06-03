@@ -9,12 +9,10 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_app
 ])
 
 <div {{ $attributes->class(['filament-breadcrumbs flex-1']) }}>
-    <ul
-        @class([
-            'hidden gap-4 items-center font-medium text-sm lg:flex',
-            'dark:text-white' => config('filament.dark_mode'),
-        ])
-    >
+    <ul @class([
+        'hidden gap-4 items-center font-medium text-sm lg:flex',
+        'dark:text-white' => config('filament.dark_mode'),
+    ])>
         @foreach ($breadcrumbs as $url => $label)
             <li>
                 <a
@@ -30,12 +28,10 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_app
             </li>
 
             @if (! $loop->last)
-                <li
-                    @class([
-                        'h-6 border-r border-gray-300 -skew-x-12',
-                        'dark:border-gray-500' => config('filament.dark_mode'),
-                    ])
-                ></li>
+                <li @class([
+                    'h-6 border-r border-gray-300 -skew-x-12',
+                    'dark:border-gray-500' => config('filament.dark_mode'),
+                ])></li>
             @endif
         @endforeach
     </ul>

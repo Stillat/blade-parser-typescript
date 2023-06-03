@@ -6,8 +6,8 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
     test('pint: it can format tables_resources_views_index_blade_php', () => {
         const input = `@php
     use Filament\\Tables\\Actions\\Position as ActionsPosition;
-    use Filament\\Tables\\Actions\\RecordCheckboxPosition;
     use Filament\\Tables\\Filters\\Layout as FiltersLayout;
+    use Filament\\Tables\\Actions\\RecordCheckboxPosition;
 
     $actions = $getActions();
     $actionsPosition = $getActionsPosition();
@@ -44,14 +44,10 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
     $records = $isLoaded ? $getRecords() : null;
     $allSelectableRecordsCount = $isLoaded ? $getAllSelectableRecordsCount() : null;
     $columnsCount = count($columns);
-    if (count($actions) && (! $isReordering)) {
-        $columnsCount++;
-    }
-    if ($isSelectionEnabled || $isReordering) {
-        $columnsCount++;
-    }
+    if (count($actions) && (! $isReordering)) $columnsCount++;
+    if ($isSelectionEnabled || $isReordering) $columnsCount++;
 
-    $getHiddenClasses = function (Filament\\Tables\\Columns\\Column $column): ?string {
+    $getHiddenClasses = function (\\Filament\\Tables\\Columns\\Column $column): ?string {
         if ($breakpoint = $column->getHiddenFrom()) {
             return match ($breakpoint) {
                 'sm' => 'sm:hidden',
@@ -186,16 +182,11 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
             @if ($header)
                 {{ $header }}
             @elseif ($heading || $headerActions)
-                <div
-                    @class([
-                        'px-2 pt-2',
-                        'hidden' => ! $heading && $isReordering,
-                    ])
-                >
-                    <x-tables::header
-                        :actions="$isReordering ? [] : $headerActions"
-                        class="mb-2"
-                    >
+                <div @class([
+                    'px-2 pt-2',
+                    'hidden' => ! $heading && $isReordering,
+                ])>
+                    <x-tables::header :actions="$isReordering ? [] : $headerActions" class="mb-2">
                         <x-slot name="heading">
                             {{ $heading }}
                         </x-slot>
@@ -205,22 +196,15 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                         </x-slot>
                     </x-tables::header>
 
-                    <x-tables::hr
-                        :x-show="\\Illuminate\\Support\\Js::from($isReorderable || $isGlobalSearchVisible || $hasFilters || $isColumnToggleFormVisible) . ' || selectedRecords.length'"
-                    />
+                    <x-tables::hr :x-show="\\Illuminate\\Support\\Js::from($isReorderable || $isGlobalSearchVisible || $hasFilters || $isColumnToggleFormVisible) . ' || selectedRecords.length'" />
                 </div>
             @endif
 
             @if ($hasFiltersAboveContent)
-                <div
-                    class="px-2 pt-2"
-                    x-data="{ areFiltersOpen: @js(! $hasFiltersAboveContentCollapsible) }"
-                >
+                <div class="px-2 pt-2" x-data="{ areFiltersOpen: @js(! $hasFiltersAboveContentCollapsible) }">
                     @if ($hasFiltersAboveContentCollapsible)
                         <div class="flex w-full justify-end">
-                            <x-tables::filters.trigger
-                                x-on:click="areFiltersOpen = ! areFiltersOpen"
-                            />
+                            <x-tables::filters.trigger x-on:click="areFiltersOpen = ! areFiltersOpen" />
                         </div>
                     @endif
 
@@ -228,9 +212,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                         <x-tables::filters :form="$getFiltersForm()" />
                     </div>
 
-                    <x-tables::hr
-                        :x-show="\\Illuminate\\Support\\Js::from($isReorderable || $isGlobalSearchVisible || $isColumnToggleFormVisible) . ' || selectedRecords.length'"
-                    />
+                    <x-tables::hr :x-show="\\Illuminate\\Support\\Js::from($isReorderable || $isGlobalSearchVisible || $isColumnToggleFormVisible) . ' || selectedRecords.length'" />
                 </div>
             @endif
 
@@ -244,7 +226,9 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
             >
                 <div class="flex items-center gap-2">
                     @if ($isReorderable)
-                        <x-tables::reorder.trigger :enabled="$isReordering" />
+                        <x-tables::reorder.trigger
+                            :enabled="$isReordering"
+                        />
                     @endif
 
                     @if (! $isReordering)
@@ -258,9 +242,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                 @if ($isGlobalSearchVisible || $hasFiltersPopover || $isColumnToggleFormVisible)
                     <div class="flex items-center justify-end w-full gap-2 md:max-w-md">
                         @if ($isGlobalSearchVisible)
-                            <div
-                                class="filament-tables-search-container flex items-center justify-end flex-1"
-                            >
+                            <div class="filament-tables-search-container flex items-center justify-end flex-1">
                                 <x-tables::search-input />
                             </div>
                         @endif
@@ -345,13 +327,11 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                         );
                     @endphp
 
-                    <div
-                        @class([
-                            'bg-gray-500/5 flex items-center gap-4 px-4 border-b',
-                            'dark:border-gray-700' => config('tables.dark_mode'),
-                            'hidden' => (! $isSelectionEnabled) && (! count($sortableColumns)),
-                        ])
-                    >
+                    <div @class([
+                        'bg-gray-500/5 flex items-center gap-4 px-4 border-b',
+                        'dark:border-gray-700' => config('tables.dark_mode'),
+                        'hidden' => (! $isSelectionEnabled) && (! count($sortableColumns)),
+                    ])>
                         @if ($isSelectionEnabled)
                             <x-tables::checkbox
                                 :label="__('tables::table.fields.bulk_select_page.label')"
@@ -413,9 +393,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                                     >
                                         <option value="">-</option>
                                         @foreach ($sortableColumns as $column)
-                                            <option value="{{ $column->getName() }}">
-                                                {{ $column->getLabel() }}
-                                            </option>
+                                            <option value="{{ $column->getName() }}">{{ $column->getLabel() }}</option>
                                         @endforeach
                                     </select>
                                 </label>
@@ -434,12 +412,8 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                                             'dark:text-white dark:bg-gray-700 dark:border-gray-600 dark:focus:border-primary-500' => config('tables.dark_mode'),
                                         ])
                                     >
-                                        <option value="asc">
-                                            {{ __('tables::table.sorting.fields.direction.options.asc') }}
-                                        </option>
-                                        <option value="desc">
-                                            {{ __('tables::table.sorting.fields.direction.options.desc') }}
-                                        </option>
+                                        <option value="asc">{{ __('tables::table.sorting.fields.direction.options.asc') }}</option>
+                                        <option value="desc">{{ __('tables::table.sorting.fields.direction.options.desc') }}</option>
                                     </select>
                                 </label>
                             </div>
@@ -506,19 +480,15 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                                         $getRecordClasses($record),
                                     ))
                                 >
-                                    <div
-                                        @class([
-                                            'items-center gap-4 md:flex md:mr-0 rtl:md:ml-0' => (! $contentGrid),
-                                            'mr-6 rtl:mr-0 rtl:ml-6' => $isSelectionEnabled || $hasCollapsibleColumnsLayout || $isReordering,
-                                        ])
-                                    >
-                                        <x-tables::reorder.handle
-                                            :class="\\Illuminate\\Support\\Arr::toCssClasses([
+                                    <div @class([
+                                        'items-center gap-4 md:flex md:mr-0 rtl:md:ml-0' => (! $contentGrid),
+                                        'mr-6 rtl:mr-0 rtl:ml-6' => $isSelectionEnabled || $hasCollapsibleColumnsLayout || $isReordering,
+                                    ])>
+                                        <x-tables::reorder.handle :class="\\Illuminate\\Support\\Arr::toCssClasses([
                                             'absolute top-3 right-3 rtl:right-auto rtl:left-3',
                                             'md:relative md:top-0 md:right-0 rtl:md:left-0' => ! $contentGrid,
                                             'hidden' => ! $isReordering,
-                                        ])"
-                                        />
+                                        ])" />
 
                                         @if ($isSelectionEnabled)
                                             <x-tables::checkbox
@@ -534,15 +504,13 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                                         @endif
 
                                         @if ($hasCollapsibleColumnsLayout)
-                                            <div
-                                                @class([
-                                                    'absolute right-1 rtl:right-auto rtl:left-1',
-                                                    'top-10' => $isSelectionEnabled,
-                                                    'top-1' => ! $isSelectionEnabled,
-                                                    'md:relative md:top-0 md:right-0 rtl:md:left-0' => ! $contentGrid,
-                                                    'hidden' => $isReordering,
-                                                ])
-                                            >
+                                            <div @class([
+                                                'absolute right-1 rtl:right-auto rtl:left-1',
+                                                'top-10' => $isSelectionEnabled,
+                                                'top-1' => ! $isSelectionEnabled,
+                                                'md:relative md:top-0 md:right-0 rtl:md:left-0' => ! $contentGrid,
+                                                'hidden' => $isReordering,
+                                            ])>
                                                 <x-tables::icon-button
                                                     icon="heroicon-s-chevron-down"
                                                     color="secondary"
@@ -765,13 +733,9 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                             @endif
 
                             @foreach ($columns as $column)
-                                <x-tables::cell
-                                    class="filament-table-individual-search-cell-{{ \\Illuminate\\Support\\Str::of($column->getName())->camel()->kebab() }} px-4 py-1"
-                                >
+                                <x-tables::cell class="filament-table-individual-search-cell-{{ \\Illuminate\\Support\\Str::of($column->getName())->camel()->kebab() }} px-4 py-1">
                                     @if ($column->isIndividuallySearchable())
-                                        <x-tables::search-input
-                                            wire-model="tableColumnSearchQueries.{{ $column->getName() }}"
-                                        />
+                                        <x-tables::search-input wire-model="tableColumnSearchQueries.{{ $column->getName() }}" />
                                     @endif
                                 </x-tables::cell>
                             @endforeach
@@ -813,13 +777,11 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                                     $getRecordClasses($record),
                                 ))"
                             >
-                                <x-tables::reorder.cell
-                                    :class="\\Illuminate\\Support\\Arr::toCssClasses([
+                                <x-tables::reorder.cell :class="\\Illuminate\\Support\\Arr::toCssClasses([
                                     'hidden' => ! $isReordering,
-                                ])"
-                                >
+                                ])">
                                     @if ($isReordering)
-                                        <x-tables::reorder.handle />
+                                        <x-tables::reorder.handle/>
                                     @endif
                                 </x-tables::reorder.cell>
 
@@ -838,11 +800,9 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
 
                                 @if ($isSelectionEnabled && $recordCheckboxPosition === RecordCheckboxPosition::BeforeCells)
                                     @if ($isRecordSelectable($record))
-                                        <x-tables::checkbox.cell
-                                            :class="\\Illuminate\\Support\\Arr::toCssClasses([
+                                        <x-tables::checkbox.cell :class="\\Illuminate\\Support\\Arr::toCssClasses([
                                             'hidden' => $isReordering,
-                                        ])"
-                                        >
+                                        ])">
                                             <x-tables::checkbox
                                                 x-model="selectedRecords"
                                                 :value="$recordKey"
@@ -907,11 +867,9 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
 
                                 @if ($isSelectionEnabled && $recordCheckboxPosition === RecordCheckboxPosition::AfterCells)
                                     @if ($isRecordSelectable($record))
-                                        <x-tables::checkbox.cell
-                                            :class="\\Illuminate\\Support\\Arr::toCssClasses([
+                                        <x-tables::checkbox.cell :class="\\Illuminate\\Support\\Arr::toCssClasses([
                                             'hidden' => $isReordering,
-                                        ])"
-                                        >
+                                        ])">
                                             <x-tables::checkbox
                                                 x-model="selectedRecords"
                                                 :value="$recordKey"
@@ -955,15 +913,11 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                     @endif
                 </x-tables::table>
             @elseif ($records === null)
-                <div
-                    class="filament-tables-defer-loading-indicator flex items-center justify-center p-6"
-                >
-                    <div
-                        @class([
-                            'flex items-center justify-center w-16 h-16 text-primary-500 rounded-full bg-primary-50',
-                            'dark:bg-gray-700' => config('tables.dark_mode'),
-                        ])
-                    >
+                <div class="filament-tables-defer-loading-indicator flex items-center justify-center p-6">
+                    <div @class([
+                        'flex items-center justify-center w-16 h-16 text-primary-500 rounded-full bg-primary-50',
+                        'dark:bg-gray-700' => config('tables.dark_mode'),
+                    ])>
                         <x-filament-support::loading-indicator class="w-6 h-6" />
                     </div>
                 </div>
@@ -990,14 +944,14 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
             @endif
         </div>
 
-        @if ($records instanceof \\Illuminate\\Contracts\\Pagination\\Paginator &&
-             ((! $records instanceof \\Illuminate\\Contracts\\Pagination\\LengthAwarePaginator) || $records->total()))
-            <div
-                @class([
-                    'filament-tables-pagination-container p-2 border-t',
-                    'dark:border-gray-700' => config('tables.dark_mode'),
-                ])
-            >
+        @if (
+            $records instanceof \\Illuminate\\Contracts\\Pagination\\Paginator &&
+            ((! $records instanceof \\Illuminate\\Contracts\\Pagination\\LengthAwarePaginator) || $records->total())
+        )
+            <div @class([
+                'filament-tables-pagination-container p-2 border-t',
+                'dark:border-gray-700' => config('tables.dark_mode'),
+            ])>
                 <x-tables::pagination
                     :paginator="$records"
                     :records-per-page-select-options="$getRecordsPerPageSelectOptions()"
@@ -1381,7 +1335,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                         </div>
                     @endif
 
-                    <div class="p-4 mb-2" x-show="areFiltersOpen">
+                    <div class="mb-2 p-4" x-show="areFiltersOpen">
                         <x-tables::filters :form="$getFiltersForm()" />
                     </div>
 
@@ -1394,7 +1348,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
             <div
                 x-show="@js($shouldRenderHeaderDiv = ($isReorderable || $isGlobalSearchVisible || $hasFiltersPopover || $isColumnToggleFormVisible)) || selectedRecords.length"
                 {!! ! $shouldRenderHeaderDiv ? 'x-cloak' : null !!}
-                class="filament-tables-header-toolbar flex items-center justify-between p-2 h-14"
+                class="filament-tables-header-toolbar flex h-14 items-center justify-between p-2"
                 x-bind:class="{
                     'gap-2': @js($isReorderable) || selectedRecords.length,
                 }"
@@ -1414,11 +1368,11 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
 
                 @if ($isGlobalSearchVisible || $hasFiltersPopover || $isColumnToggleFormVisible)
                     <div
-                        class="flex items-center justify-end w-full gap-2 md:max-w-md"
+                        class="flex w-full items-center justify-end gap-2 md:max-w-md"
                     >
                         @if ($isGlobalSearchVisible)
                             <div
-                                class="filament-tables-search-container flex items-center justify-end flex-1"
+                                class="filament-tables-search-container flex flex-1 items-center justify-end"
                             >
                                 <x-tables::search-input />
                             </div>
@@ -1724,7 +1678,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                                         @if ($recordUrl)
                                             <a
                                                 href="{{ $recordUrl }}"
-                                                class="filament-tables-record-url-link flex-1 block py-3"
+                                                class="filament-tables-record-url-link block flex-1 py-3"
                                             >
                                                 <x-tables::columns.layout
                                                     :components="$getColumnsLayout()"
@@ -1748,7 +1702,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                                                 wire:loading.attr="disabled"
                                                 wire:loading.class="cursor-wait opacity-70"
                                                 type="button"
-                                                class="filament-tables-record-action-button flex-1 block py-3"
+                                                class="filament-tables-record-action-button block flex-1 py-3"
                                             >
                                                 <x-tables::columns.layout
                                                     :components="$getColumnsLayout()"
@@ -2132,7 +2086,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                         ])
                     >
                         <x-filament-support::loading-indicator
-                            class="w-6 h-6"
+                            class="h-6 w-6"
                         />
                     </div>
                 </div>
@@ -2178,7 +2132,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
             <div class="px-2 pb-2">
                 <x-tables::hr />
 
-                <div class="p-4 mt-2">
+                <div class="mt-2 p-4">
                     <x-tables::filters :form="$getFiltersForm()" />
                 </div>
             </div>

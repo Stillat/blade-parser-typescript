@@ -8,9 +8,7 @@ suite('Pint Transformer Accpetance: notifications_resources_views_components_dro
     'detail',
 ])
 
-<x-notifications::dropdown.list.item
-    :attributes="\\Filament\\Support\\prepare_inherited_attributes($attributes)->merge($slots)"
->
+<x-notifications::dropdown.list.item :attributes="\\Filament\\Support\\prepare_inherited_attributes($attributes)->merge($slots)">
     {{ $slot }}
 </x-notifications::dropdown.list.item>
 `;

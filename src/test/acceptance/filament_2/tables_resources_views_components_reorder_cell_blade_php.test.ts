@@ -4,12 +4,14 @@ import { StringUtilities } from '../../../utilities/stringUtilities';
 
 suite('Pint Transformer Accpetance: tables_resources_views_components_reorder_cell_blade_php', () => {
     test('pint: it can format tables_resources_views_components_reorder_cell_blade_php', () => {
-        const input = `<td {{ $attributes->class(['filament-tables-reorder-cell w-4 px-4 whitespace-nowrap']) }}>
+        const input = `<td
+    {{ $attributes->class(['filament-tables-reorder-cell w-4 px-4 whitespace-nowrap']) }}
+>
     {{ $slot }}
 </td>
 `;
         const output = `<td
-    {{ $attributes->class(['filament-tables-reorder-cell w-4 px-4 whitespace-nowrap']) }}
+    {{ $attributes->class(['filament-tables-reorder-cell w-4 whitespace-nowrap px-4']) }}
 >
     {{ $slot }}
 </td>

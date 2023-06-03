@@ -6,12 +6,10 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_reorder_ha
     test('pint: it can format tables_resources_views_components_reorder_handle_blade_php', () => {
         const input = `<button
     type="button"
-    {{
-        $attributes->class([
-            'filament-tables-reorder-handle text-gray-500 cursor-move transition group-hover:text-primary-500',
-            'dark:text-gray-400 dark:group-hover:text-primary-400' => config('tables.dark_mode'),
-        ])
-    }}
+    {{ $attributes->class([
+        'filament-tables-reorder-handle text-gray-500 cursor-move transition group-hover:text-primary-500',
+        'dark:text-gray-400 dark:group-hover:text-primary-400' => config('tables.dark_mode'),
+    ]) }}
 >
     <x-heroicon-s-menu class="block h-4 w-4" />
 </button>
@@ -20,8 +18,8 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_reorder_ha
     type="button"
     {{
         $attributes->class([
-            'filament-tables-reorder-handle text-gray-500 cursor-move transition group-hover:text-primary-500',
-            'dark:text-gray-400 dark:group-hover:text-primary-400' => config('tables.dark_mode'),
+            'filament-tables-reorder-handle group-hover:text-primary-500 cursor-move text-gray-500 transition',
+            'dark:group-hover:text-primary-400 dark:text-gray-400' => config('tables.dark_mode'),
         ])
     }}
 >

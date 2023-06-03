@@ -9,7 +9,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_checkbox_c
 </td>
 `;
         const output = `<td
-    {{ $attributes->class(['filament-tables-checkbox-cell w-4 px-4 whitespace-nowrap']) }}
+    {{ $attributes->class(['filament-tables-checkbox-cell w-4 whitespace-nowrap px-4']) }}
 >
     {{ $slot }}
 </td>

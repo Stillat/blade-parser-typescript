@@ -25,7 +25,9 @@ suite('Pint Transformer Accpetance: notifications_resources_views_components_dat
                     {{ __('notifications::database.modal.buttons.mark_all_as_read.label') }}
                 </x-notifications::link>
 
-                <span>&bull;</span>
+                <span>
+                    &bull;
+                </span>
             @endif
 
             <x-notifications::link

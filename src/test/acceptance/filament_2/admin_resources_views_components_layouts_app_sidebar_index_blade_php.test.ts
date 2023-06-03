@@ -19,12 +19,10 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_app
         'dark:bg-gray-800 dark:border-gray-700' => config('filament.dark_mode'),
     ])
 >
-    <header
-        @class([
-            'filament-sidebar-header border-b h-[4rem] shrink-0 flex items-center justify-center relative',
-            'dark:border-gray-700' => config('filament.dark_mode'),
-        ])
-    >
+    <header @class([
+        'filament-sidebar-header border-b h-[4rem] shrink-0 flex items-center justify-center relative',
+        'dark:border-gray-700' => config('filament.dark_mode'),
+    ])>
         <div
             @class([
                 'flex items-center justify-center px-6 w-full',
@@ -45,21 +43,8 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_app
                     x-transition:enter-start="opacity-0"
                     x-transition:enter-end="opacity-100"
                 >
-                    <svg
-                        class="h-6 w-6"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                            d="M20.25 7.5L16 12L20.25 16.5M3.75 12H12M3.75 17.25H16M3.75 6.75H16"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        />
+                    <svg class="h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20.25 7.5L16 12L20.25 16.5M3.75 12H12M3.75 17.25H16M3.75 6.75H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </button>
             @endif
@@ -71,7 +56,10 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_app
                     'lg:ml-3' => config('filament.layout.sidebar.is_collapsible_on_desktop') && (config('filament.layout.sidebar.collapsed_width') !== 0),
                 ])
             >
-                <a href="{{ config('filament.home_url') }}" class="inline-block">
+                <a
+                    href="{{ config('filament.home_url') }}"
+                    class="inline-block"
+                >
                     <x-filament::brand />
                 </a>
             </div>
@@ -88,19 +76,8 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_app
                 x-transition:enter-start="opacity-0"
                 x-transition:enter-end="opacity-100"
             >
-                <svg
-                    class="w-6 h-6"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="2"
-                    stroke="currentColor"
-                >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-                    />
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                 </svg>
             </button>
         @endif
@@ -121,10 +98,10 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_app
 
         <script>
             if (
-                JSON.parse(localStorage.getItem("collapsedGroups")) === null ||
-                JSON.parse(localStorage.getItem("collapsedGroups")) === "null"
+                (JSON.parse(localStorage.getItem('collapsedGroups')) === null) ||
+                (JSON.parse(localStorage.getItem('collapsedGroups')) === 'null')
             ) {
-                localStorage.setItem("collapsedGroups", JSON.stringify(@js($collapsedNavigationGroupLabels)));
+                localStorage.setItem('collapsedGroups', JSON.stringify(@js($collapsedNavigationGroupLabels)))
             }
         </script>
 
@@ -139,12 +116,10 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_app
 
                 @if (! $loop->last)
                     <li>
-                        <div
-                            @class([
-                                'border-t -mr-6 rtl:-mr-auto rtl:-ml-6',
-                                'dark:border-gray-700' => config('filament.dark_mode'),
-                            ])
-                        ></div>
+                        <div @class([
+                            'border-t -mr-6 rtl:-mr-auto rtl:-ml-6',
+                            'dark:border-gray-700' => config('filament.dark_mode'),
+                        ])></div>
                     </li>
                 @endif
             @endforeach
@@ -191,7 +166,7 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_app
             @if (config('filament.layout.sidebar.is_collapsible_on_desktop') && (config('filament.layout.sidebar.collapsed_width') !== 0))
                 <button
                     type="button"
-                    class="filament-sidebar-collapse-button shrink-0 hidden lg:flex items-center justify-center w-10 h-10 text-primary-500 rounded-full outline-none hover:bg-gray-500/5 focus:bg-primary-500/10"
+                    class="filament-sidebar-collapse-button text-primary-500 focus:bg-primary-500/10 hidden h-10 w-10 shrink-0 items-center justify-center rounded-full outline-none hover:bg-gray-500/5 lg:flex"
                     x-bind:aria-label="$store.sidebar.isOpen ? '{{ __('filament::layout.buttons.sidebar.collapse.label') }}' : '{{ __('filament::layout.buttons.sidebar.expand.label') }}'"
                     x-on:click.stop="$store.sidebar.isOpen ? $store.sidebar.close() : $store.sidebar.open()"
                     x-transition:enter="lg:transition delay-100"
@@ -236,7 +211,7 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_app
         @if (config('filament.layout.sidebar.is_collapsible_on_desktop'))
             <button
                 type="button"
-                class="filament-sidebar-close-button shrink-0 flex items-center justify-center w-10 h-10 text-primary-500 rounded-full outline-none hover:bg-gray-500/5 focus:bg-primary-500/10"
+                class="filament-sidebar-close-button text-primary-500 focus:bg-primary-500/10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full outline-none hover:bg-gray-500/5"
                 x-bind:aria-label="$store.sidebar.isOpen ? '{{ __('filament::layout.buttons.sidebar.collapse.label') }}' : '{{ __('filament::layout.buttons.sidebar.expand.label') }}'"
                 x-on:click.stop="$store.sidebar.isOpen ? $store.sidebar.close() : $store.sidebar.open()"
                 x-show="(! $store.sidebar.isOpen) && @js(config('filament.layout.sidebar.collapsed_width') !== 0)"
@@ -245,7 +220,7 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_app
                 x-transition:enter-end="opacity-100"
             >
                 <svg
-                    class="w-6 h-6"
+                    class="h-6 w-6"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -263,7 +238,7 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_app
     </header>
 
     <nav
-        class="flex-1 py-6 overflow-x-hidden overflow-y-auto filament-sidebar-nav"
+        class="filament-sidebar-nav flex-1 overflow-y-auto overflow-x-hidden py-6"
     >
         <x-filament::layouts.app.sidebar.start />
         {{ \\Filament\\Facades\\Filament::renderHook('sidebar.start') }}
@@ -289,7 +264,7 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_app
             }
         </script>
 
-        <ul class="px-6 space-y-6">
+        <ul class="space-y-6 px-6">
             @foreach ($navigation as $group)
                 <x-filament::layouts.app.sidebar.group
                     :label="$group->getLabel()"

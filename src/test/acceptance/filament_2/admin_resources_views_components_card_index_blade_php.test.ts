@@ -11,22 +11,16 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_card_index_
     'heading' => null,
 ])
 
-<div
-    {{
-        $attributes->class([
-            'p-2 space-y-2 bg-white rounded-xl shadow',
-            'dark:border-gray-600 dark:bg-gray-800' => config('filament.dark_mode'),
-        ])
-    }}
->
+<div {{ $attributes->class([
+    'p-2 space-y-2 bg-white rounded-xl shadow',
+    'dark:border-gray-600 dark:bg-gray-800' => config('filament.dark_mode'),
+]) }}>
     @if ($actions || $header || $heading)
         <div class="px-4 py-2">
             @if ($header)
                 {{ $header }}
             @elseif ($actions || $heading)
-                <div
-                    class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between"
-                >
+                <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                     <x-filament::card.heading>
                         {{ $heading }}
                     </x-filament::card.heading>
@@ -109,7 +103,7 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_card_index_
 
     <div class="space-y-2">
         @if ($slot->isNotEmpty())
-            <div class="px-4 py-2 space-y-4">
+            <div class="space-y-4 px-4 py-2">
                 {{ $slot }}
             </div>
         @endif

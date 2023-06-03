@@ -29,17 +29,12 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_app
             @endif
             class="flex items-center justify-between w-full"
         >
-            <div
-                @class([
-                    'flex items-center gap-4 text-gray-600',
-                    'dark:text-gray-300' => config('filament.dark_mode'),
-                ])
-            >
+            <div @class([
+                'flex items-center gap-4 text-gray-600',
+                'dark:text-gray-300' => config('filament.dark_mode'),
+            ])>
                 @if ($icon)
-                    <x-dynamic-component
-                        :component="$icon"
-                        class="ml-1 w-3 h-3 flex-shrink-0"
-                    />
+                    <x-dynamic-component :component="$icon" class="ml-1 w-3 h-3 flex-shrink-0" />
                 @endif
 
                 <p class="flex-1 font-bold uppercase text-xs tracking-wider">
@@ -48,14 +43,10 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_app
             </div>
 
             @if ($collapsible)
-                <x-heroicon-o-chevron-down
-                    :class="\\Illuminate\\Support\\Arr::toCssClasses([
+                <x-heroicon-o-chevron-down :class="\\Illuminate\\Support\\Arr::toCssClasses([
                     'w-3 h-3 text-gray-600 transition',
                     'dark:text-gray-300' => config('filament.dark_mode'),
-                ])"
-                    x-bind:class="$store.sidebar.groupIsCollapsed(label) || '-rotate-180'"
-                    x-cloak
-                />
+                ])" x-bind:class="$store.sidebar.groupIsCollapsed(label) || '-rotate-180'" x-cloak />
             @endif
         </button>
     @endif
@@ -117,7 +108,7 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_app
             @if (config('filament.layout.sidebar.is_collapsible_on_desktop'))
                 x-show="$store.sidebar.isOpen"
             @endif
-            class="flex items-center justify-between w-full"
+            class="flex w-full items-center justify-between"
         >
             <div
                 @class([
@@ -128,11 +119,11 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_app
                 @if ($icon)
                     <x-dynamic-component
                         :component="$icon"
-                        class="ml-1 w-3 h-3 flex-shrink-0"
+                        class="ml-1 h-3 w-3 flex-shrink-0"
                     />
                 @endif
 
-                <p class="flex-1 font-bold uppercase text-xs tracking-wider">
+                <p class="flex-1 text-xs font-bold uppercase tracking-wider">
                     {{ $label }}
                 </p>
             </div>

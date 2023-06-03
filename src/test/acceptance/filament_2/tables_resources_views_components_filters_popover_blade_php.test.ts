@@ -23,7 +23,10 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_filters_po
         <x-tables::filters.trigger :indicators-count="$indicatorsCount" />
     </x-slot>
 
-    <x-tables::filters class="p-4" :form="$form" />
+    <x-tables::filters
+        class="p-4"
+        :form="$form"
+    />
 </x-tables::dropdown>
 `;
         const output = `@props([

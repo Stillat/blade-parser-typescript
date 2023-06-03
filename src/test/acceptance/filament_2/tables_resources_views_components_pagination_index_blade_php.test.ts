@@ -34,9 +34,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_pagination
         </div>
 
         @if (count($recordsPerPageSelectOptions) > 1)
-            <x-tables::pagination.records-per-page-selector
-                :options="$recordsPerPageSelectOptions"
-            />
+            <x-tables::pagination.records-per-page-selector :options="$recordsPerPageSelectOptions" />
         @endif
 
         <div class="w-10">
@@ -66,32 +64,26 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_pagination
                     </x-tables::button>
                 @endif
             @else
-                <div
-                    @class([
-                        'pl-2 text-sm font-medium',
-                        'dark:text-white' => config('tables.dark_mode'),
-                    ])
-                >
-                    {{
-                        trans_choice(
-                            'tables::table.pagination.overview',
-                            $paginator->total(),
-                            [
-                                'first' => $paginator->firstItem(),
-                                'last' => $paginator->lastItem(),
-                                'total' => $paginator->total(),
-                            ],
-                        )
-                    }}
+                <div @class([
+                    'pl-2 text-sm font-medium',
+                    'dark:text-white' => config('tables.dark_mode'),
+                ])>
+                    {{ trans_choice(
+                        'tables::table.pagination.overview',
+                        $paginator->total(),
+                        [
+                            'first' => $paginator->firstItem(),
+                            'last' => $paginator->lastItem(),
+                            'total' => $paginator->total(),
+                        ],
+                    ) }}
                 </div>
             @endif
         </div>
 
         <div class="flex items-center justify-center">
             @if (count($recordsPerPageSelectOptions) > 1)
-                <x-tables::pagination.records-per-page-selector
-                    :options="$recordsPerPageSelectOptions"
-                />
+                <x-tables::pagination.records-per-page-selector :options="$recordsPerPageSelectOptions" />
             @endif
         </div>
 
@@ -111,18 +103,14 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_pagination
                 @endif
             @else
                 @if ($paginator->hasPages())
-                    <div
-                        @class([
-                            'py-3 border rounded-lg',
-                            'dark:border-gray-600' => config('tables.dark_mode'),
-                        ])
-                    >
-                        <ol
-                            @class([
-                                'flex gap-px items-center text-sm text-gray-500 divide-x rtl:divide-x-reverse divide-gray-300',
-                                'dark:text-gray-400 dark:divide-gray-600' => config('tables.dark_mode'),
-                            ])
-                        >
+                    <div @class([
+                        'py-3 border rounded-lg',
+                        'dark:border-gray-600' => config('tables.dark_mode'),
+                    ])>
+                        <ol @class([
+                            'flex gap-px items-center text-sm text-gray-500 divide-x rtl:divide-x-reverse divide-gray-300',
+                            'dark:text-gray-400 dark:divide-gray-600' => config('tables.dark_mode'),
+                        ])>
                             @if (! $paginator->onFirstPage())
                                 <x-tables::pagination.item
                                     :wire:click="'previousPage(\\'' . $paginator->getPageName() . '\\')'"
@@ -183,7 +171,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_pagination
     aria-label="{{ __('tables::table.pagination.label') }}"
     class="filament-tables-pagination flex items-center justify-between"
 >
-    <div class="flex justify-between items-center flex-1 lg:hidden">
+    <div class="flex flex-1 items-center justify-between lg:hidden">
         <div class="w-10">
             @if ($paginator->hasPages() && (! $paginator->onFirstPage()))
                 <x-tables::icon-button
@@ -213,7 +201,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_pagination
         </div>
     </div>
 
-    <div class="hidden flex-1 items-center lg:grid grid-cols-3">
+    <div class="hidden flex-1 grid-cols-3 items-center lg:grid">
         <div class="flex items-center">
             @if ($isSimple)
                 @if (! $paginator->onFirstPage())

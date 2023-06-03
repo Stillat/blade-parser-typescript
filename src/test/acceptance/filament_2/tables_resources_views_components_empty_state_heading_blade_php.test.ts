@@ -4,14 +4,10 @@ import { StringUtilities } from '../../../utilities/stringUtilities';
 
 suite('Pint Transformer Accpetance: tables_resources_views_components_empty_state_heading_blade_php', () => {
     test('pint: it can format tables_resources_views_components_empty_state_heading_blade_php', () => {
-        const input = `<h2
-    {{
-        $attributes->class([
-            'filament-tables-empty-state-heading text-xl font-bold tracking-tight',
-            'dark:text-white' => config('tables.dark_mode'),
-        ])
-    }}
->
+        const input = `<h2 {{ $attributes->class([
+    'filament-tables-empty-state-heading text-xl font-bold tracking-tight',
+    'dark:text-white' => config('tables.dark_mode'),
+]) }}>
     {{ $slot }}
 </h2>
 `;

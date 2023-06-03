@@ -37,17 +37,15 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_section_bla
         "
     @endif
     id="{{ $getId() }}"
-    {{
-        $attributes->merge($getExtraAttributes())->class([
-            'filament-forms-section-component',
-            'rounded-xl border border-gray-300 bg-white' => ! $isAside,
-            'grid grid-cols-1' => $isAside,
-            'md:grid-cols-2' => $isAside && ! $isCompact,
-            'md:grid-cols-3' => $isAside && $isCompact,
-            'md:order-last' => $isFormBefore,
-            'dark:border-gray-600 dark:bg-gray-800' => config('forms.dark_mode') && ! $isAside,
-        ])
-    }}
+    {{ $attributes->merge($getExtraAttributes())->class([
+        'filament-forms-section-component',
+        'rounded-xl border border-gray-300 bg-white' => ! $isAside,
+        'grid grid-cols-1' => $isAside,
+        'md:grid-cols-2' => $isAside && ! $isCompact,
+        'md:grid-cols-3' => $isAside && $isCompact,
+        'md:order-last' => $isFormBefore,
+        'dark:border-gray-600 dark:bg-gray-800' => config('forms.dark_mode')  && ! $isAside,
+    ]) }}
     {{ $getExtraAlpineAttributeBag() }}
 >
     <div
@@ -66,18 +64,14 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_section_bla
             x-on:click="isCollapsed = ! isCollapsed"
         @endif
     >
-        <div
-            @class([
-                'filament-forms-section-header flex-1 space-y-1',
-                'cursor-pointer' => $isCollapsible,
-            ])
-        >
-            <h3
-                @class([
-                    'font-bold tracking-tight pointer-events-none flex flex-row items-center',
-                    'text-xl' => ! $isCompact || $isAside,
-                ])
-            >
+        <div @class([
+            'filament-forms-section-header flex-1 space-y-1',
+            'cursor-pointer' => $isCollapsible,
+        ])>
+            <h3 @class([
+                'font-bold tracking-tight pointer-events-none flex flex-row items-center',
+                'text-xl' => ! $isCompact || $isAside,
+            ])>
                 @if ($icon = $getIcon())
                     <x-dynamic-component
                         :component="$icon"
@@ -85,21 +79,18 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_section_bla
                             'mr-1',
                             'h-4 w-4' => $isCompact && ! $isAside,
                             'h-6 w-6' => ! $isCompact || $isAside,
-                        ])
-                    />
+                        ]) />
                 @endif
 
                 {{ $getHeading() }}
             </h3>
 
             @if ($description = $getDescription())
-                <p
-                    @class([
-                        'text-gray-500',
-                        'text-sm' => $isCompact && ! $isAside,
-                        'text-base' => ! $isCompact || $isAside,
-                    ])
-                >
+                <p @class([
+                    'text-gray-500',
+                    'text-sm' => $isCompact && ! $isAside,
+                    'text-base' => ! $isCompact || $isAside,
+                ])>
                     {{ $description }}
                 </p>
             @endif
@@ -110,8 +101,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_section_bla
                 x-on:click.stop="isCollapsed = ! isCollapsed"
                 x-bind:class="{
                     '-rotate-180': !isCollapsed,
-                }"
-                type="button"
+                }" type="button"
                 @class([
                     'flex items-center justify-center transform rounded-full text-primary-500 outline-none hover:bg-gray-500/5 focus:bg-primary-500/10',
                     'w-10 h-10' => ! $isCompact,
@@ -119,22 +109,11 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_section_bla
                     '-rotate-180' => ! $isCollapsed,
                 ])
             >
-                <svg
-                    @class([
-                        'w-7 h-7' => ! $isCompact,
-                        'w-5 h-5' => $isCompact,
-                    ])
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M19 9l-7 7-7-7"
-                    />
+                <svg @class([
+                    'w-7 h-7' => ! $isCompact,
+                    'w-5 h-5' => $isCompact,
+                ]) xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
             </button>
         @endif
@@ -152,15 +131,13 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_section_bla
             'md:order-first' => $isFormBefore,
         ])
     >
-        <div
-            @class([
-                'filament-forms-section-content',
-                'rounded-xl border border-gray-300 bg-white' => $isAside,
-                'dark:border-gray-600 dark:bg-gray-800' => config('forms.dark_mode') && $isAside,
-                'p-6' => ! $isCompact || $isAside,
-                'p-4' => $isCompact && ! $isAside,
-            ])
-        >
+        <div @class([
+            'filament-forms-section-content',
+            'rounded-xl border border-gray-300 bg-white' => $isAside,
+            'dark:border-gray-600 dark:bg-gray-800' => config('forms.dark_mode') && $isAside,
+            'p-6' => ! $isCompact || $isAside,
+            'p-4' => $isCompact && ! $isAside,
+        ])>
             {{ $getChildComponentContainer() }}
         </div>
     </div>

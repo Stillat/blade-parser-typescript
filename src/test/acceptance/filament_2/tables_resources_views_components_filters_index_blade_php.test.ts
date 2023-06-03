@@ -8,7 +8,10 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_filters_in
     'form',
 ])
 
-<div {{ $attributes->class(['filament-tables-filters-form space-y-6']) }} x-data>
+<div
+    {{ $attributes->class(['filament-tables-filters-form space-y-6']) }}
+    x-data
+>
     {{ $form }}
 
     <div class="text-end">

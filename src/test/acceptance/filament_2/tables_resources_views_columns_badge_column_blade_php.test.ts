@@ -23,29 +23,23 @@ suite('Pint Transformer Accpetance: tables_resources_views_columns_badge_column_
     $isCopyable = $isCopyable();
 @endphp
 
-<div
-    {{
-        $attributes->merge($getExtraAttributes())->class([
-            'filament-tables-badge-column flex',
-            'px-4 py-3' => ! $isInline(),
-            match ($getAlignment()) {
-                'start' => 'justify-start',
-                'center' => 'justify-center',
-                'end' => 'justify-end',
-                'left' => 'justify-start rtl:flex-row-reverse',
-                'right' => 'justify-end rtl:flex-row-reverse',
-                default => null,
-            },
-        ])
-    }}
->
+<div {{ $attributes->merge($getExtraAttributes())->class([
+    'filament-tables-badge-column flex',
+    'px-4 py-3' => ! $isInline(),
+    match ($getAlignment()) {
+        'start' => 'justify-start',
+        'center' => 'justify-center',
+        'end' => 'justify-end',
+        'left' => 'justify-start rtl:flex-row-reverse',
+        'right' => 'justify-end rtl:flex-row-reverse',
+        default => null,
+    },
+]) }}>
     @if (filled($state))
-        <div
-            @class([
-                'inline-flex items-center justify-center space-x-1 rtl:space-x-reverse min-h-6 px-2 py-0.5 text-sm font-medium tracking-tight rounded-xl whitespace-nowrap',
-                $stateColor => $stateColor,
-            ])
-        >
+        <div @class([
+            'inline-flex items-center justify-center space-x-1 rtl:space-x-reverse min-h-6 px-2 py-0.5 text-sm font-medium tracking-tight rounded-xl whitespace-nowrap',
+            $stateColor => $stateColor,
+        ])>
             @if ($stateIcon && $iconPosition === 'before')
                 <x-dynamic-component :component="$stateIcon" :class="$iconClasses" />
             @endif

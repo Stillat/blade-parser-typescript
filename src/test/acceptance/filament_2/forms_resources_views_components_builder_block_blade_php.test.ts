@@ -4,9 +4,7 @@ import { StringUtilities } from '../../../utilities/stringUtilities';
 
 suite('Pint Transformer Accpetance: forms_resources_views_components_builder_block_blade_php', () => {
     test('pint: it can format forms_resources_views_components_builder_block_blade_php', () => {
-        const input = `<div
-    {{ $attributes->merge($getExtraAttributes())->class(['filament-forms-builder-component-block py-8']) }}
->
+        const input = `<div {{ $attributes->merge($getExtraAttributes())->class(['filament-forms-builder-component-block py-8']) }}>
     {{ $getChildComponentContainer() }}
 </div>
 `;

@@ -42,7 +42,7 @@ suite('Pint Transformer Accpetance: support_resources_views_components_link_blad
         'w-5 h-5' => $size === 'md',
         'w-6 h-6' => $size === 'lg',
         'mr-1 rtl:ml-1' => $iconPosition === 'before',
-        'ml-1 rtl:mr-1' => $iconPosition === 'after',
+        'ml-1 rtl:mr-1' => $iconPosition === 'after'
     ]);
 
     $wireTarget = $attributes->whereStartsWith(['wire:target', 'wire:click'])->first();
@@ -68,7 +68,7 @@ suite('Pint Transformer Accpetance: support_resources_views_components_link_blad
         {{ $attributes->class($linkClasses) }}
     >
         @if ($icon && $iconPosition === 'before')
-            <x-dynamic-component :component="$icon" :class="$iconClasses" />
+            <x-dynamic-component :component="$icon" :class="$iconClasses"/>
         @endif
 
         {{ $slot }}

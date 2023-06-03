@@ -12,7 +12,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_columns_la
 ])
 
 @php
-    $getHiddenClasses = function (Filament\\Tables\\Columns\\Column | Filament\\Tables\\Columns\\Layout\\Component $layoutComponent): ?string {
+    $getHiddenClasses = function (\\Filament\\Tables\\Columns\\Column | \\Filament\\Tables\\Columns\\Layout\\Component $layoutComponent): ?string {
         if ($breakpoint = $layoutComponent->getHiddenFrom()) {
             return match ($breakpoint) {
                 'sm' => 'sm:hidden',

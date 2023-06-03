@@ -4,7 +4,8 @@ import { StringUtilities } from '../../../utilities/stringUtilities';
 
 suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_app_sidebar_footer_blade_php', () => {
     test('pint: it can format admin_resources_views_components_layouts_app_sidebar_footer_blade_php', () => {
-        const input = ``;
+        const input = `
+`;
         const output = ``;
 
         assert.strictEqual(StringUtilities.normalizeLineEndings(formatBladeStringWithPint(input).trim()), StringUtilities.normalizeLineEndings(output.trim()));

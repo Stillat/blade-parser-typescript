@@ -139,20 +139,15 @@ suite('Pint Transformer Accpetance: support_resources_views_components_button_bl
                     {{ __('filament-support::components/button.messages.uploading_file') }}
                 </span>
 
-                <span
-                    x-show="! isUploadingFile"
-                    @class([
-                        'sr-only' => $labelSrOnly,
-                    ])
-                >
+                <span x-show="! isUploadingFile" @class([
+                    'sr-only' => $labelSrOnly,
+                ])>
                     {{ $slot }}
                 </span>
             @else
-                <span
-                    @class([
-                        'sr-only' => $labelSrOnly,
-                    ])
-                >
+                <span @class([
+                    'sr-only' => $labelSrOnly,
+                ])>
                     {{ $slot }}
                 </span>
             @endif

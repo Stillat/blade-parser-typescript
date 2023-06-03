@@ -27,9 +27,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_text_input_
     :required="$isRequired()"
     :state-path="$getStatePath()"
 >
-    <div
-        {{ $attributes->merge($getExtraAttributes())->class(['filament-forms-text-input-component flex items-center space-x-2 rtl:space-x-reverse group']) }}
-    >
+    <div {{ $attributes->merge($getExtraAttributes())->class(['filament-forms-text-input-component flex items-center space-x-2 rtl:space-x-reverse group']) }}>
         @if (($prefixAction = $getPrefixAction()) && (! $prefixAction->isHidden()))
             {{ $prefixAction }}
         @endif
@@ -78,12 +76,10 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_text_input_
                     {!! $isRequired() ? 'required' : null !!}
                 @endif
                 {{ $getExtraAlpineAttributeBag() }}
-                {{
-                    $getExtraInputAttributeBag()->class([
-                        'filament-forms-input block w-full transition duration-75 rounded-lg shadow-sm outline-none focus:ring-1 focus:ring-inset disabled:opacity-70',
-                        'dark:bg-gray-700 dark:text-white' => config('forms.dark_mode'),
-                    ])
-                }}
+                {{ $getExtraInputAttributeBag()->class([
+                    'filament-forms-input block w-full transition duration-75 rounded-lg shadow-sm outline-none focus:ring-1 focus:ring-inset disabled:opacity-70',
+                    'dark:bg-gray-700 dark:text-white' => config('forms.dark_mode'),
+                ]) }}
                 x-bind:class="{
                     'border-gray-300 focus:border-primary-500 focus:ring-primary-500': ! (@js($getStatePath()) in $wire.__instance.serverMemo.errors),
                     'dark:border-gray-600 dark:focus:border-primary-500': ! (@js($getStatePath()) in $wire.__instance.serverMemo.errors) && @js(config('forms.dark_mode')),
@@ -148,7 +144,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_text_input_
         @endif
 
         @if ($icon = $getPrefixIcon())
-            <x-dynamic-component :component="$icon" class="w-5 h-5" />
+            <x-dynamic-component :component="$icon" class="h-5 w-5" />
         @endif
 
         @if (filled($label = $getPrefixLabel()))
@@ -213,7 +209,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_text_input_
         @endif
 
         @if ($icon = $getSuffixIcon())
-            <x-dynamic-component :component="$icon" class="w-5 h-5" />
+            <x-dynamic-component :component="$icon" class="h-5 w-5" />
         @endif
 
         @if (($suffixAction = $getSuffixAction()) && (! $suffixAction->isHidden()))

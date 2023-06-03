@@ -8,15 +8,10 @@ suite('Pint Transformer Accpetance: support_resources_views_components_hr_blade_
     'darkMode' => false,
 ])
 
-<div
-    aria-hidden="true"
-    {{
-        $attributes->class([
-            'filament-hr border-t',
-            'dark:border-gray-700' => $darkMode,
-        ])
-    }}
-></div>
+<div aria-hidden="true" {{ $attributes->class([
+    'filament-hr border-t',
+    'dark:border-gray-700' => $darkMode,
+]) }}></div>
 `;
         const output = `@props([
     'darkMode' => false,

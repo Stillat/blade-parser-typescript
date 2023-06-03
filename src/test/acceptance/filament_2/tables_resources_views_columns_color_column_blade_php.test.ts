@@ -27,7 +27,8 @@ suite('Pint Transformer Accpetance: tables_resources_views_columns_color_column_
                 'cursor-pointer' => $isCopyable,
             ])
     }}
-></div>
+>
+</div>
 `;
         const output = `@php
     $state = $getState();

@@ -22,8 +22,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_checkbox_li
     :required="$isRequired()"
     :state-path="$getStatePath()"
 >
-    <div
-        x-data="{
+    <div x-data="{
 
         areAllCheckboxesChecked: false,
 
@@ -71,8 +70,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_checkbox_li
             })
         }
 
-    }"
-    >
+    }">
         @if (! $isDisabled())
             @if ($isSearchable())
                 <input
@@ -130,9 +128,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_checkbox_li
             ]))"
         >
             @forelse ($getOptions() as $optionValue => $optionLabel)
-                <div
-                    wire:key="{{ $this->id }}.{{ $getStatePath() }}.{{ $field::class }}.options.{{ $optionValue }}"
-                >
+                <div wire:key="{{ $this->id }}.{{ $getStatePath() }}.{{ $field::class }}.options.{{ $optionValue }}">
                     <label
                         class="filament-forms-checkbox-list-component-option-label flex items-center space-x-3 rtl:space-x-reverse"
                         @if ($isSearchable())
@@ -148,34 +144,28 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_checkbox_li
                             value="{{ $optionValue }}"
                             dusk="filament.forms.{{ $getStatePath() }}"
                             {{ $applyStateBindingModifiers('wire:model') }}="{{ $getStatePath() }}"
-                            {{
-                                $getExtraAttributeBag()->class([
-                                    'text-primary-600 transition duration-75 rounded shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500 disabled:opacity-70',
-                                    'dark:bg-gray-700 dark:checked:bg-primary-500' => config('forms.dark_mode'),
-                                    'border-gray-300' => ! $errors->has($getStatePath()),
-                                    'dark:border-gray-600' => (! $errors->has($getStatePath())) && config('forms.dark_mode'),
-                                    'border-danger-300 ring-danger-500' => $errors->has($getStatePath()),
-                                    'dark:border-danger-400 dark:ring-danger-400' => $errors->has($getStatePath()) && config('forms.dark_mode'),
-                                ])->merge([
-                                    'disabled' => $isDisabled(),
-                                ])
-                            }}
+                            {{ $getExtraAttributeBag()->class([
+                                'text-primary-600 transition duration-75 rounded shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500 disabled:opacity-70',
+                                'dark:bg-gray-700 dark:checked:bg-primary-500' => config('forms.dark_mode'),
+                                'border-gray-300' => ! $errors->has($getStatePath()),
+                                'dark:border-gray-600' => (! $errors->has($getStatePath())) && config('forms.dark_mode'),
+                                'border-danger-300 ring-danger-500' => $errors->has($getStatePath()),
+                                'dark:border-danger-400 dark:ring-danger-400' => $errors->has($getStatePath()) && config('forms.dark_mode'),
+                            ])->merge([
+                                'disabled' => $isDisabled(),
+                            ]) }}
                         />
 
-                        <span
-                            @class([
-                                'filament-forms-checkbox-list-component-option-label-text text-sm font-medium text-gray-700',
-                                'dark:text-gray-200' => config('forms.dark_mode'),
-                            ])
-                        >
+                        <span @class([
+                            'filament-forms-checkbox-list-component-option-label-text text-sm font-medium text-gray-700',
+                            'dark:text-gray-200' => config('forms.dark_mode'),
+                        ])>
                             {{ $optionLabel }}
                         </span>
                     </label>
                 </div>
             @empty
-                <div
-                    wire:key="{{ $this->id }}.{{ $getStatePath() }}.{{ $field::class }}.empty"
-                ></div>
+                <div wire:key="{{ $this->id }}.{{ $getStatePath() }}.{{ $field::class }}.empty"></div>
             @endforelse
         </x-filament-support::grid>
 

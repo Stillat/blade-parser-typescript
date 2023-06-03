@@ -5,12 +5,10 @@ import { StringUtilities } from '../../../utilities/stringUtilities';
 suite('Pint Transformer Accpetance: admin_resources_views_components_brand_blade_php', () => {
     test('pint: it can format admin_resources_views_components_brand_blade_php', () => {
         const input = `@if (filled($brand = config('filament.brand')))
-    <div
-        @class([
-            'filament-brand text-xl font-bold leading-5 tracking-tight',
-            'dark:text-white' => config('filament.dark_mode'),
-        ])
-    >
+    <div @class([
+        'filament-brand text-xl font-bold leading-5 tracking-tight',
+        'dark:text-white' => config('filament.dark_mode'),
+    ])>
         {{ $brand }}
     </div>
 @endif

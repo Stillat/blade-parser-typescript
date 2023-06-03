@@ -17,7 +17,7 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_app
     icon="heroicon-o-bell"
     :color="$unreadNotificationsCount ? 'primary' : 'secondary'"
     :indicator="$unreadNotificationsCount"
-    class="ml-4 -mr-1 rtl:-ml-1 rtl:mr-4"
+    class="-mr-1 ml-4 rtl:-ml-1 rtl:mr-4"
 />
 `;
 

@@ -26,9 +26,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_select_blad
     :required="$isRequired()"
     :state-path="$getStatePath()"
 >
-    <div
-        {{ $attributes->merge($getExtraAttributes())->class(['filament-forms-select-component flex items-center space-x-1 rtl:space-x-reverse group']) }}
-    >
+    <div {{ $attributes->merge($getExtraAttributes())->class(['filament-forms-select-component flex items-center space-x-1 rtl:space-x-reverse group']) }}>
         @if (($prefixAction = $getPrefixAction()) && (! $prefixAction->isHidden()))
             {{ $prefixAction }}
         @endif
@@ -54,16 +52,14 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_select_blad
                     @if (! $isConcealed())
                         {!! $isRequired() ? 'required' : null !!}
                     @endif
-                    {{
-                        $attributes->merge($getExtraInputAttributes())->merge($getExtraAttributes())->class([
-                            'filament-forms-input text-gray-900 block w-full transition duration-75 rounded-lg shadow-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-inset focus:ring-primary-500 disabled:opacity-70',
-                            'dark:bg-gray-700 dark:text-white dark:focus:border-primary-500' => config('forms.dark_mode'),
-                            'border-gray-300' => ! $errors->has($getStatePath()),
-                            'dark:border-gray-600' => (! $errors->has($getStatePath())) && config('forms.dark_mode'),
-                            'border-danger-600 ring-danger-600' => $errors->has($getStatePath()),
-                            'dark:border-danger-400 dark:ring-danger-400' => $errors->has($getStatePath()) && config('forms.dark_mode'),
-                        ])
-                    }}
+                    {{ $attributes->merge($getExtraInputAttributes())->merge($getExtraAttributes())->class([
+                        'filament-forms-input text-gray-900 block w-full transition duration-75 rounded-lg shadow-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-inset focus:ring-primary-500 disabled:opacity-70',
+                        'dark:bg-gray-700 dark:text-white dark:focus:border-primary-500' => config('forms.dark_mode'),
+                        'border-gray-300' => ! $errors->has($getStatePath()),
+                        'dark:border-gray-600' => (! $errors->has($getStatePath())) && config('forms.dark_mode'),
+                        'border-danger-600 ring-danger-600' => $errors->has($getStatePath()),
+                        'dark:border-danger-400 dark:ring-danger-400' => $errors->has($getStatePath()) && config('forms.dark_mode'),
+                    ]) }}
                 >
                     @unless ($isPlaceholderSelectionDisabled())
                         <option value="">{{ $getPlaceholder() }}</option>
@@ -182,7 +178,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_select_blad
         @endif
 
         @if ($icon = $getPrefixIcon())
-            <x-dynamic-component :component="$icon" class="w-5 h-5" />
+            <x-dynamic-component :component="$icon" class="h-5 w-5" />
         @endif
 
         @if (filled($label = $getPrefixLabel()))
@@ -191,7 +187,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_select_blad
             </span>
         @endif
 
-        <div class="flex-1 min-w-0">
+        <div class="min-w-0 flex-1">
             @unless ($isSearchable() || $isMultiple())
                 <select
                     {!! $isAutofocused() ? 'autofocus' : null !!}
@@ -291,7 +287,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_select_blad
         @endif
 
         @if ($icon = $getSuffixIcon())
-            <x-dynamic-component :component="$icon" class="w-5 h-5" />
+            <x-dynamic-component :component="$icon" class="h-5 w-5" />
         @endif
 
         @if (($suffixAction = $getSuffixAction()) && (! $suffixAction->isHidden()))

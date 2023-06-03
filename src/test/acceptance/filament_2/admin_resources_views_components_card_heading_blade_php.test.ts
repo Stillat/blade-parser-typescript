@@ -9,7 +9,7 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_card_headin
 </h2>
 `;
         const output = `<h2
-    {{ $attributes->class(['text-xl font-semibold tracking-tight filament-card-heading']) }}
+    {{ $attributes->class(['filament-card-heading text-xl font-semibold tracking-tight']) }}
 >
     {{ $slot }}
 </h2>

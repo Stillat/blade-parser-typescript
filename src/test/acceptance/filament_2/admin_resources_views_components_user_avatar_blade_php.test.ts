@@ -9,12 +9,10 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_user_avatar
 ])
 
 <div
-    {{
-        $attributes->class([
-            'w-10 h-10 rounded-full bg-gray-200 bg-cover bg-center',
-            'dark:bg-gray-900' => config('filament.dark_mode'),
-        ])
-    }}
+    {{ $attributes->class([
+        'w-10 h-10 rounded-full bg-gray-200 bg-cover bg-center',
+        'dark:bg-gray-900' => config('filament.dark_mode'),
+    ]) }}
     style="background-image: url('{{ \\Filament\\Facades\\Filament::getUserAvatarUrl($user) }}')"
 ></div>
 `;
@@ -25,7 +23,7 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_user_avatar
 <div
     {{
         $attributes->class([
-            'w-10 h-10 rounded-full bg-gray-200 bg-cover bg-center',
+            'h-10 w-10 rounded-full bg-gray-200 bg-cover bg-center',
             'dark:bg-gray-900' => config('filament.dark_mode'),
         ])
     }}

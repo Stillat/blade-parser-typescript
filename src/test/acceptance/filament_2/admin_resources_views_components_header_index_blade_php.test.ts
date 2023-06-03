@@ -7,12 +7,10 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_header_inde
         const input = `@props([
     'actions' => null,
     'heading',
-    'subheading' => null,
+    'subheading' => null
 ])
 
-<header
-    {{ $attributes->class(['filament-header space-y-2 items-start justify-between sm:flex sm:space-y-0 sm:space-x-4  sm:rtl:space-x-reverse sm:py-4']) }}
->
+<header {{ $attributes->class(['filament-header space-y-2 items-start justify-between sm:flex sm:space-y-0 sm:space-x-4  sm:rtl:space-x-reverse sm:py-4']) }}>
     <div>
         <x-filament::header.heading>
             {{ $heading }}
@@ -24,6 +22,7 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_header_inde
             </x-filament::header.subheading>
         @endif
     </div>
+
 
     <x-filament::pages.actions :actions="$actions" class="shrink-0" />
 </header>

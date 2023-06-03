@@ -47,11 +47,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_field_wrapp
                 @endif
 
                 @if ($hint || $hintIcon || $hintAction)
-                    <x-forms::field-wrapper.hint
-                        :action="$hintAction"
-                        :color="$hintColor"
-                        :icon="$hintIcon"
-                    >
+                    <x-forms::field-wrapper.hint :action="$hintAction" :color="$hintColor" :icon="$hintIcon">
                         {{ filled($hint) ? ($hint instanceof \\Illuminate\\Support\\HtmlString ? $hint : \\Illuminate\\Support\\Str::of($hint)->markdown()->sanitizeHtml()->toHtmlString()) : null }}
                     </x-forms::field-wrapper.hint>
                 @endif
@@ -60,11 +56,11 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_field_wrapp
 
         {{ $slot }}
 
-        @if ($errors->has($statePath) || ($hasNestedRecursiveValidationRules && $errors->has("{$statePath}.*")))
-            <x-forms::field-wrapper.error-message>
-                {{ $errors->first($statePath) ?: ($hasNestedRecursiveValidationRules ? $errors->first("{$statePath}.*") : null) }}
-            </x-forms::field-wrapper.error-message>
-        @endif
+            @if ($errors->has($statePath) || ($hasNestedRecursiveValidationRules && $errors->has("{$statePath}.*")))
+                <x-forms::field-wrapper.error-message>
+                    {{ $errors->first($statePath) ?: ($hasNestedRecursiveValidationRules ? $errors->first("{$statePath}.*") : null) }}
+                </x-forms::field-wrapper.error-message>
+            @endif
 
         @if ($helperText)
             <x-forms::field-wrapper.helper-text>

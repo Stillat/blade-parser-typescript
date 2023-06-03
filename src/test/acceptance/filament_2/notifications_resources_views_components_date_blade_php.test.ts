@@ -4,14 +4,10 @@ import { StringUtilities } from '../../../utilities/stringUtilities';
 
 suite('Pint Transformer Accpetance: notifications_resources_views_components_date_blade_php', () => {
     test('pint: it can format notifications_resources_views_components_date_blade_php', () => {
-        const input = `<p
-    {{
-        $attributes->class([
-            'filament-notifications-date text-xs text-gray-500',
-            'dark:text-gray-300' => config('notifications.dark_mode'),
-        ])
-    }}
->
+        const input = `<p {{ $attributes->class([
+    'filament-notifications-date text-xs text-gray-500',
+    'dark:text-gray-300' => config('notifications.dark_mode'),
+]) }}>
     {{ $slot }}
 </p>
 `;

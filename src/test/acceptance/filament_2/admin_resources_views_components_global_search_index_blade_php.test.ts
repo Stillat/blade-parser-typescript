@@ -22,7 +22,7 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_global_sear
     {{ \\Filament\\Facades\\Filament::renderHook('global-search.end') }}
 </div>
 `;
-        const output = `<div class="filament-global-search flex items-center ml-4 rtl:ml-0 rtl:mr-4">
+        const output = `<div class="filament-global-search ml-4 flex items-center rtl:ml-0 rtl:mr-4">
     <x-filament::global-search.start />
     {{ \\Filament\\Facades\\Filament::renderHook('global-search.start') }}
 

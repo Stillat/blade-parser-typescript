@@ -33,13 +33,15 @@ suite('Pint Transformer Accpetance: tables_resources_views_columns_checkbox_colu
             state = newState
         })
     "
-    {{
-        $attributes->merge($getExtraAttributes())->class([
-            'filament-tables-checkbox-column',
-        ])
-    }}
+    {{ $attributes->merge($getExtraAttributes())->class([
+        'filament-tables-checkbox-column',
+    ]) }}
 >
-    <input type="hidden" value="{{ $state ? 1 : 0 }}" x-ref="newState" />
+    <input
+        type="hidden"
+        value="{{ $state ? 1 : 0 }}"
+        x-ref="newState"
+    />
 
     <input
         x-model="state"
@@ -121,8 +123,8 @@ suite('Pint Transformer Accpetance: tables_resources_views_columns_checkbox_colu
             $attributes
                 ->merge($getExtraInputAttributeBag()->getAttributes())
                 ->class([
-                    'ml-4 text-primary-600 transition duration-75 rounded shadow-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500 disabled:opacity-70',
-                    'dark:bg-gray-700 dark:checked:bg-primary-500' => config('forms.dark_mode'),
+                    'text-primary-600 focus:border-primary-500 focus:ring-primary-500 ml-4 rounded shadow-sm outline-none transition duration-75 focus:ring-2 disabled:opacity-70',
+                    'dark:checked:bg-primary-500 dark:bg-gray-700' => config('forms.dark_mode'),
                 ])
         }}
         x-bind:class="{

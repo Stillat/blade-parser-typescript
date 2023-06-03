@@ -40,9 +40,7 @@ suite('Pint Transformer Accpetance: admin_resources_views_widgets_chart_widget_b
             <x-filament::hr />
         @endif
 
-        <div
-            {!! ($pollingInterval = $this->getPollingInterval()) ? "wire:poll.{$pollingInterval}=\\"updateChartData\\"" : '' !!}
-        >
+        <div {!! ($pollingInterval = $this->getPollingInterval()) ? "wire:poll.{$pollingInterval}=\\"updateChartData\\"" : '' !!}>
             <canvas
                 x-data="{
                     chart: null,

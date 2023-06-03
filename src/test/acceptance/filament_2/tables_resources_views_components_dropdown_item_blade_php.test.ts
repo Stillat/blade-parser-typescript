@@ -8,9 +8,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_dropdown_i
     'detail',
 ])
 
-<x-tables::dropdown.list.item
-    :attributes="\\Filament\\Support\\prepare_inherited_attributes($attributes)->merge($slots)"
->
+<x-tables::dropdown.list.item :attributes="\\Filament\\Support\\prepare_inherited_attributes($attributes)->merge($slots)">
     {{ $slot }}
 </x-tables::dropdown.list.item>
 `;

@@ -17,16 +17,16 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_bas
     <head>
         {{ \\Filament\\Facades\\Filament::renderHook('head.start') }}
 
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="csrf-token" content="{{ csrf_token() }}" />
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
         @foreach (\\Filament\\Facades\\Filament::getMeta() as $tag)
             {{ $tag }}
         @endforeach
 
         @if ($favicon = config('filament.favicon'))
-            <link rel="icon" href="{{ $favicon }}" />
+            <link rel="icon" href="{{ $favicon }}">
         @endif
 
         <title>{{ $title ? "{$title} - " : null }} {{ config('filament.brand') }}</title>
@@ -34,21 +34,9 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_bas
         {{ \\Filament\\Facades\\Filament::renderHook('styles.start') }}
 
         <style>
-            [x-cloak=""],
-            [x-cloak="x-cloak"],
-            [x-cloak="1"] {
-                display: none !important;
-            }
-            @media (max-width: 1023px) {
-                [x-cloak="-lg"] {
-                    display: none !important;
-                }
-            }
-            @media (min-width: 1024px) {
-                [x-cloak="lg"] {
-                    display: none !important;
-                }
-            }
+            [x-cloak=""], [x-cloak="x-cloak"], [x-cloak="1"] { display: none !important; }
+            @media (max-width: 1023px) { [x-cloak="-lg"] { display: none !important; } }
+            @media (min-width: 1024px) { [x-cloak="lg"] { display: none !important; } }
             :root {
                 --sidebar-width: {{ config('filament.layout.sidebar.width') ?? '20rem' }};
                 --collapsed-sidebar-width: {{ config('filament.layout.sidebar.collapsed_width') ?? '5.4rem' }};
@@ -58,8 +46,8 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_bas
         @livewireStyles
 
         @if (filled($fontsUrl = config('filament.google_fonts')))
-            <link rel="preconnect" href="https://fonts.googleapis.com" />
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
             <link href="{{ $fontsUrl }}" rel="stylesheet" />
         @endif
 
@@ -69,14 +57,9 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_bas
             @elseif (\\Illuminate\\Support\\Str::of($path)->startsWith('<'))
                 {!! $path !!}
             @else
-                <link
-                    rel="stylesheet"
-                    href="{{
-                        route('filament.asset', [
-                            'file' => "{$name}.css",
-                        ])
-                    }}"
-                />
+                <link rel="stylesheet" href="{{ route('filament.asset', [
+                    'file' => "{$name}.css",
+                ]) }}" />
             @endif
         @endforeach
 
@@ -86,13 +69,10 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_bas
 
         @if (config('filament.dark_mode'))
             <script>
-                const theme = localStorage.getItem("theme");
+                const theme = localStorage.getItem('theme')
 
-                if (
-                    theme === "dark" ||
-                    (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)
-                ) {
-                    document.documentElement.classList.add("dark");
+                if ((theme === 'dark') || (! theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.classList.add('dark')
                 }
             </script>
         @endif
@@ -100,12 +80,10 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_bas
         {{ \\Filament\\Facades\\Filament::renderHook('head.end') }}
     </head>
 
-    <body
-        @class([
-            'filament-body min-h-screen bg-gray-100 text-gray-900 overflow-y-auto',
-            'dark:text-gray-100 dark:bg-gray-900' => config('filament.dark_mode'),
-        ])
-    >
+    <body @class([
+        'filament-body min-h-screen bg-gray-100 text-gray-900 overflow-y-auto',
+        'dark:text-gray-100 dark:bg-gray-900' => config('filament.dark_mode'),
+    ])>
         {{ \\Filament\\Facades\\Filament::renderHook('body.start') }}
 
         {{ $slot }}
@@ -124,46 +102,31 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_bas
             @elseif (\\Illuminate\\Support\\Str::of($path)->startsWith('<'))
                 {!! $path !!}
             @else
-                <script
-                    defer
-                    src="{{
-                        route('filament.asset', [
-                            'file' => "{$name}.js",
-                        ])
-                    }}"
-                ></script>
+                <script defer src="{{ route('filament.asset', [
+                    'file' => "{$name}.js",
+                ]) }}"></script>
             @endif
         @endforeach
 
         @stack('beforeCoreScripts')
 
-        <script
-            defer
-            src="{{
-                route('filament.asset', [
-                    'id' => Filament\\get_asset_id('app.js'),
-                    'file' => 'app.js',
-                ])
-            }}"
-        ></script>
+        <script defer src="{{ route('filament.asset', [
+            'id' => Filament\\get_asset_id('app.js'),
+            'file' => 'app.js',
+        ]) }}"></script>
 
         @if (config('filament.broadcasting.echo'))
-            <script
-                defer
-                src="{{
-                    route('filament.asset', [
-                        'id' => Filament\\get_asset_id('echo.js'),
-                        'file' => 'echo.js',
-                    ])
-                }}"
-            ></script>
+            <script defer src="{{ route('filament.asset', [
+                'id' => Filament\\get_asset_id('echo.js'),
+                'file' => 'echo.js',
+            ]) }}"></script>
 
             <script>
-                window.addEventListener("DOMContentLoaded", () => {
-                    window.Echo = new window.EchoFactory(@js(config('filament.broadcasting.echo')));
+                window.addEventListener('DOMContentLoaded', () => {
+                    window.Echo = new window.EchoFactory(@js(config('filament.broadcasting.echo')))
 
-                    window.dispatchEvent(new CustomEvent("EchoLoaded"));
-                });
+                    window.dispatchEvent(new CustomEvent('EchoLoaded'))
+                })
             </script>
         @endif
 
@@ -173,14 +136,9 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_bas
             @elseif (\\Illuminate\\Support\\Str::of($path)->startsWith('<'))
                 {!! $path !!}
             @else
-                <script
-                    defer
-                    src="{{
-                        route('filament.asset', [
-                            'file' => "{$name}.js",
-                        ])
-                    }}"
-                ></script>
+                <script defer src="{{ route('filament.asset', [
+                    'file' => "{$name}.js",
+                ]) }}"></script>
             @endif
         @endforeach
 

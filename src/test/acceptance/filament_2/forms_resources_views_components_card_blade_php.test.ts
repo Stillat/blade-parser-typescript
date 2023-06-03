@@ -6,12 +6,10 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_card_blade_
     test('pint: it can format forms_resources_views_components_card_blade_php', () => {
         const input = `<div
     {!! $getId() ? "id=\\"{$getId()}\\"" : null !!}
-    {{
-        $attributes->merge($getExtraAttributes())->class([
-            'filament-forms-card-component p-6 bg-white rounded-xl border border-gray-300',
-            'dark:border-gray-600 dark:bg-gray-800' => config('forms.dark_mode'),
-        ])
-    }}
+    {{ $attributes->merge($getExtraAttributes())->class([
+        'filament-forms-card-component p-6 bg-white rounded-xl border border-gray-300',
+        'dark:border-gray-600 dark:bg-gray-800' => config('forms.dark_mode'),
+    ]) }}
 >
     {{ $getChildComponentContainer() }}
 </div>
@@ -20,7 +18,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_card_blade_
     {!! $getId() ? "id=\\"{$getId()}\\"" : null !!}
     {{
         $attributes->merge($getExtraAttributes())->class([
-            'filament-forms-card-component p-6 bg-white rounded-xl border border-gray-300',
+            'filament-forms-card-component rounded-xl border border-gray-300 bg-white p-6',
             'dark:border-gray-600 dark:bg-gray-800' => config('forms.dark_mode'),
         ])
     }}

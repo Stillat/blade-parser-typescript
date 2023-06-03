@@ -67,7 +67,7 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_resources_r
             class="space-y-4 outline-none"
         >
             @if ($managers[$activeManager] instanceof \\Filament\\Resources\\RelationManagers\\RelationGroup)
-                @foreach ($managers[$activeManager]->getManagers(ownerRecord: $ownerRecord) as $groupedManager)
+                @foreach($managers[$activeManager]->getManagers(ownerRecord: $ownerRecord) as $groupedManager)
                     @livewire(\\Livewire\\Livewire::getAlias($groupedManager, $groupedManager::getName()), ['ownerRecord' => $ownerRecord], key($groupedManager))
                 @endforeach
             @else

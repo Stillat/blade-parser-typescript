@@ -15,7 +15,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_columns_icon_column_b
             'primary' => 'text-primary-500',
             'success' => 'text-success-500',
             'warning' => 'text-warning-500',
-            null => \\Illuminate\\Support\\Arr::toCssClasses(['text-gray-700', 'dark:text-gray-200' => config('tables.dark_mode')]),
+            null => \\Illuminate\\Support\\Arr::toCssClasses(['text-gray-700', 'dark:text-gray-200' => config('tables.dark_mode'),]),
             default => $stateColor,
         },
         match ($size) {
@@ -40,7 +40,10 @@ suite('Pint Transformer Accpetance: tables_resources_views_columns_icon_column_b
     }}
 >
     @if ($stateIcon)
-        <x-dynamic-component :component="$stateIcon" :class="$iconClasses" />
+        <x-dynamic-component
+            :component="$stateIcon"
+            :class="$iconClasses"
+        />
     @endif
 </div>
 `;

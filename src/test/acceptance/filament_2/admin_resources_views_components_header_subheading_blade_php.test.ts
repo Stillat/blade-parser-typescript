@@ -4,9 +4,7 @@ import { StringUtilities } from '../../../utilities/stringUtilities';
 
 suite('Pint Transformer Accpetance: admin_resources_views_components_header_subheading_blade_php', () => {
     test('pint: it can format admin_resources_views_components_header_subheading_blade_php', () => {
-        const input = `<p
-    {{ $attributes->class(['filament-header-subheading max-w-2xl tracking-tight text-gray-500']) }}
->
+        const input = `<p {{ $attributes->class(['filament-header-subheading max-w-2xl tracking-tight text-gray-500']) }}>
     {{ $slot }}
 </p>
 `;

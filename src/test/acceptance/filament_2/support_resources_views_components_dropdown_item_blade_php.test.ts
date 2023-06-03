@@ -8,9 +8,7 @@ suite('Pint Transformer Accpetance: support_resources_views_components_dropdown_
     'detail',
 ])
 
-<x-filament-support::dropdown.list.item
-    :attributes="\\Filament\\Support\\prepare_inherited_attributes($attributes)->merge($slots)"
->
+<x-filament-support::dropdown.list.item :attributes="\\Filament\\Support\\prepare_inherited_attributes($attributes)->merge($slots)">
     {{ $slot }}
 </x-filament-support::dropdown.list.item>
 `;

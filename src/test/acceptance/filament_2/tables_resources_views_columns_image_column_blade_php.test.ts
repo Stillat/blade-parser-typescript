@@ -4,14 +4,10 @@ import { StringUtilities } from '../../../utilities/stringUtilities';
 
 suite('Pint Transformer Accpetance: tables_resources_views_columns_image_column_blade_php', () => {
     test('pint: it can format tables_resources_views_columns_image_column_blade_php', () => {
-        const input = `<div
-    {{
-        $attributes->merge($getExtraAttributes())->class([
-            'filament-tables-image-column',
-            'px-4 py-3' => ! $isInline(),
-        ])
-    }}
->
+        const input = `<div {{ $attributes->merge($getExtraAttributes())->class([
+    'filament-tables-image-column',
+    'px-4 py-3' => ! $isInline(),
+]) }}>
     @php
         $height = $getHeight();
         $width = $getWidth() ?? ($isCircular() || $isSquare() ? $height : null);
@@ -34,13 +30,11 @@ suite('Pint Transformer Accpetance: tables_resources_views_columns_image_column_
                     {!! $height !== null ? "height: {$height};" : null !!}
                     {!! $width !== null ? "width: {$width};" : null !!}
                 "
-                {{
-                    $getExtraImgAttributeBag()->class([
-                        'object-cover object-center' => $isCircular() || $isSquare(),
-                    ])
-                }}
-            />
-        @endif
+                {{ $getExtraImgAttributeBag()->class([
+                    'object-cover object-center' => $isCircular() || $isSquare(),
+                ]) }}
+            >
+       @endif
     </div>
 </div>
 `;

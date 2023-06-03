@@ -20,7 +20,10 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_tabs_item_b
 @endphp
 
 @if ($tag === 'button')
-    <button type="{{ $type }}" {{ $attributes->class([$buttonClasses]) }}>
+    <button
+        type="{{ $type }}"
+        {{ $attributes->class([$buttonClasses]) }}
+    >
         {{ $slot }}
     </button>
 @elseif ($tag === 'a')

@@ -4,9 +4,7 @@ import { StringUtilities } from '../../../utilities/stringUtilities';
 
 suite('Pint Transformer Accpetance: tables_resources_views_components_header_heading_blade_php', () => {
     test('pint: it can format tables_resources_views_components_header_heading_blade_php', () => {
-        const input = `<h2
-    {{ $attributes->class(['filament-tables-header-heading text-xl font-bold tracking-tight']) }}
->
+        const input = `<h2 {{ $attributes->class(['filament-tables-header-heading text-xl font-bold tracking-tight']) }}>
     {{ $slot }}
 </h2>
 `;

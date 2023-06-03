@@ -5,9 +5,7 @@ import { StringUtilities } from '../../../utilities/stringUtilities';
 suite('Pint Transformer Accpetance: admin_resources_views_widgets_stats_overview_widget_blade_php', () => {
     test('pint: it can format admin_resources_views_widgets_stats_overview_widget_blade_php', () => {
         const input = `<x-filament::widget class="filament-stats-overview-widget">
-    <div
-        {!! ($pollingInterval = $this->getPollingInterval()) ? "wire:poll.{$pollingInterval}" : '' !!}
-    >
+    <div {!! ($pollingInterval = $this->getPollingInterval()) ? "wire:poll.{$pollingInterval}" : '' !!}>
         <x-filament::stats :columns="$this->getColumns()">
             @foreach ($this->getCachedCards() as $card)
                 {{ $card }}

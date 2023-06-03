@@ -40,11 +40,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_date_time_p
     >
         <input x-ref="maxDate" type="hidden" value="{{ $getMaxDate() }}" />
         <input x-ref="minDate" type="hidden" value="{{ $getMinDate() }}" />
-        <input
-            x-ref="disabledDates"
-            type="hidden"
-            value="{{ json_encode($getDisabledDates()) }}"
-        />
+        <input x-ref="disabledDates" type="hidden" value="{{ json_encode($getDisabledDates()) }}" />
 
         <button
             x-ref="button"
@@ -62,21 +58,19 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_date_time_p
             type="button"
             tabindex="-1"
             @if ($isDisabled()) disabled @endif
-            {{
-                $getExtraTriggerAttributeBag()->class([
-                    'bg-white relative w-full border py-2 text-start cursor-default rounded-lg shadow-sm outline-none',
-                    'focus-within:ring-1 focus-within:border-primary-500 focus-within:ring-inset focus-within:ring-primary-500' => ! $isDisabled(),
-                    'dark:bg-gray-700' => config('forms.dark_mode'),
-                    'border-gray-300' => ! $errors->has($getStatePath()),
-                    'dark:border-gray-600' => (! $errors->has($getStatePath())) && config('forms.dark_mode'),
-                    'border-danger-600' => $errors->has($getStatePath()),
-                    'dark:border-danger-400' => $errors->has($getStatePath()) && config('forms.dark_mode'),
-                    'opacity-70' => $isDisabled(),
-                    'dark:text-gray-300' => $isDisabled() && config('forms.dark_mode'),
-                    'px-3' => $icon === false,
-                    'pl-3 pr-10 rtl:pl-10 rtl:pr-3' => $icon !== false,
-                ])
-            }}
+            {{ $getExtraTriggerAttributeBag()->class([
+                'bg-white relative w-full border py-2 text-start cursor-default rounded-lg shadow-sm outline-none',
+                'focus-within:ring-1 focus-within:border-primary-500 focus-within:ring-inset focus-within:ring-primary-500' => ! $isDisabled(),
+                'dark:bg-gray-700' => config('forms.dark_mode'),
+                'border-gray-300' => ! $errors->has($getStatePath()),
+                'dark:border-gray-600' => (! $errors->has($getStatePath())) && config('forms.dark_mode'),
+                'border-danger-600' => $errors->has($getStatePath()),
+                'dark:border-danger-400' => $errors->has($getStatePath()) && config('forms.dark_mode'),
+                'opacity-70' => $isDisabled(),
+                'dark:text-gray-300' => $isDisabled() && config('forms.dark_mode'),
+                'px-3' => $icon === false,
+                'pl-3 pr-10 rtl:pl-10 rtl:pr-3' => $icon !== false,
+            ]) }}
         >
             <input
                 readonly
@@ -92,9 +86,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_date_time_p
             />
 
             @if ($icon !== false)
-                <span
-                    class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none rtl:right-auto rtl:left-0 rtl:pl-2"
-                >
+                <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none rtl:right-auto rtl:left-0 rtl:pl-2">
                     <x-dynamic-component
                         :component="$icon ?? 'heroicon-o-calendar'"
                         @class([
@@ -120,9 +112,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_date_time_p
         >
             <div class="space-y-3">
                 @if ($hasDate())
-                    <div
-                        class="flex items-center justify-between space-x-1 rtl:space-x-reverse"
-                    >
+                    <div class="flex items-center justify-between space-x-1 rtl:space-x-reverse">
                         <select
                             x-model="focusedMonth"
                             @class([
@@ -214,9 +204,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_date_time_p
                                 'text-xl font-medium bg-gray-50 text-gray-700',
                                 'dark:text-gray-200 dark:bg-gray-800' => config('forms.dark_mode'),
                             ])
-                        >
-                            :
-                        </span>
+                        >:</span>
 
                         <input
                             max="59"
@@ -238,9 +226,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_date_time_p
                                     'text-xl font-medium text-gray-700 bg-gray-50',
                                     'dark:text-gray-200 dark:bg-gray-800' => config('forms.dark_mode'),
                                 ])
-                            >
-                                :
-                            </span>
+                            >:</span>
 
                             <input
                                 max="59"
@@ -352,7 +338,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_date_time_p
 
             @if ($icon !== false)
                 <span
-                    class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none rtl:right-auto rtl:left-0 rtl:pl-2"
+                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 rtl:left-0 rtl:right-auto rtl:pl-2"
                 >
                     <x-dynamic-component
                         :component="$icon ?? 'heroicon-o-calendar'"
@@ -431,7 +417,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_date_time_p
                             x-bind:key="day"
                         >
                             <div
-                                class="text-sm text-center border border-transparent"
+                                class="border border-transparent text-center text-sm"
                             ></div>
                         </template>
 
@@ -455,7 +441,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_date_time_p
                                     'opacity-50': focusedDate.date() !== day && dayIsDisabled(day),
                                 }"
                                 x-bind:dusk="'filament.forms.{{ $getStatePath() }}' + '.focusedDate.' + day"
-                                class="text-sm leading-loose text-center transition duration-100 ease-in-out rounded-full"
+                                class="rounded-full text-center text-sm leading-loose transition duration-100 ease-in-out"
                             ></div>
                         </template>
                     </div>

@@ -14,9 +14,7 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_app
     'url',
 ])
 
-<li
-    @class(['filament-sidebar-item overflow-hidden', 'filament-sidebar-item-active' => $active])
->
+<li @class(['filament-sidebar-item overflow-hidden', 'filament-sidebar-item-active' => $active])>
     <a
         href="{{ $url }}"
         {!! $shouldOpenUrlInNewTab ? 'target="_blank"' : '' !!}
@@ -50,8 +48,7 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_app
             class="h-5 w-5 shrink-0"
         />
 
-        <div
-            class="flex flex-1"
+        <div class="flex flex-1"
             @if (config('filament.layout.sidebar.is_collapsible_on_desktop'))
                 x-show="$store.sidebar.isOpen"
             @endif

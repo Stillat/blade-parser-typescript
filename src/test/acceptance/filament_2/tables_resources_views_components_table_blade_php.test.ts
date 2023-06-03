@@ -9,14 +9,10 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_table_blad
     'header' => null,
 ])
 
-<table
-    {{
-        $attributes->class([
-            'filament-tables-table w-full text-start divide-y table-auto',
-            'dark:divide-gray-700' => config('tables.dark_mode'),
-        ])
-    }}
->
+<table {{ $attributes->class([
+    'filament-tables-table w-full text-start divide-y table-auto',
+    'dark:divide-gray-700' => config('tables.dark_mode'),
+]) }}>
     @if ($header)
         <thead>
             <tr class="bg-gray-500/5">

@@ -95,13 +95,13 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_wizard_blad
 >
     <input
         type="hidden"
-        value="{{
+        value='{{
             collect($getChildComponentContainer()->getComponents())
                 ->filter(static fn (\\Filament\\Forms\\Components\\Wizard\\Step $step): bool => ! $step->isHidden())
                 ->map(static fn (\\Filament\\Forms\\Components\\Wizard\\Step $step) => $step->getId())
                 ->values()
                 ->toJson()
-        }}"
+        }}'
         x-ref="stepsData"
     />
 
@@ -114,9 +114,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_wizard_blad
         ])
     >
         @foreach ($getChildComponentContainer()->getComponents() as $step)
-            <li
-                class="filament-forms-wizard-component-header-step relative overflow-hidden group md:flex-1"
-            >
+            <li class="filament-forms-wizard-component-header-step relative overflow-hidden group md:flex-1">
                 <button
                     type="button"
                     x-on:click="if (isStepAccessible(step, {{ $loop->index }})) step = '{{ $step->getId() }}'"
@@ -179,19 +177,15 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_wizard_blad
                         </div>
 
                         <div class="flex flex-col items-start justify-center">
-                            <div
-                                class="filament-forms-wizard-component-header-step-label text-sm font-semibold tracking-wide uppercase"
-                            >
+                            <div class="filament-forms-wizard-component-header-step-label text-sm font-semibold tracking-wide uppercase">
                                 {{ $step->getLabel() }}
                             </div>
 
                             @if (filled($description = $step->getDescription()))
-                                <div
-                                    @class([
-                                        'filament-forms-wizard-component-header-step-description text-sm leading-4 font-medium text-gray-500',
-                                        'dark:text-gray-400' => config('forms.dark_mode'),
-                                    ])
-                                >
+                                <div @class([
+                                    'filament-forms-wizard-component-header-step-description text-sm leading-4 font-medium text-gray-500',
+                                    'dark:text-gray-400' => config('forms.dark_mode'),
+                                ])>
                                     {{ $description }}
                                 </div>
                             @endif
@@ -200,24 +194,12 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_wizard_blad
                 </button>
 
                 @if (! $loop->first)
-                    <div
-                        class="absolute inset-0 top-0 left-0 hidden w-3 md:block"
-                        aria-hidden="true"
-                    >
-                        <svg
-                            @class([
-                                'h-full w-full text-gray-300 rtl:rotate-180',
-                                'dark:text-gray-700' => config('forms.dark_mode'),
-                            ])
-                            viewBox="0 0 12 82"
-                            fill="none"
-                            preserveAspectRatio="none"
-                        >
-                            <path
-                                d="M0.5 0V31L10.5 41L0.5 51V82"
-                                stroke="currentcolor"
-                                vector-effect="non-scaling-stroke"
-                            />
+                    <div class="absolute inset-0 top-0 left-0 hidden w-3 md:block" aria-hidden="true">
+                        <svg @class([
+                            'h-full w-full text-gray-300 rtl:rotate-180',
+                            'dark:text-gray-700' => config('forms.dark_mode'),
+                        ]) viewBox="0 0 12 82" fill="none" preserveAspectRatio="none">
+                            <path d="M0.5 0V31L10.5 41L0.5 51V82" stroke="currentcolor" vector-effect="non-scaling-stroke" />
                         </svg>
                     </div>
                 @endif
@@ -380,7 +362,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_wizard_blad
     >
         @foreach ($getChildComponentContainer()->getComponents() as $step)
             <li
-                class="filament-forms-wizard-component-header-step relative overflow-hidden group md:flex-1"
+                class="filament-forms-wizard-component-header-step group relative overflow-hidden md:flex-1"
             >
                 <button
                     type="button"
@@ -390,14 +372,14 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_wizard_blad
                         'cursor-not-allowed pointer-events-none': ! isStepAccessible(step, {{ $loop->index }}),
                     }"
                     role="step"
-                    class="flex items-center w-full h-full text-start"
+                    class="flex h-full w-full items-center text-start"
                 >
                     <div
                         x-bind:class="{
                             'bg-primary-600': getStepIndex(step) === {{ $loop->index }},
                             'bg-transparent group-hover:bg-gray-200 @if (config('forms.dark_mode')) dark:group-hover:bg-gray-600 @endif': getStepIndex(step) > {{ $loop->index }},
                         }"
-                        class="absolute top-0 left-0 w-1 h-full md:w-full md:h-1 md:bottom-0 md:top-auto"
+                        class="absolute left-0 top-0 h-full w-1 md:bottom-0 md:top-auto md:h-1 md:w-full"
                         aria-hidden="true"
                     ></div>
 
@@ -412,12 +394,12 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_wizard_blad
                                     'border-primary-500': getStepIndex(step) === {{ $loop->index }},
                                     'border-gray-300 @if (config('forms.dark_mode')) dark:border-gray-500 @endif': getStepIndex(step) < {{ $loop->index }},
                                 }"
-                                class="filament-forms-wizard-component-header-step-icon flex items-center justify-center w-10 h-10 rounded-full"
+                                class="filament-forms-wizard-component-header-step-icon flex h-10 w-10 items-center justify-center rounded-full"
                             >
                                 <x-heroicon-o-check
                                     x-show="getStepIndex(step) > {{ $loop->index }}"
                                     x-cloak
-                                    class="w-5 h-5 text-white"
+                                    class="h-5 w-5 text-white"
                                 />
 
                                 @if ($step->getIcon())
@@ -429,7 +411,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_wizard_blad
                                             'text-gray-500 @if (config('forms.dark_mode')) dark:text-gray-400 @endif': getStepIndex(step) !== {{ $loop->index }},
                                             'text-primary-500': getStepIndex(step) === {{ $loop->index }},
                                         }"
-                                        class="w-5 h-5"
+                                        class="h-5 w-5"
                                     />
                                 @else
                                     <span
@@ -447,7 +429,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_wizard_blad
 
                         <div class="flex flex-col items-start justify-center">
                             <div
-                                class="filament-forms-wizard-component-header-step-label text-sm font-semibold tracking-wide uppercase"
+                                class="filament-forms-wizard-component-header-step-label text-sm font-semibold uppercase tracking-wide"
                             >
                                 {{ $step->getLabel() }}
                             </div>
@@ -468,7 +450,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_wizard_blad
 
                 @if (! $loop->first)
                     <div
-                        class="absolute inset-0 top-0 left-0 hidden w-3 md:block"
+                        class="absolute inset-0 left-0 top-0 hidden w-3 md:block"
                         aria-hidden="true"
                     >
                         <svg

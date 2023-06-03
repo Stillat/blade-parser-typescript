@@ -18,14 +18,11 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_app
 
 <x-filament::dropdown placement="bottom-end">
     <x-slot name="trigger" class="ml-4 rtl:mr-4 rtl:ml-0">
-        <button
-            class="block"
-            aria-label="{{ __('filament::layout.buttons.user_menu.label') }}"
-        >
+        <button class="block" aria-label="{{ __('filament::layout.buttons.user_menu.label') }}">
             <x-filament::user-avatar :user="$user" />
         </button>
     </x-slot>
-
+    
     {{ \\Filament\\Facades\\Filament::renderHook('user-menu.account.before') }}
 
     <x-filament::dropdown.header
@@ -36,7 +33,7 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_app
     >
         {{ $accountItem?->getLabel() ?? \\Filament\\Facades\\Filament::getUserName($user) }}
     </x-filament::dropdown.header>
-
+    
     {{ \\Filament\\Facades\\Filament::renderHook('user-menu.account.after') }}
 
     <x-filament::dropdown.list
@@ -85,19 +82,11 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_app
     >
         <div>
             @if (config('filament.dark_mode'))
-                <x-filament::dropdown.list.item
-                    icon="heroicon-s-moon"
-                    x-show="theme === 'dark'"
-                    x-on:click="close(); mode = 'manual'; theme = 'light'"
-                >
+                <x-filament::dropdown.list.item icon="heroicon-s-moon" x-show="theme === 'dark'" x-on:click="close(); mode = 'manual'; theme = 'light'">
                     {{ __('filament::layout.buttons.light_mode.label') }}
                 </x-filament::dropdown.list.item>
 
-                <x-filament::dropdown.list.item
-                    icon="heroicon-s-sun"
-                    x-show="theme === 'light'"
-                    x-on:click="close(); mode = 'manual'; theme = 'dark'"
-                >
+                <x-filament::dropdown.list.item icon="heroicon-s-sun" x-show="theme === 'light'" x-on:click="close(); mode = 'manual'; theme = 'dark'">
                     {{ __('filament::layout.buttons.dark_mode.label') }}
                 </x-filament::dropdown.list.item>
             @endif
@@ -143,7 +132,7 @@ suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_app
 {{ \\Filament\\Facades\\Filament::renderHook('user-menu.start') }}
 
 <x-filament::dropdown placement="bottom-end">
-    <x-slot name="trigger" class="ml-4 rtl:mr-4 rtl:ml-0">
+    <x-slot name="trigger" class="ml-4 rtl:ml-0 rtl:mr-4">
         <button
             class="block"
             aria-label="{{ __('filament::layout.buttons.user_menu.label') }}"

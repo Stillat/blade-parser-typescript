@@ -24,42 +24,30 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_key_value_b
         {{ $attributes->merge($getExtraAttributes())->class(['filament-forms-key-value-component']) }}
         {{ $getExtraAlpineAttributeBag() }}
     >
-        <div
-            @class([
-                'border border-gray-300 divide-y shadow-sm bg-white rounded-xl overflow-hidden',
-                'dark:bg-gray-700 dark:border-gray-600 dark:divide-gray-600' => config('forms.dark_mode'),
-            ])
-        >
-            <table
-                @class([
-                    'w-full text-start divide-y table-auto',
-                    'dark:divide-gray-700' => config('forms.dark_mode'),
-                ])
-            >
+        <div @class([
+            'border border-gray-300 divide-y shadow-sm bg-white rounded-xl overflow-hidden',
+            'dark:bg-gray-700 dark:border-gray-600 dark:divide-gray-600' => config('forms.dark_mode'),
+        ])>
+            <table @class([
+                'w-full text-start divide-y table-auto',
+                'dark:divide-gray-700' => config('forms.dark_mode'),
+            ])>
                 <thead>
-                    <tr
-                        @class([
-                            'bg-gray-50',
-                            'dark:bg-gray-800/60' => config('forms.dark_mode'),
-                        ])
-                    >
-                        <th
-                            @class([
-                                'px-4 py-2 whitespace-nowrap font-medium text-start text-sm text-gray-600',
-                                'dark:text-gray-300' => config('forms.dark_mode'),
-                            ])
-                            scope="col"
-                        >
+                    <tr @class([
+                        'bg-gray-50',
+                        'dark:bg-gray-800/60' => config('forms.dark_mode'),
+                    ])>
+                        <th @class([
+                            'px-4 py-2 whitespace-nowrap font-medium text-start text-sm text-gray-600',
+                            'dark:text-gray-300' => config('forms.dark_mode'),
+                        ]) scope="col">
                             {{ $getKeyLabel() }}
                         </th>
 
-                        <th
-                            @class([
-                                'px-4 py-2 whitespace-nowrap font-medium text-start text-sm text-gray-600',
-                                'dark:text-gray-300' => config('forms.dark_mode'),
-                            ])
-                            scope="col"
-                        >
+                        <th @class([
+                            'px-4 py-2 whitespace-nowrap font-medium text-start text-sm text-gray-600',
+                            'dark:text-gray-300' => config('forms.dark_mode'),
+                        ]) scope="col">
                             {{ $getValueLabel() }}
                         </th>
 
@@ -86,11 +74,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_key_value_b
                         'dark:divide-gray-600' => config('forms.dark_mode'),
                     ])
                 >
-                    <template
-                        x-for="(row, index) in rows"
-                        x-bind:key="index"
-                        x-ref="rowTemplate"
-                    >
+                    <template x-for="(row, index) in rows" x-bind:key="index" x-ref="rowTemplate">
                         <tr
                             @if ($isReorderable())
                                 x-bind:x-sortable-item="row.key"
@@ -110,7 +94,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_key_value_b
                                         disabled
                                     @endif
                                     class="w-full px-4 py-3 font-mono text-sm bg-transparent border-0 focus:ring-0"
-                                />
+                                >
                             </td>
 
                             <td class="whitespace-nowrap">
@@ -123,7 +107,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_key_value_b
                                         disabled
                                     @endif
                                     class="w-full px-4 py-3 font-mono text-sm bg-transparent border-0 focus:ring-0"
-                                />
+                                >
                             </td>
 
                             @if (($canDeleteRows() || $isReorderable()) && $isEnabled())
@@ -135,9 +119,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_key_value_b
                                                 type="button"
                                                 class="text-gray-600 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                                             >
-                                                <x-heroicon-o-switch-vertical
-                                                    class="w-4 h-4"
-                                                />
+                                                <x-heroicon-o-switch-vertical class="w-4 h-4" />
 
                                                 <span class="sr-only">
                                                     {{ $getReorderButtonLabel() }}
@@ -291,7 +273,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_key_value_b
                                     @if ((! $canEditKeys()) || $isDisabled())
                                         disabled
                                     @endif
-                                    class="w-full px-4 py-3 font-mono text-sm bg-transparent border-0 focus:ring-0"
+                                    class="w-full border-0 bg-transparent px-4 py-3 font-mono text-sm focus:ring-0"
                                 />
                             </td>
 
@@ -304,7 +286,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_key_value_b
                                     @if ((! $canEditValues()) || $isDisabled())
                                         disabled
                                     @endif
-                                    class="w-full px-4 py-3 font-mono text-sm bg-transparent border-0 focus:ring-0"
+                                    class="w-full border-0 bg-transparent px-4 py-3 font-mono text-sm focus:ring-0"
                                 />
                             </td>
 
@@ -320,7 +302,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_key_value_b
                                                 class="text-gray-600 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                                             >
                                                 <x-heroicon-o-switch-vertical
-                                                    class="w-4 h-4"
+                                                    class="h-4 w-4"
                                                 />
 
                                                 <span class="sr-only">
@@ -336,7 +318,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_key_value_b
                                                 class="text-danger-600 hover:text-danger-700"
                                             >
                                                 <x-heroicon-o-trash
-                                                    class="w-4 h-4"
+                                                    class="h-4 w-4"
                                                 />
 
                                                 <span class="sr-only">
@@ -361,7 +343,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_key_value_b
                         'dark:text-white dark:bg-gray-800/60 dark:hover:bg-gray-800/30' => config('forms.dark_mode'),
                     ])
                 >
-                    <x-heroicon-s-plus class="w-4 h-4" />
+                    <x-heroicon-s-plus class="h-4 w-4" />
 
                     <span>
                         {{ $getAddButtonLabel() }}
