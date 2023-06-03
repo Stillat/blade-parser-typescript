@@ -6,6 +6,8 @@ import { LiteralNode, SwitchStatementNode, ConditionNode, DirectiveNode, BladeEc
 import { ClassEmulator } from '../parser/classEmulator';
 import { PhpValidator } from '../parser/php/phpValidator';
 import { ParserOptions, getParserOptions } from '../parser/parserOptions';
+import { ILabeledRange } from '../nodes/labeledRange';
+import { JavaScriptStructuresAnalyzer } from '../analyzers/javaScriptStructuresAnalyzer';
 
 export class ClassStringEmulation {
     private ignoreDirectives: string[] = ['if', 'unless', 'elseif'];
@@ -112,7 +114,6 @@ export class ClassStringEmulation {
                 } else {
                     // TODO: Configurable.
                     const phpEmulate = new ClassEmulator();
-                    // stringResults += phpEmulate.emulatePhpTag(node.sourceContent);
                     stringResults += phpEmulate.emulatePhpTag(node.sourceContent);
                 }
             } else {

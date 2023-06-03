@@ -1,5 +1,6 @@
 import { PhpStructuresAnalyzer } from '../analyzers/phpStructuresAnalyzer';
 import { formatAsHtmlStrings } from '../formatting/prettier/utils';
+import { ILabeledRange } from '../nodes/labeledRange';
 import { StringUtilities } from '../utilities/stringUtilities';
 import { InlineStringParser } from './inlineStringParser';
 import { StringRemover } from './stringRemover';
@@ -7,17 +8,22 @@ import { StringRemover } from './stringRemover';
 export class ClassEmulator {
     private phpStructuresAnalyzer: PhpStructuresAnalyzer;
     private stringParser: InlineStringParser;
+    private mergeRanges: ILabeledRange[] = [];
 
     constructor() {
         this.phpStructuresAnalyzer = new PhpStructuresAnalyzer();
         this.stringParser = new InlineStringParser();
     }
 
+    withAdditionalRanges(mergeRanges: ILabeledRange[]) {
+        this.mergeRanges = this.mergeRanges.concat(mergeRanges);
+    }
+
     emulateString(content: string): string {
         const uniqueSlug = StringUtilities.makeSlug(32),
             prefix = `Emulate:${uniqueSlug}=`;
 
-        this.stringParser.setIgnoreRanges(this.phpStructuresAnalyzer.getStructures());
+        this.stringParser.setIgnoreRanges(this.phpStructuresAnalyzer.getStructures().concat(this.mergeRanges));
         this.stringParser.parse(content);
 
         if (!this.stringParser.hasStringNodes()) {
@@ -37,6 +43,9 @@ export class ClassEmulator {
                 emulateDocument += `<div class="${node.content.substring(1, node.content.length - 1)}"></div>\n`;
             }
         });
+
+        console.log(emulateDocument);
+        debugger;
 
         emulateDocument = formatAsHtmlStrings(emulateDocument);
 

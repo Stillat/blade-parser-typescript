@@ -301,6 +301,25 @@ export class FragmentsParser implements StringIterator {
         return this.content.substr(start, length);
     }
 
+    getEmbeddedDocumentStructures(): StructuralFragment[] {
+        const structures: StructuralFragment[] = [];
+
+        this.getEmbeddedFragments().forEach((fragment) => {
+            if (!fragment.isClosingFragment && !fragment.isSelfClosing) {
+                const close = this.getClosingFragmentAfter(fragment);
+
+                if (close != null) {
+                    structures.push({
+                        start: fragment,
+                        end: close
+                    });
+                }
+            }
+        });
+
+        return structures;
+    }
+
     getFragmentsContainingStructures(): StructuralFragment[] {
         const structures: StructuralFragment[] = [];
 
@@ -384,6 +403,16 @@ export class FragmentsParser implements StringIterator {
 
     getEmbeddedFragment(index: number): FragmentNode {
         return this.embeddedIndexedFragments.get(index) as FragmentNode;
+    }
+
+    getEmbeddedFragments(): FragmentNode[] {
+        const fragments: FragmentNode[] = [];
+
+        this.embeddedIndexedFragments.forEach((fragment) => {
+            fragments.push(fragment);
+        });
+
+        return fragments;
     }
 
     hasFragments() {
