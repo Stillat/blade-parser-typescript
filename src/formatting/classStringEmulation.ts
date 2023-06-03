@@ -1,6 +1,6 @@
 import { StringUtilities } from '../utilities/stringUtilities';
 import { BladeDocument } from '../document/bladeDocument';
-import { LiteralNode, SwitchStatementNode, ConditionNode, DirectiveNode, BladeEchoNode, ForElseNode, BladeCommentNode, BladeComponentNode, InlinePhpNode } from '../nodes/nodes';
+import { LiteralNode, SwitchStatementNode, ConditionNode, DirectiveNode, BladeEchoNode, ForElseNode, BladeCommentNode, BladeComponentNode, InlinePhpNode, BladeEscapedEchoNode, BladeEntitiesEchoNode } from '../nodes/nodes';
 import { ClassEmulator } from '../parser/classEmulator';
 import { PhpValidator } from '../parser/php/phpValidator';
 import { ParserOptions, getParserOptions } from '../parser/parserOptions';
@@ -97,7 +97,25 @@ export class ClassStringEmulation {
                     }
                 }
             } else if (node instanceof BladeEchoNode) {
-                stringResults += node.sourceContent;
+                // TODO: Configurable.
+                if (!node.hasValidPhp()) {
+                    stringResults += node.sourceContent;
+                } else {
+                    const phpEmulate = new ClassEmulator(),
+                        echoResults = phpEmulate.emulatePhpNode(node.content);
+                    let start = '{{ ',
+                        end = ' }}';
+
+                    if (node instanceof BladeEscapedEchoNode) {
+                        start = '{!! ';
+                        end = ' !!}';
+                    } else if (node instanceof BladeEntitiesEchoNode) {
+                        start = '{{{ ';
+                        end = ' }}}';
+                    }
+
+                    stringResults += start + echoResults + end;
+                }
             } else if (node instanceof ForElseNode) {
                 stringResults += node.nodeContent;
             } else if (node instanceof BladeCommentNode) {

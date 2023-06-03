@@ -9,7 +9,7 @@ export class ClassEmulator {
     private phpStructuresAnalyzer: PhpStructuresAnalyzer;
     private stringParser: InlineStringParser;
     private mergeRanges: ILabeledRange[] = [];
-    private charsToAvoid: string[] = ["\n", '$', '{',];
+    private charsToAvoid: string[] = ["\n", '$', '{', '"', "'"];
 
     constructor() {
         this.phpStructuresAnalyzer = new PhpStructuresAnalyzer();
@@ -61,7 +61,14 @@ export class ClassEmulator {
             }
         });
 
-        emulateDocument = formatAsHtmlStrings(emulateDocument);
+        try {
+            emulateDocument = formatAsHtmlStrings(emulateDocument);
+        } catch (err) {
+            // If the transformation process failed, we cannot safely
+            // continue with anything and to not have things get
+            // destroyed we will simply return the original.
+            return content;
+        }
 
         // Now that we have formatted our emulated document,
         // we need to get the newly transformed strings.

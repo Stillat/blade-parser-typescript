@@ -1,4 +1,4 @@
-import { Engine, If, Call, Node } from 'php-parser';
+import { Engine, If, Call, Node, Variable, PropertyLookup, Identifier } from 'php-parser';
 import { ILabeledRange } from '../nodes/labeledRange';
 
 /**
@@ -60,16 +60,32 @@ export class PhpStructuresAnalyzer {
                 });
             } else if (node.kind == 'call') {
                 const callStatement = node as Call;
+                let addRange = true;
 
-                if (callStatement.loc == null) {
-                    foundUnknownLocations = true;
+                if (callStatement.what.kind == 'propertylookup') {
+                    const lookup = callStatement.what as unknown as PropertyLookup;
+
+                    if (lookup.offset.kind == 'identifier') {
+                        const identifier = lookup.offset as Identifier;
+                        
+                        if (identifier.name == 'class') {
+                            addRange = false;
+                        }
+                    }
+
                 }
 
-                ranges.push({
-                    label: 'call',
-                    start: (callStatement.loc?.start.offset ?? -1) - locationOffset,
-                    end: (callStatement.loc?.end.offset ?? -1) - locationOffset
-                });
+                if (addRange) {
+                    if (callStatement.loc == null) {
+                        foundUnknownLocations = true;
+                    }
+
+                    ranges.push({
+                        label: 'call',
+                        start: (callStatement.loc?.start.offset ?? -1) - locationOffset,
+                        end: (callStatement.loc?.end.offset ?? -1) - locationOffset
+                    });
+                }
             }
 
             for (const key in node) {
@@ -84,4 +100,8 @@ export class PhpStructuresAnalyzer {
         this.hasStructuresWithUnknownLocations = foundUnknownLocations;
         this.structures = ranges;
     }
+}
+
+function isObject(variable: any): boolean {
+    return typeof variable === 'object' && variable !== null;
 }
