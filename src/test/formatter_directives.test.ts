@@ -201,7 +201,7 @@ asdf
             'dark' => filament()->hasDarkModeForced(),
         ])`;
         const out = `@class([
-    "filament antialiased min-h-screen js-focus-visible",
+    "filament js-focus-visible min-h-screen antialiased",
     "dark" => filament()->hasDarkModeForced(),
 ])
 `;
@@ -419,7 +419,7 @@ asdf
     <li>
         <button type="button" wire:loading.attr="disabled">
             <x-component::name
-                class="w-4 h-4 text-primary-500"
+                class="text-primary-500 h-4 w-4"
                 wire:loading.delay
                 wire:target="{{ one }} {{ two }}"
             />
@@ -505,10 +505,10 @@ asdf
         </div>
 `;
         const out = `<div>
-    <div class="relative group max-w-md">
+    <div class="group relative max-w-md">
         <span
             @class([
-                "absolute inset-y-0 left-0 flex items-center justify-center w-10 h-10 text-gray-500 pointer-events-none group-focus-within:text-primary-500",
+                "group-focus-within:text-primary-500 pointer-events-none absolute inset-y-0 left-0 flex h-10 w-10 items-center justify-center text-gray-500",
                 "dark:text-gray-400" => config("filament.dark_mode"),
             ])
         ></span>
