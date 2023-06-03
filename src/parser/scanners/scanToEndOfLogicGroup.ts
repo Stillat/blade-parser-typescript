@@ -26,6 +26,7 @@ export function scanToEndOfLogicGroup(iterator: StringIterator): LogicGroupScanR
 
             if (iterator.getNext() === null && iterator.getCurrent() !== stringStart) {
                 iterator.updateIndex(recoveryIndex + 1);
+                iterator.encounteredFailure();
             }
             continue;
         }

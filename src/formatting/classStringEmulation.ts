@@ -1,70 +1,125 @@
-import { Parser } from 'php-parser';
 import { StringRemover } from '../parser/stringRemover';
 import { formatAsHtml } from './prettier/utils';
 import { StringUtilities } from '../utilities/stringUtilities';
-
-export interface IClassEmulationConfig {
-    allowedDirectives: string[],
-    runInPhp: boolean,
-    excludePatterns: string[]
-}
+import { BladeDocument } from '../document/bladeDocument';
+import { LiteralNode, SwitchStatementNode, ConditionNode, DirectiveNode, BladeEchoNode, ForElseNode, BladeCommentNode, BladeComponentNode, InlinePhpNode, BladePhpNode } from '../nodes/nodes';
+import { ClassEmulator } from '../parser/classEmulator';
+import { PhpValidator } from '../parser/php/phpValidator';
+import { ParserOptions, getParserOptions } from '../parser/parserOptions';
 
 export class ClassStringEmulation {
-    extractContent(input: string): string[] {
-        const regex = /class-string-emulate-start([\s\S]*?)class-string-emulate-end/g;
-        const matches = input.match(regex);
-        if (matches) {
-            return matches.map((match) => match.replace('class-string-emulate-start', '').replace('class-string-emulate-end', '').trim());
-        }
-        return [];
+    private ignoreDirectives: string[] = ['if', 'unless', 'elseif'];
+    private phpValidator: PhpValidator | null = null;
+    private parserOptions: ParserOptions;
+
+    constructor() {
+        this.parserOptions = getParserOptions();
+    }
+
+    withPhpValidator(phpValidator: PhpValidator | null) {
+        this.phpValidator = phpValidator;
+
+        return this;
+    }
+
+    withParserOptions(parserOptions: ParserOptions) {
+        this.parserOptions = parserOptions;
+
+        return this;
     }
 
     transform(content: string): string {
-        let tContent = content;
-        this.extractContent(content).forEach((value) => {
-            const remover = new StringRemover();
-            let newContent = value;
-            remover.remove(value);
-            let extracted = Array.from(new Set(remover.getStrings()));
-            let newDoc = '';
+        const document = new BladeDocument();
 
-            extracted.forEach((extraction) => {
-                newDoc += `<!-- "Emulate:${extraction}"-->\n`;
-                newDoc += `<div class="${extraction}"></div>\n`;
-            });
+        document.getParser()
+            .withParserOptions(this.parserOptions)
+            .withPhpValidator(this.phpValidator);
+        document.loadString(content);
 
-            newDoc = formatAsHtml(newDoc);
-            remover.remove(newDoc);
-            extracted = Array.from(new Set(remover.getStrings()));
+        const nodes = document.getAllNodes();
 
-            const newClasses: string[] = [],
-                resultMapping: Map<string, string> = new Map();
+        // If something went horribly wrong while parsing
+        // the input document, we will skip class string
+        // emulation, as we cannot guarantee anything
+        // about the placement of strings inside.
+        if (document.getParser().getDidRecovery()) {
+            return content;
+        }
 
-            for (let i = 0; i < extracted.length; i++) {
-                let line = extracted[i];
+        let stringResults = '';
 
-                if (line.startsWith('Emulate:')) {
-                    line = line.substring('Emulate:'.length);
-                    newClasses.push(line);
+        for (let i = 0; i < nodes.length; i++) {
+            const node = nodes[i];
+
+            if (node instanceof LiteralNode) {
+                stringResults += node.content;
+            } else if (node instanceof SwitchStatementNode) {
+                stringResults += node.nodeContent;
+            } else if (node instanceof ConditionNode) {
+                stringResults += node.nodeContent;
+            } else if (node instanceof DirectiveNode) {
+                if (this.ignoreDirectives.includes(node.directiveName)) {
+                    stringResults += node.sourceContent;
+                } else {
+                    if (node.directiveName == 'php') {
+                        if (node.isClosedBy != null) {
+                            // TODO: Configurable.
+                            if (!node.hasValidPhp()) {
+                                stringResults += node.sourceContent + node.documentContent;
+                            } else {
+                                const phpEmulate = new ClassEmulator();
+                                stringResults += '@php' + phpEmulate.emulatePhpNode(node.documentContent);
+                            }
+                        } else {
+                            stringResults += node.sourceContent;
+                        }
+                    } else if (node.directiveName == 'verbatim') {
+                        stringResults += node.sourceContent + node.innerContent;
+                    } else {
+                        const dirEmulate = new ClassEmulator();
+                        stringResults += dirEmulate.emulateString(node.sourceContent);
+
+                        if (i + 1 < nodes.length && nodes[i + 1] instanceof LiteralNode) {
+                            const literal = nodes[i + 1] as LiteralNode;
+
+                            if (literal.content.length == 0) {
+                                continue;
+                            }
+
+                            const firstCh = literal.content[0];
+
+                            if (StringUtilities.ctypePunct(firstCh)) {
+                                continue;
+                            }
+
+                            if (!StringUtilities.ctypeSpace(firstCh)) {
+                                stringResults += ' ';
+                            }
+                        }
+                    }
                 }
-
-                if (i + 1 < extracted.length) {
-                    resultMapping.set(line, extracted[i + 1]);
+            } else if (node instanceof BladeEchoNode) {
+                stringResults += node.sourceContent;
+            } else if (node instanceof ForElseNode) {
+                stringResults += node.nodeContent;
+            } else if (node instanceof BladeCommentNode) {
+                stringResults += node.sourceContent;
+            } else if (node instanceof BladeComponentNode) {
+                stringResults += node.sourceContent;
+            } else if (node instanceof InlinePhpNode) {
+                if (!node.hasValidPhp()) {
+                    stringResults += node.sourceContent;
+                } else {
+                    // TODO: Configurable.
+                    const phpEmulate = new ClassEmulator();
+                    // stringResults += phpEmulate.emulatePhpTag(node.sourceContent);
+                    stringResults += phpEmulate.emulatePhpTag(node.sourceContent);
                 }
-
-                i += 1;
+            } else {
+                debugger;
             }
+        }
 
-
-            newClasses.sort((a, b) => b.length - a.length).forEach((classString) => {
-                if (resultMapping.has(classString)) {
-                    newContent = StringUtilities.replaceAllInString(newContent, classString, resultMapping.get(classString) as string);
-                }
-            });
-
-            tContent = tContent.replace(value, newContent);
-        });
-
-        return tContent;
+        return stringResults;
     }
 }

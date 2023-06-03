@@ -1,4 +1,4 @@
-import { AbstractNode, BladeEchoNode, InlinePhpNode, LiteralNode } from '../nodes/nodes';
+import { AbstractNode, InlinePhpNode, LiteralNode } from '../nodes/nodes';
 import { StringUtilities } from '../utilities/stringUtilities';
 
 export class InlinePhpAnalyzer {

@@ -19,7 +19,9 @@ export class SyntaxReflow implements StringIterator {
     private tokens: AbstractNode[] = [];
     private static breakOperators: string[] = ['!'];
     public static instance: SyntaxReflow = new SyntaxReflow();
-
+    encounteredFailure() {
+        return;
+    }
     updateIndex(index: number): void {
         this.currentIndex = index;
     }

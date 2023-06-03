@@ -145,6 +145,14 @@ export function formatAsHtml(text: string) {
     });
 }
 
+export function formatAsHtmlStrings(text: string) {
+    return prettier.format(text, {
+        ...htmlOptions,
+        proseWrap: 'never',
+        parser: 'html'
+    });
+}
+
 function resolvePhpOptions(defaultOptions: ParserOptions, transformOptions: TransformOptions, options: ParserOptions | null = null) {
     let opts = defaultOptions;
 

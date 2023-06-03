@@ -2126,9 +2126,6 @@ export class Transformer {
             results = results.replace(replace, this.dumpPreservedNodes(nodes));
         });
 
-
-        results = (new ClassStringEmulation()).transform(results);
-
         return results;
     }
 

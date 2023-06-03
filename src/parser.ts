@@ -1,19 +1,28 @@
 // Internal file used to debug the parser.
 
-import { StringRemover } from './parser/stringRemover';
+import { PhpStructuresAnalyzer } from './analyzers/phpStructuresAnalyzer';
+import { ClassStringEmulation } from './formatting/classStringEmulation';
+import { formatBladeString, formatBladeStringWithPint } from './formatting/prettier/utils';
+import { ClassEmulator } from './parser/classEmulator';
+import { InlineStringParser } from './parser/inlineStringParser';
 
-const remover = new StringRemover();
+const phpCode = `<?php
+    $classList = 'text-sm';
 
-const input = `
-<div @class(['flex text-center'])></div>
+    if ((($somethingElse != 
+        'text-lg'))) {
+            if ((($somethingElse != 
+                'text-lg'))) {
+                    if ((($somethingElse != 
+                        'text-lg'))) {
+                        
+                    }
+            }
+    }`;
 
-@if ('flex text-center' != 'that')
-
-@endif
+const temp =    `
+<x-alert @param($value   $= + $anotherValue) />
 `;
 
-
-remover.remove(input);
-console.log(remover.getStrings());
-
+console.log(formatBladeStringWithPint(temp));
 debugger;

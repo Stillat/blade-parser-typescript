@@ -10,7 +10,9 @@ export class StringSplitter implements StringIterator {
     private currentIndex = 0;
     private inputLen = 0;
     private currentContent: string[] = [];
-
+    encounteredFailure() {
+        return;
+    }
     updateIndex(index: number): void {
         this.currentIndex = index;
     }

@@ -7,10 +7,11 @@ import { FormattingOptions } from '../formattingOptions';
 import { getEnvSettings, getPrettierFilePath } from '../optionDiscovery';
 import { PrettierDocumentFormatter } from './prettierDocumentFormatter';
 import { getHtmlOptions, getOptionsAdjuster, setOptions } from './utils';
+import { ClassStringEmulation } from '../classStringEmulation';
 
 let prettierOptions: prettier.ParserOptions,
-    transformOptions:TransformOptions,
-    parserOptions:ParserOptions;
+    transformOptions: TransformOptions,
+    parserOptions: ParserOptions;
 let bladeOptions: FormattingOptions | null = null;
 
 const plugin: prettier.Plugin = {
@@ -45,12 +46,20 @@ const plugin: prettier.Plugin = {
                 parserOptions = bladeOptions as ParserOptions;
                 transformOptions.tabSize = getHtmlOptions().tabWidth;
 
+                // TODO: Global way to disable this entirely.
+                const classStringEmulation = new ClassStringEmulation(),
+                    phpValidator = new PhpParserPhpValidator(),
+                    prettierText = classStringEmulation
+                        .withParserOptions(parserOptions)
+                        .withPhpValidator(phpValidator)
+                        .transform(text);
+
                 const document = new BladeDocument();
                 document.getParser()
                     .withParserOptions(parserOptions)
-                    .withPhpValidator(new PhpParserPhpValidator());
+                    .withPhpValidator(phpValidator);
 
-                return document.loadString(text);
+                return document.loadString(prettierText);
             },
             locStart: () => 0,
             locEnd: () => 0,

@@ -18,7 +18,9 @@ export class SimpleArrayParser implements StringIterator {
     private createdArrays: ArrayNode[] = [];
     private keyValueTokens: number = 0;
     private elements: number = 0;
-
+    encounteredFailure() {
+        return;
+    }
     updateIndex(index: number): void {
         this.currentIndex = index;
     }

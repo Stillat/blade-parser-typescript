@@ -12,7 +12,9 @@ export class StringRemover implements StringIterator {
     private inputLen = 0;
     private currentContent: string[] = [];
     private strings: string[] = [];
-
+    encounteredFailure() {
+        return;
+    }
     updateIndex(index: number): void {
         this.currentIndex = index;
     }

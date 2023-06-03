@@ -19,7 +19,9 @@ export class PhpOperatorReflow implements StringIterator {
     private tokens: AbstractNode[] = [];
     private static breakOperators: string[] = ['!'];
     public static instance: PhpOperatorReflow = new PhpOperatorReflow();
-
+    encounteredFailure() {
+        return;
+    }
     updateIndex(index: number): void {
         this.currentIndex = index;
     }

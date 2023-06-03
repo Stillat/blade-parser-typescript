@@ -11,4 +11,5 @@ export interface StringIterator {
     getChar(index: number): string;
     getSeedOffset(): number;
     getContentSubstring(from: number, length: number): string;
+    encounteredFailure(): void;
 }

@@ -1,4 +1,4 @@
-import {StringRemover} from './stringRemover';
+import { StringRemover } from './stringRemover';
 import { ConditionalRewriteAnalyzer } from '../analyzers/conditionalRewriteAnalyzer';
 import { DirectivePairAnalyzer } from '../analyzers/directivePairAnalyzer';
 import { DirectiveStack } from '../analyzers/directiveStack';
@@ -101,6 +101,7 @@ export class DocumentParser implements StringIterator {
     private doesHaveUnclosedRegions = false;
     private parserOptions: ParserOptions;
     private phpValidator: PhpValidator | null = null;
+    private didRecoveryLogic: boolean = false;
 
     constructor() {
         this.componentParser = new ComponentParser(this);
@@ -109,7 +110,9 @@ export class DocumentParser implements StringIterator {
 
         this.parserOptions = getParserOptions();
     }
-
+    encounteredFailure() {
+        this.didRecoveryLogic = true;
+    }
     withPhpValidator(validator: PhpValidator | null) {
         this.phpValidator = validator;
 
@@ -226,6 +229,10 @@ export class DocumentParser implements StringIterator {
         this.lastBladeEndIndex = -1;
     }
 
+    getDidRecovery(): boolean {
+        return this.didRecoveryLogic;
+    }
+
     private isStartingPhp() {
         if (this.cur == DocumentParser.Punctuation_LessThan && this.next == DocumentParser.Punctuation_QuestionMark) {
             const fetch = this.fetchAt(this.currentChunkOffset, 5).toLowerCase();
@@ -330,7 +337,7 @@ export class DocumentParser implements StringIterator {
 
     private endsWithTld(s: string): boolean {
         const regex = /\.[a-z]{2,63}$/i;
-    
+
         return regex.test(s);
     }
 
@@ -461,7 +468,7 @@ export class DocumentParser implements StringIterator {
                 }
 
                 const rmResults = StringRemover.fromText(preFetchCheck);
-                
+
                 if (rmResults.includes('.') && this.endsWithTld(rmResults)) {
                     return;
                 }
@@ -1539,9 +1546,11 @@ export class DocumentParser implements StringIterator {
                 if (newlineRecoveryIndex != -1) {
                     this.currentIndex = newlineRecoveryIndex - 2;
                     this.currentContent = this.currentContent.slice(0, newlineRecoveryIndex - 2);
+                    this.didRecoveryLogic = true;
                 } else if (spaceRecoveryIndex != -1) {
                     this.currentIndex = spaceRecoveryIndex - 2;
                     this.currentContent = this.currentContent.slice(0, spaceRecoveryIndex - 2);
+                    this.didRecoveryLogic = true;
                 }
             }
 
@@ -1613,9 +1622,11 @@ export class DocumentParser implements StringIterator {
                 if (newlineRecoveryIndex != -1) {
                     this.currentIndex = newlineRecoveryIndex - 2;
                     this.currentContent = this.currentContent.slice(0, newlineRecoveryIndex - 2);
+                    this.didRecoveryLogic = true;
                 } else if (spaceRecoveryIndex != -1) {
                     this.currentIndex = spaceRecoveryIndex - 2;
                     this.currentContent = this.currentContent.slice(0, spaceRecoveryIndex - 2);
+                    this.didRecoveryLogic = true;
                 }
             }
 
@@ -1686,9 +1697,11 @@ export class DocumentParser implements StringIterator {
                 if (newlineRecoveryIndex != -1) {
                     this.currentIndex = newlineRecoveryIndex - 2;
                     this.currentContent = this.currentContent.slice(0, newlineRecoveryIndex - 2);
+                    this.didRecoveryLogic = true;
                 } else if (spaceRecoveryIndex != -1) {
                     this.currentIndex = spaceRecoveryIndex - 2;
                     this.currentContent = this.currentContent.slice(0, spaceRecoveryIndex - 2);
+                    this.didRecoveryLogic = true;
                 }
             }
 
@@ -1787,9 +1800,11 @@ export class DocumentParser implements StringIterator {
                 if (newlineRecoveryIndex != -1) {
                     this.currentIndex = newlineRecoveryIndex - 2;
                     this.currentContent = this.currentContent.slice(0, newlineRecoveryIndex - 2);
+                    this.didRecoveryLogic = true;
                 } else if (spaceRecoveryIndex != -1) {
                     this.currentIndex = spaceRecoveryIndex - 2;
                     this.currentContent = this.currentContent.slice(0, spaceRecoveryIndex - 2);
+                    this.didRecoveryLogic = true;
                 }
             }
 
@@ -1872,9 +1887,11 @@ export class DocumentParser implements StringIterator {
                 if (newlineRecoveryIndex != -1) {
                     this.currentIndex = newlineRecoveryIndex - 2;
                     this.currentContent = this.currentContent.slice(0, newlineRecoveryIndex - 2);
+                    this.didRecoveryLogic = true;
                 } else if (spaceRecoveryIndex != -1) {
                     this.currentIndex = spaceRecoveryIndex - 2;
                     this.currentContent = this.currentContent.slice(0, spaceRecoveryIndex - 2);
+                    this.didRecoveryLogic = true;
                 }
             }
 
@@ -2122,10 +2139,11 @@ export class DocumentParser implements StringIterator {
                     this.checkCurrentOffsets();
                     const logicGroupResults = scanToEndOfLogicGroup(this);
 
-                    let directive:DirectiveNode;
+                    let directive: DirectiveNode;
 
                     if (logicGroupResults.foundEnd) {
                         directive = this.makeDirectiveWithParameters(directiveName.trim(), directiveNameStartsOn, directiveNameEndsOn, logicGroupResults);
+                        this.didRecoveryLogic = true;
                     } else {
                         directive = this.makeDirective(directiveName.trim(), directiveNameStartsOn, directiveNameEndsOn);
                     }
@@ -2152,12 +2170,12 @@ export class DocumentParser implements StringIterator {
                 directiveName = this.currentContent.join('');
                 this.currentContent = [];
                 const logicGroupResults = scanToEndOfLogicGroup(this);
-                let directive:DirectiveNode;
+                let directive: DirectiveNode;
 
                 if (logicGroupResults.foundEnd) {
                     directive = this.makeDirectiveWithParameters(directiveName.trim(), directiveNameStartsOn, directiveNameEndsOn, logicGroupResults)
                 } else {
-                    directive = this.makeDirective(directiveName.trim(), directiveNameStartsOn, directiveNameEndsOn);
+                    directive = this.makeDirective(directiveName.trim(), directiveNameStartsOn, directiveNameEndsOn + 1);
                 }
 
                 this.lastNode = directive;

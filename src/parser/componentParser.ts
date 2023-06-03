@@ -30,7 +30,9 @@ export class ComponentParser implements StringIterator {
     constructor(document: DocumentParser) {
         this.document = document;
     }
-
+    encounteredFailure() {
+        return;
+    }
     pushChar(value: string) {
         this.currentContent.push(value);
     }

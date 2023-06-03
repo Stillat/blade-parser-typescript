@@ -32,7 +32,9 @@ export class FragmentsParser implements StringIterator {
     private fragmentOpeningIndex: Map<number, number> = new Map();
     private indexedFragments: Map<number, FragmentNode> = new Map();
     private embeddedIndexedFragments: Map<number, FragmentNode> = new Map();
-
+    encounteredFailure() {
+        return;
+    }
     updateIndex(index: number): void {
         this.currentIndex = index;
     }
