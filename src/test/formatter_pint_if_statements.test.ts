@@ -396,7 +396,7 @@ A
     >
         {{-- Deliberately poor formatting to ensure that the asterisk sticks to the final word in the label. --}}
         {{ $slot }}@if ($required && $isMarkedAsRequired && ! $isDisabled)<span class="whitespace-nowrap">
-                <sup class="font-medium text-danger-700 dark:text-danger-400">*</sup>
+                <sup class="text-danger-700 dark:text-danger-400 font-medium">*</sup>
             </span>
         @endif
     </span>
