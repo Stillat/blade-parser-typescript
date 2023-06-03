@@ -157,7 +157,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_columns_text_input_co
                     'type' => $type,
                 ])
                 ->class([
-                    'ms-0.5 text-gray-900 inline-block transition duration-75 rounded-lg shadow-sm outline-none sm:text-sm focus:ring-primary-500 focus:ring-1 focus:ring-inset focus:border-primary-500 disabled:opacity-70 dark:bg-gray-700 dark:text-white dark:focus:border-primary-500',
+                    'focus:ring-primary-500 focus:border-primary-500 dark:focus:border-primary-500 ms-0.5 inline-block rounded-lg text-gray-900 shadow-sm outline-none transition duration-75 focus:ring-1 focus:ring-inset disabled:opacity-70 dark:bg-gray-700 dark:text-white sm:text-sm',
                     match ($getAlignment()) {
                         'center' => 'text-center',
                         'end' => 'text-end',

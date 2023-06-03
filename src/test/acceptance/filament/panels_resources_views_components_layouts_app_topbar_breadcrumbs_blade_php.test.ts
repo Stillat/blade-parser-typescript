@@ -51,7 +51,7 @@ suite('Pint Transformer Accpetance: panels_resources_views_components_layouts_ap
 
             @if (! $loop->last)
                 <li
-                    class="h-4 border-e border-gray-300 -skew-x-12 dark:border-gray-500"
+                    class="h-4 -skew-x-12 border-e border-gray-300 dark:border-gray-500"
                 ></li>
             @endif
         @endforeach

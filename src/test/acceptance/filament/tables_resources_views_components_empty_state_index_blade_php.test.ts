@@ -60,7 +60,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_empty_stat
     {{ $attributes->class(['filament-tables-empty-state flex flex-1 flex-col items-center justify-center p-6 mx-auto space-y-6 text-center bg-white dark:bg-gray-800']) }}
 >
     <div
-        class="filament-tables-empty-state-icon-wrapper flex items-center justify-center w-16 h-16 text-primary-500 rounded-full bg-primary-50 dark:bg-gray-700"
+        class="filament-tables-empty-state-icon-wrapper text-primary-500 bg-primary-50 flex h-16 w-16 items-center justify-center rounded-full dark:bg-gray-700"
     >
         <x-filament::icon
             :name="$icon"

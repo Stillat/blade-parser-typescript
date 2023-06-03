@@ -85,7 +85,7 @@ suite('Pint Transformer Accpetance: infolists_resources_views_components_entry_w
 
     @if (count($actions))
         <div
-            class="filament-infolists-entry-wrapper-hint-action flex gap-1 items-center"
+            class="filament-infolists-entry-wrapper-hint-action flex items-center gap-1"
         >
             @foreach ($actions as $action)
                 {{ $action }}

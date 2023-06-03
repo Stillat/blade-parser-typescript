@@ -78,7 +78,7 @@ suite('Pint Transformer Accpetance: panels_resources_views_components_layouts_ca
 
 <x-filament::layouts.base :livewire="$livewire">
     <div
-        class="filament-card-layout flex items-center justify-center min-h-screen py-14"
+        class="filament-card-layout flex min-h-screen items-center justify-center py-14"
     >
         <div
             @class([
@@ -103,7 +103,7 @@ suite('Pint Transformer Accpetance: panels_resources_views_components_layouts_ca
                 class="filament-card-layout-card relative space-y-4 rounded-xl bg-white/50 p-8 shadow-2xl ring-1 ring-gray-950/5 backdrop-blur-xl dark:bg-gray-900/50 dark:ring-white/20"
             >
                 @if ($livewire->hasLogo())
-                    <div class="flex justify-center w-full">
+                    <div class="flex w-full justify-center">
                         <x-filament::logo />
                     </div>
                 @endif
@@ -111,7 +111,7 @@ suite('Pint Transformer Accpetance: panels_resources_views_components_layouts_ca
                 <div class="space-y-2">
                     @if (filled($heading ??= $livewire->getHeading()))
                         <h2
-                            class="text-2xl font-bold tracking-tight text-center"
+                            class="text-center text-2xl font-bold tracking-tight"
                         >
                             {{ $heading }}
                         </h2>
@@ -119,7 +119,7 @@ suite('Pint Transformer Accpetance: panels_resources_views_components_layouts_ca
 
                     @if (filled($subheading ??= $livewire->getSubHeading()))
                         <h3
-                            class="text-sm text-gray-600 font-medium tracking-tight text-center dark:text-gray-300"
+                            class="text-center text-sm font-medium tracking-tight text-gray-600 dark:text-gray-300"
                         >
                             {{ $subheading }}
                         </h3>
@@ -136,7 +136,7 @@ suite('Pint Transformer Accpetance: panels_resources_views_components_layouts_ca
 
         @if (filament()->auth()->check())
             <div
-                class="absolute top-0 end-0 flex items-center justify-end p-2 w-full"
+                class="absolute end-0 top-0 flex w-full items-center justify-end p-2"
             >
                 @if (filament()->hasDatabaseNotifications())
                     @livewire('filament.core.database-notifications')

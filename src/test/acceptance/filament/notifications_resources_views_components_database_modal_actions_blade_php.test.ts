@@ -62,7 +62,7 @@ suite('Pint Transformer Accpetance: notifications_resources_views_components_dat
                     tabindex="-1"
                     wire:target="markAllNotificationsAsRead"
                     wire:loading.attr="disabled"
-                    class="disabled:opacity-70 disabled:pointer-events-none"
+                    class="disabled:pointer-events-none disabled:opacity-70"
                 >
                     {{ __('filament-notifications::database.modal.buttons.mark_all_as_read.label') }}
                 </x-filament::link>
@@ -78,7 +78,7 @@ suite('Pint Transformer Accpetance: notifications_resources_views_components_dat
                 tabindex="-1"
                 wire:target="clearNotifications"
                 wire:loading.attr="disabled"
-                class="disabled:opacity-70 disabled:pointer-events-none"
+                class="disabled:pointer-events-none disabled:opacity-70"
             >
                 {{ __('filament-notifications::database.modal.buttons.clear.label') }}
             </x-filament::link>

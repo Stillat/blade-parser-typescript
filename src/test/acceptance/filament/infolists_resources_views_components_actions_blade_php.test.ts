@@ -35,7 +35,7 @@ suite('Pint Transformer Accpetance: infolists_resources_views_components_actions
             ], escape: false)
             ->merge($getExtraAttributes(), escape: false)
             ->class([
-                'filament-infolists-actions-component flex flex-col h-full',
+                'filament-infolists-actions-component flex h-full flex-col',
                 match ($verticalAlignment = $getVerticalAlignment()) {
                     'center' => 'justify-center',
                     'end' => 'justify-end',

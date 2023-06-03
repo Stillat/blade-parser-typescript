@@ -208,10 +208,10 @@ suite('Pint Transformer Accpetance: tables_resources_views_columns_toggle_column
             "
             @disabled($isDisabled())
             type="button"
-            class="relative inline-flex shrink-0 ms-4 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 outline-none disabled:opacity-70 disabled:pointer-events-none"
+            class="relative ms-4 inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent outline-none transition-colors duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-70"
         >
             <span
-                class="pointer-events-none relative inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 ease-in-out transition duration-200"
+                class="pointer-events-none relative inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
                 x-bind:class="{
                     'translate-x-5 rtl:-translate-x-5': state,
                     'translate-x-0': ! state,
@@ -238,7 +238,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_columns_toggle_column
             </span>
 
             <span
-                class="absolute inset-0 h-full w-full flex items-center justify-center transition-opacity"
+                class="absolute inset-0 flex h-full w-full items-center justify-center transition-opacity"
                 aria-hidden="true"
                 x-bind:class="{
                     'opacity-100 ease-in duration-200': state,

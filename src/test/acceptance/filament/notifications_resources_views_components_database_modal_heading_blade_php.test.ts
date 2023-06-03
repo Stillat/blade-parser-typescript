@@ -31,7 +31,7 @@ suite('Pint Transformer Accpetance: notifications_resources_views_components_dat
 
     @if ($unreadNotificationsCount)
         <span
-            class="inline-flex absolute items-center justify-center top-0 ms-1 min-w-[1rem] h-4 rounded-full text-xs text-primary-700 bg-primary-500/10 dark:text-primary-500"
+            class="text-primary-700 bg-primary-500/10 dark:text-primary-500 absolute top-0 ms-1 inline-flex h-4 min-w-[1rem] items-center justify-center rounded-full text-xs"
         >
             {{ $unreadNotificationsCount }}
         </span>

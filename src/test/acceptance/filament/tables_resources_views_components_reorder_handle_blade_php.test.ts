@@ -25,7 +25,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_reorder_ha
             ->merge([
                 'type' => 'button',
             ], escape: false)
-            ->class(['filament-tables-reorder-handle text-gray-500 cursor-move transition group-hover:text-primary-500 dark:text-gray-400 dark:group-hover:text-primary-400'])
+            ->class(['filament-tables-reorder-handle group-hover:text-primary-500 dark:group-hover:text-primary-400 cursor-move text-gray-500 transition dark:text-gray-400'])
     }}
 >
     <x-filament::icon

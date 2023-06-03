@@ -118,7 +118,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_columns_checkbox_colu
         {{
             $attributes
                 ->merge($getExtraInputAttributes(), escape: false)
-                ->class(['ms-4 text-primary-600 transition duration-75 rounded shadow-sm text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500 disabled:opacity-70 dark:bg-gray-700 dark:checked:bg-primary-500'])
+                ->class(['text-primary-600 focus:border-primary-500 focus:ring-primary-500 dark:checked:bg-primary-500 ms-4 rounded text-sm shadow-sm outline-none transition duration-75 focus:ring-2 disabled:opacity-70 dark:bg-gray-700'])
         }}
         x-bind:class="{
             'opacity-70 pointer-events-none': isLoading,

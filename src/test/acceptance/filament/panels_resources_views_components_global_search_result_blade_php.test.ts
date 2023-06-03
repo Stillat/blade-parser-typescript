@@ -48,7 +48,7 @@ suite('Pint Transformer Accpetance: panels_resources_views_components_global_sea
 
 <li {{ $attributes->class(['filament-global-search-result']) }}>
     <div
-        class="relative block px-6 py-4 focus:bg-gray-500/5 hover:bg-gray-500/5 focus:ring-1 focus:ring-gray-300"
+        class="relative block px-6 py-4 hover:bg-gray-500/5 focus:bg-gray-500/5 focus:ring-1 focus:ring-gray-300"
     >
         <a href="{{ $url }}" class="">
             <p class="font-medium dark:text-gray-200">
@@ -56,7 +56,7 @@ suite('Pint Transformer Accpetance: panels_resources_views_components_global_sea
             </p>
 
             <p
-                class="text-sm space-x-2 rtl:space-x-reverse font-medium text-gray-500 dark:text-gray-400"
+                class="space-x-2 text-sm font-medium text-gray-500 rtl:space-x-reverse dark:text-gray-400"
             >
                 @foreach ($details as $label => $value)
                     <span>

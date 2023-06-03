@@ -47,9 +47,9 @@ suite('Pint Transformer Accpetance: panels_resources_views_components_global_sea
         {{ __('filament::global-search.field.label') }}
     </label>
 
-    <div class="relative group max-w-md">
+    <div class="group relative max-w-md">
         <span
-            class="absolute inset-y-0 start-0 flex items-center justify-center w-10 h-10 pointer-events-none"
+            class="pointer-events-none absolute inset-y-0 start-0 flex h-10 w-10 items-center justify-center"
         >
             <x-filament::icon
                 name="heroicon-m-magnifying-glass"
@@ -77,7 +77,7 @@ suite('Pint Transformer Accpetance: panels_resources_views_components_global_sea
             placeholder="{{ __('filament::global-search.field.placeholder') }}"
             type="search"
             autocomplete="off"
-            class="block w-full h-10 ps-10 bg-gray-400/10 placeholder-gray-500 border-transparent transition duration-75 rounded-lg outline-none focus:bg-white focus:placeholder-gray-400 focus:border-primary-500 focus:ring-1 focus:ring-inset focus:ring-primary-500 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-400"
+            class="focus:border-primary-500 focus:ring-primary-500 block h-10 w-full rounded-lg border-transparent bg-gray-400/10 ps-10 placeholder-gray-500 outline-none transition duration-75 focus:bg-white focus:placeholder-gray-400 focus:ring-1 focus:ring-inset dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-400"
         />
     </div>
 </div>

@@ -182,10 +182,10 @@ suite('Pint Transformer Accpetance: infolists_resources_views_components_entry_w
         </dt>
     @endif
 
-    <div class="grid gap-2 sm:grid-cols-3 sm:gap-4 sm:items-start">
+    <div class="grid gap-2 sm:grid-cols-3 sm:items-start sm:gap-4">
         @if (($label && (! $labelSrOnly)) || $labelPrefix || $labelSuffix || $hint || $hintIcon)
             <div
-                class="flex items-center justify-between gap-2 sm:gap-1 sm:items-start sm:flex-col sm:pt-1"
+                class="flex items-center justify-between gap-2 sm:flex-col sm:items-start sm:gap-1 sm:pt-1"
             >
                 @if ($label && (! $labelSrOnly))
                     <x-filament-infolists::entry-wrapper.label
@@ -212,7 +212,7 @@ suite('Pint Transformer Accpetance: infolists_resources_views_components_entry_w
             </div>
         @endif
 
-        <div class="space-y-2 sm:space-y-1 sm:col-span-2">
+        <div class="space-y-2 sm:col-span-2 sm:space-y-1">
             <dd
                 @if ($tooltip)
                     x-data="{}"

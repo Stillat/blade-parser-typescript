@@ -194,14 +194,14 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_toggle_blad
         }}
     >
         <span
-            class="pointer-events-none relative inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 ease-in-out transition duration-200"
+            class="pointer-events-none relative inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
             x-bind:class="{
                         'translate-x-5 rtl:-translate-x-5': state,
                         'translate-x-0': ! state,
                     }"
         >
             <span
-                class="absolute inset-0 h-full w-full flex items-center justify-center transition-opacity"
+                class="absolute inset-0 flex h-full w-full items-center justify-center transition-opacity"
                 aria-hidden="true"
                 x-bind:class="{
                             'opacity-0 ease-out duration-100': state,
@@ -229,7 +229,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_toggle_blad
             </span>
 
             <span
-                class="absolute inset-0 h-full w-full flex items-center justify-center transition-opacity"
+                class="absolute inset-0 flex h-full w-full items-center justify-center transition-opacity"
                 aria-hidden="true"
                 x-bind:class="{
                             'opacity-100 ease-in duration-200': state,

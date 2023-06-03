@@ -201,7 +201,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_tags_input_
                 <div wire:ignore>
                     <template x-if="state?.length" x-cloak>
                         <div
-                            class="relative w-full p-2 overflow-hidden flex flex-wrap gap-1 border-t dark:border-gray-600"
+                            class="relative flex w-full flex-wrap gap-1 overflow-hidden border-t p-2 dark:border-gray-600"
                         >
                             <template
                                 class="hidden"

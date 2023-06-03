@@ -17,7 +17,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_field_wrapp
     data-validation-error
     {{
         $attributes->class([
-            'filament-forms-field-wrapper-error-message text-sm text-danger-600 dark:text-danger-400',
+            'filament-forms-field-wrapper-error-message text-danger-600 dark:text-danger-400 text-sm',
         ])
     }}
 >

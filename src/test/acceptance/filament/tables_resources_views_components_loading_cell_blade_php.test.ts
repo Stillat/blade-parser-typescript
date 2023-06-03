@@ -8,8 +8,8 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_loading_ce
     <div class="h-4 bg-gray-300 rounded-md dark:bg-gray-600"></div>
 </td>
 `;
-        const output = `<td {{ $attributes->class(['w-full px-4 py-4 animate-pulse']) }}>
-    <div class="h-4 bg-gray-300 rounded-md dark:bg-gray-600"></div>
+        const output = `<td {{ $attributes->class(['w-full animate-pulse px-4 py-4']) }}>
+    <div class="h-4 rounded-md bg-gray-300 dark:bg-gray-600"></div>
 </td>
 `;
 

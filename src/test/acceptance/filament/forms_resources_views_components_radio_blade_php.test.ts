@@ -122,7 +122,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_radio_blade
                     'gap-2' => $isInline,
                 ])
             >
-                <div class="flex items-center h-5">
+                <div class="flex h-5 items-center">
                     <input
                         name="{{ $id }}"
                         id="{{ $id }}-{{ $value }}"

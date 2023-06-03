@@ -39,12 +39,12 @@ suite('Pint Transformer Accpetance: panels_resources_views_components_layouts_ap
 
 <span
     @class([
-        'inline-flex items-center justify-center ms-auto min-h-4 px-2 py-0.5 text-xs font-medium tracking-tight rounded-xl whitespace-normal',
+        'min-h-4 ms-auto inline-flex items-center justify-center whitespace-normal rounded-xl px-2 py-0.5 text-xs font-medium tracking-tight',
         match ($active) {
-            true => 'text-white bg-gray-900/10',
+            true => 'bg-gray-900/10 text-white',
             false => match ($badgeColor) {
                 'danger' => 'text-danger-700 bg-danger-500/10 dark:text-danger-500',
-                'gray' => 'text-gray-700 bg-gray-500/10 dark:text-gray-500',
+                'gray' => 'bg-gray-500/10 text-gray-700 dark:text-gray-500',
                 'info' => 'text-info-700 bg-info-500/10 dark:text-info-500',
                 'primary', null => 'text-primary-700 bg-primary-500/10 dark:text-primary-500',
                 'secondary' => 'text-secondary-700 bg-secondary-500/10 dark:text-secondary-500',

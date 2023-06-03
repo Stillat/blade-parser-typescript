@@ -85,7 +85,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_field_wrapp
 
     @if (count($actions))
         <div
-            class="filament-forms-field-wrapper-hint-action flex gap-1 items-center"
+            class="filament-forms-field-wrapper-hint-action flex items-center gap-1"
         >
             @foreach ($actions as $action)
                 {{ $action }}

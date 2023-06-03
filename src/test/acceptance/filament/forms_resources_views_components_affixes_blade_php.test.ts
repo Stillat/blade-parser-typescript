@@ -158,7 +158,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_affixes_bla
     {{ $attributes->class(['filament-forms-affix-container flex rtl:space-x-reverse group']) }}
 >
     @if (count($prefixActions))
-        <div class="self-stretch flex gap-1 items-center pe-2">
+        <div class="flex items-center gap-1 self-stretch pe-2">
             @foreach ($prefixActions as $prefixAction)
                 {{ $prefixAction }}
             @endforeach
@@ -205,7 +205,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_affixes_bla
         </span>
     @endif
 
-    <div class="flex-1 min-w-0">
+    <div class="min-w-0 flex-1">
         {{ $slot }}
     </div>
 
@@ -250,7 +250,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_affixes_bla
     @endif
 
     @if (count($suffixActions))
-        <div class="self-stretch flex gap-1 items-center ps-2">
+        <div class="flex items-center gap-1 self-stretch ps-2">
             @foreach ($suffixActions as $suffixAction)
                 {{ $suffixAction }}
             @endforeach

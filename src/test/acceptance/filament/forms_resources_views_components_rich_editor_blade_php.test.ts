@@ -470,7 +470,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_rich_editor
                 ])
             >
                 <div
-                    class="flex justify-between space-x-4 rtl:space-x-reverse overflow-x-auto items-stretch overflow-y-hidden"
+                    class="flex items-stretch justify-between space-x-4 overflow-x-auto overflow-y-hidden rtl:space-x-reverse"
                 >
                     <div
                         class="flex items-stretch space-x-4 outline-none rtl:space-x-reverse"
@@ -894,7 +894,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_rich_editor
         @else
             <div
                 x-html="state"
-                class="prose block w-full max-w-none rounded-lg border border-gray-300 bg-white p-3 opacity-70 shadow-sm dark:prose-invert dark:border-gray-600 dark:bg-gray-700"
+                class="prose dark:prose-invert block w-full max-w-none rounded-lg border border-gray-300 bg-white p-3 opacity-70 shadow-sm dark:border-gray-600 dark:bg-gray-700"
             ></div>
         @endunless
     </div>

@@ -101,21 +101,21 @@ suite('Pint Transformer Accpetance: panels_resources_views_widgets_filament_info
         const output = `<x-filament-widgets::widget class="filament-filament-info-widget">
     <x-filament::card class="relative">
         <div
-            class="relative h-12 flex flex-col justify-center items-center space-y-2"
+            class="relative flex h-12 flex-col items-center justify-center space-y-2"
         >
             <div class="space-y-1">
                 <a
                     href="https://filamentphp.com"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="flex items-end space-x-2 rtl:space-x-reverse text-gray-800 hover:text-primary-500 transition dark:text-primary-500 dark:hover:text-primary-400"
+                    class="hover:text-primary-500 dark:text-primary-500 dark:hover:text-primary-400 flex items-end space-x-2 text-gray-800 transition rtl:space-x-reverse"
                 >
                     <svg
                         role="img"
                         aria-label="Filament"
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 303 61"
-                        class="fill-current w-24 h-6"
+                        class="h-6 w-24 fill-current"
                     >
                         <path
                             d="M11.739,58.266 C12.337,55.484 12.909,52.793 13.455,50.193 C13.91,48.0263333 14.4191667,45.6249444 14.9825,42.9888333 L15.327,41.379 L18.1126496,28.119 L28.782,28.119 L30.654,19.344 L19.5,19.344 C19.578,18.954 19.695,18.3755 19.851,17.6085 C20.007,16.8415 20.137,16.198 20.241,15.678 C20.657,13.676 21.411,12.1745 22.503,11.1735 C23.595,10.1725 25.103,9.672 27.027,9.672 C28.119,9.672 29.198,9.802 30.264,10.062 C31.33,10.322 32.344,10.686 33.306,11.154 L36.114,1.794 C35.282,1.43 34.3135,1.1115 33.2085,0.8385 C32.1035,0.5655 30.94,0.3575 29.718,0.2145 C28.496,0.0715 27.274,-1.42108547e-14 26.052,-1.42108547e-14 C24.128,-1.42108547e-14 22.282,0.2275 20.514,0.6825 C18.746,1.1375 17.134,1.9045 15.678,2.9835 C14.222,4.0625 12.9545,5.525 11.8755,7.371 C10.7965,9.217 9.971,11.518 9.399,14.274 C9.035,16.016 8.6385,17.9075 8.2095,19.9485 L8.33664956,19.344 L1.872,19.344 L1.77635684e-14,28.119 L6.47364956,28.119 L6.37884,28.56594 C6.2062,29.3761 6.03564,30.17794 5.86716,30.97146 L5.616,32.1555 C5.2,34.1185 4.823,35.906 4.485,37.518 L3.666,41.418 C2.99,44.642 2.3725,47.5605 1.8135,50.1735 C1.2545,52.7865 0.689,55.484 0.117,58.266 L11.739,58.266 Z"
@@ -134,12 +134,12 @@ suite('Pint Transformer Accpetance: panels_resources_views_widgets_filament_info
                 </a>
             </div>
 
-            <div class="text-sm flex space-x-2 rtl:space-x-reverse">
+            <div class="flex space-x-2 text-sm rtl:space-x-reverse">
                 <a
                     href="https://filamentphp.com/docs"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="text-gray-600 outline-none hover:text-primary-500 focus:underline dark:text-gray-300 dark:hover:text-primary-500"
+                    class="hover:text-primary-500 dark:hover:text-primary-500 text-gray-600 outline-none focus:underline dark:text-gray-300"
                 >
                     {{ __('filament::widgets/filament-info-widget.buttons.visit_documentation.label') }}
                 </a>
@@ -150,7 +150,7 @@ suite('Pint Transformer Accpetance: panels_resources_views_widgets_filament_info
                     href="https://github.com/filamentphp/filament"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="text-gray-600 outline-none hover:text-primary-500 focus:underline dark:text-gray-300 dark:hover:text-primary-500"
+                    class="hover:text-primary-500 dark:hover:text-primary-500 text-gray-600 outline-none focus:underline dark:text-gray-300"
                 >
                     {{ __('filament::widgets/filament-info-widget.buttons.visit_github.label') }}
                 </a>
@@ -158,7 +158,7 @@ suite('Pint Transformer Accpetance: panels_resources_views_widgets_filament_info
         </div>
 
         <svg
-            class="h-16 w-16 absolute end-0 bottom-0"
+            class="absolute bottom-0 end-0 h-16 w-16"
             xmlns="http://www.w3.org/2000/svg"
             width="300.000000pt"
             height="418.000000pt"

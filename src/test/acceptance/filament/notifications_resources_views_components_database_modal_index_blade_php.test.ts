@@ -110,7 +110,7 @@ suite('Pint Transformer Accpetance: notifications_resources_views_components_dat
         </x-slot>
 
         <div
-            class="mt-[calc(-1rem-1px)] -mx-6 border-b divide-y dark:border-gray-700"
+            class="-mx-6 mt-[calc(-1rem-1px)] divide-y border-b dark:border-gray-700"
         >
             @foreach ($notifications as $notification)
                 <div

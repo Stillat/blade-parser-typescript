@@ -56,7 +56,7 @@ suite('Pint Transformer Accpetance: infolists_resources_views_components_repeata
         >
             @foreach ($getChildComponentContainers() as $container)
                 <li
-                    class="block p-6 rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-800 dark:ring-white/20"
+                    class="block rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-800 dark:ring-white/20"
                 >
                     {{ $container }}
                 </li>

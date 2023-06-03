@@ -273,7 +273,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_repeater_bl
                                     @endif
 
                                     <p
-                                        class="flex-none px-4 text-xs font-medium text-gray-600 truncate dark:text-gray-400"
+                                        class="flex-none truncate px-4 text-xs font-medium text-gray-600 dark:text-gray-400"
                                     >
                                         {{ $getItemLabel($uuid) }}
                                     </p>
@@ -344,7 +344,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_repeater_bl
                             </div>
 
                             <div
-                                class="p-2 text-xs text-center text-gray-400"
+                                class="p-2 text-center text-xs text-gray-400"
                                 x-show="isCollapsed"
                                 x-cloak
                             >

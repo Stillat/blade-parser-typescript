@@ -35,7 +35,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_actions_bla
             ], escape: false)
             ->merge($getExtraAttributes(), escape: false)
             ->class([
-                'filament-forms-actions-component flex flex-col h-full',
+                'filament-forms-actions-component flex h-full flex-col',
                 match ($verticalAlignment = $getVerticalAlignment()) {
                     'center' => 'justify-center',
                     'end' => 'justify-end',

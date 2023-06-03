@@ -1509,12 +1509,12 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
             <div
                 x-show="@js($shouldRenderHeaderDiv = ($isReorderable || count($groups) || $isGlobalSearchVisible || $hasFiltersDropdown || $isColumnToggleFormVisible)) || (selectedRecords.length && @js(count($bulkActions)))"
                 @if (! $shouldRenderHeaderDiv) x-cloak @endif
-                class="filament-tables-header-toolbar flex items-center justify-between py-2 px-3 h-14"
+                class="filament-tables-header-toolbar flex h-14 items-center justify-between px-3 py-2"
                 x-bind:class="{
                     'gap-3': @js($isReorderable) || @js(count($groups)) || (selectedRecords.length && @js(count($bulkActions))),
                 }"
             >
-                <div class="shrink-0 flex items-center sm:gap-3">
+                <div class="flex shrink-0 items-center sm:gap-3">
                     @if ($isReorderable)
                         <x-filament-tables::reorder.trigger
                             :enabled="$isReordering"
@@ -1536,11 +1536,11 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
 
                 @if ($isGlobalSearchVisible || $hasFiltersDropdown || $isColumnToggleFormVisible)
                     <div
-                        class="flex-1 flex items-center justify-end gap-3 md:max-w-md"
+                        class="flex flex-1 items-center justify-end gap-3 md:max-w-md"
                     >
                         @if ($isGlobalSearchVisible)
                             <div
-                                class="filament-tables-search-container flex items-center justify-end flex-1"
+                                class="filament-tables-search-container flex flex-1 items-center justify-end"
                             >
                                 <x-filament-tables::search-input />
                             </div>
@@ -1684,7 +1684,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                                             background-position: right 0.2rem
                                                 center;
                                         "
-                                        class="text-xs ps-2 pe-6 py-1 font-medium border-0 bg-gray-500/5 rounded-lg border-gray-300 sm:text-sm focus:ring-0 focus:border-primary-500 focus:ring-primary-500 dark:text-white dark:bg-gray-700 dark:border-gray-600 dark:focus:border-primary-500"
+                                        class="focus:border-primary-500 focus:ring-primary-500 dark:focus:border-primary-500 rounded-lg border-0 border-gray-300 bg-gray-500/5 py-1 pe-6 ps-2 text-xs font-medium focus:ring-0 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm"
                                     >
                                         <option value="">-</option>
                                         @foreach ($sortableColumns as $column)
@@ -1708,7 +1708,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                                             background-position: right 0.2rem
                                                 center;
                                         "
-                                        class="text-xs ps-2 pe-6 py-1 font-medium border-0 bg-gray-500/5 rounded-lg border-gray-300 sm:text-sm focus:ring-0 focus:border-primary-500 focus:ring-primary-500 dark:text-white dark:bg-gray-700 dark:border-gray-600 dark:focus:border-primary-500"
+                                        class="focus:border-primary-500 focus:ring-primary-500 dark:focus:border-primary-500 rounded-lg border-0 border-gray-300 bg-gray-500/5 py-1 pe-6 ps-2 text-xs font-medium focus:ring-0 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm"
                                     >
                                         <option value="asc">
                                             {{ __('filament-tables::table.sorting.fields.direction.options.asc') }}
@@ -1909,7 +1909,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                                         @if ($recordUrl)
                                             <a
                                                 href="{{ $recordUrl }}"
-                                                class="filament-tables-record-url-link flex-1 block py-3"
+                                                class="filament-tables-record-url-link block flex-1 py-3"
                                             >
                                                 <x-filament-tables::columns.layout
                                                     :components="$getColumnsLayout()"
@@ -1932,7 +1932,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                                                 wire:target="{{ $recordWireClickAction }}"
                                                 wire:loading.attr="disabled"
                                                 type="button"
-                                                class="filament-tables-record-action-button flex-1 block py-3 disabled:opacity-70 disabled:pointer-events-none"
+                                                class="filament-tables-record-action-button block flex-1 py-3 disabled:pointer-events-none disabled:opacity-70"
                                             >
                                                 <x-filament-tables::columns.layout
                                                     :components="$getColumnsLayout()"
@@ -2076,7 +2076,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
 
                         @if ($isGroupsOnly)
                             <th
-                                class="filament-tables-header-cell px-4 py-2 whitespace-nowrap font-medium text-sm text-gray-600 dark:text-gray-300"
+                                class="filament-tables-header-cell whitespace-nowrap px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300"
                             >
                                 {{ $group->getLabel() }}
                             </th>
@@ -2466,9 +2466,9 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                     class="filament-tables-defer-loading-indicator flex items-center justify-center p-6"
                 >
                     <div
-                        class="flex items-center justify-center w-16 h-16 text-primary-500 rounded-full bg-primary-50 dark:bg-gray-700"
+                        class="text-primary-500 bg-primary-50 flex h-16 w-16 items-center justify-center rounded-full dark:bg-gray-700"
                     >
-                        <x-filament::loading-indicator class="w-6 h-6" />
+                        <x-filament::loading-indicator class="h-6 w-6" />
                     </div>
                 </div>
             @else
@@ -2478,7 +2478,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
                     <tr>
                         <td colspan="{{ $columnsCount }}">
                             <div
-                                class="flex items-center justify-center w-full p-4"
+                                class="flex w-full items-center justify-center p-4"
                             >
                                 <x-filament-tables::empty-state
                                     :icon="$getEmptyStateIcon()"
@@ -2502,7 +2502,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
         @if ($records instanceof \\Illuminate\\Contracts\\Pagination\\Paginator &&
              ((! $records instanceof \\Illuminate\\Contracts\\Pagination\\LengthAwarePaginator) || $records->total()))
             <div
-                class="filament-tables-pagination-container p-2 border-t dark:border-gray-700"
+                class="filament-tables-pagination-container border-t p-2 dark:border-gray-700"
             >
                 <x-filament-tables::pagination
                     :paginator="$records"
@@ -2515,7 +2515,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_index_blade_php', () 
             <div class="px-2 pb-2">
                 <x-filament::hr />
 
-                <div class="p-4 mt-2">
+                <div class="mt-2 p-4">
                     <x-filament-tables::filters :form="$getFiltersForm()" />
                 </div>
             </div>

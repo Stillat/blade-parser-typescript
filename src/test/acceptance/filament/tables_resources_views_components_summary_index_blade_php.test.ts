@@ -155,7 +155,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_summary_in
 
         @if ($extraHeadingColumn)
             <td
-                class="px-4 py-2 whitespace-nowrap text-base font-medium text-gray-600 dark:text-gray-300"
+                class="whitespace-nowrap px-4 py-2 text-base font-medium text-gray-600 dark:text-gray-300"
             >
                 {{ __('filament-tables::table.summary.heading', ['label' => $pluralModelLabel]) }}
             </td>

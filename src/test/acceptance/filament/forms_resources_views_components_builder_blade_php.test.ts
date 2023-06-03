@@ -327,7 +327,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_builder_bla
 
                                 @if ($hasBlockLabels)
                                     <p
-                                        class="flex-none px-4 text-xs font-medium text-gray-600 truncate dark:text-gray-400"
+                                        class="flex-none truncate px-4 text-xs font-medium text-gray-600 dark:text-gray-400"
                                     >
                                         @php
                                             $block = $item->getParentComponent();
@@ -412,7 +412,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_builder_bla
                         </div>
 
                         <div
-                            class="p-2 text-xs text-center text-gray-400"
+                            class="p-2 text-center text-xs text-gray-400"
                             x-show="isCollapsed"
                             x-cloak
                         >
@@ -423,7 +423,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_builder_bla
                             <div
                                 x-show="isAddButtonVisible"
                                 x-transition
-                                class="absolute inset-x-0 bottom-0 flex items-center justify-center h-12 -mb-12"
+                                class="absolute inset-x-0 bottom-0 -mb-12 flex h-12 items-center justify-center"
                             >
                                 <x-filament-forms::builder.block-picker
                                     :action="$addBetweenAction"

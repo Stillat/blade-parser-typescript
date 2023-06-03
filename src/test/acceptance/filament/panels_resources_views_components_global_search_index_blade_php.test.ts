@@ -20,7 +20,7 @@ suite('Pint Transformer Accpetance: panels_resources_views_components_global_sea
     {{ filament()->renderHook('global-search.end') }}
 </div>
 `;
-        const output = `<div class="filament-global-search flex items-center ms-4">
+        const output = `<div class="filament-global-search ms-4 flex items-center">
     {{ filament()->renderHook('global-search.start') }}
 
     @if ($this->isEnabled())

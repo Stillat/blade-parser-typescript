@@ -402,7 +402,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_date_time_p
 
                     @if ($icon !== false)
                         <span
-                            class="absolute inset-y-0 end-0 flex items-center pe-2 pointer-events-none"
+                            class="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2"
                         >
                             <x-filament::icon
                                 name="heroicon-m-calendar"
@@ -432,7 +432,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_date_time_p
                             >
                                 <select
                                     x-model="focusedMonth"
-                                    class="grow px-1 py-0 text-lg font-medium text-gray-800 border-0 cursor-pointer outline-none focus:ring-0 dark:bg-gray-700 dark:text-gray-200"
+                                    class="grow cursor-pointer border-0 px-1 py-0 text-lg font-medium text-gray-800 outline-none focus:ring-0 dark:bg-gray-700 dark:text-gray-200"
                                     dusk="filament.forms.{{ $statePath }}.focusedMonth"
                                 >
                                     <template x-for="(month, index) in months">
@@ -447,7 +447,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_date_time_p
                                     type="number"
                                     inputmode="numeric"
                                     x-model.debounce="focusedYear"
-                                    class="w-20 p-0 text-lg text-end border-0 outline-none focus:ring-0 dark:bg-gray-700 dark:text-gray-200"
+                                    class="w-20 border-0 p-0 text-end text-lg outline-none focus:ring-0 dark:bg-gray-700 dark:text-gray-200"
                                     dusk="filament.forms.{{ $statePath }}.focusedYear"
                                 />
                             </div>
@@ -459,7 +459,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_date_time_p
                                 >
                                     <div
                                         x-text="day"
-                                        class="text-xs font-medium text-center text-gray-800 dark:text-gray-200"
+                                        class="text-center text-xs font-medium text-gray-800 dark:text-gray-200"
                                     ></div>
                                 </template>
                             </div>
@@ -470,7 +470,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_date_time_p
                                     x-bind:key="day"
                                 >
                                     <div
-                                        class="text-sm text-center border border-transparent"
+                                        class="border border-transparent text-center text-sm"
                                     ></div>
                                 </template>
 
@@ -494,7 +494,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_date_time_p
                                             'opacity-50': focusedDate.date() !== day && dayIsDisabled(day),
                                         }"
                                         x-bind:dusk="'filament.forms.{{ $statePath }}' + '.focusedDate.' + day"
-                                        class="text-sm leading-loose text-center transition duration-100 ease-in-out rounded-full"
+                                        class="rounded-full text-center text-sm leading-loose transition duration-100 ease-in-out"
                                     ></div>
                                 </template>
                             </div>
@@ -502,7 +502,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_date_time_p
 
                         @if ($hasTime())
                             <div
-                                class="flex items-center justify-center bg-gray-50 py-2 rounded-lg rtl:flex-row-reverse dark:bg-gray-800"
+                                class="flex items-center justify-center rounded-lg bg-gray-50 py-2 rtl:flex-row-reverse dark:bg-gray-800"
                             >
                                 <input
                                     max="23"
@@ -511,12 +511,12 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_date_time_p
                                     type="number"
                                     inputmode="numeric"
                                     x-model.debounce="hour"
-                                    class="w-16 p-0 pe-1 text-xl bg-gray-50 text-center text-gray-700 border-0 outline-none focus:ring-0 dark:text-gray-200 dark:bg-gray-800"
+                                    class="w-16 border-0 bg-gray-50 p-0 pe-1 text-center text-xl text-gray-700 outline-none focus:ring-0 dark:bg-gray-800 dark:text-gray-200"
                                     dusk="filament.forms.{{ $statePath }}.hour"
                                 />
 
                                 <span
-                                    class="text-xl font-medium bg-gray-50 text-gray-700 dark:text-gray-200 dark:bg-gray-800"
+                                    class="bg-gray-50 text-xl font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-200"
                                 >
                                     :
                                 </span>
@@ -528,13 +528,13 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_date_time_p
                                     type="number"
                                     inputmode="numeric"
                                     x-model.debounce="minute"
-                                    class="w-16 p-0 pe-1 text-xl text-center bg-gray-50 text-gray-700 border-0 outline-none focus:ring-0 dark:text-gray-200 dark:bg-gray-800"
+                                    class="w-16 border-0 bg-gray-50 p-0 pe-1 text-center text-xl text-gray-700 outline-none focus:ring-0 dark:bg-gray-800 dark:text-gray-200"
                                     dusk="filament.forms.{{ $statePath }}.minute"
                                 />
 
                                 @if ($hasSeconds())
                                     <span
-                                        class="text-xl font-medium text-gray-700 bg-gray-50 dark:text-gray-200 dark:bg-gray-800"
+                                        class="bg-gray-50 text-xl font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-200"
                                     >
                                         :
                                     </span>
@@ -547,7 +547,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_date_time_p
                                         inputmode="numeric"
                                         x-model.debounce="second"
                                         dusk="filament.forms.{{ $statePath }}.second"
-                                        class="w-16 p-0 pe-1 text-xl text-center bg-gray-50 text-gray-700 border-0 outline-none focus:ring-0 dark:text-gray-200 dark:bg-gray-800"
+                                        class="w-16 border-0 bg-gray-50 p-0 pe-1 text-center text-xl text-gray-700 outline-none focus:ring-0 dark:bg-gray-800 dark:text-gray-200"
                                     />
                                 @endif
                             </div>

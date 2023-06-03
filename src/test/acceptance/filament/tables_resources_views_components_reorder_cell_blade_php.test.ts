@@ -9,7 +9,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_reorder_ce
 </td>
 `;
         const output = `<td
-    {{ $attributes->class(['filament-tables-reorder-cell w-4 px-4 whitespace-nowrap']) }}
+    {{ $attributes->class(['filament-tables-reorder-cell w-4 whitespace-nowrap px-4']) }}
 >
     {{ $slot }}
 </td>

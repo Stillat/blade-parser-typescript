@@ -164,7 +164,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_pagination
     aria-label="{{ __('filament-tables::table.pagination.label') }}"
     class="filament-tables-pagination flex items-center justify-between"
 >
-    <div class="flex justify-between items-center flex-1 lg:hidden">
+    <div class="flex flex-1 items-center justify-between lg:hidden">
         <div class="w-10">
             @if ($paginator->hasPages() && (! $paginator->onFirstPage()))
                 <x-filament::icon-button
@@ -196,7 +196,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_pagination
         </div>
     </div>
 
-    <div class="hidden flex-1 items-center lg:grid grid-cols-3">
+    <div class="hidden flex-1 grid-cols-3 items-center lg:grid">
         <div class="flex items-center">
             @if ($isSimple)
                 @if (! $paginator->onFirstPage())
@@ -251,9 +251,9 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_pagination
                 @endif
             @else
                 @if ($paginator->hasPages())
-                    <div class="py-3 border rounded-lg dark:border-gray-600">
+                    <div class="rounded-lg border py-3 dark:border-gray-600">
                         <ol
-                            class="flex gap-px items-center text-sm text-gray-500 divide-x rtl:divide-x-reverse divide-gray-300 dark:text-gray-400 dark:divide-gray-600"
+                            class="flex items-center gap-px divide-x divide-gray-300 text-sm text-gray-500 rtl:divide-x-reverse dark:divide-gray-600 dark:text-gray-400"
                         >
                             @if (! $paginator->onFirstPage())
                                 <x-filament-tables::pagination.item

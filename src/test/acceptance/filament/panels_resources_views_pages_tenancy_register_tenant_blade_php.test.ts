@@ -50,7 +50,7 @@ suite('Pint Transformer Accpetance: panels_resources_views_pages_tenancy_registe
     @if (count($tenants = filament()->getUserTenants(filament()->auth()->user())))
         <x-slot name="after">
             <ul
-                class="bg-white/50 divide-y rounded-xl shadow-sm ring-1 ring-gray-950/5 overflow-hidden dark:ring-white/20 dark:bg-gray-900/50 dark:divide-gray-700 backdrop-blur-xl mt-8"
+                class="mt-8 divide-y overflow-hidden rounded-xl bg-white/50 shadow-sm ring-1 ring-gray-950/5 backdrop-blur-xl dark:divide-gray-700 dark:bg-gray-900/50 dark:ring-white/20"
             >
                 @foreach ($tenants as $tenant)
                     <li>

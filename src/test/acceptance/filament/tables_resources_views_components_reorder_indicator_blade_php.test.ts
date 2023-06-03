@@ -40,13 +40,13 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_reorder_in
             ->merge([
                 'wire:key' => "{$this->id}.table.reorder.indicator",
             ], escape: false)
-            ->class(['filament-tables-reorder-indicator bg-primary-500/10 px-4 py-2 whitespace-nowrap text-sm'])
+            ->class(['filament-tables-reorder-indicator bg-primary-500/10 whitespace-nowrap px-4 py-2 text-sm'])
     }}
 >
     <x-filament::loading-indicator
         wire:loading.delay=""
         wire:target="reorderTable"
-        class="w-4 h-4 me-3 text-primary-500"
+        class="text-primary-500 me-3 h-4 w-4"
     />
 
     <span>

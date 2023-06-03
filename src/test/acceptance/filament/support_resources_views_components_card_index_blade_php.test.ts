@@ -95,7 +95,7 @@ suite('Pint Transformer Accpetance: support_resources_views_components_card_inde
 
     <div class="space-y-2">
         @if ($slot->isNotEmpty())
-            <div class="px-4 py-2 space-y-4">
+            <div class="space-y-4 px-4 py-2">
                 {{ $slot }}
             </div>
         @endif

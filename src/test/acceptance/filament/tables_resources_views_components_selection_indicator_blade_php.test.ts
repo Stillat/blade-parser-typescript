@@ -56,12 +56,12 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_selection_
             ->merge([
                 'wire:key' => "{$this->id}.table.selection.indicator",
             ], escape: false)
-            ->class(['filament-tables-selection-indicator bg-primary-500/10 px-4 py-2 whitespace-nowrap text-sm'])
+            ->class(['filament-tables-selection-indicator bg-primary-500/10 whitespace-nowrap px-4 py-2 text-sm'])
     }}
 >
     <x-filament::loading-indicator
         x-show="isLoading"
-        class="inline-block w-4 h-4 me-3 text-primary-500"
+        class="text-primary-500 me-3 inline-block h-4 w-4"
     />
 
     <span
@@ -75,7 +75,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_selection_
     >
         <button
             x-on:click="selectAllRecords"
-            class="text-sm font-medium text-primary-600"
+            class="text-primary-600 text-sm font-medium"
         >
             {{ trans_choice('filament-tables::table.selection_indicator.buttons.select_all.label', $allSelectableRecordsCount) }}.
         </button>
@@ -84,7 +84,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_selection_
     <span>
         <button
             x-on:click="deselectAllRecords"
-            class="text-sm font-medium text-primary-600"
+            class="text-primary-600 text-sm font-medium"
         >
             {{ __('filament-tables::table.selection_indicator.buttons.deselect_all.label') }}.
         </button>

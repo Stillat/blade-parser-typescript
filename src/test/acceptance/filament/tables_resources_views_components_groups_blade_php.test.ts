@@ -179,7 +179,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_groups_bla
         </div>
     </x-filament::dropdown>
 
-    <div class="hidden gap-1 items-center sm:flex">
+    <div class="hidden items-center gap-1 sm:flex">
         <label>
             <span class="sr-only">
                 {{ __('filament-tables::table.grouping.fields.group.label') }}

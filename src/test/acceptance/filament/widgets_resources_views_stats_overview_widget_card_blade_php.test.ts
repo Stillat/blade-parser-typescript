@@ -152,7 +152,7 @@ suite('Pint Transformer Accpetance: widgets_resources_views_stats_overview_widge
         'space-y-2',
     ])>
         <div
-            class="flex items-center space-x-2 rtl:space-x-reverse text-sm font-medium"
+            class="flex items-center space-x-2 text-sm font-medium rtl:space-x-reverse"
         >
             @if ($icon = $getIcon())
                 <x-filament::icon
@@ -221,7 +221,7 @@ suite('Pint Transformer Accpetance: widgets_resources_views_stats_overview_widge
                 chart.destroy()
                 initChart()
             "
-            class="absolute bottom-0 inset-x-0 rounded-b-xl overflow-hidden"
+            class="absolute inset-x-0 bottom-0 overflow-hidden rounded-b-xl"
         >
             <canvas x-ref="canvas" class="h-6"></canvas>
 

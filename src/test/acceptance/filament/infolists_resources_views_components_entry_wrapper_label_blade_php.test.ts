@@ -30,7 +30,7 @@ suite('Pint Transformer Accpetance: infolists_resources_views_components_entry_w
     {{ $prefix }}
 
     <span
-        class="text-sm text-gray-500 font-medium leading-4 dark:text-gray-400"
+        class="text-sm font-medium leading-4 text-gray-500 dark:text-gray-400"
     >
         {{ $slot }}
     </span>

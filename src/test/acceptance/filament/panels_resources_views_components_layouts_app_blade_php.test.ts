@@ -82,14 +82,14 @@ suite('Pint Transformer Accpetance: panels_resources_views_components_layouts_ap
 @endphp
 
 <x-filament::layouts.base :livewire="$livewire">
-    <div class="filament-app-layout flex w-full h-full overflow-x-clip">
+    <div class="filament-app-layout flex h-full w-full overflow-x-clip">
         <div
             x-data="{}"
             x-cloak
             x-show="$store.sidebar.isOpen"
             x-transition.opacity.500ms
             x-on:click="$store.sidebar.close()"
-            class="filament-sidebar-close-overlay fixed inset-0 z-20 w-full h-full bg-gray-900/50 lg:hidden"
+            class="filament-sidebar-close-overlay fixed inset-0 z-20 h-full w-full bg-gray-900/50 lg:hidden"
         ></div>
 
         <x-filament::layouts.app.sidebar :navigation="$navigation" />
@@ -143,7 +143,7 @@ suite('Pint Transformer Accpetance: panels_resources_views_components_layouts_ap
                 {{ filament()->renderHook('content.end') }}
             </div>
 
-            <div class="filament-main-footer py-4 shrink-0">
+            <div class="filament-main-footer shrink-0 py-4">
                 <x-filament::footer />
             </div>
         </div>

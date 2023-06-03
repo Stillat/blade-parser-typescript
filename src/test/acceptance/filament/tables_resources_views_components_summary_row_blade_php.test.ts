@@ -136,7 +136,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_summary_ro
     @endif
 
     @if ($extraHeadingColumn || $groupsOnly)
-        <td class="align-top px-4 py-3 font-medium text-sm">
+        <td class="px-4 py-3 align-top text-sm font-medium">
             {{ $heading }}
         </td>
     @else
@@ -177,7 +177,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_summary_ro
                 ])
             >
                 @if ($loop->first && (! $extraHeadingColumn) && (! $groupsOnly))
-                    <div class="px-4 py-3 font-medium text-sm">
+                    <div class="px-4 py-3 text-sm font-medium">
                         {{ $heading }}
                     </div>
                 @elseif ((! $placeholderColumns) || $column->hasSummary())

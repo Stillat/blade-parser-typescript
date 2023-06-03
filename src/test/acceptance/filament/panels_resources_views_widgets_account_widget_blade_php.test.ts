@@ -39,7 +39,7 @@ suite('Pint Transformer Accpetance: panels_resources_views_widgets_account_widge
             $user = filament()->auth()->user();
         @endphp
 
-        <div class="h-12 flex items-center space-x-4 rtl:space-x-reverse">
+        <div class="flex h-12 items-center space-x-4 rtl:space-x-reverse">
             <x-filament::avatar.user :user="$user" />
 
             <div>
@@ -56,7 +56,7 @@ suite('Pint Transformer Accpetance: panels_resources_views_widgets_account_widge
 
                     <button
                         type="submit"
-                        class="text-gray-600 outline-none hover:text-primary-500 focus:underline dark:text-gray-300 dark:hover:text-primary-500"
+                        class="hover:text-primary-500 dark:hover:text-primary-500 text-gray-600 outline-none focus:underline dark:text-gray-300"
                     >
                         {{ __('filament::widgets/account-widget.buttons.logout.label') }}
                     </button>

@@ -21,7 +21,7 @@ suite('Pint Transformer Accpetance: panels_resources_views_components_layouts_ap
     icon-size="lg"
     color="gray"
     :indicator="$unreadNotificationsCount"
-    class="ms-4 -me-1"
+    class="-me-1 ms-4"
 />
 `;
 

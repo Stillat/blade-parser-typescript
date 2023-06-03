@@ -32,7 +32,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_fieldset_bl
     }}
 >
     @if (filled($label = $getLabel()))
-        <legend class="text-sm leading-tight font-medium px-2 -ms-2">
+        <legend class="-ms-2 px-2 text-sm font-medium leading-tight">
             {{ $getLabel() }}
         </legend>
     @endif

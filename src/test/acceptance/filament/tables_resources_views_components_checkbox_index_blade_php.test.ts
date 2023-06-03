@@ -36,7 +36,7 @@ suite('Pint Transformer Accpetance: tables_resources_views_components_checkbox_i
                     'wire:loading.attr' => 'disabled',
                     'wire:target' => implode(',', \\Filament\\Tables\\Table::LOADING_TARGETS),
                 ], escape: false)
-                ->class(['block border-gray-300 rounded shadow-sm text-primary-600 outline-none focus:ring focus:ring-primary-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:checked:bg-primary-600 dark:checked:border-primary-600'])
+                ->class(['text-primary-600 focus:ring-primary-200 dark:checked:bg-primary-600 dark:checked:border-primary-600 block rounded border-gray-300 shadow-sm outline-none focus:ring focus:ring-opacity-50 dark:border-gray-600 dark:bg-gray-700'])
         }}
     />
 

@@ -170,7 +170,7 @@ suite('Pint Transformer Accpetance: panels_resources_views_components_layouts_ap
     ])
 >
     <header
-        class="filament-sidebar-header border-b h-[4rem] shrink-0 flex items-center justify-center relative bg-white dark:bg-gray-800 dark:border-gray-700"
+        class="filament-sidebar-header relative flex h-[4rem] shrink-0 items-center justify-center border-b bg-white dark:border-gray-700 dark:bg-gray-800"
     >
         <div
             @class([
@@ -185,7 +185,7 @@ suite('Pint Transformer Accpetance: panels_resources_views_components_layouts_ap
             @if (filament()->isSidebarCollapsibleOnDesktop() && (! filament()->isSidebarFullyCollapsibleOnDesktop()))
                 <button
                     type="button"
-                    class="filament-sidebar-collapse-button shrink-0 hidden lg:flex items-center justify-center w-10 h-10 text-primary-500 rounded-full outline-none hover:bg-gray-500/5 focus:bg-primary-500/10"
+                    class="filament-sidebar-collapse-button text-primary-500 focus:bg-primary-500/10 hidden h-10 w-10 shrink-0 items-center justify-center rounded-full outline-none hover:bg-gray-500/5 lg:flex"
                     x-bind:aria-label="$store.sidebar.isOpen ? '{{ __('filament::layout.buttons.sidebar.collapse.label') }}' : '{{ __('filament::layout.buttons.sidebar.expand.label') }}'"
                     x-on:click.stop="$store.sidebar.isOpen ? $store.sidebar.close() : $store.sidebar.open()"
                     x-transition:enter="lg:transition delay-100"
@@ -237,7 +237,7 @@ suite('Pint Transformer Accpetance: panels_resources_views_components_layouts_ap
         @if (filament()->isSidebarCollapsibleOnDesktop())
             <button
                 type="button"
-                class="filament-sidebar-close-button shrink-0 flex items-center justify-center w-10 h-10 text-primary-500 rounded-full outline-none hover:bg-gray-500/5 focus:bg-primary-500/10"
+                class="filament-sidebar-close-button text-primary-500 focus:bg-primary-500/10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full outline-none hover:bg-gray-500/5"
                 x-bind:aria-label="$store.sidebar.isOpen ? '{{ __('filament::layout.buttons.sidebar.collapse.label') }}' : '{{ __('filament::layout.buttons.sidebar.expand.label') }}'"
                 x-on:click.stop="$store.sidebar.isOpen ? $store.sidebar.close() : $store.sidebar.open()"
                 x-show="(! $store.sidebar.isOpen) && @js(! filament()->isSidebarFullyCollapsibleOnDesktop())"
@@ -255,15 +255,15 @@ suite('Pint Transformer Accpetance: panels_resources_views_components_layouts_ap
     </header>
 
     <nav
-        class="flex-1 py-6 overflow-x-hidden overflow-y-auto filament-sidebar-nav"
+        class="filament-sidebar-nav flex-1 overflow-y-auto overflow-x-hidden py-6"
     >
         {{ filament()->renderHook('sidebar.start') }}
 
         @if (filament()->hasTenancy())
-            <div class="px-6 space-y-6 mb-6">
+            <div class="mb-6 space-y-6 px-6">
                 <x-filament::tenant-menu />
 
-                <div class="border-t -me-6 dark:border-gray-700"></div>
+                <div class="-me-6 border-t dark:border-gray-700"></div>
             </div>
         @endif
 
@@ -287,7 +287,7 @@ suite('Pint Transformer Accpetance: panels_resources_views_components_layouts_ap
         </script>
 
         @if (filament()->hasNavigation())
-            <ul class="px-6 space-y-6">
+            <ul class="space-y-6 px-6">
                 @foreach ($navigation as $group)
                     <x-filament::layouts.app.sidebar.group
                         :label="$group->getLabel()"

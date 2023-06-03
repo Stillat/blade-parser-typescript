@@ -162,22 +162,22 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_key_value_b
         }}
     >
         <div
-            class="border border-gray-300 divide-y shadow-sm bg-white rounded-xl overflow-hidden dark:bg-gray-700 dark:border-gray-600 dark:divide-gray-600"
+            class="divide-y overflow-hidden rounded-xl border border-gray-300 bg-white shadow-sm dark:divide-gray-600 dark:border-gray-600 dark:bg-gray-700"
         >
             <table
-                class="w-full text-start divide-y table-auto dark:divide-gray-700"
+                class="w-full table-auto divide-y text-start dark:divide-gray-700"
             >
                 <thead>
                     <tr class="bg-gray-50 dark:bg-gray-800/60">
                         <th
-                            class="px-4 py-2 whitespace-nowrap font-medium text-sm text-gray-600 dark:text-gray-300"
+                            class="whitespace-nowrap px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300"
                             scope="col"
                         >
                             {{ $getKeyLabel() }}
                         </th>
 
                         <th
-                            class="px-4 py-2 whitespace-nowrap font-medium text-sm text-gray-600 dark:text-gray-300"
+                            class="whitespace-nowrap px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300"
                             scope="col"
                         >
                             {{ $getValueLabel() }}
@@ -223,7 +223,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_key_value_b
                                     @if ((! $canEditKeys()) || $isDisabled)
                                         disabled
                                     @endif
-                                    class="w-full px-4 py-3 font-mono text-sm bg-transparent border-0 focus:ring-0"
+                                    class="w-full border-0 bg-transparent px-4 py-3 font-mono text-sm focus:ring-0"
                                 />
                             </td>
 
@@ -236,7 +236,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_key_value_b
                                     @if ((! $canEditValues()) || $isDisabled)
                                         disabled
                                     @endif
-                                    class="w-full px-4 py-3 font-mono text-sm bg-transparent border-0 focus:ring-0"
+                                    class="w-full border-0 bg-transparent px-4 py-3 font-mono text-sm focus:ring-0"
                                 />
                             </td>
 

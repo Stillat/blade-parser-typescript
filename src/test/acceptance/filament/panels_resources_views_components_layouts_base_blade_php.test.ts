@@ -209,7 +209,7 @@ suite('Pint Transformer Accpetance: panels_resources_views_components_layouts_ba
     </head>
 
     <body
-        class="filament-body min-h-screen overscroll-y-none bg-gray-50 text-gray-900 dark:text-white dark:bg-gray-900"
+        class="filament-body min-h-screen overscroll-y-none bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-white"
     >
         {{ filament()->renderHook('body.start') }}
 

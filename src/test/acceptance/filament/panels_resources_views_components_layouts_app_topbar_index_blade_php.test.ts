@@ -128,9 +128,9 @@ suite('Pint Transformer Accpetance: panels_resources_views_components_layouts_ap
     {{ $attributes->class(['filament-main-topbar sticky top-0 z-10 border-b bg-white dark:bg-gray-800 dark:border-gray-700']) }}
 >
     <div
-        class="flex items-center justify-between h-16 -mt-px px-2 sm:px-4 md:px-6 lg:px-8"
+        class="-mt-px flex h-16 items-center justify-between px-2 sm:px-4 md:px-6 lg:px-8"
     >
-        <div class="flex items-center flex-1">
+        <div class="flex flex-1 items-center">
             {{ filament()->renderHook('topbar.start') }}
 
             <button
@@ -153,7 +153,7 @@ suite('Pint Transformer Accpetance: panels_resources_views_components_layouts_ap
             </button>
 
             @if (filament()->hasTopNavigation())
-                <div class="hidden me-12 lg:flex">
+                <div class="me-12 hidden lg:flex">
                     @if ($homeUrl = filament()->getHomeUrl())
                         <a href="{{ $homeUrl }}" data-turbo="false">
                             <x-filament::logo />
@@ -164,7 +164,7 @@ suite('Pint Transformer Accpetance: panels_resources_views_components_layouts_ap
                 </div>
 
                 @if (filament()->hasNavigation())
-                    <ul class="hidden items-center flex-wrap gap-3 lg:flex">
+                    <ul class="hidden flex-wrap items-center gap-3 lg:flex">
                         @foreach ($navigation as $group)
                             @if ($groupLabel = $group->getLabel())
                                 <x-filament::dropdown placement="bottom-start">
@@ -232,7 +232,7 @@ suite('Pint Transformer Accpetance: panels_resources_views_components_layouts_ap
 
     @if (filament()->hasTopNavigation() && count($breadcrumbs))
         <div
-            class="hidden border-t items-center h-12 px-8 lg:flex dark:border-gray-700"
+            class="hidden h-12 items-center border-t px-8 dark:border-gray-700 lg:flex"
         >
             <x-filament::layouts.app.topbar.breadcrumbs
                 :breadcrumbs="$breadcrumbs"

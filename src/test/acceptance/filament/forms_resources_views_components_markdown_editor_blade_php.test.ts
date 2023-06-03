@@ -92,7 +92,7 @@ suite('Pint Transformer Accpetance: forms_resources_views_components_markdown_ed
         </div>
     @else
         <div
-            class="prose block w-full max-w-none rounded-lg border border-gray-300 bg-white p-3 opacity-70 shadow-sm dark:prose-invert dark:border-gray-600 dark:bg-gray-700"
+            class="prose dark:prose-invert block w-full max-w-none rounded-lg border border-gray-300 bg-white p-3 opacity-70 shadow-sm dark:border-gray-600 dark:bg-gray-700"
         >
             {!! str($getState())->markdown()->sanitizeHtml() !!}
         </div>

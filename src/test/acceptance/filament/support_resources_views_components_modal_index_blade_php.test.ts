@@ -385,7 +385,7 @@ suite('Pint Transformer Accpetance: support_resources_views_components_modal_ind
                     <button
                         tabindex="-1"
                         type="button"
-                        class="absolute top-2 end-2"
+                        class="absolute end-2 top-2"
                         @if (filled($id))
                             x-on:click="$dispatch('{{ $closeEventName }}', { id: '{{ $id }}' })"
                         @else
@@ -462,7 +462,7 @@ suite('Pint Transformer Accpetance: support_resources_views_components_modal_ind
                         @endif
 
                         @if ($slot->isNotEmpty())
-                            <div class="px-4 py-2 space-y-4">
+                            <div class="space-y-4 px-4 py-2">
                                 {{ $slot }}
                             </div>
                         @endif
