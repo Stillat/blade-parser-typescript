@@ -423,13 +423,11 @@ $thing = 'text-white px-4 sm:px-8 py-2 sm:py-3 bg-sky-700 hover:bg-sky-800 aaaaa
         assert.strictEqual(formatBladeStringWithPint(input, {
             ...defaultSettings,
             classStrings: classConfigFromObject({
-                stringRules: [
-                    {
-                        includeWhen: [
-                            /!tw/
-                        ]
-                    }
-                ]
+                stringRules: {
+                    includeWhen: [
+                        /!tw/
+                    ]
+                }
             })
         }), expected);
     });
