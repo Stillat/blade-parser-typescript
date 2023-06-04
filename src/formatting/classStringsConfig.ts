@@ -91,19 +91,26 @@ export function getDefaultClassStringConfig(): IClassStringConfiguration {
 export function classConfigFromObject(config: any): IClassStringConfiguration {
     const defaults = getDefaultClassStringConfig();
 
+    function validateRuleset(ruleset: IClassRuleset): IClassRuleset {
+        return {
+            includeWhen: ruleset.includeWhen ?? [],
+            excludeWhen: ruleset.excludeWhen ?? []
+        };
+    }
+
     return {
         enabled: config.enabled ?? defaults.enabled,
         directivesEnabled: config.directivesEnabled ?? defaults.directivesEnabled,
         excludedDirectives: config.excludedDirectives ?? defaults.excludedDirectives,
-        directives: config.directives ?? defaults.directives,
+        directives: (config.directives ?? defaults.directives).map(validateRuleset),
         bladePhpEnabled: config.bladePhpEnabled ?? defaults.bladePhpEnabled,
         phpTagsEnabled: config.phpTagsEnabled ?? defaults.phpTagsEnabled,
-        phpTagRules: config.phpTagRules ?? defaults.phpTagRules,
+        phpTagRules: (config.phpTagRules ?? defaults.phpTagRules).map(validateRuleset),
         ignoredLanguageStructures: config.ignoredLanguageStructures ?? defaults.ignoredLanguageStructures,
         bladeEchoEnabled: config.bladeEchoEnabled ?? defaults.bladeEchoEnabled,
-        bladeEchoRules: config.bladeEchoRules ?? defaults.bladeEchoRules,
-        documentRules: config.documentRules ?? defaults.documentRules,
-        stringRules: config.stringRules ?? defaults.stringRules,
+        bladeEchoRules: (config.bladeEchoRules ?? defaults.bladeEchoRules).map(validateRuleset),
+        documentRules: (config.documentRules ?? defaults.documentRules).map(validateRuleset),
+        stringRules: (config.stringRules ?? defaults.stringRules).map(validateRuleset)
     };
 }
 
@@ -191,6 +198,14 @@ export class ClassStringRuleEngine {
         }
 
         return this.passes(docText, this.documentIncludeRules);
+    }
+
+    canTransformString(content: string) {
+        if (this.stringExcludeRules.length > 0 && this.passes(content, this.stringExcludeRules)) {
+            return false;
+        }
+
+        return this.passes(content, this.stringIncludeRules);
     }
 
     private canTransform(content: string, specificExcludes: string[], specificIncludes: string[]): boolean {

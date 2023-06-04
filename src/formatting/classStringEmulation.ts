@@ -33,7 +33,7 @@ export class ClassStringEmulation {
     }
 
     private getEmulator(): ClassEmulator {
-        const emulator = new ClassEmulator();
+        const emulator = new ClassEmulator(this.classRuleEngine);
         emulator.setExcludedLanguageStructures(this.classStringConfig.ignoredLanguageStructures);
 
         return emulator;

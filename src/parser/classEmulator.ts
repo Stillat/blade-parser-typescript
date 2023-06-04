@@ -1,4 +1,5 @@
 import { PhpStructuresAnalyzer } from '../analyzers/phpStructuresAnalyzer';
+import { ClassStringRuleEngine, IClassRuleset } from '../formatting/classStringsConfig';
 import { formatAsHtmlStrings } from '../formatting/prettier/utils';
 import { ILabeledRange } from '../nodes/labeledRange';
 import { StringUtilities } from '../utilities/stringUtilities';
@@ -10,11 +11,14 @@ export class ClassEmulator {
     private stringParser: InlineStringParser;
     private mergeRanges: ILabeledRange[] = [];
     private charsToAvoid: string[] = ["\n", '$', '{', '"', "'"];
+    private classRuleEngine:ClassStringRuleEngine;
 
-    constructor() {
+    constructor(rules:ClassStringRuleEngine) {
+        this.classRuleEngine = rules;
         this.phpStructuresAnalyzer = new PhpStructuresAnalyzer();
         this.stringParser = new InlineStringParser();
     }
+
 
     setExcludedLanguageStructures(structures: string[]) {
         this.phpStructuresAnalyzer.setExcludedStructures(structures);
@@ -41,7 +45,7 @@ export class ClassEmulator {
             }
         }
 
-        return true;
+        return this.classRuleEngine.canTransformString(value);
     }
 
     emulateString(content: string): string {
