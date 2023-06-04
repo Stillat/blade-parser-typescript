@@ -111,7 +111,7 @@ export class InlineStringParser implements StringIterator {
                 for (let i = 0; i < this.ignoreRanges.length; i++) {
                     const range = this.ignoreRanges[i];
 
-                    if (stringStartedOn > range.start && this.currentIndex < range.end) {
+                    if (stringStartedOn >= range.start && this.currentIndex <= range.end) {
                         insideIgnoredRange = true;
                         break;
                     }

@@ -1,4 +1,4 @@
-import { Engine, If, Call, Node, Variable, PropertyLookup, Identifier } from 'php-parser';
+import { Engine, If, Call, Node, Variable, PropertyLookup, Identifier, RetIf } from 'php-parser';
 import { ILabeledRange } from '../nodes/labeledRange';
 
 /**
@@ -58,6 +58,18 @@ export class PhpStructuresAnalyzer {
                     start: (ifStatement.test.loc?.start.offset ?? -1) - locationOffset,
                     end: (ifStatement.test.loc?.end.offset ?? -1) - locationOffset
                 });
+            } else if (node.kind == 'retif') {
+                const retIf = node as RetIf;
+
+                if (retIf.test.loc == null) {
+                    foundUnknownLocations = true;
+                }
+
+                ranges.push({
+                    label: 'retif',
+                    start: (retIf.test.loc?.start.offset ?? -1) - locationOffset,
+                    end: (retIf.test.loc?.end.offset ?? -1) - locationOffset + 2
+                });
             } else if (node.kind == 'call') {
                 const callStatement = node as Call;
                 let addRange = true;
@@ -67,7 +79,7 @@ export class PhpStructuresAnalyzer {
 
                     if (lookup.offset.kind == 'identifier') {
                         const identifier = lookup.offset as Identifier;
-                        
+
                         if (identifier.name == 'class') {
                             addRange = false;
                         }
