@@ -8,7 +8,6 @@ import { getEnvSettings, getPrettierFilePath } from '../optionDiscovery';
 import { PrettierDocumentFormatter } from './prettierDocumentFormatter';
 import { getHtmlOptions, getOptionsAdjuster, setOptions } from './utils';
 import { ClassStringEmulation } from '../classStringEmulation';
-import { getDefaultClassStringConfig } from '../classStringsConfig';
 
 let prettierOptions: prettier.ParserOptions,
     transformOptions: TransformOptions,
