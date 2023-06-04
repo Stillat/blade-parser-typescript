@@ -25,8 +25,8 @@ export interface IClassStringConfiguration {
     bladeEchoEnabled: boolean,
     bladeEchoRules: IClassRuleset[],
 
-    documentRules: IClassRuleset[],
-    stringRules: IClassRuleset[],
+    documentRules: IClassRuleset,
+    stringRules: IClassRuleset,
 }
 
 export function getDefaultClassStringConfig(): IClassStringConfiguration {
@@ -86,8 +86,14 @@ export function getDefaultClassStringConfig(): IClassStringConfiguration {
         bladeEchoEnabled: true,
         bladeEchoRules: [],
 
-        documentRules: [],
-        stringRules: []
+        documentRules: {
+            includeWhen: [],
+            excludeWhen: []
+        },
+        stringRules: {
+            includeWhen: [],
+            excludeWhen: []
+        }
     };
 }
 
@@ -98,6 +104,21 @@ export function classConfigFromObject(config: any): IClassStringConfiguration {
         return {
             includeWhen: ruleset.includeWhen ?? [],
             excludeWhen: ruleset.excludeWhen ?? []
+        };
+    }
+
+    function getSingleRuleset(config:any, defaults:IClassRuleset): IClassRuleset {
+        if (!config) {
+            return defaults;
+        }
+
+        if (!config.includeWhen && !config.excludeWhen) {
+            return defaults;
+        }
+
+        return {
+            excludeWhen: config.excludeWhen ?? [],
+            includeWhen: config.includeWhen ?? []
         };
     }
 
@@ -113,8 +134,8 @@ export function classConfigFromObject(config: any): IClassStringConfiguration {
         ignoredLanguageStructures: config.ignoredLanguageStructures ?? defaults.ignoredLanguageStructures,
         bladeEchoEnabled: config.bladeEchoEnabled ?? defaults.bladeEchoEnabled,
         bladeEchoRules: (config.bladeEchoRules ?? defaults.bladeEchoRules).map(validateRuleset),
-        documentRules: (config.documentRules ?? defaults.documentRules).map(validateRuleset),
-        stringRules: (config.stringRules ?? defaults.stringRules).map(validateRuleset)
+        documentRules: getSingleRuleset(config.documentRules, defaults.documentRules),
+        stringRules: getSingleRuleset(config.stringRules, defaults.stringRules)
     };
 }
 
@@ -149,11 +170,11 @@ export class ClassStringRuleEngine {
         this.echoExcludeRules = this.getExcludeRules(config.bladeEchoRules);
         this.echoIncludeRules = this.getIncludeRules(config.bladeEchoRules);
 
-        this.documentExcludeRules = this.getExcludeRules(config.documentRules);
-        this.documentIncludeRules = this.getIncludeRules(config.documentRules);
+        this.documentExcludeRules = config.documentRules.excludeWhen;
+        this.documentIncludeRules = config.documentRules.includeWhen;
 
-        this.stringExcludeRules = this.getExcludeRules(config.stringRules);
-        this.stringIncludeRules = this.getIncludeRules(config.stringRules);
+        this.stringExcludeRules = config.stringRules.excludeWhen;
+        this.stringIncludeRules = config.stringRules.includeWhen;
     }
 
     private getIncludeRules(rules: IClassRuleset[]): string[] {

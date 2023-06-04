@@ -177,11 +177,11 @@ If you'd like to modify this list you may add a `classStrings` configuration obj
 
 ```json
 {
-    "classStrings": [
+    "classStrings": {
         "excludedDirectives": [
             "if", "unless", "elseif", "for", "forelse", "foreach"
         ]
-    ]
+    }
 }
 ```
 
@@ -191,13 +191,13 @@ Sometimes you may wish to have the class string emulation feature enabled, but h
 
 ```json
 {
-    "classStrings": [
-        "documentRules": [
+    "classStrings": {
+        "documentRules": {
             "excludeWhen": [
-                "/skip/"
+                "skip"
             ]
-        ]
-    ]
+        }
+    }
 }
 ```
 
@@ -207,13 +207,13 @@ If you need to do the opposite, and only run the feature on documents that *do* 
 
 ```json
 {
-    "classStrings": [
-        "documentRules": [
+    "classStrings": {
+        "documentRules": {
             "includeWhen": [
                 
             ]
-        ]
-    ]
+        }
+    }
 }
 ```
 
@@ -223,19 +223,19 @@ Similar to excluding or including entire documents, you may also set up a list o
 
 ```json
 {
-    "classStrings": [
-        "stringRules": [
+    "classStrings": {
+        "stringRules": {
             "includeWhen": [
-                "/!tw/"
+                "!tw"
             ]
-        ]
-    ]
+        }
+    }
 }
 ```
 
 ### Class String Emulation and PHP Language Features
 
-By default, the class string emulation will not be applied to strings under a wide variety of situations. For example, if the string is contained with a condition statement, used in a comparison operation, or is the target of most assignments, the string will *not* be changed.
+By default, class string emulation will not be applied to strings under a wide variety of situations. For example, if the string is contained with a condition statement, used in a comparison operation, or is the target of most assignments, the string will *not* be changed.
 
 For example, the strings in the following template would not be impacted:
 
@@ -309,6 +309,32 @@ The following table lists the available configuration options:
 | Bitwise XOR Assignment | `assign_bitwise_xor` | Yes |
 | Left Shift Assignment | `assign_left_shift` | Yes |
 | Right Shift Assignment | `assign_right_shift` | Yes |
+
+\* By default the Blade Formatter will allow processing of strings contained within any method named `class`. You can change this behavior by adding a `allowedMethodNames` configuration item to the `classStrings` configuration within your `.blade.format.json` file:
+
+```json
+{
+    "classStrings": {
+        "allowedMethodNames": [
+            "class",
+            "methodName",
+            "anotherName"
+        ]
+    }
+}
+```
+
+Method names are case sensitive.
+
+### Ignored Strings
+
+Strings will be ignored if any of the following conditions are met (these behaviors cannot be disabled at this time):
+
+* The string does not contains a space
+* The string contains newline characters
+* The string contains any of the following characters: `${"'`
+* The string contains the `, ` (comma space) character sequence
+* Strings inside `{{-- format-ignore-start --}}{{-- format-ignore-end --}}` regions will **not** be changed
 
 ## Configuring the Blade Parser (Optional)
 
