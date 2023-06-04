@@ -1,9 +1,10 @@
 # Changelog
 
-## 1.5.0 (Unreleased)
+## 1.5.0
 
 - Improves whitespace management of Blade echoes inside embedded documents, such as `<style>` and `<script>`
 - Improves internal parser recovery mechanics when encountering improper directive arguments
+- Applies prettier plugins that target HTML class-lists to strings inside Blade directives and embedded PHP code (such as the TailwindCSS prettier plugin)
 
 ## 1.4.8
 
