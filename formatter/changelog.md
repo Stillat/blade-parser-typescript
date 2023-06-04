@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.0 (Unreleased)
+
+- Improves whitespace management of Blade echoes inside embedded documents, such as `<style>` and `<script>`
+- Improves internal parser recovery mechanics when encountering improper directive arguments
+
 ## 1.4.8
 
 - Corrects resolution of Pint configuration when formatting nested documents (#53)
@@ -12,7 +17,7 @@
 
 ## 1.4.6
 
-- Improves placement of spaces after directives when content is inlined within an element or attribute (#51)
+- Improves placement of spaces after directives when content is in-lined within an element or attribute (#51)
 - Improves relative indentation of directive arguments (#49)
 - Corrects an issue that would cause odd replacements inside attached conditions (#52)
 - Improves how PHP content is sent to Laravel Pint for better output results (#50)
@@ -25,17 +30,17 @@
 - Improves relative PHP indentation when formatting using Pint
 - Improves relative echo indentation when formatting using Pint
 - Improves namespace and `use` behavior when formatting using Pint
-- Improves formatting of docblock comments and their indentation when using Pint
+- Improves formatting of doc-block comments and their indentation when using Pint
 - Overrides the `no_unused_imports` ruleset when using Pint to prevent namespaces from being removed (this would impact documents that imported things at the top, but used them in separate PHP regions later)
-- Improves how simple conditions are formatted when they are attached to Blade echos on their left
+- Improves how simple conditions are formatted when they are attached to Blade echoes on their left
 - General improvements to overall layout engine
 - Pint formatting results will now utilize trailing comma configuration more consistently
 - Improved relative indentation of nested arrays and directive arguments when using Pint
-- Improved trailing whitespace after inlined condition behavior
+- Improved trailing whitespace after in-lined condition behavior
 - Resolves an issue where directive parenthesis can be duplicated when Pint fails
 - Resolves an issue where valid trailing semicolons may be removed when formatting raw PHP blocks
 - Improves on reflowing of content when Prettier's layout breaks virtual elements onto separate lines
-- Improves trailing whitespace behavior of inline directives, echos, etc. when lines are separated
+- Improves trailing whitespace behavior of inline directives, echoes, etc. when lines are separated
 
 ## 1.4.4
 
@@ -66,11 +71,11 @@
 ## 1.3.1
 
 - Improves formatting of nested documents (style, script)
-- Improves newline management when formatting really long lines inside echos
+- Improves newline management when formatting really long lines inside echoes
 
 ## 1.3.0
 
-- Adds a new `echoStyle` configuration option, with support for either `block` (default) or `inline` mode
+- Adds a new `echoestyle` configuration option, with support for either `block` (default) or `inline` mode
 - Corrects an issue where `{{-- format-ignore-start --}}` behaves incorrectly with nested documents (#44)
 - Improves management of print width settings internally (#46)
 - Corrects an issue that caused style blocks to be repeatedly indented (#45)
@@ -86,12 +91,12 @@
 
 ## 1.1.18
 
-- Formatting of echos will now respect manual newline placement, while preserving inline echos as text (#41)
+- Formatting of echoes will now respect manual newline placement, while preserving inline echoes as text (#41)
 - Improved condition and paired directive formatting to handle more nuanced situations (#40)
 
 ## 1.1.17
 
-- Improves formatting of code inside echos
+- Improves formatting of code inside echoes
 
 ## 1.1.16
 
@@ -110,7 +115,7 @@
 
 ## 1.1.13
 
-- Improves formatting of very long echos when start/ends were left on the same line
+- Improves formatting of very long echoes when start/ends were left on the same line
 
 ## 1.1.11
 
@@ -134,13 +139,13 @@
 
 ## 1.1.7
 
-- Preserves inline echos as text (#25)
+- Preserves inline echoes as text (#25)
 
 ## 1.1.6
 
 - Improves wrapping behavior inside conditions (#26)
 - Improves formatting of empty arrays inside `@props` and other directives (#23)
-- Fixes a bug where `{{ $echo }}` echos inside component tags were missed (#22)
+- Fixes a bug where `{{ $echo }}` echoes inside component tags were missed (#22)
 - Improves wrapping behavior of array arguments inside directives (#24)
 
 ## 1.1.5
@@ -150,7 +155,7 @@
 ## 1.1.4
 
 - Prevents email addresses from becoming directives (#21)
-- Improves formatting of multi-line echos (#20, #19, #18)
+- Improves formatting of multi-line echoes (#20, #19, #18)
 
 ## 1.1.3
 
