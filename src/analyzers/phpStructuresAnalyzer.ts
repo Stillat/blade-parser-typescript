@@ -16,6 +16,7 @@ export class PhpStructuresAnalyzer {
     private structures: ILabeledRange[] = [];
     private hasStructuresWithUnknownLocations: boolean = false;
     private excludedStructures: string[] = [];
+    private allowedMethods: string[] = [];
     private phpAssignToGeneric: Map<string, string> = new Map<string, string>([
         ['=', GenericLanguageStructures.Assignment],
         ['+=', GenericLanguageStructures.AdditionAssignment],
@@ -86,6 +87,10 @@ export class PhpStructuresAnalyzer {
         this.excludedStructures = structures;
     }
 
+    setAllowedMethods(methods: string[]) {
+        this.allowedMethods = methods;
+    }
+
     getStructures(): ILabeledRange[] {
         return this.structures;
     }
@@ -94,7 +99,8 @@ export class PhpStructuresAnalyzer {
         const ranges: ILabeledRange[] = [],
             excludedStructures = this.excludedStructures,
             phpOps = this.phpOperatorsToGeneric,
-            phpAssigns = this.phpAssignToGeneric;
+            phpAssigns = this.phpAssignToGeneric,
+            allowedMethodNames = this.allowedMethods;
         let foundUnknownLocations = false;
 
         function traverse(node: any) {
@@ -190,7 +196,7 @@ export class PhpStructuresAnalyzer {
                     if (lookup.offset.kind == 'identifier') {
                         const identifier = lookup.offset as Identifier;
 
-                        if (identifier.name == 'class') {
+                        if (allowedMethodNames.includes(identifier.name)) {
                             addRange = false;
                         }
                     }

@@ -14,6 +14,8 @@ export interface IClassStringConfiguration {
     excludedDirectives: string[],
     directives: IClassRuleset[],
 
+    allowedMethodNames: string[],
+
     bladePhpEnabled: boolean,
     phpTagsEnabled: boolean,
     phpTagRules: IClassRuleset[],
@@ -34,6 +36,7 @@ export function getDefaultClassStringConfig(): IClassStringConfiguration {
         excludedDirectives: [
             'if', 'unless', 'elseif', 'for', 'forelse', 'foreach',
         ],
+        allowedMethodNames: ['class'],
         directives: [],
         bladePhpEnabled: true,
         phpTagsEnabled: true,
@@ -100,6 +103,7 @@ export function classConfigFromObject(config: any): IClassStringConfiguration {
 
     return {
         enabled: config.enabled ?? defaults.enabled,
+        allowedMethodNames: config.allowedMethodNames ?? defaults.allowedMethodNames,
         directivesEnabled: config.directivesEnabled ?? defaults.directivesEnabled,
         excludedDirectives: config.excludedDirectives ?? defaults.excludedDirectives,
         directives: (config.directives ?? defaults.directives).map(validateRuleset),
