@@ -65,8 +65,7 @@ export class ClassStringEmulation {
                 } else {
                     if (node.directiveName == 'php') {
                         if (node.isClosedBy != null) {
-                            // TODO: Configurable.
-                            if (!node.hasValidPhp()) {
+                            if (!this.classRuleEngine.canTransformBladePhp(node) || !node.hasValidPhp()) {
                                 stringResults += node.sourceContent + node.documentContent;
                             } else {
                                 const phpEmulate = new ClassEmulator();
@@ -78,34 +77,38 @@ export class ClassStringEmulation {
                     } else if (node.directiveName == 'verbatim') {
                         stringResults += node.sourceContent + node.innerContent;
                     } else {
-                        // TODO: Valid PHP check.
-                        //       Check for detected JSON.
-                        //       Check for enabled within rules.
-                        const dirEmulate = new ClassEmulator();
-                        stringResults += dirEmulate.emulateString(node.sourceContent);
+                        if (node.hasJsonParameters || !this.classRuleEngine.canTransformDirective(node)) {
+                            stringResults += node.sourceContent;
+                        } else {
+                            if (!node.hasDirectiveParameters || !node.hasValidPhp()) {
+                                stringResults += node.sourceContent;
+                            } else {
+                                const dirEmulate = new ClassEmulator();
+                                stringResults += dirEmulate.emulateString(node.sourceContent);
 
-                        if (i + 1 < nodes.length && nodes[i + 1] instanceof LiteralNode) {
-                            const literal = nodes[i + 1] as LiteralNode;
+                                if (i + 1 < nodes.length && nodes[i + 1] instanceof LiteralNode) {
+                                    const literal = nodes[i + 1] as LiteralNode;
 
-                            if (literal.content.length == 0) {
-                                continue;
-                            }
+                                    if (literal.content.length == 0) {
+                                        continue;
+                                    }
 
-                            const firstCh = literal.content[0];
+                                    const firstCh = literal.content[0];
 
-                            if (StringUtilities.ctypePunct(firstCh)) {
-                                continue;
-                            }
+                                    if (StringUtilities.ctypePunct(firstCh)) {
+                                        continue;
+                                    }
 
-                            if (!StringUtilities.ctypeSpace(firstCh)) {
-                                stringResults += ' ';
+                                    if (!StringUtilities.ctypeSpace(firstCh)) {
+                                        stringResults += ' ';
+                                    }
+                                }
                             }
                         }
                     }
                 }
             } else if (node instanceof BladeEchoNode) {
-                // TODO: Configurable.
-                if (!node.hasValidPhp()) {
+                if (!this.classRuleEngine.canTransformBladeEcho(node) || !node.hasValidPhp()) {
                     stringResults += node.sourceContent;
                 } else {
                     const phpEmulate = new ClassEmulator(),
@@ -130,10 +133,9 @@ export class ClassStringEmulation {
             } else if (node instanceof BladeComponentNode) {
                 stringResults += node.sourceContent;
             } else if (node instanceof InlinePhpNode) {
-                if (!node.hasValidPhp()) {
+                if (!this.classRuleEngine.canTransformInlinePhp(node) || !node.hasValidPhp()) {
                     stringResults += node.sourceContent;
                 } else {
-                    // TODO: Configurable.
                     const phpEmulate = new ClassEmulator();
                     stringResults += phpEmulate.emulatePhpTag(node.sourceContent);
                 }
