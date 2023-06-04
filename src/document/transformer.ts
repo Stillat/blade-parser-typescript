@@ -1,3 +1,4 @@
+import { getDefaultClassStringConfig } from '../formatting/classStringsConfig';
 import { FormattingOptions } from '../formatting/formattingOptions';
 import { PhpOperatorReflow } from '../formatting/phpOperatorReflow';
 import { formatBladeString, formatBladeStringWithPint, getPhpOptions } from '../formatting/prettier/utils';
@@ -164,7 +165,8 @@ export class Transformer {
         pintTempDirectory: '',
         pintCacheDirectory: '',
         pintCacheEnabled: true,
-        pintConfigPath: ''
+        pintConfigPath: '',
+        classStrings: getDefaultClassStringConfig()
     }
 
     constructor(doc: BladeDocument) {

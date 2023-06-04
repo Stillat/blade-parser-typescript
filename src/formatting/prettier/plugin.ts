@@ -49,8 +49,7 @@ const plugin: prettier.Plugin = {
 
                 let prettierText = text;
 
-                // TODO: Pull from the env. settings.
-                const classConfig = getDefaultClassStringConfig(),
+                const classConfig = transformOptions.classStrings,
                     phpValidator = new PhpParserPhpValidator();
 
                 if (classConfig.enabled) {

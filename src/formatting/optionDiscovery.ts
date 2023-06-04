@@ -3,6 +3,7 @@ import * as path from 'path';
 import { CommonEventShortcuts } from '../parser/excludeDirectives/commonEventShortcuts';
 import { CssAtRules } from '../parser/excludeDirectives/cssAtRules';
 import { FormattingOptions } from './formattingOptions';
+import { classConfigFromObject, getDefaultClassStringConfig } from './classStringsConfig';
 
 const BLADE_CONFIG_FILE = '.blade.format.json';
 
@@ -29,6 +30,7 @@ const defaultSettings: FormattingOptions = {
     pintTempDirectory: '',
     pintCacheEnabled: true,
     pintConfigPath: '',
+    classStrings: getDefaultClassStringConfig()
 };
 
 export { defaultSettings };
@@ -130,7 +132,8 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         pintTempDir = '',
         pintCacheDir = '',
         pintCacheEnabled = true,
-        pintConfigPath = '';
+        pintConfigPath = '',
+        classStrings = getDefaultClassStringConfig();
 
     if (typeof configObject.ignoreDirectives !== 'undefined' && configObject.ignoreDirectives !== null) {
         ignoreDirectives = configObject.ignoreDirectives as string[];
@@ -216,6 +219,10 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         spacesAfterControlDirective = 3;
     }
 
+    if (typeof configObject.classStrings !== 'undefined' && configObject.classStrings != null) {
+        classStrings = classConfigFromObject(configObject.classStrings);
+    }
+
     return {
         ignoreDirectives: ignoreDirectives,
         spacesAfterDirective: spacesAfterDirective,
@@ -233,7 +240,8 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         pintCacheDirectory: pintCacheDir,
         pintTempDirectory: pintTempDir,
         pintCacheEnabled: pintCacheEnabled,
-        pintConfigPath: pintConfigPath
+        pintConfigPath: pintConfigPath,
+        classStrings:classStrings
     };
 }
 

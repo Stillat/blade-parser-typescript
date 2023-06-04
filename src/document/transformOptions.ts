@@ -1,3 +1,5 @@
+import { IClassStringConfiguration } from '../formatting/classStringsConfig';
+
 export interface TransformOptions {
     spacesAfterDirective: number,
     spacesAfterControlDirective: number,
@@ -13,4 +15,5 @@ export interface TransformOptions {
     pintCacheDirectory: string,
     pintCacheEnabled: boolean,
     pintConfigPath: string,
+    classStrings: IClassStringConfiguration
 }

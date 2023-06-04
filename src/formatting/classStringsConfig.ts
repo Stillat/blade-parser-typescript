@@ -88,6 +88,25 @@ export function getDefaultClassStringConfig(): IClassStringConfiguration {
     };
 }
 
+export function classConfigFromObject(config: any): IClassStringConfiguration {
+    const defaults = getDefaultClassStringConfig();
+
+    return {
+        enabled: config.enabled ?? defaults.enabled,
+        directivesEnabled: config.directivesEnabled ?? defaults.directivesEnabled,
+        excludedDirectives: config.excludedDirectives ?? defaults.excludedDirectives,
+        directives: config.directives ?? defaults.directives,
+        bladePhpEnabled: config.bladePhpEnabled ?? defaults.bladePhpEnabled,
+        phpTagsEnabled: config.phpTagsEnabled ?? defaults.phpTagsEnabled,
+        phpTagRules: config.phpTagRules ?? defaults.phpTagRules,
+        ignoredLanguageStructures: config.ignoredLanguageStructures ?? defaults.ignoredLanguageStructures,
+        bladeEchoEnabled: config.bladeEchoEnabled ?? defaults.bladeEchoEnabled,
+        bladeEchoRules: config.bladeEchoRules ?? defaults.bladeEchoRules,
+        documentRules: config.documentRules ?? defaults.documentRules,
+        stringRules: config.stringRules ?? defaults.stringRules,
+    };
+}
+
 export class ClassStringRuleEngine {
     private config: IClassStringConfiguration;
 
