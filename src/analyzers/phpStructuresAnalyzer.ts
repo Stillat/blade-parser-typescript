@@ -15,6 +15,7 @@ export class PhpStructuresAnalyzer {
     private parser: Engine;
     private structures: ILabeledRange[] = [];
     private hasStructuresWithUnknownLocations: boolean = false;
+    private excludedStructures: string[] = [];
 
     constructor() {
         this.parser = new Engine({
@@ -38,12 +39,17 @@ export class PhpStructuresAnalyzer {
         this.findStructureLocations(ast, locationOffset);
     }
 
+    setExcludedStructures(structures: string[]) {
+        this.excludedStructures = structures;
+    }
+
     getStructures(): ILabeledRange[] {
         return this.structures;
     }
 
     private findStructureLocations(ast: Node, locationOffset: number): void {
-        const ranges: ILabeledRange[] = [];
+        const ranges: ILabeledRange[] = [],
+            excludedStructures = this.excludedStructures;
         let foundUnknownLocations = false;
 
         function traverse(node: any) {
@@ -54,11 +60,13 @@ export class PhpStructuresAnalyzer {
                     foundUnknownLocations = true;
                 }
 
-                ranges.push({
-                    label: GenericLanguageStructures.IfStatement,
-                    start: (ifStatement.test.loc?.start.offset ?? -1) - locationOffset,
-                    end: (ifStatement.test.loc?.end.offset ?? -1) - locationOffset
-                });
+                if (excludedStructures.includes(GenericLanguageStructures.IfStatement)) {
+                    ranges.push({
+                        label: GenericLanguageStructures.IfStatement,
+                        start: (ifStatement.test.loc?.start.offset ?? -1) - locationOffset,
+                        end: (ifStatement.test.loc?.end.offset ?? -1) - locationOffset
+                    });
+                }
             } else if (node.kind == 'retif') {
                 const retIf = node as RetIf;
 
@@ -66,11 +74,13 @@ export class PhpStructuresAnalyzer {
                     foundUnknownLocations = true;
                 }
 
-                ranges.push({
-                    label: GenericLanguageStructures.TernaryStatement,
-                    start: (retIf.test.loc?.start.offset ?? -1) - locationOffset,
-                    end: (retIf.test.loc?.end.offset ?? -1) - locationOffset + 2
-                });
+                if (excludedStructures.includes(GenericLanguageStructures.TernaryStatement)) {
+                    ranges.push({
+                        label: GenericLanguageStructures.TernaryStatement,
+                        start: (retIf.test.loc?.start.offset ?? -1) - locationOffset,
+                        end: (retIf.test.loc?.end.offset ?? -1) - locationOffset + 2
+                    });
+                }
             } else if (node.kind == 'call') {
                 const callStatement = node as Call;
                 let addRange = true;
@@ -86,6 +96,10 @@ export class PhpStructuresAnalyzer {
                         }
                     }
 
+                }
+
+                if (!excludedStructures.includes(GenericLanguageStructures.CallStatement)) {
+                    addRange = false;
                 }
 
                 if (addRange) {

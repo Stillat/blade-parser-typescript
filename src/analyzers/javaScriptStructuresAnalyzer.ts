@@ -6,6 +6,7 @@ const espree = require('espree');
 export class JavaScriptStructuresAnalyzer {
     private document: BladeDocument;
     private structures: ILabeledRange[] = [];
+    private excludedStructures: string[] = [];
 
     constructor(document: BladeDocument) {
         this.document = document;
@@ -16,31 +17,37 @@ export class JavaScriptStructuresAnalyzer {
             .getParser()
             .getFragmentsParser()
             .getEmbeddedDocumentStructures(),
-            ranges: ILabeledRange[] = [];
+            ranges: ILabeledRange[] = [],
+            excludedStructures = this.excludedStructures;
 
         fragments.forEach((structure) => {
             const jsCode = this.document.getParser().getText((structure.start.endPosition?.offset ?? 0) + 1, structure.end?.startPosition?.offset ?? 0),
                 startShift = (structure.start.endPosition?.offset ?? 0) + 1;
             const ast = espree.parse(jsCode, { range: true });
+
             function traverse(node: any) {
                 if (node.type === 'CallExpression') {
                     const startIndex = node.start as number,
                         endIndex = node.end as number;
 
-                    ranges.push({
-                        label: GenericLanguageStructures.CallStatement,
-                        start: startIndex + startShift,
-                        end: endIndex + startShift
-                    });
+                    if (excludedStructures.includes(GenericLanguageStructures.CallStatement)) {
+                        ranges.push({
+                            label: GenericLanguageStructures.CallStatement,
+                            start: startIndex + startShift,
+                            end: endIndex + startShift
+                        });
+                    }
                 } else if (node.type === 'IfStatement') {
                     const startIndex = node.start as number,
                         endIndex = node.end as number;
 
-                    ranges.push({
-                        label: GenericLanguageStructures.IfStatement,
-                        start: startIndex + startShift,
-                        end: endIndex + startShift
-                    });
+                    if (excludedStructures.includes(GenericLanguageStructures.IfStatement)) {
+                        ranges.push({
+                            label: GenericLanguageStructures.IfStatement,
+                            start: startIndex + startShift,
+                            end: endIndex + startShift
+                        });
+                    }
                 }
 
                 for (const key in node) {

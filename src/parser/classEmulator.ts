@@ -16,6 +16,10 @@ export class ClassEmulator {
         this.stringParser = new InlineStringParser();
     }
 
+    setExcludedLanguageStructures(structures: string[]) {
+        this.phpStructuresAnalyzer.setExcludedStructures(structures);
+    }
+
     withAdditionalRanges(mergeRanges: ILabeledRange[]) {
         this.mergeRanges = this.mergeRanges.concat(mergeRanges);
     }

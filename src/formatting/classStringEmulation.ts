@@ -30,6 +30,13 @@ export class ClassStringEmulation {
         return this;
     }
 
+    private getEmulator(): ClassEmulator {
+        const emulator = new ClassEmulator();
+        emulator.setExcludedLanguageStructures(this.classStringConfig.ignoredLanguageStructures);
+
+        return emulator;
+    }
+
     transform(content: string): string {
         const document = new BladeDocument();
 
@@ -68,7 +75,7 @@ export class ClassStringEmulation {
                             if (!this.classRuleEngine.canTransformBladePhp(node) || !node.hasValidPhp()) {
                                 stringResults += node.sourceContent + node.documentContent;
                             } else {
-                                const phpEmulate = new ClassEmulator();
+                                const phpEmulate = this.getEmulator();
                                 stringResults += '@php' + phpEmulate.emulatePhpNode(node.documentContent);
                             }
                         } else {
@@ -83,7 +90,7 @@ export class ClassStringEmulation {
                             if (!node.hasDirectiveParameters || !node.hasValidPhp()) {
                                 stringResults += node.sourceContent;
                             } else {
-                                const dirEmulate = new ClassEmulator();
+                                const dirEmulate = this.getEmulator();
                                 stringResults += dirEmulate.emulateString(node.sourceContent);
                             }
 
@@ -111,7 +118,7 @@ export class ClassStringEmulation {
                 if (!this.classRuleEngine.canTransformBladeEcho(node) || !node.hasValidPhp()) {
                     stringResults += node.sourceContent;
                 } else {
-                    const phpEmulate = new ClassEmulator(),
+                    const phpEmulate = this.getEmulator(),
                         echoResults = phpEmulate.emulatePhpNode(node.content);
                     let start = '{{ ',
                         end = ' }}';
@@ -136,7 +143,7 @@ export class ClassStringEmulation {
                 if (!this.classRuleEngine.canTransformInlinePhp(node) || !node.hasValidPhp()) {
                     stringResults += node.sourceContent;
                 } else {
-                    const phpEmulate = new ClassEmulator();
+                    const phpEmulate = this.getEmulator();
                     stringResults += phpEmulate.emulatePhpTag(node.sourceContent);
                 }
             }
