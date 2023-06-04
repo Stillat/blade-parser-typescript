@@ -92,6 +92,7 @@ export class DocumentFormatter {
             .withPhpTagFormatter(this.phpTagFormatter)
             .withJsonFormatter(this.jsonFormatter);
 
+        document.transform().setFormattingOptions(this.formattingOptions);
         if (this.transformOptions != null) {
             document.transform().withOptions(this.transformOptions);
         }

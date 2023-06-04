@@ -1,4 +1,5 @@
 import { ClassStringEmulation } from '../formatting/classStringEmulation';
+import { FormattingOptions } from '../formatting/formattingOptions';
 import { PhpOperatorReflow } from '../formatting/phpOperatorReflow';
 import { formatBladeString, formatBladeStringWithPint, getPhpOptions } from '../formatting/prettier/utils';
 import { SyntaxReflow } from '../formatting/syntaxReflow';
@@ -144,6 +145,7 @@ export class Transformer {
     private useLaravelPint: boolean = false;
     private pintTransformer: PintTransformer | null = null;
     private filePath: string = '';
+    private formattingOptions: FormattingOptions | null = null;
 
     private phpFormatter: PhpFormatter | null = null;
     private blockPhpFormatter: BlockPhpFormatter | null = null;
@@ -193,6 +195,10 @@ export class Transformer {
         this.setPintTransformer(transformer.getPintTransformer());
 
         return this;
+    }
+
+    setFormattingOptions(formattingOptions: FormattingOptions | null) {
+        this.formattingOptions = formattingOptions;
     }
 
     withJsonFormatter(formatter: JsonFormatter | null) {
@@ -1494,9 +1500,9 @@ export class Transformer {
             let attachedDoc = directive.directive.documentContent;
 
             if (this.transformOptions.useLaravelPint) {
-                attachedDoc = formatBladeStringWithPint(attachedDoc, null, this.transformOptions).trim();
+                attachedDoc = formatBladeStringWithPint(attachedDoc, this.formattingOptions, this.transformOptions).trim();
             } else {
-                attachedDoc = formatBladeString(attachedDoc).trim();
+                attachedDoc = formatBladeString(attachedDoc, this.formattingOptions).trim();
             }
             const dirResult = this.printDirective(directive.directive, this.indentLevel(slug)).trim(),
                 relIndent = this.findNewLeadingStart(value, slug),

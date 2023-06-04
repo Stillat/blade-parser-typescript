@@ -69,9 +69,10 @@ const plugin: prettier.Plugin = {
     printers: {
         blade: {
             print(path: prettier.AstPath) {
-                const doc = path.stack[0] as BladeDocument;
+                const doc = path.stack[0] as BladeDocument,
+                    formatter = new PrettierDocumentFormatter(prettierOptions, transformOptions);
 
-                return (new PrettierDocumentFormatter(prettierOptions, transformOptions)).formatDocument(doc);
+                return formatter.formatDocument(doc);
             }
         }
     },
