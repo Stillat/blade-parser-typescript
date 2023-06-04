@@ -1,5 +1,7 @@
 import { ILabeledRange } from '../nodes/labeledRange';
 import { isStartOfString } from './scanners/isStartOfString';
+import { skipToEndOfLine } from './scanners/skipToEndOfLine';
+import { skipToEndOfMultilineComment } from './scanners/skipToEndOfMultilineComment';
 import { skipToEndOfStringTraced } from './scanners/skipToEndOfString';
 import { StringIterator } from './stringIterator';
 
@@ -88,6 +90,16 @@ export class InlineStringParser implements StringIterator {
 
         for (this.currentIndex = 0; this.currentIndex < this.inputLen; this.currentIndex += 1) {
             this.checkCurrentOffsets();
+
+            if (this.cur == '/' && this.next == '/') {
+                skipToEndOfLine(this, true);
+                continue;
+            }
+
+            if (this.cur == '/' && this.next == '*') {
+                skipToEndOfMultilineComment(this, true);
+                continue;
+            }
 
             if (isStartOfString(this.cur)) {
                 const stringStart = this.cur,
