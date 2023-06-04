@@ -85,23 +85,23 @@ export class ClassStringEmulation {
                             } else {
                                 const dirEmulate = new ClassEmulator();
                                 stringResults += dirEmulate.emulateString(node.sourceContent);
+                            }
 
-                                if (i + 1 < nodes.length && nodes[i + 1] instanceof LiteralNode) {
-                                    const literal = nodes[i + 1] as LiteralNode;
+                            if (i + 1 < nodes.length && nodes[i + 1] instanceof LiteralNode) {
+                                const literal = nodes[i + 1] as LiteralNode;
 
-                                    if (literal.content.length == 0) {
-                                        continue;
-                                    }
+                                if (literal.content.length == 0) {
+                                    continue;
+                                }
 
-                                    const firstCh = literal.content[0];
+                                const firstCh = literal.content[0];
 
-                                    if (StringUtilities.ctypePunct(firstCh)) {
-                                        continue;
-                                    }
+                                if (StringUtilities.ctypePunct(firstCh)) {
+                                    continue;
+                                }
 
-                                    if (!StringUtilities.ctypeSpace(firstCh)) {
-                                        stringResults += ' ';
-                                    }
+                                if (!StringUtilities.ctypeSpace(firstCh)) {
+                                    stringResults += ' ';
                                 }
                             }
                         }

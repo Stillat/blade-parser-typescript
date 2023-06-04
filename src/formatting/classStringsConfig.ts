@@ -132,7 +132,7 @@ export class ClassStringRuleEngine {
 
         const docText = document.getContent();
 
-        if (!this.passes(docText, this.documentExcludeRules)) {
+        if (this.documentExcludeRules.length > 0 && !this.passes(docText, this.documentExcludeRules)) {
             return false;
         }
 
@@ -140,7 +140,7 @@ export class ClassStringRuleEngine {
     }
 
     private canTransform(content: string, specificExcludes: string[], specificIncludes: string[]): boolean {
-        if (this.passes(content, specificExcludes)) {
+        if (specificExcludes.length > 0 && this.passes(content, specificExcludes)) {
             return false;
         }
 
@@ -149,7 +149,7 @@ export class ClassStringRuleEngine {
         }
 
         // Test against the generic rules, if available.
-        if (this.passes(content, this.stringExcludeRules)) {
+        if (this.stringExcludeRules.length > 0 && this.passes(content, this.stringExcludeRules)) {
             return false;
         }
 
