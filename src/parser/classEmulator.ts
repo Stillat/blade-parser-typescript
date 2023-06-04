@@ -30,6 +30,11 @@ export class ClassEmulator {
             return false;
         }
 
+        // Probably shouldn't continue with this, either.
+        if (value.includes(', ')) {
+            return false;
+        }
+
         for (let i = 0; i < this.charsToAvoid.length; i++) {
             if (value.includes(this.charsToAvoid[i])) {
                 return false;
