@@ -37,7 +37,7 @@
         "camelize": "^1.0.0",
         "espree": "^9.5.2",
         "jsonata": "1.8.6",
-        "php-parser": "3.1.0-beta.10",
+        "php-parser": "3.1.4",
         "prettier": "^2.5.1",
         "sha1": "^1.1.1",
         "uuid": "^8.3.2"

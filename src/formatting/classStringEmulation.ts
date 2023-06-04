@@ -74,11 +74,15 @@ export class ClassStringEmulation {
                 } else {
                     if (node.directiveName == 'php') {
                         if (node.isClosedBy != null) {
-                            if (this.isIgnoring ||!this.classRuleEngine.canTransformBladePhp(node) || !node.hasValidPhp()) {
+                            if (this.isIgnoring ||!this.classRuleEngine.canTransformBladePhp(node)) {
                                 stringResults += node.sourceContent + node.documentContent;
                             } else {
-                                const phpEmulate = this.getEmulator();
-                                stringResults += '@php' + phpEmulate.emulatePhpNode(node.documentContent);
+                                if (this.phpValidator?.isValid(node.documentContent, true)) {
+                                    const phpEmulate = this.getEmulator();
+                                    stringResults += '@php' + phpEmulate.emulatePhpNode(node.documentContent);
+                                } else {
+                                    stringResults += node.sourceContent + node.documentContent;
+                                }                                
                             }
                         } else {
                             stringResults += node.sourceContent;
