@@ -1,4 +1,4 @@
-import { Engine, If, Call, Node, Variable, PropertyLookup, Identifier, RetIf } from 'php-parser';
+import { Engine, If, Call, Node, Variable, PropertyLookup, Identifier, RetIf, Bin } from 'php-parser';
 import { ILabeledRange } from '../nodes/labeledRange';
 import { GenericLanguageStructures } from './genericLanguageStructures';
 
@@ -79,6 +79,25 @@ export class PhpStructuresAnalyzer {
                         label: GenericLanguageStructures.TernaryStatement,
                         start: (retIf.test.loc?.start.offset ?? -1) - locationOffset,
                         end: (retIf.test.loc?.end.offset ?? -1) - locationOffset + 2
+                    });
+                }
+            } else if (node.kind == 'bin') {
+                const binStatement = node as Bin;
+                let addRange = true;
+
+                if (binStatement.left.loc == null || binStatement.right.loc == null) {
+                    foundUnknownLocations = true;
+                }
+
+                if (!excludedStructures.includes(GenericLanguageStructures.BinCompare)) {
+                    addRange = false;
+                }
+
+                if (addRange) {
+                    ranges.push({
+                        label: GenericLanguageStructures.BinCompare,
+                        start: (binStatement.left.loc?.start.offset ?? -1) - locationOffset,
+                        end: (binStatement.right.loc?.end.offset ?? -1) - locationOffset
                     });
                 }
             } else if (node.kind == 'call') {

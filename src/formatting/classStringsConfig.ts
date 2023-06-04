@@ -42,7 +42,8 @@ export function getDefaultClassStringConfig(): IClassStringConfiguration {
         ignoredLanguageStructures: [
             GenericLanguageStructures.CallStatement,
             GenericLanguageStructures.IfStatement,
-            GenericLanguageStructures.TernaryStatement
+            GenericLanguageStructures.TernaryStatement,
+            GenericLanguageStructures.BinCompare,
         ],
 
         bladeEchoEnabled: true,
