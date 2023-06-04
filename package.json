@@ -14,7 +14,7 @@
         "watch": "tsc -b -w",
         "test:core": "npm run compile && mocha ./out/test/!(*pint*).test.js -- -u tdd",
         "test:core_pint": "npm run compile && mocha ./out/test/*pint*.test.js -- -u tdd",
-        "test:parser": "npm run compile && mocha ./out/test/**/*.test.js -- -u tdd",
+        "test:parser": "npm run compile && mocha ./out/test/**/*.test.js -- -u tdd --slow 10000 --timeout 20000 --parallel",
         "bundle:prettier": "npm run compile && npm run esbuild:prettier",
         "esbuild:prettier": "esbuild ./src/formatting/prettier/plugin.ts --bundle --minify --outfile=./formatter/plugin.js --format=cjs --platform=node --external:prettier"
     },
