@@ -5,12 +5,14 @@ import { ClassEmulator } from '../parser/classEmulator';
 import { PhpValidator } from '../parser/php/phpValidator';
 import { ParserOptions, getParserOptions } from '../parser/parserOptions';
 import { ClassStringRuleEngine, IClassStringConfiguration } from './classStringsConfig';
+import { TransformIgnore } from '../document/transformIgnore';
 
 export class ClassStringEmulation {
     private classStringConfig: IClassStringConfiguration;
     private classRuleEngine: ClassStringRuleEngine;
     private phpValidator: PhpValidator | null = null;
     private parserOptions: ParserOptions;
+    private isIgnoring: boolean = false;
 
     constructor(classStringConfig: IClassStringConfiguration) {
         this.classStringConfig = classStringConfig;
@@ -67,12 +69,12 @@ export class ClassStringEmulation {
             } else if (node instanceof ConditionNode) {
                 stringResults += node.nodeContent;
             } else if (node instanceof DirectiveNode) {
-                if (this.classStringConfig.excludedDirectives.includes(node.directiveName.toLowerCase())) {
+                if (this.isIgnoring ||this.classStringConfig.excludedDirectives.includes(node.directiveName.toLowerCase())) {
                     stringResults += node.sourceContent;
                 } else {
                     if (node.directiveName == 'php') {
                         if (node.isClosedBy != null) {
-                            if (!this.classRuleEngine.canTransformBladePhp(node) || !node.hasValidPhp()) {
+                            if (this.isIgnoring ||!this.classRuleEngine.canTransformBladePhp(node) || !node.hasValidPhp()) {
                                 stringResults += node.sourceContent + node.documentContent;
                             } else {
                                 const phpEmulate = this.getEmulator();
@@ -84,7 +86,7 @@ export class ClassStringEmulation {
                     } else if (node.directiveName == 'verbatim') {
                         stringResults += node.sourceContent + node.innerContent;
                     } else {
-                        if (node.hasJsonParameters || !this.classRuleEngine.canTransformDirective(node)) {
+                        if (this.isIgnoring ||node.hasJsonParameters || !this.classRuleEngine.canTransformDirective(node)) {
                             stringResults += node.sourceContent;
                         } else {
                             if (!node.hasDirectiveParameters || !node.hasValidPhp()) {
@@ -115,11 +117,11 @@ export class ClassStringEmulation {
                     }
                 }
             } else if (node instanceof BladeEchoNode) {
-                if (!this.classRuleEngine.canTransformBladeEcho(node) || !node.hasValidPhp()) {
+                if (this.isIgnoring || !this.classRuleEngine.canTransformBladeEcho(node) || !node.hasValidPhp()) {
                     stringResults += node.sourceContent;
                 } else {
                     const phpEmulate = this.getEmulator(),
-                        echoResults = phpEmulate.emulatePhpNode(node.content);
+                        echoResults = phpEmulate.emulatePhpNode(node.content).trim();
                     let start = '{{ ',
                         end = ' }}';
 
@@ -137,10 +139,16 @@ export class ClassStringEmulation {
                 stringResults += node.nodeContent;
             } else if (node instanceof BladeCommentNode) {
                 stringResults += node.sourceContent;
+
+                if (node.innerContent.trim() == TransformIgnore.FormatIgnoreStart) {
+                    this.isIgnoring = true;
+                } else if (node.innerContent.trim() == TransformIgnore.FormatIgnoreEnd) {
+                    this.isIgnoring = false;
+                }
             } else if (node instanceof BladeComponentNode) {
                 stringResults += node.sourceContent;
             } else if (node instanceof InlinePhpNode) {
-                if (!this.classRuleEngine.canTransformInlinePhp(node) || !node.hasValidPhp()) {
+                if (this.isIgnoring || !this.classRuleEngine.canTransformInlinePhp(node) || !node.hasValidPhp()) {
                     stringResults += node.sourceContent;
                 } else {
                     const phpEmulate = this.getEmulator();

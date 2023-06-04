@@ -2143,9 +2143,9 @@ export class DocumentParser implements StringIterator {
 
                     if (logicGroupResults.foundEnd) {
                         directive = this.makeDirectiveWithParameters(directiveName.trim(), directiveNameStartsOn, directiveNameEndsOn, logicGroupResults);
-                        this.didRecoveryLogic = true;
                     } else {
                         directive = this.makeDirective(directiveName.trim(), directiveNameStartsOn, directiveNameEndsOn);
+                        this.didRecoveryLogic = true;
                     }
 
                     this.lastNode = directive;

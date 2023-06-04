@@ -28,7 +28,7 @@ suite('<style> Containing Structures', () => {
         <style>
             .thing {
                 background-color: @foreach ($something as $somethingElse)
-                    {{ $thing}}
+                    {{ $thing }}
                 @endforeach
             }
         </style>
@@ -68,7 +68,7 @@ suite('<style> Containing Structures', () => {
             <style>
                 .thing {
                     background-color: @foreach ($something as $somethingElse)
-                        {{ $thing}}
+                        {{ $thing }}
                     @endforeach
                 }
             </style>

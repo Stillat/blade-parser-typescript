@@ -1,4 +1,3 @@
-import { ClassStringEmulation } from '../formatting/classStringEmulation';
 import { FormattingOptions } from '../formatting/formattingOptions';
 import { PhpOperatorReflow } from '../formatting/phpOperatorReflow';
 import { formatBladeString, formatBladeStringWithPint, getPhpOptions } from '../formatting/prettier/utils';
@@ -15,6 +14,7 @@ import { DirectivePrinter } from './printers/directivePrinter';
 import { EchoPrinter } from './printers/echoPrinter';
 import { IndentLevel } from './printers/indentLevel';
 import { getPrintWidth } from './printers/printWidthUtils';
+import { TransformIgnore } from './transformIgnore';
 import { TransformOptions } from './transformOptions';
 
 interface EmbeddedDocument {
@@ -94,8 +94,6 @@ interface VirtualBlockStructure {
 }
 
 export class Transformer {
-    private formatIgnoreStart = 'format-ignore-start';
-    private formatIgnoreEnd = 'format-ignore-end';
     private isInsideIgnoreFormatter: boolean = false;
     private ignoredLiteralBlocks: Map<string, AbstractNode[]> = new Map();
     private activeLiteralSlug: string = '';
@@ -1298,7 +1296,7 @@ export class Transformer {
                 this.pushLiteralBlock(this.activeLiteralSlug, node);
 
                 if (node instanceof BladeCommentNode) {
-                    if (node.innerContent.trim().toLowerCase() == this.formatIgnoreEnd) {
+                    if (node.innerContent.trim().toLowerCase() == TransformIgnore.FormatIgnoreEnd) {
                         this.isInsideIgnoreFormatter = false;
                         return;
                     }
@@ -1323,7 +1321,7 @@ export class Transformer {
             } else if (node instanceof ForElseNode) {
                 result += this.prepareForElse(node);
             } else if (node instanceof BladeCommentNode) {
-                if (node.innerContent.trim() == this.formatIgnoreStart) {
+                if (node.innerContent.trim() == TransformIgnore.FormatIgnoreStart) {
                     this.isInsideIgnoreFormatter = true;
                     this.activeLiteralSlug = this.makeSlug(16);
                     this.pushStartLiteralBlock(this.activeLiteralSlug, node);
