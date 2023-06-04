@@ -40,6 +40,8 @@ You are free to install and configure whichever versions of these plugins you wo
 
 For example, if we had installed the `prettier-plugin-tailwindcss` plugin, we could update our `.prettierrc` file like so:
 
+> Starting with version 1.5, prettier plugins that modify class strings, such as `prettier-plugin-tailwindcss` can also be applied to strings contained within Blade directives and embedded PHP code. See the section "Class String Emulation" for more information.
+
 ```json
 {
     "tailwindConfig": "path/to/tailwind.config.js",
@@ -145,6 +147,168 @@ Entire sections of a Blade template can be ignored by surrounding it with two sp
 {{-- format-ignore-end --}}
 </div>
 ```
+
+## Class String Emulation
+
+Class string emulation is a feature (starting with version 1.5) that is able to apply the results of prettier plugins that target CSS class lists to strings contained within Blade directives and embedded PHP code. This feature also works when using Laravel Pint as the PHP formatter.
+
+This feature is enabled by default, with a sensible (and safe) default configuration. If you'd like to disable this feature entirely, you may add a `classStrings` configuration object to your `.blade.format.json` file and set the `enabled` value to `false`:
+
+```json
+{
+    "classStrings": {
+        "enabled": false
+    }
+}
+```
+
+### Setting Excluded Directives
+
+By default, the Blade formatter will not apply this feature to the following list of directives:
+
+* if
+* unless
+* elseif
+* for
+* forelse
+* foreach
+
+If you'd like to modify this list you may add a `classStrings` configuration object to your `.blade.format.json` file and modify the `excludedDirectives` configuration property:
+
+```json
+{
+    "classStrings": [
+        "excludedDirectives": [
+            "if", "unless", "elseif", "for", "forelse", "foreach"
+        ]
+    ]
+}
+```
+
+### Avoiding Class String Emulation for Entire Templates
+
+Sometimes you may wish to have the class string emulation feature enabled, but have the ability to not have it evaluate certain documents or templates. To help with this, you may set up a list of exclusion regular expressions that will be used to reject a template.
+
+```json
+{
+    "classStrings": [
+        "documentRules": [
+            "excludeWhen": [
+                "/skip/"
+            ]
+        ]
+    ]
+}
+```
+
+Each regular expression in the list will be tested against the document before it is evaluated. If any of the exclusion patterns pass, the template will not have class string emulation applied to Blade directives or embedded PHP content.
+
+If you need to do the opposite, and only run the feature on documents that *do* match a certain pattern, you may alternatively use the `includeWhen` option:
+
+```json
+{
+    "classStrings": [
+        "documentRules": [
+            "includeWhen": [
+                
+            ]
+        ]
+    ]
+}
+```
+
+### Specifying Rules for Strings
+
+Similar to excluding or including entire documents, you may also set up a list of rules that are applied to each string. For example, if we only wanted to run the feature on Blade directive or PHP strings that contain the value `!tw`, we could set up our `.blade.format.json` file like so:
+
+```json
+{
+    "classStrings": [
+        "stringRules": [
+            "includeWhen": [
+                "/!tw/"
+            ]
+        ]
+    ]
+}
+```
+
+### Class String Emulation and PHP Language Features
+
+By default, the class string emulation will not be applied to strings under a wide variety of situations. For example, if the string is contained with a condition statement, used in a comparison operation, or is the target of most assignments, the string will *not* be changed.
+
+For example, the strings in the following template would not be impacted:
+
+```blade
+
+@php
+
+    if ($someValue == 'text-white px-4 sm:px-8 py-2') {
+
+    }
+
+@endphp
+
+```
+
+If you really want to override this behavior (you probably don't need to), you can adjust this behavior by updating the `.blade.format.json` file and adding a `ignoredLanguageStructures` configuration property:
+
+> Important: If you override this value, you must include *all* of the structures you would like ignored.
+
+```json
+{
+    "classStrings": {
+        "ignoredLanguageStructures": [
+            "assign",
+            "concat",
+            ...
+        ]
+    }
+}
+```
+
+The following table lists the available configuration options:
+
+| PHP Operator/Structure | Configuration String | Ignored by Default |
+|---|---|--|
+| If Statements | `if` | Yes |
+| Method/Function Calls | `call` | Yes* |
+| Ternary | `ternary` | Yes |
+| Addition | `addition` | Yes |
+| Subtraction | `subtraction` | Yes |
+| Multiplication | `multiplication` | Yes |
+| Division | `division` | Yes |
+| Modulus | `modulus` | Yes |
+| Exponentiation | `exponentiation` | Yes |
+| Generic Comparison (if a more specific match was not found) | `compare` | Yes |
+| Concatenation | `concat` | Yes |
+| Greater Than | `greater_than` | Yes |
+| Greater Than or Equal | `greater_than_equal` | Yes |
+| Less Than | `less_than` | Yes |
+| Less Than or Equal | `less_than_equal` | Yes |
+| Bitwise AND | `bitwise_and` | Yes |
+| Bitwise OR | `bitwise_or` | Yes |
+| Bitwise XOR | `bitwise_xor` | Yes |
+| Left Shift | `left_shift` | Yes |
+| Right Shift | `right_shift` | Yes |
+| Equality | `equality` | Yes |
+| Inequality | `inequality` | Yes |
+| Not Identity | `not_identity` | Yes |
+| AND Comparison (`&&`, `and`, etc.) |  `and` | Yes |
+| OR Comparison (`\|\|`, `or`, etc.) | `or` | Yes |
+| XOR | `xor` | Yes |
+| Assignment | `assign` | No |
+| Addition Assignment | `assign_addition` | Yes |
+| Subtraction Assignment | `assign_subtraction` | Yes |
+| Multiplication Assignment | `assign_multiplication` | Yes |
+| Division Assignment | `assign_division` | Yes |
+| Modulus Assignment | `assign_modulus` | Yes |
+| Concatenation Assignment | `assign_concat` | Yes |
+| Bitwise AND Assignment | `assign_bitwise_and` | Yes |
+| Bitwise OR Assignment | `assign_bitwise_or` | Yes |
+| Bitwise XOR Assignment | `assign_bitwise_xor` | Yes |
+| Left Shift Assignment | `assign_left_shift` | Yes |
+| Right Shift Assignment | `assign_right_shift` | Yes |
 
 ## Configuring the Blade Parser (Optional)
 
