@@ -144,8 +144,8 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tags_input_
         <div x-show="state?.length || @js(! $isDisabled)">
             <div
                 @class([
-                    'block w-full transition duration-75 rounded-lg shadow-sm sm:text-sm border overflow-hidden focus-within:ring-1',
-                    'border-gray-300 focus-within:border-primary-500 focus-within:ring-primary-500 dark:border-gray-600 dark:focus-within:border-primary-500' => ! $errors->has($statePath),
+                    'block w-full overflow-hidden rounded-lg border shadow-sm transition duration-75 focus-within:ring-1 sm:text-sm',
+                    'focus-within:border-primary-500 focus-within:ring-primary-500 dark:focus-within:border-primary-500 border-gray-300 dark:border-gray-600' => ! $errors->has($statePath),
                     'border-danger-600 ring-danger-600 dark:border-danger-400 dark:ring-danger-400' => $errors->has($statePath),
                 ])
             >
@@ -182,7 +182,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tags_input_
                                     })
                             })"
                             x-model="newTag"
-                            {{ $getExtraInputAttributeBag()->class(['webkit-calendar-picker-indicator:opacity-0 block w-full border-0 sm:text-sm dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-400']) }}
+                            {{ $getExtraInputAttributeBag()->class(['webkit-calendar-picker-indicator:opacity-0 block w-full border-0 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-400 sm:text-sm']) }}
                         />
 
                         <datalist id="{{ $id }}-suggestions">
@@ -215,7 +215,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tags_input_
                                     type="button"
                                     x-bind:dusk="'filament.forms.{{ $statePath }}' + '.tag.' + tag + '.delete'"
                                     @class([
-                                        'inline-flex items-center justify-center min-h-6 px-2 py-0.5 text-sm font-medium tracking-tight text-primary-700 rounded-xl bg-primary-500/10 space-x-1 rtl:space-x-reverse dark:text-primary-500',
+                                        'min-h-6 text-primary-700 bg-primary-500/10 dark:text-primary-500 inline-flex items-center justify-center space-x-1 rounded-xl px-2 py-0.5 text-sm font-medium tracking-tight rtl:space-x-reverse',
                                         'cursor-default' => $isDisabled,
                                     ])
                                 >

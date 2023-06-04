@@ -93,7 +93,7 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_layouts_app
                 x-bind:style="'display: flex'" {{-- Mimics \`x-cloak\`, as using \`x-cloak\` causes visual issues with chart widgets --}}
             @endif
             @class([
-                'filament-main flex-col gap-y-6 w-screen flex-1 rtl:lg:pl-0',
+                'filament-main w-screen flex-1 flex-col gap-y-6 rtl:lg:pl-0',
                 'hidden h-full transition-all' => config('filament.layout.sidebar.is_collapsible_on_desktop'),
                 'flex lg:pl-[var(--sidebar-width)] rtl:lg:pr-[var(--sidebar-width)]' => ! config('filament.layout.sidebar.is_collapsible_on_desktop'),
             ])
@@ -102,7 +102,7 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_layouts_app
 
             <div
                 @class([
-                    'filament-main-content flex-1 w-full px-4 mx-auto md:px-6 lg:px-8',
+                    'filament-main-content mx-auto w-full flex-1 px-4 md:px-6 lg:px-8',
                     match ($maxContentWidth ??= config('filament.layout.max_content_width')) {
                         null, '7xl', '' => 'max-w-7xl',
                         'xl' => 'max-w-xl',

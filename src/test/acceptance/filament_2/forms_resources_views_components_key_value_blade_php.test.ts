@@ -190,13 +190,13 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_key_value_b
     >
         <div
             @class([
-                'border border-gray-300 divide-y shadow-sm bg-white rounded-xl overflow-hidden',
-                'dark:bg-gray-700 dark:border-gray-600 dark:divide-gray-600' => config('forms.dark_mode'),
+                'divide-y overflow-hidden rounded-xl border border-gray-300 bg-white shadow-sm',
+                'dark:divide-gray-600 dark:border-gray-600 dark:bg-gray-700' => config('forms.dark_mode'),
             ])
         >
             <table
                 @class([
-                    'w-full text-start divide-y table-auto',
+                    'w-full table-auto divide-y text-start',
                     'dark:divide-gray-700' => config('forms.dark_mode'),
                 ])
             >
@@ -209,7 +209,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_key_value_b
                     >
                         <th
                             @class([
-                                'px-4 py-2 whitespace-nowrap font-medium text-start text-sm text-gray-600',
+                                'whitespace-nowrap px-4 py-2 text-start text-sm font-medium text-gray-600',
                                 'dark:text-gray-300' => config('forms.dark_mode'),
                             ])
                             scope="col"
@@ -219,7 +219,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_key_value_b
 
                         <th
                             @class([
-                                'px-4 py-2 whitespace-nowrap font-medium text-start text-sm text-gray-600',
+                                'whitespace-nowrap px-4 py-2 text-start text-sm font-medium text-gray-600',
                                 'dark:text-gray-300' => config('forms.dark_mode'),
                             ])
                             scope="col"
@@ -339,8 +339,8 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_key_value_b
                     x-on:click="addRow"
                     type="button"
                     @class([
-                        'w-full px-4 py-2 flex items-center space-x-1 rtl:space-x-reverse text-sm font-medium text-gray-800 hover:bg-gray-50 focus:bg-gray-50',
-                        'dark:text-white dark:bg-gray-800/60 dark:hover:bg-gray-800/30' => config('forms.dark_mode'),
+                        'flex w-full items-center space-x-1 px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50 focus:bg-gray-50 rtl:space-x-reverse',
+                        'dark:bg-gray-800/60 dark:text-white dark:hover:bg-gray-800/30' => config('forms.dark_mode'),
                     ])
                 >
                     <x-heroicon-s-plus class="h-4 w-4" />

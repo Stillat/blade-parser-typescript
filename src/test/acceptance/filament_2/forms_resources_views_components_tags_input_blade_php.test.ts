@@ -133,11 +133,11 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tags_input_
         <div
             x-show="state.length || {{ $isDisabled() ? 'false' : 'true' }}"
             @class([
-                'block w-full transition duration-75 divide-y rounded-lg shadow-sm border overflow-hidden focus-within:border-primary-500 focus-within:ring-1 focus-within:ring-primary-500',
+                'focus-within:border-primary-500 focus-within:ring-primary-500 block w-full divide-y overflow-hidden rounded-lg border shadow-sm transition duration-75 focus-within:ring-1',
                 'dark:divide-gray-600' => config('forms.dark_mode'),
                 'border-gray-300' => ! $errors->has($getStatePath()),
                 'dark:border-gray-600' => (! $errors->has($getStatePath())) && config('forms.dark_mode'),
-                'border-danger-600 ring-1 ring-inset ring-danger-600' => $errors->has($getStatePath()),
+                'border-danger-600 ring-danger-600 ring-1 ring-inset' => $errors->has($getStatePath()),
                 'dark:border-danger-400 dark:ring-danger-400' => $errors->has($getStatePath()) && config('forms.dark_mode'),
             ])
         >
@@ -203,7 +203,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tags_input_
                             type="button"
                             x-bind:dusk="'filament.forms.{{ $getStatePath() }}' + '.tag.' + tag + '.delete'"
                             @class([
-                                'inline-flex items-center justify-center min-h-6 px-2 py-0.5 text-sm font-medium tracking-tight text-primary-700 rounded-xl bg-primary-500/10 space-x-1 rtl:space-x-reverse',
+                                'min-h-6 text-primary-700 bg-primary-500/10 inline-flex items-center justify-center space-x-1 rounded-xl px-2 py-0.5 text-sm font-medium tracking-tight rtl:space-x-reverse',
                                 'dark:text-primary-500' => config('forms.dark_mode'),
                                 'cursor-default' => $isDisabled(),
                             ])

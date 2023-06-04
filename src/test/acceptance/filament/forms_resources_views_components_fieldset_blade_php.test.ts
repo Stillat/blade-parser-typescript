@@ -28,7 +28,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_fieldset_bl
                 'id' => $getId(),
             ], escape: false)
             ->merge($getExtraAttributes(), escape: false)
-            ->class(['filament-forms-fieldset-component rounded-xl shadow-sm border border-gray-300 p-6 dark:border-gray-600 dark:text-gray-200'])
+            ->class(['filament-forms-fieldset-component rounded-xl border border-gray-300 p-6 shadow-sm dark:border-gray-600 dark:text-gray-200'])
     }}
 >
     @if (filled($label = $getLabel()))

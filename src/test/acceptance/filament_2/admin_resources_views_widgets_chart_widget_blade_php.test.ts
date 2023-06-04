@@ -127,8 +127,8 @@ suite('Pint Transformer Acceptance: admin_resources_views_widgets_chart_widget_b
                     <select
                         wire:model="filter"
                         @class([
-                            'text-gray-900 border-gray-300 block h-10 transition duration-75 rounded-lg shadow-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-inset focus:ring-primary-500',
-                            'dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:focus:border-primary-500' => config('filament.dark_mode'),
+                            'focus:border-primary-500 focus:ring-primary-500 block h-10 rounded-lg border-gray-300 text-gray-900 shadow-sm outline-none transition duration-75 focus:ring-1 focus:ring-inset',
+                            'dark:focus:border-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200' => config('filament.dark_mode'),
                         ])
                         wire:loading.class="animate-pulse"
                     >

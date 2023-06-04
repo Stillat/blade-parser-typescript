@@ -68,7 +68,7 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_card_index_
 <div
     {{
         $attributes->class([
-            'p-2 space-y-2 bg-white rounded-xl shadow',
+            'space-y-2 rounded-xl bg-white p-2 shadow',
             'dark:border-gray-600 dark:bg-gray-800' => config('filament.dark_mode'),
         ])
     }}

@@ -188,7 +188,7 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_stats_card_
 <{!! $tag !!}
     {{
         $attributes->merge($extraAttributes)->class([
-            'filament-stats-card relative p-6 rounded-2xl bg-white shadow',
+            'filament-stats-card relative rounded-2xl bg-white p-6 shadow',
             'dark:bg-gray-800' => config('filament.dark_mode'),
         ])
     }}
@@ -198,7 +198,7 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_stats_card_
     ])>
         <div
             @class([
-                'flex items-center space-x-2 rtl:space-x-reverse text-sm font-medium text-gray-500',
+                'flex items-center space-x-2 text-sm font-medium text-gray-500 rtl:space-x-reverse',
                 'dark:text-gray-200' => config('filament.dark_mode'),
             ])
         >
@@ -216,7 +216,7 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_stats_card_
         @if ($description)
             <div
                 @class([
-                    'flex items-center space-x-1 rtl:space-x-reverse text-sm font-medium',
+                    'flex items-center space-x-1 text-sm font-medium rtl:space-x-reverse',
                     match ($descriptionColor) {
                         'danger' => 'text-danger-600',
                         'primary' => 'text-primary-600',

@@ -164,7 +164,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
         x-bind:class="$store.sidebar.isOpen ? 'filament-sidebar-open translate-x-0' : '-translate-x-full rtl:translate-x-full'"
     @endif
     @class([
-        'filament-sidebar fixed inset-y-0 start-0 z-20 flex h-screen w-[--sidebar-width] flex-col bg-white transition-all dark:bg-gray-800 lg:bg-transparent lg:dark:bg-transparent lg:z-0',
+        'filament-sidebar fixed inset-y-0 start-0 z-20 flex h-screen w-[--sidebar-width] flex-col bg-white transition-all dark:bg-gray-800 lg:z-0 lg:bg-transparent lg:dark:bg-transparent',
         'lg:translate-x-0 rtl:lg:-translate-x-0' => ! (filament()->isSidebarCollapsibleOnDesktop() || filament()->isSidebarFullyCollapsibleOnDesktop() || filament()->hasTopNavigation()),
         'lg:-translate-x-full rtl:lg:translate-x-full' => filament()->hasTopNavigation(),
     ])
@@ -174,7 +174,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
     >
         <div
             @class([
-                'flex items-center justify-center px-6 w-full',
+                'flex w-full items-center justify-center px-6',
                 'lg:px-4' => filament()->isSidebarCollapsibleOnDesktop() && (! filament()->isSidebarFullyCollapsibleOnDesktop()),
             ])
             x-show="$store.sidebar.isOpen || @js(! filament()->isSidebarCollapsibleOnDesktop()) || @js(filament()->isSidebarFullyCollapsibleOnDesktop())"
@@ -220,7 +220,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
             <div
                 data-turbo="false"
                 @class([
-                    'flex items-center w-full relative',
+                    'relative flex w-full items-center',
                     'lg:ms-3' => filament()->isSidebarCollapsibleOnDesktop() && (! filament()->isSidebarFullyCollapsibleOnDesktop()),
                 ])
             >

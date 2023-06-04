@@ -82,7 +82,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ca
     >
         <div
             @class([
-                'w-screen px-6 space-y-8 md:mt-0 md:px-2',
+                'w-screen space-y-8 px-6 md:mt-0 md:px-2',
                 match ($width = $livewire->getCardWidth()) {
                     'xs' => 'max-w-xs',
                     'sm' => 'max-w-sm',

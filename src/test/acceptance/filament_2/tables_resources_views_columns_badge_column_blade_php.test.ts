@@ -79,7 +79,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_badge_column_
 
     $stateIcon = $getStateIcon();
     $iconPosition = $getIconPosition();
-    $iconClasses = 'w-4 h-4';
+    $iconClasses = 'h-4 w-4';
 
     $isCopyable = $isCopyable();
 @endphp
@@ -103,7 +103,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_badge_column_
     @if (filled($state))
         <div
             @class([
-                'inline-flex items-center justify-center space-x-1 rtl:space-x-reverse min-h-6 px-2 py-0.5 text-sm font-medium tracking-tight rounded-xl whitespace-nowrap',
+                'min-h-6 inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-xl px-2 py-0.5 text-sm font-medium tracking-tight rtl:space-x-reverse',
                 $stateColor => $stateColor,
             ])
         >

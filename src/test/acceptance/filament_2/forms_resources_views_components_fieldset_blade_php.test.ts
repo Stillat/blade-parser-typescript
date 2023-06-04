@@ -24,7 +24,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_fieldset_bl
     {!! $getId() ? "id=\\"{$getId()}\\"" : null !!}
     {{
         $attributes->merge($getExtraAttributes())->class([
-            'filament-forms-fieldset-component rounded-xl shadow-sm border border-gray-300 p-6',
+            'filament-forms-fieldset-component rounded-xl border border-gray-300 p-6 shadow-sm',
             'dark:border-gray-600 dark:text-gray-200' => config('forms.dark_mode'),
         ])
     }}

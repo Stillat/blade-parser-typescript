@@ -31,8 +31,8 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_summaries_val
         $attributes
             ->merge($getExtraAttributes(), escape: false)
             ->class([
-                'filament-tables-values-summary text-sm px-4 py-3 whitespace-normal',
-                'prose prose-sm max-w-none dark:prose-invert' => $isBulleted(),
+                'filament-tables-values-summary whitespace-normal px-4 py-3 text-sm',
+                'prose prose-sm dark:prose-invert max-w-none' => $isBulleted(),
             ])
     }}
 >

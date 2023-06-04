@@ -143,8 +143,8 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_select_column
         x-tooltip="error"
         {{
             $attributes->merge($getExtraInputAttributes())->merge($getExtraAttributes())->class([
-                'ml-0.5 text-gray-900 inline-block transition duration-75 rounded-lg shadow-sm outline-none focus:ring-primary-500 focus:ring-1 focus:ring-inset focus:border-primary-500 disabled:opacity-70',
-                'dark:bg-gray-700 dark:text-white dark:focus:border-primary-500' => config('forms.dark_mode'),
+                'focus:ring-primary-500 focus:border-primary-500 ml-0.5 inline-block rounded-lg text-gray-900 shadow-sm outline-none transition duration-75 focus:ring-1 focus:ring-inset disabled:opacity-70',
+                'dark:focus:border-primary-500 dark:bg-gray-700 dark:text-white' => config('forms.dark_mode'),
             ])
         }}
         x-bind:class="{

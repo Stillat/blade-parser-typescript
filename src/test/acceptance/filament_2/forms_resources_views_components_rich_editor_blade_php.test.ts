@@ -835,8 +835,8 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_rich_editor
                 dusk="filament.forms.{{ $getStatePath() }}"
                 {{
                     $getExtraInputAttributeBag()->class([
-                        'bg-white block w-full transition duration-75 rounded-lg shadow-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-inset focus:ring-primary-500 prose max-w-none break-words',
-                        'dark:prose-invert dark:bg-gray-700 dark:focus:border-primary-500' => config('forms.dark_mode'),
+                        'focus:border-primary-500 focus:ring-primary-500 prose block w-full max-w-none break-words rounded-lg bg-white shadow-sm outline-none transition duration-75 focus:ring-1 focus:ring-inset',
+                        'dark:prose-invert dark:focus:border-primary-500 dark:bg-gray-700' => config('forms.dark_mode'),
                     ])
                 }}
                 x-bind:class="{

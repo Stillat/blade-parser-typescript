@@ -309,8 +309,8 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
             @if ($isDisabled()) disabled @endif
             {{
                 $getExtraTriggerAttributeBag()->class([
-                    'bg-white relative w-full border py-2 text-start cursor-default rounded-lg shadow-sm outline-none',
-                    'focus-within:ring-1 focus-within:border-primary-500 focus-within:ring-inset focus-within:ring-primary-500' => ! $isDisabled(),
+                    'relative w-full cursor-default rounded-lg border bg-white py-2 text-start shadow-sm outline-none',
+                    'focus-within:border-primary-500 focus-within:ring-primary-500 focus-within:ring-1 focus-within:ring-inset' => ! $isDisabled(),
                     'dark:bg-gray-700' => config('forms.dark_mode'),
                     'border-gray-300' => ! $errors->has($getStatePath()),
                     'dark:border-gray-600' => (! $errors->has($getStatePath())) && config('forms.dark_mode'),
@@ -330,7 +330,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
                 x-model="displayText"
                 {!! ($id = $getId()) ? "id=\\"{$id}\\"" : null !!}
                 @class([
-                    'w-full h-full p-0 placeholder-gray-400 bg-transparent border-0 outline-none focus:outline-none focus:placeholder-gray-500 focus:ring-0',
+                    'h-full w-full border-0 bg-transparent p-0 placeholder-gray-400 outline-none focus:placeholder-gray-500 focus:outline-none focus:ring-0',
                     'dark:bg-gray-700 dark:placeholder-gray-400' => config('forms.dark_mode'),
                     'cursor-default' => $isDisabled(),
                 ])
@@ -358,9 +358,9 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
             wire:ignore.self
             wire:key="{{ $this->id }}.{{ $getStatePath() }}.{{ $field::class }}.panel"
             @class([
-                'absolute hidden z-10 my-1 bg-white border border-gray-300 rounded-lg shadow-md',
-                'dark:bg-gray-700 dark:border-gray-600' => config('forms.dark_mode'),
-                'p-4 min-w-[16rem] w-fit' => $hasDate(),
+                'absolute z-10 my-1 hidden rounded-lg border border-gray-300 bg-white shadow-md',
+                'dark:border-gray-600 dark:bg-gray-700' => config('forms.dark_mode'),
+                'w-fit min-w-[16rem] p-4' => $hasDate(),
             ])
         >
             <div class="space-y-3">
@@ -371,7 +371,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
                         <select
                             x-model="focusedMonth"
                             @class([
-                                'grow px-1 py-0 text-lg font-medium text-gray-800 border-0 cursor-pointer outline-none focus:ring-0',
+                                'grow cursor-pointer border-0 px-1 py-0 text-lg font-medium text-gray-800 outline-none focus:ring-0',
                                 'dark:bg-gray-700 dark:text-gray-200' => config('forms.dark_mode'),
                             ])
                             dusk="filament.forms.{{ $getStatePath() }}.focusedMonth"
@@ -389,7 +389,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
                             inputmode="numeric"
                             x-model.debounce="focusedYear"
                             @class([
-                                'w-20 p-0 text-lg text-end border-0 outline-none focus:ring-0',
+                                'w-20 border-0 p-0 text-end text-lg outline-none focus:ring-0',
                                 'dark:bg-gray-700 dark:text-gray-200' => config('forms.dark_mode'),
                             ])
                             dusk="filament.forms.{{ $getStatePath() }}.focusedYear"
@@ -404,7 +404,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
                             <div
                                 x-text="day"
                                 @class([
-                                    'text-xs font-medium text-center text-gray-800',
+                                    'text-center text-xs font-medium text-gray-800',
                                     'dark:text-gray-200' => config('forms.dark_mode'),
                                 ])
                             ></div>
@@ -450,7 +450,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
                 @if ($hasTime())
                     <div
                         @class([
-                            'flex items-center justify-center bg-gray-50 py-2 rounded-lg rtl:flex-row-reverse',
+                            'flex items-center justify-center rounded-lg bg-gray-50 py-2 rtl:flex-row-reverse',
                             'dark:bg-gray-800' => config('forms.dark_mode'),
                         ])
                     >
@@ -462,16 +462,16 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
                             inputmode="numeric"
                             x-model.debounce="hour"
                             @class([
-                                'w-16 p-0 pr-1 text-xl bg-gray-50 text-center text-gray-700 border-0 outline-none focus:ring-0',
-                                'dark:text-gray-200 dark:bg-gray-800' => config('forms.dark_mode'),
+                                'w-16 border-0 bg-gray-50 p-0 pr-1 text-center text-xl text-gray-700 outline-none focus:ring-0',
+                                'dark:bg-gray-800 dark:text-gray-200' => config('forms.dark_mode'),
                             ])
                             dusk="filament.forms.{{ $getStatePath() }}.hour"
                         />
 
                         <span
                             @class([
-                                'text-xl font-medium bg-gray-50 text-gray-700',
-                                'dark:text-gray-200 dark:bg-gray-800' => config('forms.dark_mode'),
+                                'bg-gray-50 text-xl font-medium text-gray-700',
+                                'dark:bg-gray-800 dark:text-gray-200' => config('forms.dark_mode'),
                             ])
                         >
                             :
@@ -485,8 +485,8 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
                             inputmode="numeric"
                             x-model.debounce="minute"
                             @class([
-                                'w-16 p-0 pr-1 text-xl text-center bg-gray-50 text-gray-700 border-0 outline-none focus:ring-0',
-                                'dark:text-gray-200 dark:bg-gray-800' => config('forms.dark_mode'),
+                                'w-16 border-0 bg-gray-50 p-0 pr-1 text-center text-xl text-gray-700 outline-none focus:ring-0',
+                                'dark:bg-gray-800 dark:text-gray-200' => config('forms.dark_mode'),
                             ])
                             dusk="filament.forms.{{ $getStatePath() }}.minute"
                         />
@@ -494,8 +494,8 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
                         @if ($hasSeconds())
                             <span
                                 @class([
-                                    'text-xl font-medium text-gray-700 bg-gray-50',
-                                    'dark:text-gray-200 dark:bg-gray-800' => config('forms.dark_mode'),
+                                    'bg-gray-50 text-xl font-medium text-gray-700',
+                                    'dark:bg-gray-800 dark:text-gray-200' => config('forms.dark_mode'),
                                 ])
                             >
                                 :
@@ -510,8 +510,8 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
                                 x-model.debounce="second"
                                 dusk="filament.forms.{{ $getStatePath() }}.second"
                                 @class([
-                                    'w-16 p-0 pr-1 text-xl text-center bg-gray-50 text-gray-700 border-0 outline-none focus:ring-0',
-                                    'dark:text-gray-200 dark:bg-gray-800' => config('forms.dark_mode'),
+                                    'w-16 border-0 bg-gray-50 p-0 pr-1 text-center text-xl text-gray-700 outline-none focus:ring-0',
+                                    'dark:bg-gray-800 dark:text-gray-200' => config('forms.dark_mode'),
                                 ])
                             />
                         @endif

@@ -118,11 +118,11 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_resources_r
                         role="tab"
                         type="button"
                         @class([
-                            'flex whitespace-nowrap items-center h-8 px-5 font-medium rounded-lg outline-none focus:ring-2 focus:ring-primary-600 focus:ring-inset',
-                            'hover:text-gray-800 focus:text-primary-600' => $activeManager !== $tabKey,
+                            'focus:ring-primary-600 flex h-8 items-center whitespace-nowrap rounded-lg px-5 font-medium outline-none focus:ring-2 focus:ring-inset',
+                            'focus:text-primary-600 hover:text-gray-800' => $activeManager !== $tabKey,
                             'dark:text-gray-400 dark:hover:text-gray-300 dark:focus:text-gray-400' => ($activeManager !== $tabKey) && config('filament.dark_mode'),
-                            'text-primary-600 shadow bg-white' => $activeManager === $tabKey,
-                            'dark:text-white dark:bg-primary-600' => ($activeManager === $tabKey) && config('filament.dark_mode'),
+                            'text-primary-600 bg-white shadow' => $activeManager === $tabKey,
+                            'dark:bg-primary-600 dark:text-white' => ($activeManager === $tabKey) && config('filament.dark_mode'),
                         ])
                     >
                         @if (filled($tabKey))

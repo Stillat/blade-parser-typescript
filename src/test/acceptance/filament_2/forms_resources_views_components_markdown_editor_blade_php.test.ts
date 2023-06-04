@@ -550,7 +550,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_markdown_ed
                                     x-bind:class="{ 'text-gray-400 @if (config('forms.dark_mode')) dark:text-gray-400 @endif': tab !== 'preview' }"
                                     @class([
                                         'text-sm hover:underline',
-                                        'text-gray-400' . (config('forms.dark_mode') ? ' dark:text-gray-400' : null),
+                                        'text-gray-400' . (config('forms.dark_mode') ? 'dark:text-gray-400' : null),
                                     ])
                                 >
                                     {{ __('forms::components.markdown_editor.toolbar_buttons.preview') }}
@@ -625,15 +625,15 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_markdown_ed
                     x-html="overlay"
                     style="min-height: 150px"
                     @class([
-                        'w-full h-full rounded-lg px-3 py-2 border border-transparent font-mono tracking-normal bg-white text-sm text-gray-900 break-words whitespace-pre-wrap',
-                        'dark:bg-gray-700 dark:border-gray-600 dark:text-white' => config('forms.dark_mode'),
+                        'h-full w-full whitespace-pre-wrap break-words rounded-lg border border-transparent bg-white px-3 py-2 font-mono text-sm tracking-normal text-gray-900',
+                        'dark:border-gray-600 dark:bg-gray-700 dark:text-white' => config('forms.dark_mode'),
                     ])
                 ></div>
             </div>
 
             <div
                 @class([
-                    'prose max-w-none block w-full h-full min-h-full px-3 py-2 bg-white border border-gray-300 rounded-lg shadow-sm break-words focus:border-primary-300',
+                    'prose focus:border-primary-300 block h-full min-h-full w-full max-w-none break-words rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-sm',
                     'dark:prose-invert dark:border-gray-600 dark:bg-gray-700' => config('forms.dark_mode'),
                 ])
                 x-show="tab === 'preview'"

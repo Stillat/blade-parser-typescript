@@ -356,8 +356,8 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_wizard_blad
         {!! $getLabel() ? 'aria-label="' . $getLabel() . '"' : null !!}
         role="list"
         @class([
-            'filament-forms-wizard-component-header border border-gray-300 shadow-sm bg-white rounded-xl overflow-hidden divide-y divide-gray-300 md:flex md:divide-y-0',
-            'dark:bg-gray-800 dark:border-gray-700 dark:divide-gray-700' => config('forms.dark_mode'),
+            'filament-forms-wizard-component-header divide-y divide-gray-300 overflow-hidden rounded-xl border border-gray-300 bg-white shadow-sm md:flex md:divide-y-0',
+            'dark:divide-gray-700 dark:border-gray-700 dark:bg-gray-800' => config('forms.dark_mode'),
         ])
     >
         @foreach ($getChildComponentContainer()->getComponents() as $step)
@@ -437,7 +437,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_wizard_blad
                             @if (filled($description = $step->getDescription()))
                                 <div
                                     @class([
-                                        'filament-forms-wizard-component-header-step-description text-sm leading-4 font-medium text-gray-500',
+                                        'filament-forms-wizard-component-header-step-description text-sm font-medium leading-4 text-gray-500',
                                         'dark:text-gray-400' => config('forms.dark_mode'),
                                     ])
                                 >

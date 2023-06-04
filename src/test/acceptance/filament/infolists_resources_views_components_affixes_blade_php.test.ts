@@ -61,7 +61,7 @@ suite('Pint Transformer Acceptance: infolists_resources_views_components_affixes
 @endphp
 
 <div
-    {{ $attributes->class(['filament-infolists-affix-container flex rtl:space-x-reverse group']) }}
+    {{ $attributes->class(['filament-infolists-affix-container group flex rtl:space-x-reverse']) }}
 >
     @if (count($prefixActions))
         <div class="flex items-center gap-1 self-stretch pe-2">

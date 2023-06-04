@@ -71,7 +71,7 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_global_sear
 
             <p
                 @class([
-                    'text-sm space-x-2 rtl:space-x-reverse font-medium text-gray-500',
+                    'space-x-2 text-sm font-medium text-gray-500 rtl:space-x-reverse',
                     'dark:text-gray-400' => config('filament.dark_mode'),
                 ])
             >

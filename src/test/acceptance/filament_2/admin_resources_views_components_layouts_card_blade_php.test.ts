@@ -63,13 +63,13 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_layouts_car
 <x-filament::layouts.base :title="$title">
     <div
         @class([
-            'filament-login-page flex items-center justify-center min-h-screen bg-gray-100 text-gray-900 py-12',
+            'filament-login-page flex min-h-screen items-center justify-center bg-gray-100 py-12 text-gray-900',
             'dark:bg-gray-900 dark:text-white' => config('filament.dark_mode'),
         ])
     >
         <div
             @class([
-                'w-screen px-6 -mt-16 space-y-8 md:mt-0 md:px-2',
+                '-mt-16 w-screen space-y-8 px-6 md:mt-0 md:px-2',
                 match ($width) {
                     'xs' => 'max-w-xs',
                     'sm' => 'max-w-sm',
@@ -88,8 +88,8 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_layouts_car
         >
             <div
                 @class([
-                    'p-8 space-y-4 bg-white/50 backdrop-blur-xl border border-gray-200 shadow-2xl rounded-2xl relative',
-                    'dark:bg-gray-900/50 dark:border-gray-700' => config('filament.dark_mode'),
+                    'relative space-y-4 rounded-2xl border border-gray-200 bg-white/50 p-8 shadow-2xl backdrop-blur-xl',
+                    'dark:border-gray-700 dark:bg-gray-900/50' => config('filament.dark_mode'),
                 ])
             >
                 <div class="flex w-full justify-center">

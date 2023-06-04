@@ -144,18 +144,18 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_layouts_app
     @class([
         'filament-sidebar fixed inset-y-0 left-0 z-20 flex h-screen w-[var(--sidebar-width)] flex-col overflow-hidden bg-white transition-all rtl:left-auto rtl:right-0 lg:z-0 lg:border-r rtl:lg:border-l rtl:lg:border-r-0',
         'lg:translate-x-0' => ! config('filament.layout.sidebar.is_collapsible_on_desktop'),
-        'dark:bg-gray-800 dark:border-gray-700' => config('filament.dark_mode'),
+        'dark:border-gray-700 dark:bg-gray-800' => config('filament.dark_mode'),
     ])
 >
     <header
         @class([
-            'filament-sidebar-header border-b h-[4rem] shrink-0 flex items-center justify-center relative',
+            'filament-sidebar-header relative flex h-[4rem] shrink-0 items-center justify-center border-b',
             'dark:border-gray-700' => config('filament.dark_mode'),
         ])
     >
         <div
             @class([
-                'flex items-center justify-center px-6 w-full',
+                'flex w-full items-center justify-center px-6',
                 'lg:px-4' => config('filament.layout.sidebar.is_collapsible_on_desktop') && (config('filament.layout.sidebar.collapsed_width') !== 0),
             ])
             x-show="$store.sidebar.isOpen || @js(! config('filament.layout.sidebar.is_collapsible_on_desktop')) || @js(config('filament.layout.sidebar.collapsed_width') === 0)"
@@ -195,7 +195,7 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_layouts_app
             <div
                 data-turbo="false"
                 @class([
-                    'flex items-center w-full relative',
+                    'relative flex w-full items-center',
                     'lg:ml-3' => config('filament.layout.sidebar.is_collapsible_on_desktop') && (config('filament.layout.sidebar.collapsed_width') !== 0),
                 ])
             >
@@ -277,7 +277,7 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_layouts_app
                     <li>
                         <div
                             @class([
-                                'border-t -mr-6 rtl:-mr-auto rtl:-ml-6',
+                                'rtl:-mr-auto -mr-6 border-t rtl:-ml-6',
                                 'dark:border-gray-700' => config('filament.dark_mode'),
                             ])
                         ></div>

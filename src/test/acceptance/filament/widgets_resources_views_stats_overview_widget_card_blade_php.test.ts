@@ -173,7 +173,7 @@ suite('Pint Transformer Acceptance: widgets_resources_views_stats_overview_widge
         @if ($description = $getDescription())
             <div
                 @class([
-                    'flex items-center space-x-1 rtl:space-x-reverse text-sm font-medium',
+                    'flex items-center space-x-1 text-sm font-medium rtl:space-x-reverse',
                     match ($descriptionColor = $getDescriptionColor()) {
                         'danger' => 'text-danger-600',
                         'gray', null => 'text-gray-600',

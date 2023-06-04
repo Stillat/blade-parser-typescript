@@ -141,7 +141,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_affixes_bla
 ])
 
 @php
-    $baseAffixClasses = 'whitespace-nowrap group-focus-within:text-primary-500 shadow-sm px-2 border border-gray-300 self-stretch flex items-center dark:border-gray-600 dark:bg-gray-700';
+    $baseAffixClasses = 'group-focus-within:text-primary-500 flex items-center self-stretch whitespace-nowrap border border-gray-300 px-2 shadow-sm dark:border-gray-600 dark:bg-gray-700';
 
     $prefixActions = array_filter(
         $prefixActions,
@@ -155,7 +155,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_affixes_bla
 @endphp
 
 <div
-    {{ $attributes->class(['filament-forms-affix-container flex rtl:space-x-reverse group']) }}
+    {{ $attributes->class(['filament-forms-affix-container group flex rtl:space-x-reverse']) }}
 >
     @if (count($prefixActions))
         <div class="flex items-center gap-1 self-stretch pe-2">
@@ -169,7 +169,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_affixes_bla
         <span
             @class([
                 $baseAffixClasses,
-                'rounded-s-lg -me-px',
+                '-me-px rounded-s-lg',
             ])
             @if (filled($statePath))
                 x-bind:class="{
@@ -231,7 +231,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_affixes_bla
         <span
             @class([
                 $baseAffixClasses,
-                'rounded-e-lg -ms-px',
+                '-ms-px rounded-e-lg',
             ])
             @if (filled($statePath))
                 x-bind:class="{

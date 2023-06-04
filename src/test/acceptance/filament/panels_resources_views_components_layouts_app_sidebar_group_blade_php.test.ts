@@ -166,7 +166,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
         @endif
         x-collapse.duration.200ms
         @class([
-            'text-sm space-y-1 -mx-3',
+            '-mx-3 space-y-1 text-sm',
             'mt-2' => $label,
         ])
     >

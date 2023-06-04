@@ -126,7 +126,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ba
     lang="{{ str_replace('_', '-', app()->getLocale()) }}"
     dir="{{ __('filament::layout.direction') ?? 'ltr' }}"
     @class([
-        'filament antialiased min-h-screen js-focus-visible',
+        'filament js-focus-visible min-h-screen antialiased',
         'dark' => filament()->hasDarkModeForced(),
     ])
 >

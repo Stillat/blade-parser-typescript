@@ -150,7 +150,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_select_blad
 `;
         const output = `@php
     $affixLabelClasses = [
-        'whitespace-nowrap group-focus-within:text-primary-500',
+        'group-focus-within:text-primary-500 whitespace-nowrap',
         'text-gray-400' => ! $errors->has($getStatePath()),
         'text-danger-400' => $errors->has($getStatePath()),
     ];
@@ -171,7 +171,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_select_blad
     :state-path="$getStatePath()"
 >
     <div
-        {{ $attributes->merge($getExtraAttributes())->class(['filament-forms-select-component flex items-center space-x-1 rtl:space-x-reverse group']) }}
+        {{ $attributes->merge($getExtraAttributes())->class(['filament-forms-select-component group flex items-center space-x-1 rtl:space-x-reverse']) }}
     >
         @if (($prefixAction = $getPrefixAction()) && (! $prefixAction->isHidden()))
             {{ $prefixAction }}
@@ -200,8 +200,8 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_select_blad
                     @endif
                     {{
                         $attributes->merge($getExtraInputAttributes())->merge($getExtraAttributes())->class([
-                            'filament-forms-input text-gray-900 block w-full transition duration-75 rounded-lg shadow-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-inset focus:ring-primary-500 disabled:opacity-70',
-                            'dark:bg-gray-700 dark:text-white dark:focus:border-primary-500' => config('forms.dark_mode'),
+                            'filament-forms-input focus:border-primary-500 focus:ring-primary-500 block w-full rounded-lg text-gray-900 shadow-sm outline-none transition duration-75 focus:ring-1 focus:ring-inset disabled:opacity-70',
+                            'dark:focus:border-primary-500 dark:bg-gray-700 dark:text-white' => config('forms.dark_mode'),
                             'border-gray-300' => ! $errors->has($getStatePath()),
                             'dark:border-gray-600' => (! $errors->has($getStatePath())) && config('forms.dark_mode'),
                             'border-danger-600 ring-danger-600' => $errors->has($getStatePath()),

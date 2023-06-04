@@ -262,7 +262,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_repeater_bl
                                 <header
                                     @if ($isCollapsible) x-on:click.stop="isCollapsed = ! isCollapsed" @endif
                                     @class([
-                                        'flex items-center h-10 overflow-hidden border-b bg-gray-50 rounded-t-xl dark:bg-gray-800 dark:border-gray-700',
+                                        'flex h-10 items-center overflow-hidden rounded-t-xl border-b bg-gray-50 dark:border-gray-700 dark:bg-gray-800',
                                         'cursor-pointer' => $isCollapsible,
                                     ])
                                 >

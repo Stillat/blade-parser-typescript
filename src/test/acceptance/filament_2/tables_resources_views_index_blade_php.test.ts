@@ -1438,7 +1438,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                 wire:poll.{{ $pollingInterval }}
             @endif
             @class([
-                'filament-tables-table-container overflow-x-auto relative',
+                'filament-tables-table-container relative overflow-x-auto',
                 'dark:border-gray-700' => config('tables.dark_mode'),
                 'overflow-x-auto' => $content || $hasColumnsLayout,
                 'rounded-t-xl' => ! $renderHeader,
@@ -1460,7 +1460,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
 
                     <div
                         @class([
-                            'bg-gray-500/5 flex items-center gap-4 px-4 border-b',
+                            'flex items-center gap-4 border-b bg-gray-500/5 px-4',
                             'dark:border-gray-700' => config('tables.dark_mode'),
                             'hidden' => (! $isSelectionEnabled) && (! count($sortableColumns)),
                         ])
@@ -1523,8 +1523,8 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                                 center;
                                         "
                                         @class([
-                                            'text-xs pl-2 pr-6 py-1 font-medium border-0 bg-gray-500/5 rounded-lg border-gray-300 sm:text-sm focus:ring-0 focus:border-primary-500 focus:ring-primary-500',
-                                            'dark:text-white dark:bg-gray-700 dark:border-gray-600 dark:focus:border-primary-500' => config('tables.dark_mode'),
+                                            'focus:border-primary-500 focus:ring-primary-500 rounded-lg border-0 border-gray-300 bg-gray-500/5 py-1 pl-2 pr-6 text-xs font-medium focus:ring-0 sm:text-sm',
+                                            'dark:focus:border-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white' => config('tables.dark_mode'),
                                         ])
                                     >
                                         <option value="">-</option>
@@ -1551,8 +1551,8 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                                 center;
                                         "
                                         @class([
-                                            'text-xs pl-2 pr-6 py-1 font-medium border-0 bg-gray-500/5 rounded-lg border-gray-300 sm:text-sm focus:ring-0 focus:border-primary-500 focus:ring-primary-500',
-                                            'dark:text-white dark:bg-gray-700 dark:border-gray-600 dark:focus:border-primary-500' => config('tables.dark_mode'),
+                                            'focus:border-primary-500 focus:ring-primary-500 rounded-lg border-0 border-gray-300 bg-gray-500/5 py-1 pl-2 pr-6 text-xs font-medium focus:ring-0 sm:text-sm',
+                                            'dark:focus:border-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white' => config('tables.dark_mode'),
                                         ])
                                     >
                                         <option value="asc">
@@ -1616,12 +1616,12 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                     }"
                                     @class(array_merge(
                                         [
-                                            'h-full relative px-4 transition',
+                                            'relative h-full px-4 transition',
                                             'hover:bg-gray-50' => $recordUrl || $recordAction,
                                             'dark:hover:bg-gray-500/10' => ($recordUrl || $recordAction) && config('tables.dark_mode'),
                                             'dark:border-gray-600' => (! $contentGrid) && config('tables.dark_mode'),
                                             'group' => $isReordering,
-                                            'rounded-xl shadow-sm border border-gray-200' => $contentGrid,
+                                            'rounded-xl border border-gray-200 shadow-sm' => $contentGrid,
                                             'dark:border-gray-700 dark:bg-gray-700/40' => $contentGrid && config('tables.dark_mode'),
                                         ],
                                         $getRecordClasses($record),
@@ -1629,8 +1629,8 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                 >
                                     <div
                                         @class([
-                                            'items-center gap-4 md:flex md:mr-0 rtl:md:ml-0' => (! $contentGrid),
-                                            'mr-6 rtl:mr-0 rtl:ml-6' => $isSelectionEnabled || $hasCollapsibleColumnsLayout || $isReordering,
+                                            'items-center gap-4 md:mr-0 md:flex rtl:md:ml-0' => (! $contentGrid),
+                                            'mr-6 rtl:ml-6 rtl:mr-0' => $isSelectionEnabled || $hasCollapsibleColumnsLayout || $isReordering,
                                         ])
                                     >
                                         <x-tables::reorder.handle
@@ -1657,10 +1657,10 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                         @if ($hasCollapsibleColumnsLayout)
                                             <div
                                                 @class([
-                                                    'absolute right-1 rtl:right-auto rtl:left-1',
+                                                    'absolute right-1 rtl:left-1 rtl:right-auto',
                                                     'top-10' => $isSelectionEnabled,
                                                     'top-1' => ! $isSelectionEnabled,
-                                                    'md:relative md:top-0 md:right-0 rtl:md:left-0' => ! $contentGrid,
+                                                    'md:relative md:right-0 md:top-0 rtl:md:left-0' => ! $contentGrid,
                                                     'hidden' => $isReordering,
                                                 ])
                                             >
@@ -1745,7 +1745,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                             x-collapse
                                             x-cloak
                                             @class([
-                                                'pb-2 -mx-2',
+                                                '-mx-2 pb-2',
                                                 'md:pl-20 rtl:md:pl-0 rtl:md:pr-20' => (! $contentGrid) && $isSelectionEnabled,
                                                 'md:pl-12 rtl:md:pl-0 rtl:md:pr-12' => (! $contentGrid) && (! $isSelectionEnabled),
                                                 'hidden' => $isReordering,
@@ -2081,7 +2081,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                 >
                     <div
                         @class([
-                            'flex items-center justify-center w-16 h-16 text-primary-500 rounded-full bg-primary-50',
+                            'text-primary-500 bg-primary-50 flex h-16 w-16 items-center justify-center rounded-full',
                             'dark:bg-gray-700' => config('tables.dark_mode'),
                         ])
                     >
@@ -2117,7 +2117,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
              ((! $records instanceof \\Illuminate\\Contracts\\Pagination\\LengthAwarePaginator) || $records->total()))
             <div
                 @class([
-                    'filament-tables-pagination-container p-2 border-t',
+                    'filament-tables-pagination-container border-t p-2',
                     'dark:border-gray-700' => config('tables.dark_mode'),
                 ])
             >

@@ -153,7 +153,7 @@ suite('Pint Transformer Acceptance: support_resources_views_components_link_blad
 @php
     $linkClasses = [
         'filament-link inline-flex items-center justify-center gap-0.5 font-medium outline-none hover:underline focus:underline',
-        'opacity-70 cursor-not-allowed pointer-events-none' => $disabled,
+        'pointer-events-none cursor-not-allowed opacity-70' => $disabled,
         'text-sm' => $size === 'sm',
         'text-lg' => $size === 'lg',
         'text-primary-600 hover:text-primary-500' => $color === 'primary',

@@ -125,7 +125,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
 ])
 
 <header
-    {{ $attributes->class(['filament-main-topbar sticky top-0 z-10 border-b bg-white dark:bg-gray-800 dark:border-gray-700']) }}
+    {{ $attributes->class(['filament-main-topbar sticky top-0 z-10 border-b bg-white dark:border-gray-700 dark:bg-gray-800']) }}
 >
     <div
         class="-mt-px flex h-16 items-center justify-between px-2 sm:px-4 md:px-6 lg:px-8"
@@ -139,7 +139,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
                 x-bind:aria-label="$store.sidebar.isOpen ? '{{ __('filament::layout.buttons.sidebar.collapse.label') }}' : '{{ __('filament::layout.buttons.sidebar.expand.label') }}'"
                 x-on:click="$store.sidebar.isOpen ? $store.sidebar.close() : $store.sidebar.open()"
                 @class([
-                    'filament-sidebar-open-button shrink-0 flex items-center justify-center w-10 h-10 rounded-full outline-none hover:bg-gray-500/5 focus:bg-primary-500/10',
+                    'filament-sidebar-open-button focus:bg-primary-500/10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full outline-none hover:bg-gray-500/5',
                     'lg:me-4' => filament()->isSidebarFullyCollapsibleOnDesktop(),
                     'lg:hidden' => ! (filament()->isSidebarFullyCollapsibleOnDesktop()),
                 ])

@@ -203,7 +203,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_text_column_b
             ->class([
                 'filament-tables-text-column',
                 'px-4 py-3' => ! $isInline(),
-                'text-primary-600 transition hover:underline hover:text-primary-500 focus:underline focus:text-primary-500' => $isClickable && (! $isBadge),
+                'text-primary-600 hover:text-primary-500 focus:text-primary-500 transition hover:underline focus:underline' => $isClickable && (! $isBadge),
             ])
     }}
 >
@@ -215,7 +215,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_text_column_b
 
     <{{ $isListWithLineBreaks ? 'ul' : 'div' }}
         @class([
-            'list-disc list-inside' => $isBulleted(),
+            'list-inside list-disc' => $isBulleted(),
             'flex flex-wrap gap-1' => $isBadge,
         ])
     >
@@ -230,11 +230,11 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_text_column_b
                     <div
                         @class([
                             'inline-flex items-center space-x-1 rtl:space-x-reverse',
-                            'filament-tables-text-column-badge justify-center min-h-6 px-2 py-0.5 rounded-xl whitespace-nowrap' => $isBadge,
+                            'filament-tables-text-column-badge min-h-6 justify-center whitespace-nowrap rounded-xl px-2 py-0.5' => $isBadge,
                             'whitespace-normal' => $canWrap,
                             ($isBadge ? match ($color = $getColor($state)) {
                                 'danger' => 'filament-tables-text-column-badge-color-danger text-danger-700 bg-danger-500/10 dark:text-danger-500',
-                                'gray', null => 'filament-tables-text-column-badge-color-gray text-gray-700 bg-gray-500/10 dark:text-gray-300 dark:bg-gray-500/20',
+                                'gray', null => 'filament-tables-text-column-badge-color-gray bg-gray-500/10 text-gray-700 dark:bg-gray-500/20 dark:text-gray-300',
                                 'info' => 'filament-tables-text-column-badge-color-info text-info-700 bg-info-500/10 dark:text-info-500',
                                 'primary' => 'filament-tables-text-column-badge-color-primary text-primary-700 bg-primary-500/10 dark:text-primary-500',
                                 'secondary' => 'filament-tables-text-column-badge-color-secondary text-secondary-700 bg-secondary-500/10 dark:text-secondary-500',

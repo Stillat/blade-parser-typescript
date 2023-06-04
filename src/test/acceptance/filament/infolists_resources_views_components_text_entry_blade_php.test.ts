@@ -234,7 +234,7 @@ suite('Pint Transformer Acceptance: infolists_resources_views_components_text_en
     >
         <{{ $isListWithLineBreaks ? 'ul' : 'div' }}
             @class([
-                'list-disc list-inside' => $isBulleted(),
+                'list-inside list-disc' => $isBulleted(),
                 'flex flex-wrap gap-1' => $isBadge,
             ])
         >
@@ -249,12 +249,12 @@ suite('Pint Transformer Acceptance: infolists_resources_views_components_text_en
                         <div
                             @class([
                                 'inline-flex items-center space-x-1 rtl:space-x-reverse',
-                                'justify-center min-h-6 px-2 py-0.5 rounded-xl whitespace-nowrap' => $isBadge,
-                                'prose max-w-none dark:prose-invert' => $isProse,
+                                'min-h-6 justify-center whitespace-nowrap rounded-xl px-2 py-0.5' => $isBadge,
+                                'prose dark:prose-invert max-w-none' => $isProse,
                                 'whitespace-normal' => $canWrap,
                                 ($isBadge ? match ($color = $getColor($state)) {
                                     'danger' => 'text-danger-700 bg-danger-500/10 dark:text-danger-500',
-                                    'gray', null => 'text-gray-700 bg-gray-500/10 dark:text-gray-300 dark:bg-gray-500/20',
+                                    'gray', null => 'bg-gray-500/10 text-gray-700 dark:bg-gray-500/20 dark:text-gray-300',
                                     'info' => 'text-info-700 bg-info-500/10 dark:text-info-500',
                                     'primary' => 'text-primary-700 bg-primary-500/10 dark:text-primary-500',
                                     'secondary' => 'text-secondary-700 bg-secondary-500/10 dark:text-secondary-500',

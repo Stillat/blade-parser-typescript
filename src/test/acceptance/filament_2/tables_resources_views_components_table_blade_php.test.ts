@@ -50,7 +50,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_components_table_blad
 <table
     {{
         $attributes->class([
-            'filament-tables-table w-full text-start divide-y table-auto',
+            'filament-tables-table w-full table-auto divide-y text-start',
             'dark:divide-gray-700' => config('tables.dark_mode'),
         ])
     }}

@@ -117,7 +117,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_text_input_
     $datalistOptions = $getDatalistOptions();
 
     $affixLabelClasses = [
-        'whitespace-nowrap group-focus-within:text-primary-500',
+        'group-focus-within:text-primary-500 whitespace-nowrap',
         'text-gray-400' => ! $errors->has($getStatePath()),
         'text-danger-400' => $errors->has($getStatePath()),
     ];
@@ -137,7 +137,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_text_input_
     :state-path="$getStatePath()"
 >
     <div
-        {{ $attributes->merge($getExtraAttributes())->class(['filament-forms-text-input-component flex items-center space-x-2 rtl:space-x-reverse group']) }}
+        {{ $attributes->merge($getExtraAttributes())->class(['filament-forms-text-input-component group flex items-center space-x-2 rtl:space-x-reverse']) }}
     >
         @if (($prefixAction = $getPrefixAction()) && (! $prefixAction->isHidden()))
             {{ $prefixAction }}
@@ -189,7 +189,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_text_input_
                 {{ $getExtraAlpineAttributeBag() }}
                 {{
                     $getExtraInputAttributeBag()->class([
-                        'filament-forms-input block w-full transition duration-75 rounded-lg shadow-sm outline-none focus:ring-1 focus:ring-inset disabled:opacity-70',
+                        'filament-forms-input block w-full rounded-lg shadow-sm outline-none transition duration-75 focus:ring-1 focus:ring-inset disabled:opacity-70',
                         'dark:bg-gray-700 dark:text-white' => config('forms.dark_mode'),
                     ])
                 }}

@@ -1625,7 +1625,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
 
                     <div
                         @class([
-                            'bg-gray-500/5 flex items-center gap-4 px-4 border-b dark:border-gray-700',
+                            'flex items-center gap-4 border-b bg-gray-500/5 px-4 dark:border-gray-700',
                             'hidden' => (! $isSelectionEnabled) && (! count($sortableColumns)),
                         ])
                     >
@@ -1849,17 +1849,17 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                         'bg-gray-50 dark:bg-gray-500/10': isRecordSelected('{{ $recordKey }}'),
                                     }"
                                     @class([
-                                        'h-full relative px-4 transition',
+                                        'relative h-full px-4 transition',
                                         'hover:bg-gray-50 dark:hover:bg-gray-500/10' => $recordUrl || $recordAction,
                                         'dark:border-gray-600' => ! $contentGrid,
                                         'group' => $isReordering,
-                                        'rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 dark:bg-gray-700/40' => $contentGrid,
+                                        'rounded-xl border border-gray-200 shadow-sm dark:border-gray-700 dark:bg-gray-700/40' => $contentGrid,
                                         ...$getRecordClasses($record),
                                     ])
                                 >
                                     <div
                                         @class([
-                                            'items-center gap-4 md:flex md:me-0' => (! $contentGrid),
+                                            'items-center gap-4 md:me-0 md:flex' => (! $contentGrid),
                                             'me-6' => $isSelectionEnabled || $hasCollapsibleColumnsLayout || $isReordering,
                                         ])
                                     >
@@ -1890,7 +1890,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                                     'absolute end-1',
                                                     'top-10' => $isSelectionEnabled,
                                                     'top-1' => ! $isSelectionEnabled,
-                                                    'md:relative md:top-0 md:end-0' => ! $contentGrid,
+                                                    'md:relative md:end-0 md:top-0' => ! $contentGrid,
                                                     'hidden' => $isReordering,
                                                 ])
                                             >
@@ -1974,7 +1974,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                             x-show="! isCollapsed"
                                             x-collapse
                                             @class([
-                                                'pb-2 -mx-2',
+                                                '-mx-2 pb-2',
                                                 'md:ps-20' => (! $contentGrid) && $isSelectionEnabled,
                                                 'md:ps-12' => (! $contentGrid) && (! $isSelectionEnabled),
                                                 'hidden' => $isReordering,

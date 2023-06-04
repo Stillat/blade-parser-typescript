@@ -34,7 +34,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_header_ind
 ])
 
 <header
-    {{ $attributes->class(['filament-header space-y-2 items-start justify-between sm:flex sm:space-y-0 sm:space-x-4  sm:rtl:space-x-reverse sm:py-4']) }}
+    {{ $attributes->class(['filament-header items-start justify-between space-y-2 sm:flex sm:space-x-4 sm:space-y-0 sm:py-4 sm:rtl:space-x-reverse']) }}
 >
     <div>
         <x-filament::header.heading>

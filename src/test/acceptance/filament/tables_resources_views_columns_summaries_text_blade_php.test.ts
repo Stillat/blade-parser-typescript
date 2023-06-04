@@ -17,7 +17,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_summaries_tex
 </div>
 `;
         const output = `<div
-    {{ $attributes->merge($getExtraAttributes(), escape: false)->class(['filament-tables-text-summary text-sm px-4 py-3']) }}
+    {{ $attributes->merge($getExtraAttributes(), escape: false)->class(['filament-tables-text-summary px-4 py-3 text-sm']) }}
 >
     @if (filled($label = $getLabel()))
         <span class="text-gray-500 dark:text-gray-400">{{ $label }}:</span>

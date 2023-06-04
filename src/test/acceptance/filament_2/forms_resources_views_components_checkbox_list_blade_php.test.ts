@@ -260,8 +260,8 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_checkbox_li
                     type="search"
                     placeholder="{{ $getSearchPrompt() }}"
                     @class([
-                        'mb-2 block h-7 px-2 text-sm w-full rounded-lg border-gray-300 shadow-sm text-gray-700 transition duration-75 outline-none focus:border-primary-500 focus:ring-1 focus:ring-inset focus:ring-primary-500',
-                        'dark:text-gray-200 dark:bg-gray-700 dark:border-gray-600' => config('forms.dark_mode'),
+                        'focus:border-primary-500 focus:ring-primary-500 mb-2 block h-7 w-full rounded-lg border-gray-300 px-2 text-sm text-gray-700 shadow-sm outline-none transition duration-75 focus:ring-1 focus:ring-inset',
+                        'dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200' => config('forms.dark_mode'),
                     ])
                 />
             @endif

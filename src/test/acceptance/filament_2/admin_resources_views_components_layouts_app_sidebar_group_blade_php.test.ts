@@ -145,7 +145,7 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_layouts_app
         x-show="! ($store.sidebar.groupIsCollapsed(label) && {{ config('filament.layout.sidebar.is_collapsible_on_desktop') ? '$store.sidebar.isOpen' : 'true' }})"
         x-collapse.duration.200ms
         @class([
-            'text-sm space-y-1 -mx-3',
+            '-mx-3 space-y-1 text-sm',
             'mt-2' => $label,
         ])
     >

@@ -57,7 +57,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_components_empty_stat
 ])
 
 <div
-    {{ $attributes->class(['filament-tables-empty-state flex flex-1 flex-col items-center justify-center p-6 mx-auto space-y-6 text-center bg-white dark:bg-gray-800']) }}
+    {{ $attributes->class(['filament-tables-empty-state mx-auto flex flex-1 flex-col items-center justify-center space-y-6 bg-white p-6 text-center dark:bg-gray-800']) }}
 >
     <div
         class="filament-tables-empty-state-icon-wrapper text-primary-500 bg-primary-50 flex h-16 w-16 items-center justify-center rounded-full dark:bg-gray-700"

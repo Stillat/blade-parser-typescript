@@ -77,7 +77,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_components_filters_in
 
 @if (count($indicators))
     <div
-        {{ $attributes->class(['filament-tables-filter-indicators bg-gray-500/5 gap-x-4 px-4 py-1 text-sm flex']) }}
+        {{ $attributes->class(['filament-tables-filter-indicators flex gap-x-4 bg-gray-500/5 px-4 py-1 text-sm']) }}
     >
         <div class="flex flex-1 flex-wrap items-center gap-x-2 gap-y-1">
             <span class="font-medium dark:text-gray-200">

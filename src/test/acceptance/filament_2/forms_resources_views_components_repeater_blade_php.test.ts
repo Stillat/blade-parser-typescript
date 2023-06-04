@@ -424,16 +424,16 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_repeater_bl
                                 setTimeout(() => $el.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' }), 200)
                             "
                             @class([
-                                'filament-forms-repeater-component-item bg-white border border-gray-300 shadow-sm rounded-xl relative',
-                                'dark:bg-gray-800 dark:border-gray-600' => config('forms.dark_mode'),
+                                'filament-forms-repeater-component-item relative rounded-xl border border-gray-300 bg-white shadow-sm',
+                                'dark:border-gray-600 dark:bg-gray-800' => config('forms.dark_mode'),
                             ])
                         >
                             @if ((! $isItemMovementDisabled) || (! $isItemDeletionDisabled) || $isCloneable || $isCollapsible || $hasItemLabels)
                                 <header
                                     @if ($isCollapsible) x-on:click.stop="isCollapsed = ! isCollapsed" @endif
                                     @class([
-                                        'flex items-center h-10 overflow-hidden border-b bg-gray-50 rounded-t-xl',
-                                        'dark:bg-gray-800 dark:border-gray-700' => config('forms.dark_mode'),
+                                        'flex h-10 items-center overflow-hidden rounded-t-xl border-b bg-gray-50',
+                                        'dark:border-gray-700 dark:bg-gray-800' => config('forms.dark_mode'),
                                         'cursor-pointer' => $isCollapsible,
                                     ])
                                 >
@@ -446,7 +446,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_repeater_bl
                                             wire:keydown.prevent.arrow-down="dispatchFormEvent('repeater::moveItemDown', '{{ $getStatePath() }}', '{{ $uuid }}')"
                                             type="button"
                                             @class([
-                                                'flex items-center justify-center flex-none w-10 h-10 text-gray-400 border-r transition outline-none hover:text-gray-500 focus:bg-gray-500/5',
+                                                'flex h-10 w-10 flex-none items-center justify-center border-r text-gray-400 outline-none transition hover:text-gray-500 focus:bg-gray-500/5',
                                                 'dark:border-gray-700 dark:focus:bg-gray-600/20' => config('forms.dark_mode'),
                                             ])
                                         >
@@ -462,7 +462,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_repeater_bl
 
                                     <p
                                         @class([
-                                            'flex-none px-4 text-xs font-medium text-gray-600 truncate',
+                                            'flex-none truncate px-4 text-xs font-medium text-gray-600',
                                             'dark:text-gray-400' => config('forms.dark_mode'),
                                         ])
                                     >
@@ -487,7 +487,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_repeater_bl
                                                         wire:target="dispatchFormEvent('repeater::moveItemUp', '{{ $getStatePath() }}', '{{ $uuid }}')"
                                                         wire:loading.attr="disabled"
                                                         @class([
-                                                            'flex items-center justify-center flex-none w-10 h-10 text-gray-400 transition outline-none hover:text-gray-500 focus:bg-gray-500/5',
+                                                            'flex h-10 w-10 flex-none items-center justify-center text-gray-400 outline-none transition hover:text-gray-500 focus:bg-gray-500/5',
                                                             'dark:border-gray-700 dark:focus:bg-gray-600/20' => config('forms.dark_mode'),
                                                         ])
                                                     >
@@ -520,7 +520,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_repeater_bl
                                                         wire:target="dispatchFormEvent('repeater::moveItemDown', '{{ $getStatePath() }}', '{{ $uuid }}')"
                                                         wire:loading.attr="disabled"
                                                         @class([
-                                                            'flex items-center justify-center flex-none w-10 h-10 text-gray-400 transition outline-none hover:text-gray-500 focus:bg-gray-500/5',
+                                                            'flex h-10 w-10 flex-none items-center justify-center text-gray-400 outline-none transition hover:text-gray-500 focus:bg-gray-500/5',
                                                             'dark:border-gray-700 dark:focus:bg-gray-600/20' => config('forms.dark_mode'),
                                                         ])
                                                     >
@@ -554,7 +554,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_repeater_bl
                                                     wire:loading.attr="disabled"
                                                     type="button"
                                                     @class([
-                                                        'flex items-center justify-center flex-none w-10 h-10 text-gray-400 transition outline-none hover:text-gray-500 focus:bg-gray-500/5',
+                                                        'flex h-10 w-10 flex-none items-center justify-center text-gray-400 outline-none transition hover:text-gray-500 focus:bg-gray-500/5',
                                                         'dark:border-gray-700 dark:focus:bg-gray-600/20' => config('forms.dark_mode'),
                                                     ])
                                                 >
@@ -587,7 +587,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_repeater_bl
                                                     wire:loading.attr="disabled"
                                                     type="button"
                                                     @class([
-                                                        'flex items-center justify-center flex-none w-10 h-10 text-danger-600 transition outline-none hover:text-danger-500 focus:bg-gray-500/5',
+                                                        'text-danger-600 hover:text-danger-500 flex h-10 w-10 flex-none items-center justify-center outline-none transition focus:bg-gray-500/5',
                                                         'dark:text-danger-500 dark:hover:text-danger-400 dark:focus:bg-gray-600/20' => config('forms.dark_mode'),
                                                     ])
                                                 >
@@ -618,7 +618,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_repeater_bl
                                                     x-on:click.stop="isCollapsed = ! isCollapsed"
                                                     type="button"
                                                     @class([
-                                                        'flex items-center justify-center flex-none w-10 h-10 text-gray-400 transition outline-none hover:text-gray-500 focus:bg-gray-500/5',
+                                                        'flex h-10 w-10 flex-none items-center justify-center text-gray-400 outline-none transition hover:text-gray-500 focus:bg-gray-500/5',
                                                         'dark:focus:bg-gray-600/20' => config('forms.dark_mode'),
                                                     ])
                                                 >

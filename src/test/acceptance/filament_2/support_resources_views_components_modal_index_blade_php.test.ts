@@ -316,7 +316,7 @@ suite('Pint Transformer Acceptance: support_resources_views_components_modal_ind
             @endif
             aria-hidden="true"
             @class([
-                'filament-modal-close-overlay fixed inset-0 w-full h-full bg-black/50',
+                'filament-modal-close-overlay fixed inset-0 h-full w-full bg-black/50',
                 'cursor-pointer' => $closeByClickingAway,
             ])
         ></div>
@@ -325,7 +325,7 @@ suite('Pint Transformer Acceptance: support_resources_views_components_modal_ind
             x-ref="modalContainer"
             {{
                 $attributes->class([
-                    'relative w-full cursor-pointer pointer-events-none transition',
+                    'pointer-events-none relative w-full cursor-pointer transition',
                     'my-auto p-4' => ! $slideOver,
                 ])
             }}
@@ -357,11 +357,11 @@ suite('Pint Transformer Acceptance: support_resources_views_components_modal_ind
                     x-transition:leave-end="translate-y-8"
                 @endif
                 @class([
-                    'filament-modal-window w-full py-2 bg-white cursor-default pointer-events-auto',
+                    'filament-modal-window pointer-events-auto w-full cursor-default bg-white py-2',
                     'dark:bg-gray-800' => $darkMode,
                     'relative' => $width !== 'screen',
-                    'h-screen overflow-y-auto ml-auto mr-0 rtl:mr-auto rtl:ml-0' => $slideOver,
-                    'rounded-xl mx-auto' => ! ($slideOver || ($width === 'screen')),
+                    'ml-auto mr-0 h-screen overflow-y-auto rtl:ml-0 rtl:mr-auto' => $slideOver,
+                    'mx-auto rounded-xl' => ! ($slideOver || ($width === 'screen')),
                     'hidden' => ! $visible,
                     'max-w-xs' => $width === 'xs',
                     'max-w-sm' => $width === 'sm',
@@ -402,7 +402,7 @@ suite('Pint Transformer Acceptance: support_resources_views_components_modal_ind
 
                 <div
                     @class([
-                        'flex flex-col h-full' => ($width === 'screen') || $slideOver,
+                        'flex h-full flex-col' => ($width === 'screen') || $slideOver,
                     ])
                 >
                     <div class="space-y-2">
@@ -429,7 +429,7 @@ suite('Pint Transformer Acceptance: support_resources_views_components_modal_ind
                         @if ($heading || $subheading)
                             <div
                                 @class([
-                                    'p-4 space-y-2',
+                                    'space-y-2 p-4',
                                     'text-center' => ! $slideOver,
                                     'dark:text-white' => $darkMode,
                                 ])

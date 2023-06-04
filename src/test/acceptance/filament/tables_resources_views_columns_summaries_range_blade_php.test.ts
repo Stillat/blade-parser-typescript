@@ -33,7 +33,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_summaries_ran
 </div>
 `;
         const output = `<div
-    {{ $attributes->merge($getExtraAttributes(), escape: false)->class(['filament-tables-range-summary text-sm px-4 py-3']) }}
+    {{ $attributes->merge($getExtraAttributes(), escape: false)->class(['filament-tables-range-summary px-4 py-3 text-sm']) }}
 >
     @php
         $state = $formatState($getState());

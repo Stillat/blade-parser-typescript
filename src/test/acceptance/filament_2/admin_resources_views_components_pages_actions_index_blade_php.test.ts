@@ -72,7 +72,7 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_pages_actio
                         'right' => 'flex-row-reverse space-x-reverse',
                         default => 'justify-start',
                     } => ! $fullWidth,
-                    'grid gap-2 grid-cols-[repeat(auto-fit,minmax(0,1fr))]' => $fullWidth,
+                    'grid grid-cols-[repeat(auto-fit,minmax(0,1fr))] gap-2' => $fullWidth,
                 ])
             }}
         >

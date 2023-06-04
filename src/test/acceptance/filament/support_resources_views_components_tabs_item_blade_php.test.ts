@@ -137,9 +137,9 @@ suite('Pint Transformer Acceptance: support_resources_views_components_tabs_item
                 'role' => 'tab',
             ])
             ->class([
-                'filament-tabs-item flex whitespace-nowrap items-center gap-3 h-8 px-5 font-medium rounded-md outline-none focus:ring-2 focus:ring-primary-600 focus:ring-inset',
-                'hover:text-gray-800 focus:text-primary-600 dark:text-gray-400 dark:hover:text-gray-300 dark:focus:text-gray-400' => (! $active) && (! $alpineActive),
-                'text-primary-600 shadow bg-white dark:text-white dark:bg-primary-600' => $active,
+                'filament-tabs-item focus:ring-primary-600 flex h-8 items-center gap-3 whitespace-nowrap rounded-md px-5 font-medium outline-none focus:ring-2 focus:ring-inset',
+                'focus:text-primary-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-300 dark:focus:text-gray-400' => (! $active) && (! $alpineActive),
+                'text-primary-600 dark:bg-primary-600 bg-white shadow dark:text-white' => $active,
             ])
     }}
 >
@@ -180,9 +180,9 @@ suite('Pint Transformer Acceptance: support_resources_views_components_tabs_item
                 }"
             @endif
             @class([
-                'inline-flex items-center justify-center min-h-4 px-2 py-0.5 text-xs font-medium tracking-tight rounded-xl whitespace-normal',
+                'min-h-4 inline-flex items-center justify-center whitespace-normal rounded-xl px-2 py-0.5 text-xs font-medium tracking-tight',
                 'bg-gray-200 dark:bg-gray-600' => (! $active) && (! $alpineActive),
-                'bg-white text-primary-600 font-medium' => $active,
+                'text-primary-600 bg-white font-medium' => $active,
             ])
         >
             {{ $badge }}

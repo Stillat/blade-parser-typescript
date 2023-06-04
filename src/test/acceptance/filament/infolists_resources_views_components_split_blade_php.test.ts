@@ -36,11 +36,11 @@ suite('Pint Transformer Acceptance: infolists_resources_views_components_split_b
             ->class([
                 'flex gap-6',
                 match ($getFromBreakpoint()) {
-                    'sm' => 'flex-col sm:items-center sm:flex-row',
-                    'md' => 'flex-col md:items-center md:flex-row',
-                    'lg' => 'flex-col lg:items-center lg:flex-row',
-                    'xl' => 'flex-col xl:items-center xl:flex-row',
-                    '2xl' => 'flex-col 2xl:items-center 2xl:flex-row',
+                    'sm' => 'flex-col sm:flex-row sm:items-center',
+                    'md' => 'flex-col md:flex-row md:items-center',
+                    'lg' => 'flex-col lg:flex-row lg:items-center',
+                    'xl' => 'flex-col xl:flex-row xl:items-center',
+                    '2xl' => 'flex-col 2xl:flex-row 2xl:items-center',
                     default => 'items-center',
                 },
             ])
@@ -50,7 +50,7 @@ suite('Pint Transformer Acceptance: infolists_resources_views_components_split_b
         @foreach ($container->getComponents() as $component)
             <div
                 @class([
-                    'flex-1 w-full' => $component->canGrow(),
+                    'w-full flex-1' => $component->canGrow(),
                 ])
             >
                 {{ $component }}

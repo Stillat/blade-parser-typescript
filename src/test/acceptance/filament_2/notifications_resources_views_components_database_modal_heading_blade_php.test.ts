@@ -35,7 +35,7 @@ suite('Pint Transformer Acceptance: notifications_resources_views_components_dat
     @if ($unreadNotificationsCount)
         <span
             @class([
-                'inline-flex absolute items-center justify-center top-0 ml-1 min-w-[1rem] h-4 rounded-full text-xs text-primary-700 bg-primary-500/10',
+                'text-primary-700 bg-primary-500/10 absolute top-0 ml-1 inline-flex h-4 min-w-[1rem] items-center justify-center rounded-full text-xs',
                 'dark:text-primary-500' => config('tables.dark_mode'),
             ])
         >

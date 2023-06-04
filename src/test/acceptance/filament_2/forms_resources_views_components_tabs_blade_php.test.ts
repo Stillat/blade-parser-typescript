@@ -164,8 +164,8 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tabs_blade_
     {!! $getId() ? "id=\\"{$getId()}\\"" : null !!}
     {{
         $attributes->merge($getExtraAttributes())->class([
-            'filament-forms-tabs-component rounded-xl shadow-sm border border-gray-300 bg-white',
-            'dark:bg-gray-800 dark:border-gray-700' => config('forms.dark_mode'),
+            'filament-forms-tabs-component rounded-xl border border-gray-300 bg-white shadow-sm',
+            'dark:border-gray-700 dark:bg-gray-800' => config('forms.dark_mode'),
         ])
     }}
     {{ $getExtraAlpineAttributeBag() }}
@@ -187,7 +187,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tabs_blade_
         {!! $getLabel() ? 'aria-label="' . $getLabel() . '"' : null !!}
         role="tablist"
         @class([
-            'filament-forms-tabs-component-header rounded-t-xl flex overflow-y-auto bg-gray-100',
+            'filament-forms-tabs-component-header flex overflow-y-auto rounded-t-xl bg-gray-100',
             'dark:bg-gray-700' => config('forms.dark_mode'),
         ])
     >

@@ -356,13 +356,13 @@ suite('Pint Transformer Acceptance: support_resources_views_components_button_bl
 @php
     $buttonClasses = [
         ...[
-            'filament-button grid-flow-col items-center justify-center rounded-lg border font-medium relative outline-none transition-colors focus:ring-2 disabled:pointer-events-none disabled:opacity-70',
+            'filament-button relative grid-flow-col items-center justify-center rounded-lg border font-medium outline-none transition-colors focus:ring-2 disabled:pointer-events-none disabled:opacity-70',
             match ($size) {
-                'xs' => 'filament-button-size-xs gap-1.5 py-[calc(theme(spacing.2)-1px)] px-[calc(theme(spacing.3)-1px)] text-xs',
-                'sm' => 'filament-button-size-sm gap-1.5 py-[calc(theme(spacing.2)-1px)] px-[calc(theme(spacing.[3.5])-1px)] text-sm',
-                'md' => 'filament-button-size-md gap-2 py-[calc(theme(spacing[2.5])-1px)] px-[calc(theme(spacing.4)-1px)] text-sm',
-                'lg' => 'filament-button-size-lg gap-2 py-[calc(theme(spacing.3)-1px)] px-[calc(theme(spacing.5)-1px)] text-sm',
-                'xl' => 'filament-button-size-xl gap-2 py-[calc(theme(spacing.3)-1px)] px-[calc(theme(spacing.6)-1px)] text-base',
+                'xs' => 'filament-button-size-xs gap-1.5 px-[calc(theme(spacing.3)-1px)] py-[calc(theme(spacing.2)-1px)] text-xs',
+                'sm' => 'filament-button-size-sm gap-1.5 px-[calc(theme(spacing.[3.5])-1px)] py-[calc(theme(spacing.2)-1px)] text-sm',
+                'md' => 'filament-button-size-md gap-2 px-[calc(theme(spacing.4)-1px)] py-[calc(theme(spacing[2.5])-1px)] text-sm',
+                'lg' => 'filament-button-size-lg gap-2 px-[calc(theme(spacing.5)-1px)] py-[calc(theme(spacing.3)-1px)] text-sm',
+                'xl' => 'filament-button-size-xl gap-2 px-[calc(theme(spacing.6)-1px)] py-[calc(theme(spacing.3)-1px)] text-base',
             },
             'hidden' => $labeledFrom,
             match ($labeledFrom) {
@@ -380,7 +380,7 @@ suite('Pint Transformer Acceptance: support_resources_views_components_button_bl
                     'filament-button-outlined',
                     match ($color) {
                         'danger' => 'filament-button-color-danger border-danger-600 text-danger-600 hover:bg-danger-500/10 focus:bg-danger-500/10 focus:ring-danger-500/50 dark:border-danger-400 dark:text-danger-400',
-                        'gray' => 'filament-button-color-gray border-gray-300 text-gray-700 hover:bg-gray-500/10 focus:bg-gray-500/10 focus:ring-primary-500/50 dark:border-gray-600 dark:text-gray-200',
+                        'gray' => 'filament-button-color-gray focus:ring-primary-500/50 border-gray-300 text-gray-700 hover:bg-gray-500/10 focus:bg-gray-500/10 dark:border-gray-600 dark:text-gray-200',
                         'info' => 'filament-button-color-info border-info-600 text-info-600 hover:bg-info-500/10 focus:bg-info-500/10 focus:ring-info-500/50 dark:border-info-400 dark:text-info-400',
                         'primary' => 'filament-button-color-primary border-primary-600 text-primary-600 hover:bg-primary-500/10 focus:bg-primary-500/10 focus:ring-primary-500/50 dark:border-primary-400 dark:text-primary-400',
                         'secondary' => 'filament-button-color-secondary border-secondary-600 text-secondary-600 hover:bg-secondary-500/10 focus:bg-secondary-500/10 focus:ring-secondary-500/50 dark:border-secondary-400 dark:text-secondary-400',
@@ -392,13 +392,13 @@ suite('Pint Transformer Acceptance: support_resources_views_components_button_bl
                 : [
                     'shadow',
                     match ($color) {
-                        'danger' => 'filament-button-color-danger border-transparent bg-danger-600 text-white hover:bg-danger-500 focus:bg-danger-500 focus:ring-danger-500/50',
-                        'gray' => 'filament-button-color-gray border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:bg-gray-50 focus:ring-primary-500 focus:border-transparent dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 dark:focus:bg-gray-700',
-                        'info' => 'filament-button-color-info border-transparent bg-info-600 text-white hover:bg-info-500 focus:bg-info-500 focus:ring-info-500/50',
-                        'primary' => 'filament-button-color-primary border-transparent bg-primary-600 text-white hover:bg-primary-500 focus:bg-primary-500 focus:ring-primary-500/50',
-                        'secondary' => 'filament-button-color-secondary border-transparent bg-secondary-600 text-white hover:bg-secondary-500 focus:bg-secondary-500 focus:ring-secondary-500/50',
-                        'success' => 'filament-button-color-success border-transparent bg-success-600 text-white hover:bg-success-500 focus:bg-success-500 focus:ring-success-500/50',
-                        'warning' => 'filament-button-color-warning border-transparent bg-warning-600 text-white hover:bg-warning-500 focus:bg-warning-500 focus:ring-warning-500/50',
+                        'danger' => 'filament-button-color-danger bg-danger-600 hover:bg-danger-500 focus:bg-danger-500 focus:ring-danger-500/50 border-transparent text-white',
+                        'gray' => 'filament-button-color-gray focus:ring-primary-500 border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:border-transparent focus:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 dark:focus:bg-gray-700',
+                        'info' => 'filament-button-color-info bg-info-600 hover:bg-info-500 focus:bg-info-500 focus:ring-info-500/50 border-transparent text-white',
+                        'primary' => 'filament-button-color-primary bg-primary-600 hover:bg-primary-500 focus:bg-primary-500 focus:ring-primary-500/50 border-transparent text-white',
+                        'secondary' => 'filament-button-color-secondary bg-secondary-600 hover:bg-secondary-500 focus:bg-secondary-500 focus:ring-secondary-500/50 border-transparent text-white',
+                        'success' => 'filament-button-color-success bg-success-600 hover:bg-success-500 focus:bg-success-500 focus:ring-success-500/50 border-transparent text-white',
+                        'warning' => 'filament-button-color-warning bg-warning-600 hover:bg-warning-500 focus:bg-warning-500 focus:ring-warning-500/50 border-transparent text-white',
                         default => $color,
                     },
                 ]

@@ -84,7 +84,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_components_filters_in
 
 @if (count($indicators))
     <div
-        {{ $attributes->class(['filament-tables-filter-indicators bg-gray-500/5 gap-x-4 px-4 py-1 text-sm flex']) }}
+        {{ $attributes->class(['filament-tables-filter-indicators flex gap-x-4 bg-gray-500/5 px-4 py-1 text-sm']) }}
     >
         <div class="flex flex-1 flex-wrap items-center gap-x-2 gap-y-1">
             <span class="font-medium dark:text-gray-200">
@@ -99,8 +99,8 @@ suite('Pint Transformer Acceptance: tables_resources_views_components_filters_in
 
                     <span
                         @class([
-                            'filament-tables-filter-indicator inline-flex items-center justify-center min-h-6 px-2 py-0.5 text-xs font-medium tracking-tight rounded-xl text-gray-700 bg-gray-500/10 whitespace-normal',
-                            'dark:text-gray-300 dark:bg-gray-500/20' => config('tables.dark_mode'),
+                            'filament-tables-filter-indicator min-h-6 inline-flex items-center justify-center whitespace-normal rounded-xl bg-gray-500/10 px-2 py-0.5 text-xs font-medium tracking-tight text-gray-700',
+                            'dark:bg-gray-500/20 dark:text-gray-300' => config('tables.dark_mode'),
                         ])
                     >
                         {{ $indicator }}
@@ -129,8 +129,8 @@ suite('Pint Transformer Acceptance: tables_resources_views_components_filters_in
                 wire:click="removeTableFilters"
                 type="button"
                 @class([
-                    '-mb-1.5 -mt-0.5 -mr-2 p-1.5 text-gray-600 hover:bg-gray-500/10 rounded-full hover:text-gray-700',
-                    'dark:text-gray-400 dark:hover:text-gray-300 dark:hover:bg-gray-500/20' => config('tables.dark_mode'),
+                    '-mb-1.5 -mr-2 -mt-0.5 rounded-full p-1.5 text-gray-600 hover:bg-gray-500/10 hover:text-gray-700',
+                    'dark:text-gray-400 dark:hover:bg-gray-500/20 dark:hover:text-gray-300' => config('tables.dark_mode'),
                 ])
             >
                 <div class="flex h-5 w-5 items-center justify-center">

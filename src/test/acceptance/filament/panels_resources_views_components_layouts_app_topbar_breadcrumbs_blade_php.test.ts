@@ -34,7 +34,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
     'breadcrumbs' => [],
 ])
 
-<div {{ $attributes->class(['hidden filament-breadcrumbs flex-1 lg:block']) }}>
+<div {{ $attributes->class(['filament-breadcrumbs hidden flex-1 lg:block']) }}>
     <ul class="flex items-center gap-3 text-sm font-medium dark:text-white">
         @foreach ($breadcrumbs as $url => $label)
             <li>

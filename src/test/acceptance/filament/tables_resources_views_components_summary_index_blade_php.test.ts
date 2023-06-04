@@ -170,7 +170,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_components_summary_in
                 <td
                     {{
                         $column->getExtraHeaderAttributeBag()->class([
-                            'px-4 py-2 font-medium text-sm text-gray-600 dark:text-gray-300',
+                            'px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300',
                             'whitespace-nowrap' => ! $column->isHeaderWrapped(),
                             'whitespace-normal' => $column->isHeaderWrapped(),
                             match ($column->getAlignment()) {

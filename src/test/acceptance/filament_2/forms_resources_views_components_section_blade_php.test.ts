@@ -191,13 +191,13 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_section_bla
 >
     <div
         @class([
-            'filament-forms-section-header-wrapper flex rtl:space-x-reverse overflow-hidden rounded-t-xl',
+            'filament-forms-section-header-wrapper flex overflow-hidden rounded-t-xl rtl:space-x-reverse',
             'min-h-[40px]' => $isCompact,
             'min-h-[56px]' => ! $isCompact,
             'pb-4' => $isAside,
             'pr-6' => $isAside && ! $isFormBefore,
             'pl-6' => $isAside && $isFormBefore,
-            'px-4 py-2 items-center bg-gray-100' => ! $isAside,
+            'items-center bg-gray-100 px-4 py-2' => ! $isAside,
             'dark:bg-gray-900' => config('forms.dark_mode') && (! $isAside),
         ])
         @if ($isCollapsible)
@@ -213,7 +213,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_section_bla
         >
             <h3
                 @class([
-                    'font-bold tracking-tight pointer-events-none flex flex-row items-center',
+                    'pointer-events-none flex flex-row items-center font-bold tracking-tight',
                     'text-xl' => ! $isCompact || $isAside,
                 ])
             >
@@ -252,16 +252,16 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_section_bla
                 }"
                 type="button"
                 @class([
-                    'flex items-center justify-center transform rounded-full text-primary-500 outline-none hover:bg-gray-500/5 focus:bg-primary-500/10',
-                    'w-10 h-10' => ! $isCompact,
-                    'w-8 h-8 -my-1' => $isCompact,
+                    'text-primary-500 focus:bg-primary-500/10 flex transform items-center justify-center rounded-full outline-none hover:bg-gray-500/5',
+                    'h-10 w-10' => ! $isCompact,
+                    '-my-1 h-8 w-8' => $isCompact,
                     '-rotate-180' => ! $isCollapsed,
                 ])
             >
                 <svg
                     @class([
-                        'w-7 h-7' => ! $isCompact,
-                        'w-5 h-5' => $isCompact,
+                        'h-7 w-7' => ! $isCompact,
+                        'h-5 w-5' => $isCompact,
                     ])
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"

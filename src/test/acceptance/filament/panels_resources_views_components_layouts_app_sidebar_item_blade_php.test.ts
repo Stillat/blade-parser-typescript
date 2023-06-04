@@ -106,7 +106,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
             x-tooltip.html="tooltip"
         @endif
         @class([
-            'flex items-center justify-center gap-3 px-3 py-2 rounded-lg font-medium transition',
+            'flex items-center justify-center gap-3 rounded-lg px-3 py-2 font-medium transition',
             'hover:bg-gray-500/5 focus:bg-gray-500/5 dark:text-gray-300 dark:hover:bg-gray-700' => ! $active,
             'bg-primary-500 text-white' => $active,
         ])

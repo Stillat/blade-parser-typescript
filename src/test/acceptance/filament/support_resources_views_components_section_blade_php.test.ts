@@ -181,7 +181,7 @@ suite('Pint Transformer Acceptance: support_resources_views_components_section_b
         $attributes->class([
             'filament-section-component',
             match ($aside) {
-                true => 'grid grid-cols-1 gap-x-6 gap-y-4 items-start md:grid-cols-3',
+                true => 'grid grid-cols-1 items-start gap-x-6 gap-y-4 md:grid-cols-3',
                 false => 'rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-800 dark:ring-white/20',
             },
         ])

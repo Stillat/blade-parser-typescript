@@ -45,7 +45,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_summaries_ico
 </div>
 `;
         const output = `<div
-    {{ $attributes->merge($getExtraAttributes(), escape: false)->class(['filament-tables-icon-count-summary text-sm space-y-1 px-4 py-3']) }}
+    {{ $attributes->merge($getExtraAttributes(), escape: false)->class(['filament-tables-icon-count-summary space-y-1 px-4 py-3 text-sm']) }}
 >
     @if (filled($label = $getLabel()))
         <p class="text-gray-500 dark:text-gray-400">{{ $label }}:</p>

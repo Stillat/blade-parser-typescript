@@ -315,7 +315,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
                             $applyStateBindingModifiers('wire:model') => $statePath,
                         ], escape: false)
                         ->class([
-                            'block w-full transition duration-75 shadow-sm outline-none sm:text-sm focus:relative focus:z-[1] focus:ring-1 focus:ring-inset disabled:opacity-70 dark:bg-gray-700 dark:text-white',
+                            'block w-full shadow-sm outline-none transition duration-75 focus:relative focus:z-[1] focus:ring-1 focus:ring-inset disabled:opacity-70 dark:bg-gray-700 dark:text-white sm:text-sm',
                             'rounded-s-lg' => ! ($prefixLabel || $prefixIcon),
                             'rounded-e-lg' => ! ($suffixLabel || $suffixIcon),
                         ])
@@ -376,15 +376,15 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
                     @disabled($isDisabled)
                     {{
                         $getExtraTriggerAttributeBag()->class([
-                            'bg-white relative w-full border py-2 text-start cursor-default shadow-sm outline-none sm:text-sm dark:bg-gray-700',
+                            'relative w-full cursor-default border bg-white py-2 text-start shadow-sm outline-none dark:bg-gray-700 sm:text-sm',
                             'focus-within:ring-1 focus-within:ring-inset' => ! $isDisabled,
-                            'border-gray-300 focus-within:border-primary-500 focus-within:ring-primary-500 dark:border-gray-600 dark:focus-within:border-primary-500' => ! $errors->has($statePath),
+                            'focus-within:border-primary-500 focus-within:ring-primary-500 dark:focus-within:border-primary-500 border-gray-300 dark:border-gray-600' => ! $errors->has($statePath),
                             'border-danger-600 ring-danger-600 dark:border-danger-400 dark:ring-danger-400' => $errors->has($statePath),
                             'opacity-70 dark:text-gray-300' => $isDisabled,
                             'rounded-s-lg' => ! ($prefixLabel || $prefixIcon),
                             'rounded-e-lg' => ! ($suffixLabel || $suffixIcon),
                             'px-3' => $icon === false,
-                            'ps-3 pe-10' => $icon !== false,
+                            'pe-10 ps-3' => $icon !== false,
                         ])
                     }}
                 >
@@ -395,7 +395,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
                         x-model="displayText"
                         @if ($id = $getId()) id="{{ $id }}" @endif
                         @class([
-                            'w-full h-full p-0 placeholder-gray-400 bg-transparent border-0 outline-none focus:outline-none focus:placeholder-gray-500 focus:ring-0 dark:bg-gray-700 dark:placeholder-gray-400',
+                            'h-full w-full border-0 bg-transparent p-0 placeholder-gray-400 outline-none focus:placeholder-gray-500 focus:outline-none focus:ring-0 dark:bg-gray-700 dark:placeholder-gray-400',
                             'cursor-default' => $isDisabled,
                         ])
                     />
@@ -421,8 +421,8 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
                     wire:ignore
                     wire:key="{{ $this->id }}.{{ $statePath }}.{{ $field::class }}.panel"
                     @class([
-                        'absolute hidden z-10 my-1 bg-white border border-gray-300 rounded-lg shadow-md dark:bg-gray-700 dark:border-gray-600',
-                        'p-4 min-w-[16rem] w-fit' => $hasDate(),
+                        'absolute z-10 my-1 hidden rounded-lg border border-gray-300 bg-white shadow-md dark:border-gray-600 dark:bg-gray-700',
+                        'w-fit min-w-[16rem] p-4' => $hasDate(),
                     ])
                 >
                     <div class="space-y-3">

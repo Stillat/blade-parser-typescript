@@ -211,9 +211,9 @@ suite('Pint Transformer Acceptance: support_resources_views_components_link_blad
     $iconSize ??= $size;
 
     $linkClasses = [
-        'filament-link inline-flex items-center justify-center gap-0.5 font-medium relative outline-none hover:underline focus:underline disabled:opacity-70 disabled:pointer-events-none',
+        'filament-link relative inline-flex items-center justify-center gap-0.5 font-medium outline-none hover:underline focus:underline disabled:pointer-events-none disabled:opacity-70',
         'pe-4' => $indicator,
-        'opacity-70 pointer-events-none' => $disabled,
+        'pointer-events-none opacity-70' => $disabled,
         match ($color) {
             'danger' => 'text-danger-600 hover:text-danger-500 dark:text-danger-500 dark:hover:text-danger-400',
             'gray' => 'text-gray-600 hover:text-gray-500 dark:text-gray-300 dark:hover:text-gray-200',
