@@ -25,6 +25,11 @@ export class ClassEmulator {
     }
 
     private isSafeToProcess(value: string): boolean {
+        // Return early if there are no spaces in the content.
+        if (!value.includes(' ')) {
+            return false;
+        }
+
         for (let i = 0; i < this.charsToAvoid.length; i++) {
             if (value.includes(this.charsToAvoid[i])) {
                 return false;
@@ -49,7 +54,8 @@ export class ClassEmulator {
             stringStartMapping: Map<number, string> = new Map(),
             stringTransformMapping: Map<number, string> = new Map();
 
-        let emulateDocument: string = '';
+        let emulateDocument: string = '',
+            extractedCount = 0;
 
         stringNodes.forEach((node) => {
             if (node.type == 'string') {
@@ -62,6 +68,7 @@ export class ClassEmulator {
                 stringStartMapping.set(node.index, node.content[0]);
                 emulateDocument += `<!-- "${prefix}${node.index}"-->\n`;
                 emulateDocument += `<div class="${innerContent}"></div>\n`;
+                extractedCount += 2;
             }
         });
 
@@ -83,6 +90,13 @@ export class ClassEmulator {
         remover.remove(emulateDocument);
 
         const extracted = remover.getStrings();
+
+        // If we do not get the same amount of
+        // strings after transforming the
+        // content, bail out early.
+        if (extracted.length != extractedCount) {
+            return content;
+        }
 
         for (let i = 0; i < extracted.length; i++) {
             let line = extracted[i];
