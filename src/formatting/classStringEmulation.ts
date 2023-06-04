@@ -4,13 +4,17 @@ import { LiteralNode, SwitchStatementNode, ConditionNode, DirectiveNode, BladeEc
 import { ClassEmulator } from '../parser/classEmulator';
 import { PhpValidator } from '../parser/php/phpValidator';
 import { ParserOptions, getParserOptions } from '../parser/parserOptions';
+import { ClassStringRuleEngine, IClassStringConfiguration } from './classStringsConfig';
 
 export class ClassStringEmulation {
-    private ignoreDirectives: string[] = ['if', 'unless', 'elseif'];
+    private classStringConfig: IClassStringConfiguration;
+    private classRuleEngine: ClassStringRuleEngine;
     private phpValidator: PhpValidator | null = null;
     private parserOptions: ParserOptions;
 
-    constructor() {
+    constructor(classStringConfig: IClassStringConfiguration) {
+        this.classStringConfig = classStringConfig;
+        this.classRuleEngine = new ClassStringRuleEngine(this.classStringConfig);
         this.parserOptions = getParserOptions();
     }
 
@@ -56,7 +60,7 @@ export class ClassStringEmulation {
             } else if (node instanceof ConditionNode) {
                 stringResults += node.nodeContent;
             } else if (node instanceof DirectiveNode) {
-                if (this.ignoreDirectives.includes(node.directiveName)) {
+                if (this.classStringConfig.excludedDirectives.includes(node.directiveName.toLowerCase())) {
                     stringResults += node.sourceContent;
                 } else {
                     if (node.directiveName == 'php') {
@@ -74,6 +78,9 @@ export class ClassStringEmulation {
                     } else if (node.directiveName == 'verbatim') {
                         stringResults += node.sourceContent + node.innerContent;
                     } else {
+                        // TODO: Valid PHP check.
+                        //       Check for detected JSON.
+                        //       Check for enabled within rules.
                         const dirEmulate = new ClassEmulator();
                         stringResults += dirEmulate.emulateString(node.sourceContent);
 
