@@ -1,4 +1,4 @@
-import { Engine, If, Call, Node, Variable, PropertyLookup, Identifier, RetIf, Bin } from 'php-parser';
+import { Engine, If, Call, Node, Variable, PropertyLookup, Identifier, RetIf, Bin, Assign } from 'php-parser';
 import { ILabeledRange } from '../nodes/labeledRange';
 import { GenericLanguageStructures } from './genericLanguageStructures';
 
@@ -16,6 +16,49 @@ export class PhpStructuresAnalyzer {
     private structures: ILabeledRange[] = [];
     private hasStructuresWithUnknownLocations: boolean = false;
     private excludedStructures: string[] = [];
+    private phpAssignToGeneric: Map<string, string> = new Map<string, string>([
+        ['=', GenericLanguageStructures.Assignment],
+        ['+=', GenericLanguageStructures.AdditionAssignment],
+        ['-=', GenericLanguageStructures.SubtractionAssignment],
+        ['*=', GenericLanguageStructures.MultiplicationAssignment],
+        ['/=', GenericLanguageStructures.DivisionAssignment],
+        ['%=', GenericLanguageStructures.ModulusAssignment],
+        ['.=', GenericLanguageStructures.ConcatenationAssignment],
+        ['%=', GenericLanguageStructures.BitwiseAndAssignment],
+        ['|=', GenericLanguageStructures.BitwiseOrAssignment],
+        ['^=', GenericLanguageStructures.BitwiseXorAssignment],
+        ['<<=', GenericLanguageStructures.LeftShiftAssignment],
+        ['>>=', GenericLanguageStructures.RightShiftAssignment],
+    ]);
+
+    private phpOperatorsToGeneric: Map<string, string> = new Map<string, string>([
+        ['.', GenericLanguageStructures.Concat],
+        ['+', GenericLanguageStructures.Addition],
+        ['-', GenericLanguageStructures.Substraction],
+        ['*', GenericLanguageStructures.Multiplication],
+        ['/', GenericLanguageStructures.Division],
+        ['%', GenericLanguageStructures.Modulus],
+        ['**', GenericLanguageStructures.Exponentiation],
+        ['>', GenericLanguageStructures.GreaterThan],
+        ['&', GenericLanguageStructures.BitwiseAnd],
+        ['|', GenericLanguageStructures.BitwiseOr],
+        ['^', GenericLanguageStructures.BitwiseXor],
+        ['<<', GenericLanguageStructures.LeftShift],
+        ['>>', GenericLanguageStructures.RightShift],
+        ['==', GenericLanguageStructures.Equality],
+        ['===', GenericLanguageStructures.Identity],
+        ['<', GenericLanguageStructures.LessThan],
+        ['<>', GenericLanguageStructures.Inequality],
+        ['!=', GenericLanguageStructures.Inequality],
+        ['!==', GenericLanguageStructures.NotIdentity],
+        ['>=', GenericLanguageStructures.GreaterThanEqual],
+        ['<=', GenericLanguageStructures.LessThanEqual],
+        ['&&', GenericLanguageStructures.CompAnd],
+        ['and', GenericLanguageStructures.CompAnd],
+        ['||', GenericLanguageStructures.CompOr],
+        ['or', GenericLanguageStructures.CompOr],
+        ['xor', GenericLanguageStructures.Xor],
+    ]);
 
     constructor() {
         this.parser = new Engine({
@@ -49,7 +92,9 @@ export class PhpStructuresAnalyzer {
 
     private findStructureLocations(ast: Node, locationOffset: number): void {
         const ranges: ILabeledRange[] = [],
-            excludedStructures = this.excludedStructures;
+            excludedStructures = this.excludedStructures,
+            phpOps = this.phpOperatorsToGeneric,
+            phpAssigns = this.phpAssignToGeneric;
         let foundUnknownLocations = false;
 
         function traverse(node: any) {
@@ -81,6 +126,33 @@ export class PhpStructuresAnalyzer {
                         end: (retIf.test.loc?.end.offset ?? -1) - locationOffset + 2
                     });
                 }
+            } else if (node.kind == 'assign') {
+                const assignStatement = node as Assign;
+                let addRange = true;
+
+                if (assignStatement.left.loc == null || assignStatement.right.loc == null) {
+                    foundUnknownLocations = true;
+                }
+
+                let assignType = assignStatement.operator;
+
+                if (phpAssigns.has(assignType)) {
+                    assignType = phpAssigns.get(assignType) as string;
+                } else {
+                    assignType = GenericLanguageStructures.Assignment;
+                }
+
+                if (!excludedStructures.includes(assignType)) {
+                    addRange = false;
+                }
+
+                if (addRange) {
+                    ranges.push({
+                        label: assignType,
+                        start: (assignStatement.left.loc?.start.offset ?? -1) - locationOffset,
+                        end: (assignStatement.right.loc?.end.offset ?? -1) - locationOffset
+                    });
+                }
             } else if (node.kind == 'bin') {
                 const binStatement = node as Bin;
                 let addRange = true;
@@ -89,13 +161,21 @@ export class PhpStructuresAnalyzer {
                     foundUnknownLocations = true;
                 }
 
-                if (!excludedStructures.includes(GenericLanguageStructures.BinCompare)) {
+                let binType = binStatement.kind.toLowerCase();
+
+                if (phpOps.has(binType)) {
+                    binType = phpOps.get(binType) as string;
+                } else {
+                    binType = GenericLanguageStructures.BinCompare;
+                }
+
+                if (!excludedStructures.includes(binType)) {
                     addRange = false;
                 }
 
                 if (addRange) {
                     ranges.push({
-                        label: GenericLanguageStructures.BinCompare,
+                        label: binType,
                         start: (binStatement.left.loc?.start.offset ?? -1) - locationOffset,
                         end: (binStatement.right.loc?.end.offset ?? -1) - locationOffset
                     });
