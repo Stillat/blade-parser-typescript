@@ -1,5 +1,6 @@
 import { BladeDocument } from '../document/bladeDocument';
 import { ILabeledRange } from '../nodes/labeledRange';
+import { GenericLanguageStructures } from './genericLanguageStructures';
 const espree = require('espree');
 
 export class JavaScriptStructuresAnalyzer {
@@ -27,7 +28,7 @@ export class JavaScriptStructuresAnalyzer {
                         endIndex = node.end as number;
 
                     ranges.push({
-                        label: 'call',
+                        label: GenericLanguageStructures.CallStatement,
                         start: startIndex + startShift,
                         end: endIndex + startShift
                     });
@@ -36,7 +37,7 @@ export class JavaScriptStructuresAnalyzer {
                         endIndex = node.end as number;
 
                     ranges.push({
-                        label: 'if',
+                        label: GenericLanguageStructures.IfStatement,
                         start: startIndex + startShift,
                         end: endIndex + startShift
                     });

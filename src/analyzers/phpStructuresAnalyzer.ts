@@ -1,5 +1,6 @@
 import { Engine, If, Call, Node, Variable, PropertyLookup, Identifier, RetIf } from 'php-parser';
 import { ILabeledRange } from '../nodes/labeledRange';
+import { GenericLanguageStructures } from './genericLanguageStructures';
 
 /**
  * This class helps find structures within PHP code
@@ -54,7 +55,7 @@ export class PhpStructuresAnalyzer {
                 }
 
                 ranges.push({
-                    label: 'if',
+                    label: GenericLanguageStructures.IfStatement,
                     start: (ifStatement.test.loc?.start.offset ?? -1) - locationOffset,
                     end: (ifStatement.test.loc?.end.offset ?? -1) - locationOffset
                 });
@@ -66,7 +67,7 @@ export class PhpStructuresAnalyzer {
                 }
 
                 ranges.push({
-                    label: 'retif',
+                    label: GenericLanguageStructures.TernaryStatement,
                     start: (retIf.test.loc?.start.offset ?? -1) - locationOffset,
                     end: (retIf.test.loc?.end.offset ?? -1) - locationOffset + 2
                 });
@@ -93,7 +94,7 @@ export class PhpStructuresAnalyzer {
                     }
 
                     ranges.push({
-                        label: 'call',
+                        label: GenericLanguageStructures.CallStatement,
                         start: (callStatement.loc?.start.offset ?? -1) - locationOffset,
                         end: (callStatement.loc?.end.offset ?? -1) - locationOffset
                     });
