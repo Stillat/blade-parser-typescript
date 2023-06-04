@@ -19,6 +19,9 @@ export class ClassEmulator {
         this.stringParser = new InlineStringParser();
     }
 
+    setAllowedMethodNames(allowedMethodNames:string[]) {
+        this.phpStructuresAnalyzer.setAllowedMethods(allowedMethodNames);
+    }
 
     setExcludedLanguageStructures(structures: string[]) {
         this.phpStructuresAnalyzer.setExcludedStructures(structures);

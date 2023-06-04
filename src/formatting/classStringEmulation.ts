@@ -34,7 +34,9 @@ export class ClassStringEmulation {
 
     private getEmulator(): ClassEmulator {
         const emulator = new ClassEmulator(this.classRuleEngine);
+
         emulator.setExcludedLanguageStructures(this.classStringConfig.ignoredLanguageStructures);
+        emulator.setAllowedMethodNames(this.classStringConfig.allowedMethodNames);
 
         return emulator;
     }
