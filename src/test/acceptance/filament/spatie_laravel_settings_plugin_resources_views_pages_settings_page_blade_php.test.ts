@@ -2,7 +2,7 @@ import assert from 'assert';
 import { formatBladeStringWithPint } from '../../../formatting/prettier/utils';
 import { StringUtilities } from '../../../utilities/stringUtilities';
 
-suite('Pint Transformer Accpetance: spatie_laravel_settings_plugin_resources_views_pages_settings_page_blade_php', () => {
+suite('Pint Transformer Acceptance: spatie_laravel_settings_plugin_resources_views_pages_settings_page_blade_php', () => {
     test('pint: it can format spatie_laravel_settings_plugin_resources_views_pages_settings_page_blade_php', () => {
         const input = `<x-filament::page>
     <x-filament::form wire:submit.prevent="save">

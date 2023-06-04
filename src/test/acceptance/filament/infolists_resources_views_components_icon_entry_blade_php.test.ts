@@ -2,7 +2,7 @@ import assert from 'assert';
 import { formatBladeStringWithPint } from '../../../formatting/prettier/utils';
 import { StringUtilities } from '../../../utilities/stringUtilities';
 
-suite('Pint Transformer Accpetance: infolists_resources_views_components_icon_entry_blade_php', () => {
+suite('Pint Transformer Acceptance: infolists_resources_views_components_icon_entry_blade_php', () => {
     test('pint: it can format infolists_resources_views_components_icon_entry_blade_php', () => {
         const input = `<x-dynamic-component
     :component="$getEntryWrapperView()"

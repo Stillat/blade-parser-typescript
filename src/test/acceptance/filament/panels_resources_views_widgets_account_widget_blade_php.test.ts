@@ -2,7 +2,7 @@ import assert from 'assert';
 import { formatBladeStringWithPint } from '../../../formatting/prettier/utils';
 import { StringUtilities } from '../../../utilities/stringUtilities';
 
-suite('Pint Transformer Accpetance: panels_resources_views_widgets_account_widget_blade_php', () => {
+suite('Pint Transformer Acceptance: panels_resources_views_widgets_account_widget_blade_php', () => {
     test('pint: it can format panels_resources_views_widgets_account_widget_blade_php', () => {
         const input = `<x-filament-widgets::widget class="filament-account-widget">
     <x-filament::card>

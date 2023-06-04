@@ -2,7 +2,7 @@ import assert from 'assert';
 import { formatBladeStringWithPint } from '../../../formatting/prettier/utils';
 import { StringUtilities } from '../../../utilities/stringUtilities';
 
-suite('Pint Transformer Accpetance: admin_resources_views_components_global_search_no_results_message_blade_php', () => {
+suite('Pint Transformer Acceptance: admin_resources_views_components_global_search_no_results_message_blade_php', () => {
     test('pint: it can format admin_resources_views_components_global_search_no_results_message_blade_php', () => {
         const input = `<div {{ $attributes->class([
     'filament-global-search-no-results-message px-6 py-4',

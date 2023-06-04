@@ -2,7 +2,7 @@ import assert from 'assert';
 import { formatBladeStringWithPint } from '../../../formatting/prettier/utils';
 import { StringUtilities } from '../../../utilities/stringUtilities';
 
-suite('Pint Transformer Accpetance: notifications_resources_views_actions_group_blade_php', () => {
+suite('Pint Transformer Acceptance: notifications_resources_views_actions_group_blade_php', () => {
     test('pint: it can format notifications_resources_views_actions_group_blade_php', () => {
         const input = `<x-filament-support::actions.group
     :actions="$getActions()"

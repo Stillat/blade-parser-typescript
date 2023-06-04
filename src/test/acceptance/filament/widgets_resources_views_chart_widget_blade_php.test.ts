@@ -2,7 +2,7 @@ import assert from 'assert';
 import { formatBladeStringWithPint } from '../../../formatting/prettier/utils';
 import { StringUtilities } from '../../../utilities/stringUtilities';
 
-suite('Pint Transformer Accpetance: widgets_resources_views_chart_widget_blade_php', () => {
+suite('Pint Transformer Acceptance: widgets_resources_views_chart_widget_blade_php', () => {
     test('pint: it can format widgets_resources_views_chart_widget_blade_php', () => {
         const input = `@php
     $heading = $this->getHeading();

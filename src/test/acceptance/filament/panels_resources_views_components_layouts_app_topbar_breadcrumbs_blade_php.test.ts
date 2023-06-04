@@ -2,7 +2,7 @@ import assert from 'assert';
 import { formatBladeStringWithPint } from '../../../formatting/prettier/utils';
 import { StringUtilities } from '../../../utilities/stringUtilities';
 
-suite('Pint Transformer Accpetance: panels_resources_views_components_layouts_app_topbar_breadcrumbs_blade_php', () => {
+suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_app_topbar_breadcrumbs_blade_php', () => {
     test('pint: it can format panels_resources_views_components_layouts_app_topbar_breadcrumbs_blade_php', () => {
         const input = `@props([
     'breadcrumbs' => [],

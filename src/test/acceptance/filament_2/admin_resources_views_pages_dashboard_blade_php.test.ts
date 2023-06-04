@@ -2,7 +2,7 @@ import assert from 'assert';
 import { formatBladeStringWithPint } from '../../../formatting/prettier/utils';
 import { StringUtilities } from '../../../utilities/stringUtilities';
 
-suite('Pint Transformer Accpetance: admin_resources_views_pages_dashboard_blade_php', () => {
+suite('Pint Transformer Acceptance: admin_resources_views_pages_dashboard_blade_php', () => {
     test('pint: it can format admin_resources_views_pages_dashboard_blade_php', () => {
         const input = `<x-filament::page class="filament-dashboard-page">
     <x-filament::widgets

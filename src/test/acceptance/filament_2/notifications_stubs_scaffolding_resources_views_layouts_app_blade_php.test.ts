@@ -2,7 +2,7 @@ import assert from 'assert';
 import { formatBladeStringWithPint } from '../../../formatting/prettier/utils';
 import { StringUtilities } from '../../../utilities/stringUtilities';
 
-suite('Pint Transformer Accpetance: notifications_stubs_scaffolding_resources_views_layouts_app_blade_php', () => {
+suite('Pint Transformer Acceptance: notifications_stubs_scaffolding_resources_views_layouts_app_blade_php', () => {
     test('pint: it can format notifications_stubs_scaffolding_resources_views_layouts_app_blade_php', () => {
         const input = `<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">

@@ -2,7 +2,7 @@ import assert from 'assert';
 import { formatBladeStringWithPint } from '../../../formatting/prettier/utils';
 import { StringUtilities } from '../../../utilities/stringUtilities';
 
-suite('Pint Transformer Accpetance: admin_resources_views_components_global_search_input_blade_php', () => {
+suite('Pint Transformer Acceptance: admin_resources_views_components_global_search_input_blade_php', () => {
     test('pint: it can format admin_resources_views_components_global_search_input_blade_php', () => {
         const input = `<div {{ $attributes->class(['filament-global-search-input']) }}>
     <label for="globalSearchInput" class="sr-only">

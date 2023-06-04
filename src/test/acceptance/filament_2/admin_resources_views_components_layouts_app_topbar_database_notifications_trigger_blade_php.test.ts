@@ -2,7 +2,7 @@ import assert from 'assert';
 import { formatBladeStringWithPint } from '../../../formatting/prettier/utils';
 import { StringUtilities } from '../../../utilities/stringUtilities';
 
-suite('Pint Transformer Accpetance: admin_resources_views_components_layouts_app_topbar_database_notifications_trigger_blade_php', () => {
+suite('Pint Transformer Acceptance: admin_resources_views_components_layouts_app_topbar_database_notifications_trigger_blade_php', () => {
     test('pint: it can format admin_resources_views_components_layouts_app_topbar_database_notifications_trigger_blade_php', () => {
         const input = `<x-filament::icon-button
     :label="__('filament::layout.buttons.database_notifications.label')"

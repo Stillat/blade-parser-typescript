@@ -2,7 +2,7 @@ import assert from 'assert';
 import { formatBladeStringWithPint } from '../../../formatting/prettier/utils';
 import { StringUtilities } from '../../../utilities/stringUtilities';
 
-suite('Pint Transformer Accpetance: panels_resources_views_components_header_heading_blade_php', () => {
+suite('Pint Transformer Acceptance: panels_resources_views_components_header_heading_blade_php', () => {
     test('pint: it can format panels_resources_views_components_header_heading_blade_php', () => {
         const input = `<h1 {{ $attributes->class(['filament-header-heading text-2xl font-bold tracking-tight']) }}>
     {{ $slot }}

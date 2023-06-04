@@ -2,7 +2,7 @@ import assert from 'assert';
 import { formatBladeStringWithPint } from '../../../formatting/prettier/utils';
 import { StringUtilities } from '../../../utilities/stringUtilities';
 
-suite('Pint Transformer Accpetance: notifications_resources_views_components_database_modal_empty_state_blade_php', () => {
+suite('Pint Transformer Acceptance: notifications_resources_views_components_database_modal_empty_state_blade_php', () => {
     test('pint: it can format notifications_resources_views_components_database_modal_empty_state_blade_php', () => {
         const input = `<div {{ $attributes->class([
     'flex flex-col items-center justify-center mx-auto my-6 space-y-4 text-center bg-white',

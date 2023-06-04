@@ -2,7 +2,7 @@ import assert from 'assert';
 import { formatBladeStringWithPint } from '../../../formatting/prettier/utils';
 import { StringUtilities } from '../../../utilities/stringUtilities';
 
-suite('Pint Transformer Accpetance: tables_resources_views_components_container_blade_php', () => {
+suite('Pint Transformer Acceptance: tables_resources_views_components_container_blade_php', () => {
     test('pint: it can format tables_resources_views_components_container_blade_php', () => {
         const input = `<div {{ $attributes->class([
     'border border-gray-300 shadow-sm bg-white rounded-xl filament-tables-container',

@@ -2,7 +2,7 @@ import assert from 'assert';
 import { formatBladeStringWithPint } from '../../../formatting/prettier/utils';
 import { StringUtilities } from '../../../utilities/stringUtilities';
 
-suite('Pint Transformer Accpetance: support_resources_views_components_modal_heading_blade_php', () => {
+suite('Pint Transformer Acceptance: support_resources_views_components_modal_heading_blade_php', () => {
     test('pint: it can format support_resources_views_components_modal_heading_blade_php', () => {
         const input = `@props([
     'darkMode' => false,

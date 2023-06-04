@@ -2,7 +2,7 @@ import assert from 'assert';
 import { formatBladeStringWithPint } from '../../../formatting/prettier/utils';
 import { StringUtilities } from '../../../utilities/stringUtilities';
 
-suite('Pint Transformer Accpetance: tables_resources_views_components_empty_state_description_blade_php', () => {
+suite('Pint Transformer Acceptance: tables_resources_views_components_empty_state_description_blade_php', () => {
     test('pint: it can format tables_resources_views_components_empty_state_description_blade_php', () => {
         const input = `<p {{ $attributes->class([
     'filament-tables-empty-state-description whitespace-normal text-sm font-medium text-gray-500',

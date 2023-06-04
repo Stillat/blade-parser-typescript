@@ -2,7 +2,7 @@ import assert from 'assert';
 import { formatBladeStringWithPint } from '../../../formatting/prettier/utils';
 import { StringUtilities } from '../../../utilities/stringUtilities';
 
-suite('Pint Transformer Accpetance: forms_resources_views_components_field_wrapper_helper_text_blade_php', () => {
+suite('Pint Transformer Acceptance: forms_resources_views_components_field_wrapper_helper_text_blade_php', () => {
     test('pint: it can format forms_resources_views_components_field_wrapper_helper_text_blade_php', () => {
         const input = `<div {{ $attributes->class(['filament-forms-field-wrapper-helper-text text-sm text-gray-600 dark:text-gray-300']) }}>
     {{ $slot }}
