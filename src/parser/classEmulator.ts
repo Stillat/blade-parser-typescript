@@ -90,7 +90,6 @@ export class ClassEmulator {
                 if (i + 1 < extracted.length) {
                     const transformed = extracted[i + 1];
 
-
                     stringTransformMapping.set(originalNodeIndex, transformed);
                     i++;
                 }
