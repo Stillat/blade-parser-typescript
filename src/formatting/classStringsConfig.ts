@@ -32,7 +32,7 @@ export function getDefaultClassStringConfig(): IClassStringConfiguration {
         enabled: true,
         directivesEnabled: true,
         excludedDirectives: [
-            'if', 'unless', 'elseif'
+            'if', 'unless', 'elseif', 'for', 'forelse', 'foreach',
         ],
         directives: [],
         bladePhpEnabled: true,
