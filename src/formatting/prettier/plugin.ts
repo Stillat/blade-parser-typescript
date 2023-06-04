@@ -8,6 +8,7 @@ import { getEnvSettings, getPrettierFilePath } from '../optionDiscovery';
 import { PrettierDocumentFormatter } from './prettierDocumentFormatter';
 import { getHtmlOptions, getOptionsAdjuster, setOptions } from './utils';
 import { ClassStringEmulation } from '../classStringEmulation';
+import { getDefaultClassStringConfig } from '../classStringsConfig';
 
 let prettierOptions: prettier.ParserOptions,
     transformOptions: TransformOptions,
@@ -46,13 +47,20 @@ const plugin: prettier.Plugin = {
                 parserOptions = bladeOptions as ParserOptions;
                 transformOptions.tabSize = getHtmlOptions().tabWidth;
 
-                // TODO: Global way to disable this entirely.
-                const classStringEmulation = new ClassStringEmulation(),
-                    phpValidator = new PhpParserPhpValidator(),
+                let prettierText = text;
+
+                // TODO: Pull from the env. settings.
+                const classConfig = getDefaultClassStringConfig(),
+                    phpValidator = new PhpParserPhpValidator();
+
+                if (classConfig.enabled) {
+                    const classStringEmulation = new ClassStringEmulation(classConfig);
+
                     prettierText = classStringEmulation
                         .withParserOptions(parserOptions)
                         .withPhpValidator(phpValidator)
-                        .transform(text);
+                        .transform(prettierText);
+                }
 
                 const document = new BladeDocument();
                 document.getParser()

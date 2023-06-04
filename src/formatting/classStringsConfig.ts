@@ -1,3 +1,4 @@
+import { GenericLanguageStructures } from '../analyzers/genericLanguageStructures';
 import { BladeDocument } from '../document/bladeDocument';
 import { BladeEchoNode, DirectiveNode, InlinePhpNode } from '../nodes/nodes';
 
@@ -17,11 +18,39 @@ export interface IClassStringConfiguration {
     phpTagsEnabled: boolean,
     phpTagRules: IClassRuleset[],
 
+    ignoredLanguageStructures: string[],
+
     bladeEchoEnabled: boolean,
     bladeEchoRules: IClassRuleset[],
 
     documentRules: IClassRuleset[],
     stringRules: IClassRuleset[],
+}
+
+export function getDefaultClassStringConfig(): IClassStringConfiguration {
+    return {
+        enabled: true,
+        directivesEnabled: true,
+        excludedDirectives: [
+            'if', 'unless', 'elseif'
+        ],
+        directives: [],
+        bladePhpEnabled: true,
+        phpTagsEnabled: true,
+        phpTagRules: [],
+
+        ignoredLanguageStructures: [
+            GenericLanguageStructures.CallStatement,
+            GenericLanguageStructures.IfStatement,
+            GenericLanguageStructures.TernaryStatement
+        ],
+
+        bladeEchoEnabled: true,
+        bladeEchoRules: [],
+
+        documentRules: [],
+        stringRules: []
+    };
 }
 
 export class ClassStringRuleEngine {
@@ -166,7 +195,7 @@ export class ClassStringRuleEngine {
 
         checkName = checkName.toLowerCase();
 
-        if (this.config.excludedDirectives.length > 0 && this.config.excludedDirectives.includes(checkName)) {
+        if (this.config.excludedDirectives.length > 0 && (this.config.excludedDirectives.includes(checkName) || this.config.excludedDirectives.includes(directiveNode.directiveName.toLocaleLowerCase()))) {
             return false;
         }
 
