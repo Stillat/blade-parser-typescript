@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.3
+
+- Improves internal error recovery mechanisms
+
 ## 1.5.0
 
 - Improves whitespace management of Blade echoes inside embedded documents, such as `<style>` and `<script>`
