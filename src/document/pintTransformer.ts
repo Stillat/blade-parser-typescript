@@ -37,6 +37,7 @@ export class PintTransformer {
     private phpTagDocs: Map<string, string> = new Map();
     private cleanupFiles: string[] = [];
     private cleanupDirs: string[] = [];
+    private didFail: boolean = false;
     private defaultConfig: object = {
         "preset": "laravel",
         "rules": {
@@ -100,6 +101,10 @@ export class PintTransformer {
         }
 
         this.pintCommand = pintCommand;
+    }
+
+    getDidFail(): boolean {
+        return this.didFail;
     }
 
     setTemplateFilePath(path: string) {
@@ -437,8 +442,8 @@ export class PintTransformer {
         try {
             theRes = this.callLaravelPint(transformResults);
         } catch (err) {
-            const fff = err as unknown as any;
-            console.log(fff.stdout.toString());
+            this.didFail = true;
+            
             this.cleanupFiles.forEach((fileName) => {
                 fs.unlinkSync(fileName);
             });

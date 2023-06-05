@@ -145,6 +145,7 @@ export class Transformer {
     private pintTransformer: PintTransformer | null = null;
     private filePath: string = '';
     private formattingOptions: FormattingOptions | null = null;
+    private didPintFail:boolean = false;
 
     private phpFormatter: PhpFormatter | null = null;
     private blockPhpFormatter: BlockPhpFormatter | null = null;
@@ -1290,6 +1291,7 @@ export class Transformer {
                 );
                 this.pintTransformer.setTemplateFilePath(this.filePath);
                 this.pintTransformer.format(this.doc);
+                this.didPintFail = this.pintTransformer.getDidFail();
             }
         }
 
@@ -2094,6 +2096,10 @@ export class Transformer {
     }
 
     fromStructure(content: string) {
+        if (this.didPintFail) {
+            return this.doc.getContent();
+        }
+
         const reflowedContent = this.reflowSlugs(content);
 
         this.structureLines = StringUtilities.breakByNewLine(reflowedContent);
