@@ -80,7 +80,7 @@ export function formatBladeStringWithPint(text: string, options: FormattingOptio
     let curOptions: FormattingOptions = {
         ...defaultSettings,
         useLaravelPint: true,
-        pintCommand: `php ${pintLocation} {file}`,
+        pintCommand: pintCommand,
         pintCacheDirectory: pintCacheDirectory,
         pintTempDirectory: pintTempDirectory
     };
