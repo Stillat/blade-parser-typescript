@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.4
+
+- Corrects an issue where `@php @endphp` content may be lost when `formatDirectivePhpParameters` is set to false (#56)
+- Automatically disables the `declare_strict_types` Pint rule when formatting PHP inside Blade (#56)
+
 ## 1.5.3
 
 - Improves internal error recovery mechanisms

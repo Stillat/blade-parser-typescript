@@ -1570,6 +1570,9 @@ export class Transformer {
                             value = value.replace(virtualOpen, formattedPhp);
                         }
                     }
+                } else {
+                    value = value.replace(open, replacePhp + "\n" + formattedPhp);
+                    value = value.replace(virtualOpen, '');
                 }
             } else if (originalDirective.directiveName.trim().toLowerCase() == 'verbatim') {
                 const replaceVerbatim = directive.directive.sourceContent + "\n" + IndentLevel.shiftClean(

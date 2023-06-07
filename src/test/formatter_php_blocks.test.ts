@@ -1,5 +1,6 @@
 import assert from 'assert';
 import { formatBladeString } from '../formatting/prettier/utils';
+import { defaultSettings } from '../formatting/optionDiscovery';
 
 suite('@php @endphp Formatting', () => {
     test('it indents php blocks', () => {
@@ -162,5 +163,20 @@ fn () => true;
 
         assert.strictEqual(formatBladeString(input), out);
         assert.strictEqual(formatBladeString(out), out);
+    });
+
+    test('it preserves php blocks when format directive php parameters is disabled', () => {
+        const input =  `
+        @php $size = match ($size) { 'xs' => 'h-5 w-5 md:h-4 md:w-4', 'sm' => 'h-6 w-6 md:h-5 md:w-5', 'md' => 'h-7 w-7 md:h-6 md:w-6', 'lg' => 'h-8 w-8 md:h-7 md:w-7', 'xl' => 'h-9 w-9 md:h-8 md:w-8', default => $size, }; @endphp
+        
+        `;
+        const out = `@php
+ $size = match ($size) { 'xs' => 'h-5 w-5 md:h-4 md:w-4', 'sm' => 'h-6 w-6 md:h-5 md:w-5', 'md' => 'h-7 w-7 md:h-6 md:w-6', 'lg' => 'h-8 w-8 md:h-7 md:w-7', 'xl' => 'h-9 w-9 md:h-8 md:w-8', default => $size, }; 
+@endphp
+`;
+        assert.strictEqual(formatBladeString(input, {
+            ...defaultSettings,
+            formatDirectivePhpParameters: false,
+        }), out);
     });
 });

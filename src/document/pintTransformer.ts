@@ -46,6 +46,7 @@ export class PintTransformer {
                 "spacing": "one"
             },
             "no_unused_imports": false,
+            "declare_strict_types": false,
             "method_argument_space": true,
             "single_trait_insert_per_statement": true,
             "types_spaces": {
@@ -74,9 +75,11 @@ export class PintTransformer {
                     if (typeof existingConfig.rules !== 'undefined') {
                         // We won't have everything available all the time, so need to set this.
                         existingConfig.rules.no_unused_imports = false;
+                        existingConfig.rules.declare_strict_types = false;
                     } else {
                         existingConfig.rules = {
-                            no_unused_imports: false
+                            no_unused_imports: false,
+                            declare_strict_types: false,
                         };
                     }
 

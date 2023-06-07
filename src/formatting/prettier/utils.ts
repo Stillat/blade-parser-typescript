@@ -67,6 +67,7 @@ export function formatBladeString(text: string, options: FormattingOptions | nul
 
 export function formatBladeStringWithPint(text: string, options: FormattingOptions | null = null, transformOptions: TransformOptions | null = null) {
     let pintLocation = __dirname + '/../../../pint/pint',
+        pintConfig = __dirname + '/../../../pint/pint.json',
         pintCacheDirectory = __dirname + '/../../../_test/_cache/',
         pintTempDirectory = __dirname + '/../../../_test/_temp/',
         pintCommand = `php ${pintLocation} {file}`;
@@ -75,6 +76,7 @@ export function formatBladeStringWithPint(text: string, options: FormattingOptio
         pintCommand = transformOptions.pintCommand;
         pintCacheDirectory = transformOptions.pintCacheDirectory;
         pintTempDirectory = transformOptions.pintTempDirectory;
+        pintConfig = transformOptions.pintConfigPath;
     }
 
     let curOptions: FormattingOptions = {
@@ -82,7 +84,8 @@ export function formatBladeStringWithPint(text: string, options: FormattingOptio
         useLaravelPint: true,
         pintCommand: pintCommand,
         pintCacheDirectory: pintCacheDirectory,
-        pintTempDirectory: pintTempDirectory
+        pintTempDirectory: pintTempDirectory,
+        pintConfigPath: pintConfig
     };
 
     if (options != null) {
@@ -92,7 +95,8 @@ export function formatBladeStringWithPint(text: string, options: FormattingOptio
             useLaravelPint: true,
             pintCommand: pintCommand,
             pintCacheDirectory: pintCacheDirectory,
-            pintTempDirectory: pintTempDirectory
+            pintTempDirectory: pintTempDirectory,
+            pintConfigPath: pintConfig
         };
     }
 
