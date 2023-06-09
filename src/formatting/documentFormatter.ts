@@ -86,6 +86,7 @@ export class DocumentFormatter {
         }
 
         document.transform()
+            .setTransformHtmlAttributes(true)
             .withFilePath(this.filePath)
             .withBlockPhpFormatter(this.blockPhpFormatter)
             .withPhpFormatter(this.phpFormatter)

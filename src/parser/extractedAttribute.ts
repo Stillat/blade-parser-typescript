@@ -4,3 +4,7 @@ export interface IExtractedAttribute {
     startedOn: number,
     endedOn: number,
 }
+
+export interface ITransformedExtractedAttribute extends IExtractedAttribute {
+    transformedContent: string
+}

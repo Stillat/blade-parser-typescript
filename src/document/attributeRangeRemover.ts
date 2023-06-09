@@ -3,11 +3,8 @@ import { StringUtilities } from '../utilities/stringUtilities';
 
 export class AttributeRangeRemover {
 
-    private ranges: IExtractedAttribute[] = [];
     private attributeMapping: Map<string, IExtractedAttribute> = new Map();
-    private originalContent: string = '';
     private slugs: string[] = [];
-    private content: string = '';
 
     private makeSlug(): string {
         const slug = StringUtilities.makeSlug(32);
@@ -23,9 +20,6 @@ export class AttributeRangeRemover {
 
 
     remove(content: string, ranges: IExtractedAttribute[]) {
-        this.originalContent = content;
-        this.ranges = ranges;
-
         let newContent = '',
             lastEnd = 0;
 
@@ -40,8 +34,15 @@ export class AttributeRangeRemover {
                 lastEnd = range.startedOn + range.content.length;
                 newContent += part;
                 newContent += '"' + rangeSlug + '"';
+
+                if (ranges.length == 1) {
+                    newContent += content.substring(lastEnd);
+                }
             } else if (i == ranges.length - 1) {
-                // TODO: Edge case if there is only ONE.
+                if (ranges.length == 1) {
+                    const part = content.substring(0, range.startedOn);
+                    newContent += part;
+                }
                 const part = content.substring(lastEnd, range.startedOn);
                 lastEnd = range.startedOn + range.content.length;
                 newContent += part;
@@ -55,8 +56,10 @@ export class AttributeRangeRemover {
             }
         }
 
-        this.content = newContent;
-
         return newContent;
+    }
+
+    getRemovedAttributes() {
+        return this.attributeMapping;
     }
 }

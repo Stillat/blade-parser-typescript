@@ -538,12 +538,12 @@ export class FragmentsParser implements StringIterator {
                     const potentialName = this.scanBackToName(stringStartedOn - 2);
 
                     if (this.extractAttributeNames.includes(potentialName)) {
-                        const attributeContent = this.getContentSubstring(stringStartedOn + 3, this.currentIndex - stringStartedOn + 1);
+                        const attributeContent = this.getContentSubstring(fragmentParameter.startPosition.offset, fragmentParameter.endPosition.offset - fragmentParameter.startPosition.offset + 1);
                         this.extractedAttributes.push({
                             content: attributeContent,
                             name: potentialName,
-                            startedOn: stringStartedOn + 3,
-                            endedOn: this.currentIndex - stringStartedOn + 1
+                            startedOn: fragmentParameter.startPosition.offset,
+                            endedOn: fragmentParameter.endPosition.offset + 1
                         });
                     }
                 }

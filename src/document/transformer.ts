@@ -4,8 +4,12 @@ import { PhpOperatorReflow } from '../formatting/phpOperatorReflow';
 import { formatBladeString, formatBladeStringWithPint, getPhpOptions } from '../formatting/prettier/utils';
 import { SyntaxReflow } from '../formatting/syntaxReflow';
 import { AbstractNode, BladeCommentNode, BladeComponentNode, BladeEchoNode, ConditionNode, DirectiveNode, ExecutionBranchNode, ForElseNode, FragmentPosition, InlinePhpNode, LiteralNode, ParameterNode, ParameterType, SwitchCaseNode, SwitchStatementNode } from '../nodes/nodes';
+import { DocumentParser } from '../parser/documentParser';
+import { IExtractedAttribute, ITransformedExtractedAttribute } from '../parser/extractedAttribute';
+import { FragmentsParser } from '../parser/fragmentsParser';
 import { SimpleArrayParser } from '../parser/simpleArrayParser';
 import { StringUtilities } from '../utilities/stringUtilities';
+import { AttributeRangeRemover } from './attributeRangeRemover';
 import { BladeDocument } from './bladeDocument';
 import { BlockPhpFormatter, JsonFormatter, PhpFormatter, PhpTagFormatter } from './formatters';
 import { PintTransformer } from './pintTransformer';
@@ -147,6 +151,8 @@ export class Transformer {
     private filePath: string = '';
     private formattingOptions: FormattingOptions | null = null;
     private didPintFail: boolean = false;
+    private transformHtmlAttributes: boolean = false;
+    private extractedAttribute: Map<string, ITransformedExtractedAttribute> = new Map();
 
     private phpFormatter: PhpFormatter | null = null;
     private blockPhpFormatter: BlockPhpFormatter | null = null;
@@ -173,6 +179,12 @@ export class Transformer {
 
     constructor(doc: BladeDocument) {
         this.doc = doc;
+    }
+
+    setTransformHtmlAttributes(transform: boolean) {
+        this.transformHtmlAttributes = transform;
+
+        return this;
     }
 
     getPintTransformer(): PintTransformer | null {
@@ -279,6 +291,49 @@ export class Transformer {
             indentLevel,
             this.pintTransformer
         );
+    }
+
+    private formatExtractedScript(content: string): string {
+        const formatContent = content.substring(1, content.length - 1),
+            tempTemplate = "<script>\n" + formatContent + "\n</script>";
+        let result = content;
+
+        try {
+            if (this.transformOptions.useLaravelPint) {
+                result = formatBladeStringWithPint(tempTemplate, this.formattingOptions, this.transformOptions);
+            } else {
+                result = formatBladeString(tempTemplate, this.formattingOptions);
+            }
+
+            result = result.trim();
+            result = result.substring(8);
+            result = result.substring(0, result.length - 9);
+
+            result = result.trim();
+
+            if (content.trim().endsWith(';') == false && result.endsWith(';')) {
+                result = result.substring(0, result.length - 1);
+            }
+        } catch (err) {
+            const hmmmm = 'asdf';
+        }
+
+        return result;
+    }
+
+    private registerExtractedAttribute(slug: string, attribute: IExtractedAttribute) {
+        if (this.parentTransformer != null) {
+            this.parentTransformer.registerExtractedAttribute(slug, attribute);
+        } else {
+            if (!this.extractedAttribute.has(slug)) {
+                let transformedContent = this.formatExtractedScript(attribute.content);
+
+                this.extractedAttribute.set(slug, {
+                    ...attribute,
+                    transformedContent: transformedContent
+                });
+            }
+        }
     }
 
     private makeSlug(length: number): string {
@@ -481,6 +536,16 @@ export class Transformer {
             close = this.close(slug);
 
         return "\n" + open + close + "\n";
+    }
+
+    private transformExtractedAttributes(content: string): string {
+        let value = content;
+
+        this.extractedAttribute.forEach((attribute, slug) => {
+            value = value.replace(slug, IndentLevel.shiftIndent(attribute.transformedContent, this.indentLevel(slug), true, this.transformOptions, false, false));
+        });
+
+        return value;
     }
 
     private transformPhpBlock(content: string): string {
@@ -1307,7 +1372,32 @@ export class Transformer {
             }
         }
 
-        this.doc.getRenderNodes().forEach((node) => {
+        let nodes = this.doc.getRenderNodes();
+
+        if (this.parentTransformer == null && this.transformHtmlAttributes) {
+            const fragments = new FragmentsParser();
+            fragments.setIndexRanges(this.doc.getParser().getNodeIndexRanges());
+
+            fragments.setExtractAttributeNames(['x-data', 'ax-load-src']);
+            fragments.setExtractAttributes(true);
+
+            fragments.parse(this.doc.getContent());
+            const extractedAttributes = fragments.getExtractedAttributes();
+
+            if (extractedAttributes.length > 0) {
+                const attributeRemover = new AttributeRangeRemover();
+                const tmpDocContent = attributeRemover.remove(this.doc.getContent(), extractedAttributes),
+                    tmpDoc = BladeDocument.fromText(tmpDocContent);
+
+                attributeRemover.getRemovedAttributes().forEach((attribute, slug) => {
+                    this.registerExtractedAttribute(slug, attribute);
+                });
+
+                nodes = tmpDoc.getRenderNodes();
+            }
+        }
+
+        nodes.forEach((node) => {
             if (this.isInsideIgnoreFormatter) {
                 this.pushLiteralBlock(this.activeLiteralSlug, node);
 
@@ -2154,6 +2244,10 @@ export class Transformer {
         results = this.transformEmbeddedDirectives(results);
         results = this.transformExtractedDocuments(results);
         results = this.transformPhpBlock(results);
+
+        if (this.parentTransformer == null) {
+            results = this.transformExtractedAttributes(results);
+        }
 
         this.ignoredLiteralBlocks.forEach((nodes, slug) => {
             const replace = this.selfClosing(slug),
