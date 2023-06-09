@@ -54,7 +54,8 @@ interface TransformedLogicBranch {
     virtualOpen: string,
     virtualClose: string,
     virtualBreakOpen: string,
-    virtualBreakClose: string
+    virtualBreakClose: string,
+    isLiteralContent: boolean,
 }
 
 interface TransformedCondition {
@@ -145,7 +146,7 @@ export class Transformer {
     private pintTransformer: PintTransformer | null = null;
     private filePath: string = '';
     private formattingOptions: FormattingOptions | null = null;
-    private didPintFail:boolean = false;
+    private didPintFail: boolean = false;
 
     private phpFormatter: PhpFormatter | null = null;
     private blockPhpFormatter: BlockPhpFormatter | null = null;
@@ -1185,7 +1186,8 @@ export class Transformer {
                     isFirst: index == 0,
                     isLast: index == condition.logicBranches.length - 1,
                     virtualBreakClose: '',
-                    virtualBreakOpen: ''
+                    virtualBreakOpen: '',
+                    isLiteralContent: false,
                 };
 
                 if (branch.head?.directiveName == 'else') {
@@ -1197,6 +1199,8 @@ export class Transformer {
                         ((branch.head?.children.length <= 2 || branch.head?.children.length > 4) &&
                             !this.isAllInlineNodes(branch.head.children) &&
                             !containsBladeStructures)) {
+
+
                         tBranch.virtualBreakOpen = this.open(virtualBreakSlug);
                         tBranch.virtualBreakClose = this.close(virtualBreakSlug);
                         result += "\n" + tBranch.virtualBreakOpen + "\n";
@@ -1220,11 +1224,19 @@ export class Transformer {
                         tBranch.virtualBreakOpen = this.open(ifBreakSlug);
                         tBranch.virtualBreakClose = this.close(ifBreakSlug);
 
-                        result += tBranch.pairOpen;
-                        result += "\n" + tBranch.virtualBreakOpen;
-                        result += innerDoc;
-                        result += "\n" + tBranch.virtualBreakClose;
-                        result += tBranch.pairClose;
+                        if (branch.head?.children.length <= 2 && branch.head.children[0] instanceof LiteralNode) {
+                            result += tBranch.pairOpen;
+                            result += "\n" + tBranch.virtualBreakOpen;
+                            result += "\n" + tBranch.virtualBreakClose;
+                            result += tBranch.pairClose;
+                            tBranch.isLiteralContent = true;
+                        } else {
+                            result += tBranch.pairOpen;
+                            result += "\n" + tBranch.virtualBreakOpen;
+                            result += innerDoc;
+                            result += "\n" + tBranch.virtualBreakClose;
+                            result += tBranch.pairClose;
+                        }
                     } else {
                         if (branchContainsAllInline) {
                             result += "\n" + tBranch.pairOpen;
@@ -1665,6 +1677,10 @@ export class Transformer {
         this.conditions.forEach((condition) => {
             condition.structures.forEach((structure) => {
                 const structureDirective = structure.branch.head as DirectiveNode;
+
+                if (structure.isLiteralContent) {
+                    value = value.replace(structure.virtualBreakOpen, structure.doc.trim());
+                }
 
                 if (structure.virtualBreakOpen.length > 0) {
                     this.removeLines.push(structure.virtualBreakOpen);
