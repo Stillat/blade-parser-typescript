@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.5
+
+- Improves placement of literal content within a condition, when not accompanied by HTML or Blade structures
+- Corrects an issue with Blade comments inside Components (#57)
+
 ## 1.5.4
 
 - Corrects an issue where `@php @endphp` content may be lost when `formatDirectivePhpParameters` is set to false (#56)
