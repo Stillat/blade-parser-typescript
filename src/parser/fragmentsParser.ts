@@ -3,6 +3,7 @@ import { Position } from '../nodes/position';
 import { StringUtilities } from '../utilities/stringUtilities';
 import { DocumentOffset } from './documentOffset';
 import { DocumentParser } from './documentParser';
+import { IExtractedAttribute } from './extractedAttribute';
 import { IndexRange } from './indexRange';
 import { isStartOfString } from './scanners/isStartOfString';
 import { skipToEndOfLine } from './scanners/skipToEndOfLine';
@@ -32,6 +33,10 @@ export class FragmentsParser implements StringIterator {
     private fragmentOpeningIndex: Map<number, number> = new Map();
     private indexedFragments: Map<number, FragmentNode> = new Map();
     private embeddedIndexedFragments: Map<number, FragmentNode> = new Map();
+    private extractAttributePositions: boolean = false;
+    private extractAttributeNames: string[] = [];
+    private extractedAttributes: IExtractedAttribute[] = [];
+
     encounteredFailure() {
         return;
     }
@@ -86,8 +91,20 @@ export class FragmentsParser implements StringIterator {
         return null;
     }
 
+    setExtractAttributes(extractAttributes: boolean) {
+        this.extractAttributePositions = extractAttributes;
+    }
+
+    setExtractAttributeNames(attributeNames: string[]) {
+        this.extractAttributeNames = attributeNames;
+    }
+
     getContentSubstring(from: number, length: number): string {
         return this.content.substr(from, length);
+    }
+
+    getExtractedAttributes(): IExtractedAttribute[] {
+        return this.extractedAttributes;
     }
 
     private resetState() {
@@ -443,6 +460,22 @@ export class FragmentsParser implements StringIterator {
         }
     }
 
+    private scanBackToName(startedOn: number): string {
+        const chars: string[] = [];
+
+        for (let i = startedOn; i > 0; i--) {
+            const char = this.chars[i];
+
+            if (StringUtilities.ctypeSpace(char)) {
+                break;
+            }
+
+            chars.push(char);
+        }
+
+        return chars.reverse().join('');
+    }
+
     private parseIntermediateText() {
         this.chars = this.content.substr(this.currentChunkOffset, this.chunkSize).split('');
         this.charLen = this.chars.length;
@@ -500,6 +533,21 @@ export class FragmentsParser implements StringIterator {
                 fragmentParameter.startPosition = this.positionFromOffset(stringStartedOn + this.seedOffset, stringStartedOn + this.seedOffset);
                 fragmentParameter.endPosition = this.positionFromOffset(this.currentIndex + this.seedOffset, this.currentIndex + this.seedOffset);
                 potentialParameterRanges.push(fragmentParameter);
+
+                if (this.extractAttributePositions == true) {
+                    const potentialName = this.scanBackToName(stringStartedOn - 2);
+
+                    if (this.extractAttributeNames.includes(potentialName)) {
+                        const attributeContent = this.getContentSubstring(stringStartedOn + 3, this.currentIndex - stringStartedOn + 1);
+                        this.extractedAttributes.push({
+                            content: attributeContent,
+                            name: potentialName,
+                            startedOn: stringStartedOn + 3,
+                            endedOn: this.currentIndex - stringStartedOn + 1
+                        });
+                    }
+                }
+
                 continue;
             }
 

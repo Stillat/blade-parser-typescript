@@ -102,6 +102,7 @@ export class DocumentParser implements StringIterator {
     private parserOptions: ParserOptions;
     private phpValidator: PhpValidator | null = null;
     private didRecoveryLogic: boolean = false;
+    private parseFragments: boolean = true;
 
     constructor() {
         this.componentParser = new ComponentParser(this);
@@ -551,6 +552,10 @@ export class DocumentParser implements StringIterator {
         BladeErrorCodes.TYPE_UNCLOSED_FOR_ELSE_DIRECTIVE,
         BladeErrorCodes.TYPE_UNPAIRED_FOR_ELSE_CLOSING_DIRECTIVE
     ];
+
+    setParseFragments(parseFragments:boolean) {
+        this.parseFragments = parseFragments;
+    }
 
     pushError(error: BladeError) {
         const errorHash = error.hash();
@@ -1248,7 +1253,7 @@ export class DocumentParser implements StringIterator {
 
         this.createChildDocuments(this.renderNodes);
 
-        if (this.content.length > 0) {
+        if (this.parseFragments && this.content.length > 0) {
             this.fragmentsParser
                 .setIndexRanges(this.getNodeIndexRanges())
                 .parse(FragmentsTransformer.transform(this.nodes, this.content));
