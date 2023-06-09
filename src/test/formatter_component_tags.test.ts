@@ -232,4 +232,11 @@ suite('Component Tags', () => {
         assert.strictEqual(formatBladeString(input), out);
         assert.strictEqual(formatBladeString(out), out);
     });
+
+    test('it preserves comments', () => {
+        const input = `<x-foo {{-- foo="" --}} />`;
+        const out = `<x-foo {{-- foo="" --}} />
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    });
 });

@@ -1922,6 +1922,11 @@ export class Transformer {
         let value = content;
 
         this.echoParameters.forEach((param, slug) => {
+            // Handle case of comments.
+            if (param.inlineEcho?.sourceContent.startsWith('{{--') && param.inlineEcho.sourceContent.endsWith('--}}')) {
+                let commentContent = param.inlineEcho.content.substring(2, param.inlineEcho.content.length - 2);
+                value = value.replace(slug, '{{-- ' + commentContent.trim() + ' --}}');
+            }
             if (param.inlineEcho != null) {
                 value = value.replace(slug, EchoPrinter.printEcho(param.inlineEcho, this.transformOptions, this.phpFormatter, 0, this.pintTransformer));
             } else {
