@@ -239,4 +239,21 @@ suite('Component Tags', () => {
 `;
         assert.strictEqual(formatBladeString(input), out);
     });
+
+    test('it does not break @click.prevent directive', () => {
+        const input = `<x-jet-dropdown-link
+    href="{{ route('logout') }}"
+    @click.prevent="$root.submit();"
+>
+    {{ __('Log Out') }}
+</x-jet-dropdown-link>`;
+        const out = `<x-jet-dropdown-link
+    href="{{ route('logout') }}"
+    @click.prevent="$root.submit();"
+>
+    {{ __("Log Out") }}
+</x-jet-dropdown-link>
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    })
 });
