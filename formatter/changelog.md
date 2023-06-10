@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.6
+
+- Corrects an issue that would break up attribute and directive names, such as `@click.prevent` (#58)
+
 ## 1.5.5
 
 - Improves placement of literal content within a condition, when not accompanied by HTML or Blade structures
