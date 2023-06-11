@@ -55,8 +55,6 @@ const plugin: prettier.Plugin = {
                 const classConfig = transformOptions.classStrings,
                     phpValidator = new PhpParserPhpValidator();
 
-
-
                 const fragments = new FragmentsParser(),
                     tmpDoc = BladeDocument.fromText(prettierText);
                 fragments.setIndexRanges(tmpDoc.getParser().getNodeIndexRanges());

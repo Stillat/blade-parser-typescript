@@ -22,6 +22,7 @@ export class FragmentsParser implements StringIterator {
     private seedOffset = 0;
     private shiftLine = 0;
     private chars: string[] = [];
+    private allTheChars: string[] = [];
     private currentIndex = 0;
     private lastDocumentOffsetKey: number | null = null;
     private cur: string | null = null;
@@ -369,6 +370,7 @@ export class FragmentsParser implements StringIterator {
     }
 
     parse(text: string) {
+        this.allTheChars = text.split('');
         this.resetState().processInputText(text);
 
         const indexCount = this.fragmentStartIndex.length;
@@ -540,7 +542,7 @@ export class FragmentsParser implements StringIterator {
 
             if (isStartOfString(this.cur)) {
                 const stringStartedOn = this.currentIndex;
-                skipToEndOfString(this, this.nodeIndexSkipMap);
+                this.skipToEndOfStringWithIndex();
                 const fragmentParameter = new FragmentParameterNode();
                 fragmentParameter.startPosition = this.positionFromOffset(stringStartedOn + this.seedOffset, stringStartedOn + this.seedOffset);
                 fragmentParameter.endPosition = this.positionFromOffset(this.currentIndex + this.seedOffset, this.currentIndex + this.seedOffset);
@@ -601,6 +603,28 @@ export class FragmentsParser implements StringIterator {
                     this.isScript = true;
                 }
 
+                break;
+            }
+        }
+    }
+
+    private skipToEndOfStringWithIndex() {
+        const stringInitializer = this.cur;
+        this.incrementIndex();
+    
+        for (this.currentIndex; this.currentIndex < this.inputLen; this.currentIndex++) {
+            this.checkCurrentOffsets();
+
+            const offsetIndex = this.currentIndex + this.seedOffset;
+    
+            if (this.nodeIndexSkipMap.has(offsetIndex)) {
+                const skipCount = this.nodeIndexSkipMap.get(offsetIndex) as number;
+                this.advance(skipCount - 1);
+                continue;
+            }
+            
+    
+            if (this.cur == stringInitializer && this.prev != DocumentParser.String_EscapeCharacter) {
                 break;
             }
         }

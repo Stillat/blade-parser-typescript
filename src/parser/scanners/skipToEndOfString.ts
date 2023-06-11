@@ -6,18 +6,12 @@ export interface StringResults {
     endedOn: number
 }
 
-export function skipToEndOfString(iterator: StringIterator, skipMap:Map<number, number>|null = null) {
+export function skipToEndOfString(iterator: StringIterator) {
     const stringInitializer = iterator.getCurrent() as string;
     iterator.incrementIndex();
 
     for (iterator.getCurrentIndex(); iterator.getCurrentIndex() < iterator.inputLength(); iterator.incrementIndex()) {
         iterator.checkCurrentOffsets();
-
-        if (skipMap != null && skipMap.has(iterator.getCurrentIndex())) {
-            const jumpCount = skipMap.get(iterator.getCurrentIndex()) as number;
-            iterator.advance(jumpCount - 1);
-            continue;
-        }
 
         if (iterator.getCurrent() == stringInitializer && iterator.getPrev() != DocumentParser.String_EscapeCharacter) {
             break;
