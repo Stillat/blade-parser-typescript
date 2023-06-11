@@ -2,6 +2,21 @@ import { StringUtilities } from '../../utilities/stringUtilities';
 import { TransformOptions } from '../transformOptions';
 
 export class IndentLevel {
+    static relativeIndentLevel(value: string, content: string): number {
+        const tempStructureLines = StringUtilities.breakByNewLine(content);
+
+        for (let i = 0; i < tempStructureLines.length; i++) {
+            const thisLine = tempStructureLines[i];
+
+            if (thisLine.includes(value)) {
+                const trimmed = thisLine.trimLeft();
+
+                return thisLine.length - trimmed.length;
+            }
+        }
+        return 0;
+    }
+
     static indentRelative(value: string, targetIndent: number, tabSize: number): string {
         const sourceLines: string[] = StringUtilities.breakByNewLine(value);
         let reflowedLines: string[] = [];

@@ -2,7 +2,6 @@ import { TransformOptions } from '../document/transformOptions';
 import { PhpFormatter, BlockPhpFormatter, PhpTagFormatter, JsonFormatter, HtmlFormatter, PreFormatter } from '../document/formatters';
 import { BladeDocument } from '../document/bladeDocument';
 import { FormattingOptions } from './formattingOptions';
-import { IExtractedAttribute } from '../parser/extractedAttribute';
 
 export class DocumentFormatter {
     private filePath: string = '';
@@ -14,13 +13,6 @@ export class DocumentFormatter {
     private phpTagFormatter: PhpTagFormatter | null = null;
     private jsonFormatter: JsonFormatter | null = null;
     private preFormatter: PreFormatter | null = null;
-    private extractedAttributes: Map<string, IExtractedAttribute> = new Map();
-
-    withExtractedAttributes(extractedAttributes: Map<string, IExtractedAttribute>) {
-        this.extractedAttributes = extractedAttributes;
-
-        return this;
-    }
 
     withTransformOptions(options: TransformOptions) {
         this.transformOptions = options;
@@ -94,7 +86,6 @@ export class DocumentFormatter {
         }
 
         document.transform()
-            .setTransformHtmlAttributes(true)
             .withFilePath(this.filePath)
             .withBlockPhpFormatter(this.blockPhpFormatter)
             .withPhpFormatter(this.phpFormatter)
@@ -105,8 +96,6 @@ export class DocumentFormatter {
         if (this.transformOptions != null) {
             document.transform().withOptions(this.transformOptions);
         }
-
-        document.transform().setExtractedAttributes(this.extractedAttributes);
 
         const structure = document.transform().toStructure(),
             formatted = this.htmlFormatter(structure);

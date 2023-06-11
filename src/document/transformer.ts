@@ -1,15 +1,11 @@
 import { getDefaultClassStringConfig } from '../formatting/classStringsConfig';
 import { FormattingOptions } from '../formatting/formattingOptions';
 import { PhpOperatorReflow } from '../formatting/phpOperatorReflow';
-import { formatAsJavaScript, formatBladeString, formatBladeStringWithPint, getHtmlOptions, getPhpOptions } from '../formatting/prettier/utils';
+import { formatBladeString, formatBladeStringWithPint, getPhpOptions } from '../formatting/prettier/utils';
 import { SyntaxReflow } from '../formatting/syntaxReflow';
 import { AbstractNode, BladeCommentNode, BladeComponentNode, BladeEchoNode, ConditionNode, DirectiveNode, ExecutionBranchNode, ForElseNode, FragmentPosition, InlinePhpNode, LiteralNode, ParameterNode, ParameterType, SwitchCaseNode, SwitchStatementNode } from '../nodes/nodes';
-import { DocumentParser } from '../parser/documentParser';
-import { IExtractedAttribute, ITransformedExtractedAttribute } from '../parser/extractedAttribute';
-import { FragmentsParser } from '../parser/fragmentsParser';
 import { SimpleArrayParser } from '../parser/simpleArrayParser';
 import { StringUtilities } from '../utilities/stringUtilities';
-import { AttributeRangeRemover } from './attributeRangeRemover';
 import { BladeDocument } from './bladeDocument';
 import { BlockPhpFormatter, JsonFormatter, PhpFormatter, PhpTagFormatter } from './formatters';
 import { PintTransformer } from './pintTransformer';
@@ -151,8 +147,6 @@ export class Transformer {
     private filePath: string = '';
     private formattingOptions: FormattingOptions | null = null;
     private didPintFail: boolean = false;
-    private transformHtmlAttributes: boolean = false;
-    private extractedAttribute: Map<string, ITransformedExtractedAttribute> = new Map();
 
     private phpFormatter: PhpFormatter | null = null;
     private blockPhpFormatter: BlockPhpFormatter | null = null;
@@ -179,20 +173,6 @@ export class Transformer {
 
     constructor(doc: BladeDocument) {
         this.doc = doc;
-    }
-
-    setTransformHtmlAttributes(transform: boolean) {
-        this.transformHtmlAttributes = transform;
-
-        return this;
-    }
-
-    setExtractedAttributes(attributes: Map<string, IExtractedAttribute>) {
-        attributes.forEach((attribute, slug) => {
-            this.registerExtractedAttribute(slug, attribute);
-        });
-
-        return this;
     }
 
     getPintTransformer(): PintTransformer | null {
@@ -307,82 +287,6 @@ export class Transformer {
             indentLevel,
             this.pintTransformer
         );
-    }
-
-    private formatExtractedScript(attribute: IExtractedAttribute): string {
-        let addedVarPlaceholder = false;
-
-        const formatContent = attribute.content.substring(1, attribute.content.length - 1).trim();
-
-        let tempTemplate = "\n";
-
-        if (formatContent.startsWith('{') && formatContent.endsWith('}')) {
-            tempTemplate += 'let _tmpFormat = ';
-            addedVarPlaceholder = true;
-        }
-
-        tempTemplate += formatContent;
-
-        tempTemplate += "\n";
-
-        let result = attribute.content;
-        let toFormat = '';
-        try {
-            const tmpDoc = BladeDocument.fromText('<script>' + tempTemplate + '</script>');
-
-            // TODO: Return original if it contains structures.
-            const tmpTransformer = tmpDoc.transform()
-                .cloneOptions(this)
-                .setFormattingOptions(this.formattingOptions)
-                .withOptions(this.transformOptions);
-
-            const tmpResult = tmpTransformer.toStructure();
-
-            toFormat = tmpResult.trim();
-            toFormat = toFormat.substring(8);
-            toFormat = toFormat.trim();
-            toFormat = toFormat.substring(0, toFormat.length - 9);
-            result = formatAsJavaScript(toFormat);
-
-            result = tmpTransformer.fromStructure(result);
-            if (addedVarPlaceholder) {
-                result = result.trimLeft();
-                result = result.substring(3);
-                result = result.trimLeft();
-                result = result.substring(10);
-                result = result.trimLeft();
-                result = result.substring(1);
-                result = result.trimLeft();
-            }
-
-            result = result.trim();
-
-            if (formatContent.trim().endsWith(';') == false && result.endsWith(';')) {
-                result = result.substring(0, result.length - 1);
-            }
-        } catch (err) {
-            console.log(err);
-            console.log(toFormat);
-            // Prevent failures from crashing formatting process.
-            debugger;
-        }
-
-        return result;
-    }
-
-    private registerExtractedAttribute(slug: string, attribute: IExtractedAttribute) {
-        if (this.parentTransformer != null) {
-            this.parentTransformer.registerExtractedAttribute(slug, attribute);
-        } else {
-            if (!this.extractedAttribute.has(slug)) {
-                let transformedContent = this.formatExtractedScript(attribute);
-
-                this.extractedAttribute.set(slug, {
-                    ...attribute,
-                    transformedContent: transformedContent
-                });
-            }
-        }
     }
 
     private makeSlug(length: number): string {
@@ -585,44 +489,6 @@ export class Transformer {
             close = this.close(slug);
 
         return "\n" + open + close + "\n";
-    }
-
-    private transformExtractedAttributes(content: string): string {
-        let value = content;
-
-        this.extractedAttribute.forEach((attribute, slug) => {
-            let targetIndent = this.relativeIndentLevel(slug, value);
-            let appendFinal = ' '.repeat(targetIndent);
-
-            // Target indent will be the starting location of the attribute itself.
-            //targetIndent += this.transformOptions.tabSize;
-
-            let transformedContent = attribute.transformedContent;
-
-            // IndentLevel.shiftIndent(attribute.transformedContent, targetIndent, false, this.transformOptions, false, false)
-
-            const origTransformedContent = attribute.transformedContent.trim();
-            if (origTransformedContent.startsWith('{') && origTransformedContent.endsWith('}')) {
-                transformedContent = IndentLevel.shiftIndent(
-                    origTransformedContent,
-                    targetIndent,
-                    true,
-                    this.transformOptions,
-                    false,
-                    false
-                );
-            } else {
-                if (transformedContent.includes("\n") == false) {
-                    transformedContent = transformedContent.trim();
-                } else {
-                    transformedContent = `\n${transformedContent}\n${appendFinal}`;
-                }
-            }
-
-            value = value.replace(slug, transformedContent);
-        });
-
-        return value;
     }
 
     private transformPhpBlock(content: string): string {
@@ -1965,21 +1831,6 @@ export class Transformer {
         return value;
     }
 
-    private relativeIndentLevel(value: string, content: string): number {
-        const tempStructureLines = StringUtilities.breakByNewLine(content);
-
-        for (let i = 0; i < tempStructureLines.length; i++) {
-            const thisLine = tempStructureLines[i];
-
-            if (thisLine.includes(value)) {
-                const trimmed = thisLine.trimLeft();
-
-                return thisLine.length - trimmed.length;
-            }
-        }
-        return 0;
-    }
-
     private indentLevel(value: string): number {
         for (let i = 0; i < this.structureLines.length; i++) {
             const thisLine = this.structureLines[i];
@@ -2313,10 +2164,6 @@ export class Transformer {
         results = this.transformEmbeddedDirectives(results);
         results = this.transformExtractedDocuments(results);
         results = this.transformPhpBlock(results);
-
-        if (this.parentTransformer == null) {
-            results = this.transformExtractedAttributes(results);
-        }
 
         this.ignoredLiteralBlocks.forEach((nodes, slug) => {
             const replace = this.selfClosing(slug),
