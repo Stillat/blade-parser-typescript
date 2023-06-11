@@ -8,6 +8,10 @@ import { getEnvSettings, getPrettierFilePath } from '../optionDiscovery';
 import { PrettierDocumentFormatter } from './prettierDocumentFormatter';
 import { getHtmlOptions, getOptionsAdjuster, setOptions } from './utils';
 import { ClassStringEmulation } from '../classStringEmulation';
+import { AttributeRangeRemover } from '../../document/attributeRangeRemover';
+import { FragmentsParser } from '../../parser/fragmentsParser';
+import { IBladeDocumentWithRemovedAttributes } from '../../document/bladeDocumentWithRemovedAttributes';
+import { IExtractedAttribute } from '../../parser/extractedAttribute';
 
 let prettierOptions: prettier.ParserOptions,
     transformOptions: TransformOptions,
@@ -51,6 +55,26 @@ const plugin: prettier.Plugin = {
                 const classConfig = transformOptions.classStrings,
                     phpValidator = new PhpParserPhpValidator();
 
+
+
+                const fragments = new FragmentsParser(),
+                    tmpDoc = BladeDocument.fromText(prettierText);
+                fragments.setIndexRanges(tmpDoc.getParser().getNodeIndexRanges());
+
+                fragments.setExtractAttributeNames(['x-data']);
+                fragments.setExtractAttributes(true);
+
+                fragments.parse(prettierText);
+                const extractedAttributes = fragments.getExtractedAttributes();
+
+                let attributeMap:Map<string, IExtractedAttribute> = new Map();
+
+                if (extractedAttributes.length > 0) {
+                    const attributeRemover = new AttributeRangeRemover();
+                    prettierText = attributeRemover.remove(prettierText, extractedAttributes);
+                    attributeMap = attributeRemover.getRemovedAttributes();
+                }
+
                 if (classConfig.enabled) {
                     const classStringEmulation = new ClassStringEmulation(classConfig);
 
@@ -65,7 +89,14 @@ const plugin: prettier.Plugin = {
                     .withParserOptions(parserOptions)
                     .withPhpValidator(phpValidator);
 
-                return document.loadString(prettierText);
+                document.loadString(prettierText);
+
+                const docToFormat:IBladeDocumentWithRemovedAttributes = {
+                    doc: document,
+                    attributes: attributeMap
+                };
+
+                return docToFormat;
             },
             locStart: () => 0,
             locEnd: () => 0,
@@ -75,10 +106,12 @@ const plugin: prettier.Plugin = {
     printers: {
         blade: {
             print(path: prettier.AstPath) {
-                const doc = path.stack[0] as BladeDocument,
+                const doc = path.stack[0] as IBladeDocumentWithRemovedAttributes,
                     formatter = new PrettierDocumentFormatter(prettierOptions, transformOptions);
 
-                return formatter.formatDocument(doc);
+                return formatter
+                    .withExtractedAttributes(doc.attributes)
+                    .formatDocument(doc.doc);
             }
         }
     },

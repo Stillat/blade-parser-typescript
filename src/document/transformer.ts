@@ -187,6 +187,14 @@ export class Transformer {
         return this;
     }
 
+    setExtractedAttributes(attributes: Map<string, IExtractedAttribute>) {
+        attributes.forEach((attribute, slug) => {
+            this.registerExtractedAttribute(slug, attribute);
+        });
+
+        return this;
+    }
+
     getPintTransformer(): PintTransformer | null {
         return this.pintTransformer;
     }
@@ -293,10 +301,10 @@ export class Transformer {
         );
     }
 
-    private formatExtractedScript(content: string): string {
-        const formatContent = content.substring(1, content.length - 1),
-            tempTemplate = "<script>\n" + formatContent + "\n</script>";
-        let result = content;
+    private formatExtractedScript(attribute: IExtractedAttribute): string {
+        const formatContent = attribute.content.substring(1, attribute.content.length - 1),
+            tempTemplate = "<script>\nlet _tmpFormat = " + formatContent + ";\n</script>";
+        let result = attribute.content;
 
         try {
             if (this.transformOptions.useLaravelPint) {
@@ -311,11 +319,35 @@ export class Transformer {
 
             result = result.trim();
 
-            if (content.trim().endsWith(';') == false && result.endsWith(';')) {
+            if (attribute.content.trim().endsWith(';') == false && result.endsWith(';')) {
                 result = result.substring(0, result.length - 1);
             }
+
+            result = result.trimLeft();
+            result = result.substring(3);
+            result = result.trimLeft();
+            result = result.substring(10);
+            result = result.trimLeft();
+            result = result.substring(1);
+            result = result.trimLeft();
+
+            const resultLines = StringUtilities.breakByNewLine(result),
+                newLines: string[] = [];
+
+            for (let i = 0; i < resultLines.length; i++) {
+                const line = resultLines[i];
+
+                if ((line.length - line.trimLeft().length) >= 4) {
+                    newLines.push(line.substring(4));
+                } else {
+                    newLines.push(line);
+                }
+            }
+
+            result = newLines.join("\n");
         } catch (err) {
-            const hmmmm = 'asdf';
+            // Prevent failures from crashing formatting process.
+            debugger;
         }
 
         return result;
@@ -326,7 +358,7 @@ export class Transformer {
             this.parentTransformer.registerExtractedAttribute(slug, attribute);
         } else {
             if (!this.extractedAttribute.has(slug)) {
-                let transformedContent = this.formatExtractedScript(attribute.content);
+                let transformedContent = this.formatExtractedScript(attribute);
 
                 this.extractedAttribute.set(slug, {
                     ...attribute,
@@ -542,7 +574,9 @@ export class Transformer {
         let value = content;
 
         this.extractedAttribute.forEach((attribute, slug) => {
-            value = value.replace(slug, IndentLevel.shiftIndent(attribute.transformedContent, this.indentLevel(slug), true, this.transformOptions, false, false));
+            const targetIndent = this.relativeIndentLevel(slug, value),
+                transformedContent = IndentLevel.shiftIndent(attribute.transformedContent, targetIndent, true, this.transformOptions, false, false);
+            value = value.replace(slug, transformedContent);
         });
 
         return value;
@@ -1374,29 +1408,6 @@ export class Transformer {
 
         let nodes = this.doc.getRenderNodes();
 
-        if (this.parentTransformer == null && this.transformHtmlAttributes) {
-            const fragments = new FragmentsParser();
-            fragments.setIndexRanges(this.doc.getParser().getNodeIndexRanges());
-
-            fragments.setExtractAttributeNames(['x-data', 'ax-load-src']);
-            fragments.setExtractAttributes(true);
-
-            fragments.parse(this.doc.getContent());
-            const extractedAttributes = fragments.getExtractedAttributes();
-
-            if (extractedAttributes.length > 0) {
-                const attributeRemover = new AttributeRangeRemover();
-                const tmpDocContent = attributeRemover.remove(this.doc.getContent(), extractedAttributes),
-                    tmpDoc = BladeDocument.fromText(tmpDocContent);
-
-                attributeRemover.getRemovedAttributes().forEach((attribute, slug) => {
-                    this.registerExtractedAttribute(slug, attribute);
-                });
-
-                nodes = tmpDoc.getRenderNodes();
-            }
-        }
-
         nodes.forEach((node) => {
             if (this.isInsideIgnoreFormatter) {
                 this.pushLiteralBlock(this.activeLiteralSlug, node);
@@ -1909,6 +1920,21 @@ export class Transformer {
         });
 
         return value;
+    }
+
+    private relativeIndentLevel(value: string, content: string): number {
+        const tempStructureLines = StringUtilities.breakByNewLine(content);
+        
+        for (let i = 0; i < tempStructureLines.length; i++) {
+            const thisLine = tempStructureLines[i];
+
+            if (thisLine.includes(value)) {
+                const trimmed = thisLine.trimLeft();
+
+                return thisLine.length - trimmed.length;
+            }
+        }
+        return 0;
     }
 
     private indentLevel(value: string): number {
