@@ -319,7 +319,6 @@ export class Transformer {
         if (formatContent.startsWith('{') && formatContent.endsWith('}')) {
             tempTemplate += 'let _tmpFormat = ';
             addedVarPlaceholder = true;
-            
         }
 
         tempTemplate += formatContent;

@@ -602,6 +602,15 @@ export class FragmentsParser implements StringIterator {
 
                         let shouldAdd = true;
 
+                        if (this.nodeIndexSkipMap.has(fragmentParameter.startPosition.offset + 2)) {
+                            const featureLen = this.nodeIndexSkipMap.get(fragmentParameter.startPosition.offset + 2) as number,
+                                checkOffset = featureLen + fragmentParameter.startPosition.offset + 3;
+
+                            if (checkOffset == fragmentParameter.endPosition.offset) {
+                                shouldAdd = false;
+                            }
+                        }
+
                         if (attributeContent.trim() == '{}') {
                             shouldAdd = false;
                         }
