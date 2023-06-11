@@ -6,11 +6,11 @@ export class AttributeRangeRemover {
     private attributeMapping: Map<string, IExtractedAttribute> = new Map();
     private slugs: string[] = [];
 
-    private makeSlug(): string {
-        const slug = StringUtilities.makeSlug(32);
+    private makeSlug(length: number): string {
+        const slug = StringUtilities.makeSlug(length);
 
         if (this.slugs.includes(slug)) {
-            return this.makeSlug();
+            return this.makeSlug(length + 1);
         }
 
         this.slugs.push(slug);
@@ -25,7 +25,7 @@ export class AttributeRangeRemover {
 
         for (let i = 0; i < ranges.length; i++) {
             const range = ranges[i],
-                rangeSlug = this.makeSlug();
+                rangeSlug = this.makeSlug(range.content.length);
 
             this.attributeMapping.set(rangeSlug, range);
 
