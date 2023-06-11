@@ -576,7 +576,7 @@ export class FragmentsParser implements StringIterator {
                             dynamicAttributeNameOverride = attributePrefix + dynamciAttributeNameCheck.substring(0, dynamciAttributeNameCheck.length - 2);
                         }
                     }
-                    this.advance(dynamicLen + 1);
+                    this.advance(dynamicLen);
                     continue;
                 }
             }
