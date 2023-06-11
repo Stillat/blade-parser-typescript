@@ -10,6 +10,14 @@ export class StringSplitter implements StringIterator {
     private currentIndex = 0;
     private inputLen = 0;
     private currentContent: string[] = [];
+
+    advance(count: number) {
+        for (let i = 0; i < count; i++) {
+            this.currentIndex++;
+            this.checkCurrentOffsets();
+        }
+    }
+    
     encounteredFailure() {
         return;
     }

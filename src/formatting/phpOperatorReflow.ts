@@ -19,6 +19,12 @@ export class PhpOperatorReflow implements StringIterator {
     private tokens: AbstractNode[] = [];
     private static breakOperators: string[] = ['!'];
     public static instance: PhpOperatorReflow = new PhpOperatorReflow();
+    advance(count: number) {
+        for (let i = 0; i < count; i++) {
+            this.currentIndex++;
+            this.checkCurrentOffsets();
+        }
+    }
     encounteredFailure() {
         return;
     }
@@ -74,7 +80,7 @@ export class PhpOperatorReflow implements StringIterator {
         return this.tokens;
     }
 
-    static couldReflow(input:string):boolean {
+    static couldReflow(input: string): boolean {
         return PhpOperatorReflow.breakOperators.some(sb => input.includes(sb));
     }
 
@@ -111,7 +117,7 @@ export class PhpOperatorReflow implements StringIterator {
 
             if (this.cur == DocumentParser.Punctuation_ForwardSlash && this.next == DocumentParser.Punctuation_Asterisk) {
                 skipToEndOfMultilineComment(this, true);
-                
+
                 continue;
             }
 
@@ -143,7 +149,7 @@ export class PhpOperatorReflow implements StringIterator {
         }
     }
 
-    reflow(input:string): string {
+    reflow(input: string): string {
         try {
             this.parse(input);
         } catch (err) {

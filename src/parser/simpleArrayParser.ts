@@ -18,6 +18,14 @@ export class SimpleArrayParser implements StringIterator {
     private createdArrays: ArrayNode[] = [];
     private keyValueTokens: number = 0;
     private elements: number = 0;
+    
+    advance(count: number) {
+        for (let i = 0; i < count; i++) {
+            this.currentIndex++;
+            this.checkCurrentOffsets();
+        }
+    }
+
     encounteredFailure() {
         return;
     }

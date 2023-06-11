@@ -18,6 +18,12 @@ export class SyntaxReflow implements StringIterator {
     private currentContent: string[] = [];
     private tokens: AbstractNode[] = [];
     public static instance: SyntaxReflow = new SyntaxReflow();
+    advance(count: number) {
+        for (let i = 0; i < count; i++) {
+            this.currentIndex++;
+            this.checkCurrentOffsets();
+        }
+    }
     encounteredFailure() {
         return;
     }

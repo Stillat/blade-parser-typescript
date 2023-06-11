@@ -1,5 +1,6 @@
 export interface StringIterator {
     updateIndex(index: number): void,
+    advance(count:number): void,
     inputLength(): number,
     getCurrentIndex(): number,
     incrementIndex(): void,

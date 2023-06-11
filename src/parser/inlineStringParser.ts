@@ -24,6 +24,14 @@ export class InlineStringParser implements StringIterator {
     private currentContent: string[] = [];
     private nodeIndex: number = 0;
     private hasStringNodesInResult: boolean = false;
+    
+    advance(count: number) {
+        for (let i = 0; i < count; i++) {
+            this.currentIndex++;
+            this.checkCurrentOffsets();
+        }
+    }
+
     encounteredFailure() {
         return;
     }

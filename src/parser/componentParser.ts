@@ -30,6 +30,12 @@ export class ComponentParser implements StringIterator {
     constructor(document: DocumentParser) {
         this.document = document;
     }
+    advance(count: number) {
+        for (let i = 0; i < count; i++) {
+            this.currentIndex++;
+            this.checkCurrentOffsets();
+        }
+    }
     encounteredFailure() {
         return;
     }

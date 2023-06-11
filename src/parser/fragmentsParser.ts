@@ -14,6 +14,7 @@ import { StringIterator } from './stringIterator';
 export class FragmentsParser implements StringIterator {
     private content = '';
     private nodeIndex: IndexRange[] = [];
+    private nodeIndexSkipMap: Map<number, number> = new Map();
     private fragmentStartIndex: number[] = [];
     private charLen = 0;
     private documentOffsets: Map<number, DocumentOffset> = new Map();
@@ -37,6 +38,13 @@ export class FragmentsParser implements StringIterator {
     private extractAttributeNames: string[] = [];
     private extractedAttributes: IExtractedAttribute[] = [];
 
+    advance(count: number) {
+        for (let i = 0; i < count; i++) {
+            this.currentIndex++;
+            this.checkCurrentOffsets();
+        }
+    }
+    
     encounteredFailure() {
         return;
     }
@@ -311,6 +319,10 @@ export class FragmentsParser implements StringIterator {
     setIndexRanges(index: IndexRange[]) {
         this.nodeIndex = index;
 
+        this.nodeIndex.forEach((item) => {
+            this.nodeIndexSkipMap.set(item.start, item.end - item.start);
+        });
+
         return this;
     }
 
@@ -528,7 +540,7 @@ export class FragmentsParser implements StringIterator {
 
             if (isStartOfString(this.cur)) {
                 const stringStartedOn = this.currentIndex;
-                skipToEndOfString(this);
+                skipToEndOfString(this, this.nodeIndexSkipMap);
                 const fragmentParameter = new FragmentParameterNode();
                 fragmentParameter.startPosition = this.positionFromOffset(stringStartedOn + this.seedOffset, stringStartedOn + this.seedOffset);
                 fragmentParameter.endPosition = this.positionFromOffset(this.currentIndex + this.seedOffset, this.currentIndex + this.seedOffset);

@@ -12,6 +12,14 @@ export class StringRemover implements StringIterator {
     private inputLen = 0;
     private currentContent: string[] = [];
     private strings: string[] = [];
+
+    advance(count: number) {
+        for (let i = 0; i < count; i++) {
+            this.currentIndex++;
+            this.checkCurrentOffsets();
+        }
+    }
+    
     encounteredFailure() {
         return;
     }

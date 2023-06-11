@@ -111,6 +111,14 @@ export class DocumentParser implements StringIterator {
 
         this.parserOptions = getParserOptions();
     }
+    
+    advance(count: number) {
+        for (let i = 0; i < count; i++) {
+            this.currentIndex++;
+            this.checkCurrentOffsets();
+        }
+    }
+
     encounteredFailure() {
         this.didRecoveryLogic = true;
     }
