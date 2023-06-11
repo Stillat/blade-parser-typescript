@@ -169,9 +169,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
         'lg:-translate-x-full rtl:lg:translate-x-full' => filament()->hasTopNavigation(),
     ])
 >
-    <header
-        class="filament-sidebar-header relative flex h-[4rem] shrink-0 items-center justify-center border-b bg-white dark:border-gray-700 dark:bg-gray-800"
-    >
+    <header class="filament-sidebar-header relative flex h-[4rem] shrink-0 items-center justify-center border-b bg-white dark:border-gray-700 dark:bg-gray-800">
         <div
             @class([
                 'flex w-full items-center justify-center px-6',
@@ -192,19 +190,8 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
                     x-transition:enter-start="opacity-0"
                     x-transition:enter-end="opacity-100"
                 >
-                    <x-filament::icon
-                        alias="app::sidebar.buttons.collapse"
-                        color="text-primary-500"
-                        size="h-6 w-6"
-                    >
-                        <svg
-                            class="h-full w-full"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
+                    <x-filament::icon alias="app::sidebar.buttons.collapse" color="text-primary-500" size="h-6 w-6">
+                        <svg class="h-full w-full" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M20.25 7.5L16 12L20.25 16.5M3.75 12H12M3.75 17.25H16M3.75 6.75H16"
                                 stroke="currentColor"
@@ -245,18 +232,12 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
                 x-transition:enter-start="opacity-0"
                 x-transition:enter-end="opacity-100"
             >
-                <x-filament::icon
-                    name="heroicon-o-bars-3"
-                    alias="app::sidebar.buttons.toggle"
-                    size="h-6 w-6"
-                />
+                <x-filament::icon name="heroicon-o-bars-3" alias="app::sidebar.buttons.toggle" size="h-6 w-6" />
             </button>
         @endif
     </header>
 
-    <nav
-        class="filament-sidebar-nav flex-1 overflow-y-auto overflow-x-hidden py-6"
-    >
+    <nav class="filament-sidebar-nav flex-1 overflow-y-auto overflow-x-hidden py-6">
         {{ filament()->renderHook('sidebar.start') }}
 
         @if (filament()->hasTenancy())
@@ -275,14 +256,8 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
         @endphp
 
         <script>
-            if (
-                JSON.parse(localStorage.getItem("collapsedGroups")) === null ||
-                JSON.parse(localStorage.getItem("collapsedGroups")) === "null"
-            ) {
-                localStorage.setItem(
-                    "collapsedGroups",
-                    JSON.stringify(@js($collapsedNavigationGroupLabels))
-                );
+            if (JSON.parse(localStorage.getItem("collapsedGroups")) === null || JSON.parse(localStorage.getItem("collapsedGroups")) === "null") {
+                localStorage.setItem("collapsedGroups", JSON.stringify(@js($collapsedNavigationGroupLabels)));
             }
         </script>
 

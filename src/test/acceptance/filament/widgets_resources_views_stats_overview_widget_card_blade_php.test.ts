@@ -151,16 +151,9 @@ suite('Pint Transformer Acceptance: widgets_resources_views_stats_overview_widge
     <div @class([
         'space-y-2',
     ])>
-        <div
-            class="flex items-center space-x-2 text-sm font-medium rtl:space-x-reverse"
-        >
+        <div class="flex items-center space-x-2 text-sm font-medium rtl:space-x-reverse">
             @if ($icon = $getIcon())
-                <x-filament::icon
-                    :name="$icon"
-                    alias="widgets::stats-overview.card"
-                    color="text-gray-500 dark:text-gray-200"
-                    size="h-4 w-4"
-                />
+                <x-filament::icon :name="$icon" alias="widgets::stats-overview.card" color="text-gray-500 dark:text-gray-200" size="h-4 w-4" />
             @endif
 
             <span>{{ $getLabel() }}</span>
@@ -187,21 +180,13 @@ suite('Pint Transformer Acceptance: widgets_resources_views_stats_overview_widge
                 ])
             >
                 @if ($descriptionIcon && ($descriptionIconPosition === 'before'))
-                    <x-filament::icon
-                        :name="$descriptionIcon"
-                        alias="widgets::stats-overview.card.description"
-                        size="h-4 w-4"
-                    />
+                    <x-filament::icon :name="$descriptionIcon" alias="widgets::stats-overview.card.description" size="h-4 w-4" />
                 @endif
 
                 <span>{{ $description }}</span>
 
                 @if ($descriptionIcon && ($descriptionIconPosition === 'after'))
-                    <x-filament::icon
-                        :name="$descriptionIcon"
-                        alias="widgets::stats-overview.card.description"
-                        size="h-4 w-4"
-                    />
+                    <x-filament::icon :name="$descriptionIcon" alias="widgets::stats-overview.card.description" size="h-4 w-4" />
                 @endif
             </div>
         @endif

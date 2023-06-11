@@ -121,7 +121,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_text_input_
                 ax-load
                 ax-load-src="{{ \\Filament\\Support\\Facades\\FilamentAsset::getAlpineComponentSrc('text-input', 'filament/forms') }}"
                 x-data="textInputFormComponent({
-                    getMaskOptionsUsing: (IMask) => ({{ $getJsonMaskConfiguration() }}),
+                    getMaskOptionsUsing: (IMask) => {{ $getJsonMaskConfiguration() }},
                     state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')", lazilyEntangledModifiers: ['defer']) }},
                 })"
                 wire:ignore

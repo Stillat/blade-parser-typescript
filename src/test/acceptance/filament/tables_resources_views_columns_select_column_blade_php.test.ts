@@ -122,11 +122,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_select_column
         ])
     }}
 >
-    <input
-        type="hidden"
-        value="{{ str($state)->replace('"', '\\\\"') }}"
-        x-ref="newState"
-    />
+    <input type="hidden" value="{{ str($state)->replace('"', '\\\\"') }}" x-ref="newState" />
 
     <select
         x-model="state"
@@ -160,10 +156,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_select_column
         @endif
 
         @foreach ($getOptions() as $value => $label)
-            <option
-                value="{{ $value }}"
-                @disabled($isOptionDisabled($value, $label))
-            >
+            <option value="{{ $value }}" @disabled($isOptionDisabled($value, $label))>
                 {{ $label }}
             </option>
         @endforeach

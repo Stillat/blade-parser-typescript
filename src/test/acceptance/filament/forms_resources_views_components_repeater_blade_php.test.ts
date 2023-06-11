@@ -193,15 +193,11 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_repeater_bl
     <div>
         @if ((count($containers) > 1) && $isCollapsible)
             <div class="space-x-2 rtl:space-x-reverse" x-data="{}">
-                <span
-                    x-on:click="$dispatch('repeater-collapse', '{{ $statePath }}')"
-                >
+                <span x-on:click="$dispatch('repeater-collapse', '{{ $statePath }}')">
                     {{ $getAction('collapseAll') }}
                 </span>
 
-                <span
-                    x-on:click="$dispatch('repeater-expand', '{{ $statePath }}')"
-                >
+                <span x-on:click="$dispatch('repeater-expand', '{{ $statePath }}')">
                     {{ $getAction('expandAll') }}
                 </span>
             </div>
@@ -272,63 +268,46 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_repeater_bl
                                         </div>
                                     @endif
 
-                                    <p
-                                        class="flex-none truncate px-4 text-xs font-medium text-gray-600 dark:text-gray-400"
-                                    >
+                                    <p class="flex-none truncate px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
                                         {{ $getItemLabel($uuid) }}
                                     </p>
 
                                     <div class="flex-1"></div>
 
-                                    <ul
-                                        class="flex divide-x rtl:divide-x-reverse dark:divide-gray-700"
-                                    >
+                                    <ul class="flex divide-x rtl:divide-x-reverse dark:divide-gray-700">
                                         @if ($isReorderableWithButtons)
                                             @if (! $loop->first)
-                                                <li
-                                                    class="flex items-center justify-center"
-                                                >
+                                                <li class="flex items-center justify-center">
                                                     {{ $moveUpAction(['item' => $uuid]) }}
                                                 </li>
                                             @endif
 
                                             @if (! $loop->last)
-                                                <li
-                                                    class="flex items-center justify-center"
-                                                >
+                                                <li class="flex items-center justify-center">
                                                     {{ $moveDownAction(['item' => $uuid]) }}
                                                 </li>
                                             @endif
                                         @endif
 
                                         @if ($cloneAction)
-                                            <li
-                                                class="flex items-center justify-center"
-                                            >
+                                            <li class="flex items-center justify-center">
                                                 {{ $cloneAction(['item' => $uuid]) }}
                                             </li>
                                         @endif
 
                                         @if ($deleteAction)
-                                            <li
-                                                class="flex items-center justify-center"
-                                            >
+                                            <li class="flex items-center justify-center">
                                                 {{ $deleteAction(['item' => $uuid]) }}
                                             </li>
                                         @endif
 
                                         @if ($isCollapsible)
-                                            <li
-                                                x-on:click.stop="isCollapsed = ! isCollapsed"
-                                            >
+                                            <li x-on:click.stop="isCollapsed = ! isCollapsed">
                                                 <div x-show="!isCollapsed">
                                                     {{ $getAction('collapse') }}
                                                 </div>
 
-                                                <div
-                                                    x-show="isCollapsed"
-                                                    x-cloak
-                                                >
+                                                <div x-show="isCollapsed" x-cloak>
                                                     {{ $getAction('expand') }}
                                                 </div>
                                             </li>
@@ -337,17 +316,11 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_repeater_bl
                                 </header>
                             @endif
 
-                            <div
-                                x-bind:class="{ 'invisible h-0 !m-0 overflow-y-hidden': isCollapsed, 'p-6': !isCollapsed}"
-                            >
+                            <div x-bind:class="{ 'invisible h-0 !m-0 overflow-y-hidden': isCollapsed, 'p-6': !isCollapsed}">
                                 {{ $item }}
                             </div>
 
-                            <div
-                                class="p-2 text-center text-xs text-gray-400"
-                                x-show="isCollapsed"
-                                x-cloak
-                            >
+                            <div class="p-2 text-center text-xs text-gray-400" x-show="isCollapsed" x-cloak>
                                 {{ __('filament-forms::components.repeater.collapsed') }}
                             </div>
                         </li>

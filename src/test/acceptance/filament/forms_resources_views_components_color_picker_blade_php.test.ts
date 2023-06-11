@@ -138,7 +138,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_color_picke
                 x-data="colorPickerFormComponent({
                     isAutofocused: @js($isAutofocused()),
                     isDisabled: @js($isDisabled),
-                    state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')") }}
+                    state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')") }},
                 })"
                 x-on:keydown.esc="isOpen() && $event.stopPropagation()"
                 {{ $getExtraAlpineAttributeBag()->class(['relative flex-1']) }}
@@ -169,10 +169,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_color_picke
                     }}
                 />
 
-                <span
-                    x-cloak
-                    class="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2"
-                >
+                <span x-cloak class="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2">
                     <span
                         x-bind:style="{ 'background-color': state, ...(state ? { 'background-image': 'none' } : {}) }"
                         class="filament-forms-color-picker-component-preview relative h-7 w-7 overflow-hidden rounded-md"

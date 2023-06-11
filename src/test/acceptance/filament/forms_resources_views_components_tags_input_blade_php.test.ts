@@ -187,10 +187,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tags_input_
 
                         <datalist id="{{ $id }}-suggestions">
                             @foreach ($getSuggestions() as $suggestion)
-                                <template
-                                    x-if="! state.includes(@js($suggestion))"
-                                    x-bind:key="@js($suggestion)"
-                                >
+                                <template x-if="! state.includes(@js($suggestion))" x-bind:key="@js($suggestion)">
                                     <option value="{{ $suggestion }}" />
                                 </template>
                             @endforeach
@@ -200,14 +197,8 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tags_input_
 
                 <div wire:ignore>
                     <template x-if="state?.length" x-cloak>
-                        <div
-                            class="relative flex w-full flex-wrap gap-1 overflow-hidden border-t p-2 dark:border-gray-600"
-                        >
-                            <template
-                                class="hidden"
-                                x-for="tag in state"
-                                x-bind:key="tag"
-                            >
+                        <div class="relative flex w-full flex-wrap gap-1 overflow-hidden border-t p-2 dark:border-gray-600">
+                            <template class="hidden" x-for="tag in state" x-bind:key="tag">
                                 <button
                                     @unless ($isDisabled)
                                         x-on:click="deleteTag(tag)"
@@ -219,10 +210,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tags_input_
                                         'cursor-default' => $isDisabled,
                                     ])
                                 >
-                                    <span
-                                        class="text-start"
-                                        x-text="tag"
-                                    ></span>
+                                    <span class="text-start" x-text="tag"></span>
 
                                     @unless ($isDisabled)
                                         <x-filament::icon

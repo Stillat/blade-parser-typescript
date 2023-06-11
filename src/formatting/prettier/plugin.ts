@@ -59,7 +59,7 @@ const plugin: prettier.Plugin = {
                     tmpDoc = BladeDocument.fromText(prettierText);
                 fragments.setIndexRanges(tmpDoc.getParser().getNodeIndexRanges());
 
-                fragments.setExtractAttributeNames(['x-data']);
+                fragments.setExtractAttributeNames(['x-data', 'ax-load', 'ax-load-src']);
                 fragments.setExtractAttributes(true);
 
                 fragments.parse(prettierText);

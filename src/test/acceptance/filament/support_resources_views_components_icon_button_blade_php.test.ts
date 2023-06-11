@@ -305,11 +305,7 @@ suite('Pint Transformer Acceptance: support_resources_views_components_icon_butt
         />
 
         @if ($hasLoadingIndicator)
-            <x-filament::loading-indicator
-                wire:loading.delay=""
-                :wire:target="$loadingIndicatorTarget"
-                :class="$iconClasses . ' ' . $iconSize"
-            />
+            <x-filament::loading-indicator wire:loading.delay="" :wire:target="$loadingIndicatorTarget" :class="$iconClasses . ' ' . $iconSize" />
         @endif
 
         @if ($indicator)
@@ -343,12 +339,7 @@ suite('Pint Transformer Acceptance: support_resources_views_components_icon_butt
             </span>
         @endif
 
-        <x-filament::icon
-            :name="$icon"
-            alias="support::icon-button"
-            :size="$iconSize"
-            :class="$iconClasses"
-        />
+        <x-filament::icon :name="$icon" alias="support::icon-button" :size="$iconSize" :class="$iconClasses" />
 
         @if ($indicator)
             <span class="{{ $indicatorClasses }}">

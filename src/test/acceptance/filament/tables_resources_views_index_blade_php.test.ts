@@ -1330,7 +1330,6 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
 
 <div
     x-data="{
-
         collapsedGroups: [],
 
         hasHeader: true,
@@ -1342,107 +1341,106 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
         shouldCheckUniqueSelection: true,
 
         init: function () {
-            $wire.on('deselectAllTableRecords', () => this.deselectAllRecords())
+            $wire.on("deselectAllTableRecords", () => this.deselectAllRecords());
 
-            $watch('selectedRecords', () => {
-                if (! this.shouldCheckUniqueSelection) {
-                    this.shouldCheckUniqueSelection = true
+            $watch("selectedRecords", () => {
+                if (!this.shouldCheckUniqueSelection) {
+                    this.shouldCheckUniqueSelection = true;
 
-                    return
+                    return;
                 }
 
-                this.selectedRecords = [...new Set(this.selectedRecords)]
+                this.selectedRecords = [...new Set(this.selectedRecords)];
 
-                this.shouldCheckUniqueSelection = false
-            })
+                this.shouldCheckUniqueSelection = false;
+            });
         },
 
         mountBulkAction: function (name) {
-            $wire.mountTableBulkAction(name, this.selectedRecords)
+            $wire.mountTableBulkAction(name, this.selectedRecords);
         },
 
         toggleSelectRecordsOnPage: function () {
-            let keys = this.getRecordsOnPage()
+            let keys = this.getRecordsOnPage();
 
             if (this.areRecordsSelected(keys)) {
-                this.deselectRecords(keys)
+                this.deselectRecords(keys);
 
-                return
+                return;
             }
 
-            this.selectRecords(keys)
+            this.selectRecords(keys);
         },
 
         getRecordsOnPage: function () {
-            let keys = []
+            let keys = [];
 
-            for (checkbox of $el.getElementsByClassName('filament-tables-record-checkbox')) {
-                keys.push(checkbox.value)
+            for (checkbox of $el.getElementsByClassName("filament-tables-record-checkbox")) {
+                keys.push(checkbox.value);
             }
 
-            return keys
+            return keys;
         },
 
         selectRecords: function (keys) {
             for (key of keys) {
                 if (this.isRecordSelected(key)) {
-                    continue
+                    continue;
                 }
 
-                this.selectedRecords.push(key)
+                this.selectedRecords.push(key);
             }
         },
 
         deselectRecords: function (keys) {
             for (key of keys) {
-                let index = this.selectedRecords.indexOf(key)
+                let index = this.selectedRecords.indexOf(key);
 
                 if (index === -1) {
-                    continue
+                    continue;
                 }
 
-                this.selectedRecords.splice(index, 1)
+                this.selectedRecords.splice(index, 1);
             }
         },
 
         selectAllRecords: async function () {
-            this.isLoading = true
+            this.isLoading = true;
 
-            this.selectedRecords = await $wire.getAllSelectableTableRecordKeys()
+            this.selectedRecords = await $wire.getAllSelectableTableRecordKeys();
 
-            this.isLoading = false
+            this.isLoading = false;
         },
 
         deselectAllRecords: function () {
-            this.selectedRecords = []
+            this.selectedRecords = [];
         },
 
         isRecordSelected: function (key) {
-            return this.selectedRecords.includes(key)
+            return this.selectedRecords.includes(key);
         },
 
         areRecordsSelected: function (keys) {
-            return keys.every(key => this.isRecordSelected(key))
+            return keys.every((key) => this.isRecordSelected(key));
         },
 
         toggleCollapseGroup: function (group) {
             if (this.isGroupCollapsed(group)) {
-                this.collapsedGroups.splice(this.collapsedGroups.indexOf(group), 1)
+                this.collapsedGroups.splice(this.collapsedGroups.indexOf(group), 1);
 
-                return
+                return;
             }
 
-            this.collapsedGroups.push(group)
+            this.collapsedGroups.push(group);
         },
 
         isGroupCollapsed: function (group) {
-            return this.collapsedGroups.includes(group)
+            return this.collapsedGroups.includes(group);
         },
 
         resetCollapsedGroups: function () {
-            this.collapsedGroups = []
+            this.collapsedGroups = [];
         },
-
     }"
     class="filament-tables-component"
     @if (! $isLoaded)
@@ -1479,24 +1477,16 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
             @endif
 
             @if ($hasFiltersAboveContent)
-                <div
-                    class="px-2"
-                    x-data="{ areFiltersOpen: @js(! $hasFiltersAboveContentCollapsible) }"
-                >
+                <div class="px-2" x-data="{ areFiltersOpen: @js(! $hasFiltersAboveContentCollapsible) }">
                     <div class="py-2">
                         @if ($hasFiltersAboveContentCollapsible)
-                            <div
-                                x-on:click="areFiltersOpen = ! areFiltersOpen"
-                                class="flex w-full justify-end"
-                            >
+                            <div x-on:click="areFiltersOpen = ! areFiltersOpen" class="flex w-full justify-end">
                                 {{ $getFiltersTriggerAction()->indicator(count(\\Illuminate\\Support\\Arr::flatten($filterIndicators))) }}
                             </div>
                         @endif
 
                         <div class="p-4" x-show="areFiltersOpen">
-                            <x-filament-tables::filters
-                                :form="$getFiltersForm()"
-                            />
+                            <x-filament-tables::filters :form="$getFiltersForm()" />
                         </div>
                     </div>
 
@@ -1516,9 +1506,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
             >
                 <div class="flex shrink-0 items-center sm:gap-3">
                     @if ($isReorderable)
-                        <x-filament-tables::reorder.trigger
-                            :enabled="$isReordering"
-                        />
+                        <x-filament-tables::reorder.trigger :enabled="$isReordering" />
                     @endif
 
                     @if (count($groups))
@@ -1526,22 +1514,14 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                     @endif
 
                     @if ((! $isReordering) && count($bulkActions))
-                        <x-filament-tables::actions
-                            :actions="$bulkActions"
-                            x-show="selectedRecords.length"
-                            x-cloak="x-cloak"
-                        />
+                        <x-filament-tables::actions :actions="$bulkActions" x-show="selectedRecords.length" x-cloak="x-cloak" />
                     @endif
                 </div>
 
                 @if ($isGlobalSearchVisible || $hasFiltersDropdown || $isColumnToggleFormVisible)
-                    <div
-                        class="flex flex-1 items-center justify-end gap-3 md:max-w-md"
-                    >
+                    <div class="flex flex-1 items-center justify-end gap-3 md:max-w-md">
                         @if ($isGlobalSearchVisible)
-                            <div
-                                class="filament-tables-search-container flex flex-1 items-center justify-end"
-                            >
+                            <div class="filament-tables-search-container flex flex-1 items-center justify-end">
                                 <x-filament-tables::search-input />
                             </div>
                         @endif
@@ -1575,10 +1555,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
         </div>
 
         @if ($isReordering)
-            <x-filament-tables::reorder.indicator
-                :colspan="$columnsCount"
-                class="border-t dark:border-gray-700"
-            />
+            <x-filament-tables::reorder.indicator :colspan="$columnsCount" class="border-t dark:border-gray-700" />
         @elseif ($isSelectionEnabled && $isLoaded)
             <x-filament-tables::selection-indicator
                 :all-selectable-records-count="$allSelectableRecordsCount"
@@ -1593,10 +1570,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
         @endif
 
         <div>
-            <x-filament-tables::filters.indicators
-                :indicators="$filterIndicators"
-                class="border-t dark:border-gray-700"
-            />
+            <x-filament-tables::filters.indicators :indicators="$filterIndicators" class="border-t dark:border-gray-700" />
         </div>
 
         <div
@@ -1653,8 +1627,8 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                         @if (count($sortableColumns))
                             <div
                                 x-data="{
-                                    column: $wire.entangle('tableSortColumn'),
-                                    direction: $wire.entangle('tableSortDirection'),
+                                    column: $wire.entangle("tableSortColumn"),
+                                    direction: $wire.entangle("tableSortDirection"),
                                 }"
                                 x-init="
                                     $watch('column', function (newColumn, oldColumn) {
@@ -1680,17 +1654,12 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
 
                                     <select
                                         x-model="column"
-                                        style="
-                                            background-position: right 0.2rem
-                                                center;
-                                        "
+                                        style="background-position: right 0.2rem center"
                                         class="focus:border-primary-500 focus:ring-primary-500 dark:focus:border-primary-500 rounded-lg border-0 border-gray-300 bg-gray-500/5 py-1 pe-6 ps-2 text-xs font-medium focus:ring-0 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm"
                                     >
                                         <option value="">-</option>
                                         @foreach ($sortableColumns as $column)
-                                            <option
-                                                value="{{ $column->getName() }}"
-                                            >
+                                            <option value="{{ $column->getName() }}">
                                                 {{ $column->getLabel() }}
                                             </option>
                                         @endforeach
@@ -1704,18 +1673,11 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
 
                                     <select
                                         x-model="direction"
-                                        style="
-                                            background-position: right 0.2rem
-                                                center;
-                                        "
+                                        style="background-position: right 0.2rem center"
                                         class="focus:border-primary-500 focus:ring-primary-500 dark:focus:border-primary-500 rounded-lg border-0 border-gray-300 bg-gray-500/5 py-1 pe-6 ps-2 text-xs font-medium focus:ring-0 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm"
                                     >
-                                        <option value="asc">
-                                            {{ __('filament-tables::table.sorting.fields.direction.options.asc') }}
-                                        </option>
-                                        <option value="desc">
-                                            {{ __('filament-tables::table.sorting.fields.direction.options.desc') }}
-                                        </option>
+                                        <option value="asc">{{ __('filament-tables::table.sorting.fields.direction.options.asc') }}</option>
+                                        <option value="desc">{{ __('filament-tables::table.sorting.fields.direction.options.desc') }}</option>
                                     </select>
                                 </label>
                             </div>
@@ -1761,9 +1723,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
 
                             @if ($recordGroupTitle !== $previousRecordGroupTitle)
                                 @if ($hasSummary && (! $isReordering) && filled($previousRecordGroupTitle))
-                                    <x-filament-tables::table
-                                        class="col-span-full"
-                                    >
+                                    <x-filament-tables::table class="col-span-full">
                                         <x-filament-tables::summary.row
                                             :columns="$columns"
                                             :heading="__('filament-tables::table.summary.subheadings.group', ['group' => $previousRecordGroupTitle, 'label' => $pluralModelLabel])"
@@ -1803,23 +1763,17 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                             />
                                         @endif
 
-                                        <div
-                                            class="flex flex-col items-start gap-y-1"
-                                        >
-                                            <span
-                                                class="text-sm font-medium text-gray-600 dark:text-gray-300"
-                                            >
+                                        <div class="flex flex-col items-start gap-y-1">
+                                            <span class="text-sm font-medium text-gray-600 dark:text-gray-300">
                                                 @if ($group->isTitlePrefixedWithLabel())
-                                                        {{ $group->getLabel() }}:
+                                                    {{ $group->getLabel() }}:
                                                 @endif
 
                                                 {{ $recordGroupTitle }}
                                             </span>
 
                                             @if (filled($recordGroupDescription = $group->getDescription($record, $recordGroupTitle)))
-                                                <span
-                                                    class="text-sm text-gray-500 dark:text-gray-400"
-                                                >
+                                                <span class="text-sm text-gray-500 dark:text-gray-400">
                                                     {{ $recordGroupDescription }}
                                                 </span>
                                             @endif
@@ -1907,10 +1861,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                         @endif
 
                                         @if ($recordUrl)
-                                            <a
-                                                href="{{ $recordUrl }}"
-                                                class="filament-tables-record-url-link block flex-1 py-3"
-                                            >
+                                            <a href="{{ $recordUrl }}" class="filament-tables-record-url-link block flex-1 py-3">
                                                 <x-filament-tables::columns.layout
                                                     :components="$getColumnsLayout()"
                                                     :record="$record"
@@ -2013,9 +1964,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                 @endif
 
                 @if ($hasSummary && (! $isReordering))
-                    <x-filament-tables::table
-                        class="border-t dark:border-gray-700"
-                    >
+                    <x-filament-tables::table class="border-t dark:border-gray-700">
                         <x-filament-tables::summary
                             :columns="$columns"
                             :plural-model-label="$pluralModelLabel"
@@ -2075,9 +2024,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                         @endif
 
                         @if ($isGroupsOnly)
-                            <th
-                                class="filament-tables-header-cell whitespace-nowrap px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300"
-                            >
+                            <th class="filament-tables-header-cell whitespace-nowrap px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300">
                                 {{ $group->getLabel() }}
                             </th>
                         @endif
@@ -2100,9 +2047,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                         @if (! $isReordering)
                             @if (count($actions) && $actionsPosition === ActionsPosition::AfterColumns)
                                 @if ($actionsColumnLabel)
-                                    <x-filament-tables::header-cell
-                                        alignment="right"
-                                    >
+                                    <x-filament-tables::header-cell alignment="right">
                                         {{ $actionsColumnLabel }}
                                     </x-filament-tables::header-cell>
                                 @else
@@ -2134,9 +2079,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
 
                             @if (count($actions) && $actionsPosition === ActionsPosition::AfterCells)
                                 @if ($actionsColumnLabel)
-                                    <x-filament-tables::header-cell
-                                        alignment="right"
-                                    >
+                                    <x-filament-tables::header-cell alignment="right">
                                         {{ $actionsColumnLabel }}
                                     </x-filament-tables::header-cell>
                                 @else
@@ -2161,13 +2104,9 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                             @endif
 
                             @foreach ($columns as $column)
-                                <x-filament-tables::cell
-                                    class="filament-table-individual-search-cell-{{ str($column->getName())->camel()->kebab() }} px-4 py-1"
-                                >
+                                <x-filament-tables::cell class="filament-table-individual-search-cell-{{ str($column->getName())->camel()->kebab() }} px-4 py-1">
                                     @if ($column->isIndividuallySearchable())
-                                        <x-filament-tables::search-input
-                                            wire-model="tableColumnSearches.{{ $column->getName() }}"
-                                        />
+                                        <x-filament-tables::search-input wire-model="tableColumnSearches.{{ $column->getName() }}" />
                                     @endif
                                 </x-filament-tables::cell>
                             @endforeach
@@ -2216,9 +2155,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                 @endif
 
                                 @if (! $isGroupsOnly)
-                                    <x-filament-tables::row
-                                        class="filament-tables-group-header-row bg-gray-500/5"
-                                    >
+                                    <x-filament-tables::row class="filament-tables-group-header-row bg-gray-500/5">
                                         <td colspan="{{ $columnsCount }}">
                                             @php
                                                 $tag = $group->isCollapsible() ? 'button' : 'div';
@@ -2242,23 +2179,17 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                                     />
                                                 @endif
 
-                                                <div
-                                                    class="flex flex-col items-start gap-y-1"
-                                                >
-                                                    <span
-                                                        class="text-sm font-medium text-gray-600 dark:text-gray-300"
-                                                    >
+                                                <div class="flex flex-col items-start gap-y-1">
+                                                    <span class="text-sm font-medium text-gray-600 dark:text-gray-300">
                                                         @if ($group->isTitlePrefixedWithLabel())
-                                                                {{ $group->getLabel() }}:
+                                                            {{ $group->getLabel() }}:
                                                         @endif
 
                                                         {{ $recordGroupTitle }}
                                                     </span>
 
                                                     @if (filled($recordGroupDescription = $group->getDescription($record, $recordGroupTitle)))
-                                                        <span
-                                                            class="text-sm text-gray-500 dark:text-gray-400"
-                                                        >
+                                                        <span class="text-sm text-gray-500 dark:text-gray-400">
                                                             {{ $recordGroupDescription }}
                                                         </span>
                                                     @endif
@@ -2302,11 +2233,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                                 'hidden' => $isReordering,
                                             ])
                                         >
-                                            <x-filament-tables::actions
-                                                :actions="$actions"
-                                                :alignment="$actionsAlignment ?? 'start'"
-                                                :record="$record"
-                                            />
+                                            <x-filament-tables::actions :actions="$actions" :alignment="$actionsAlignment ?? 'start'" :record="$record" />
                                         </x-filament-tables::actions.cell>
                                     @endif
 
@@ -2333,11 +2260,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                                 'hidden' => $isReordering,
                                             ])
                                         >
-                                            <x-filament-tables::actions
-                                                :actions="$actions"
-                                                :alignment="$actionsAlignment ?? 'start'"
-                                                :record="$record"
-                                            />
+                                            <x-filament-tables::actions :actions="$actions" :alignment="$actionsAlignment ?? 'start'" :record="$record" />
                                         </x-filament-tables::actions.cell>
                                     @endif
 
@@ -2371,11 +2294,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                                 'hidden' => $isReordering,
                                             ])
                                         >
-                                            <x-filament-tables::actions
-                                                :actions="$actions"
-                                                :alignment="$actionsAlignment ?? 'end'"
-                                                :record="$record"
-                                            />
+                                            <x-filament-tables::actions :actions="$actions" :alignment="$actionsAlignment ?? 'end'" :record="$record" />
                                         </x-filament-tables::actions.cell>
                                     @endif
 
@@ -2402,11 +2321,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                                 'hidden' => $isReordering,
                                             ])
                                         >
-                                            <x-filament-tables::actions
-                                                :actions="$actions"
-                                                :alignment="$actionsAlignment ?? 'end'"
-                                                :record="$record"
-                                            />
+                                            <x-filament-tables::actions :actions="$actions" :alignment="$actionsAlignment ?? 'end'" :record="$record" />
                                         </x-filament-tables::actions.cell>
                                     @endif
 
@@ -2462,12 +2377,8 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                     @endif
                 </x-filament-tables::table>
             @elseif ($records === null)
-                <div
-                    class="filament-tables-defer-loading-indicator flex items-center justify-center p-6"
-                >
-                    <div
-                        class="text-primary-500 bg-primary-50 flex h-16 w-16 items-center justify-center rounded-full dark:bg-gray-700"
-                    >
+                <div class="filament-tables-defer-loading-indicator flex items-center justify-center p-6">
+                    <div class="text-primary-500 bg-primary-50 flex h-16 w-16 items-center justify-center rounded-full dark:bg-gray-700">
                         <x-filament::loading-indicator class="h-6 w-6" />
                     </div>
                 </div>
@@ -2477,13 +2388,8 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                 @else
                     <tr>
                         <td colspan="{{ $columnsCount }}">
-                            <div
-                                class="flex w-full items-center justify-center p-4"
-                            >
-                                <x-filament-tables::empty-state
-                                    :icon="$getEmptyStateIcon()"
-                                    :actions="$getEmptyStateActions()"
-                                >
+                            <div class="flex w-full items-center justify-center p-4">
+                                <x-filament-tables::empty-state :icon="$getEmptyStateIcon()" :actions="$getEmptyStateActions()">
                                     <x-slot name="heading">
                                         {{ $getEmptyStateHeading() }}
                                     </x-slot>
@@ -2501,13 +2407,8 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
 
         @if ($records instanceof \\Illuminate\\Contracts\\Pagination\\Paginator &&
              ((! $records instanceof \\Illuminate\\Contracts\\Pagination\\LengthAwarePaginator) || $records->total()))
-            <div
-                class="filament-tables-pagination-container border-t p-2 dark:border-gray-700"
-            >
-                <x-filament-tables::pagination
-                    :paginator="$records"
-                    :page-options="$getPaginationPageOptions()"
-                />
+            <div class="filament-tables-pagination-container border-t p-2 dark:border-gray-700">
+                <x-filament-tables::pagination :paginator="$records" :page-options="$getPaginationPageOptions()" />
             </div>
         @endif
 

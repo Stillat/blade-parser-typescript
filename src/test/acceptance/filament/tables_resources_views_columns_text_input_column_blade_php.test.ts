@@ -123,11 +123,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_text_input_co
             ->class(['filament-tables-text-input-column'])
     }}
 >
-    <input
-        type="hidden"
-        value="{{ str($state)->replace('"', '\\\\"') }}"
-        x-ref="newState"
-    />
+    <input type="hidden" value="{{ str($state)->replace('"', '\\\\"') }}" x-ref="newState" />
 
     <input
         x-model="state"

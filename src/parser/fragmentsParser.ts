@@ -551,7 +551,7 @@ export class FragmentsParser implements StringIterator {
                 if (this.extractAttributePositions == true) {
                     const potentialName = this.scanBackToName(stringStartedOn - 2);
 
-                    if (this.extractAttributeNames.includes(potentialName)) {
+                    if (potentialName.startsWith('x-') && this.extractAttributeNames.includes(potentialName)) {
                         const attributeContent = this.getContentSubstring(fragmentParameter.startPosition.offset, fragmentParameter.endPosition.offset - fragmentParameter.startPosition.offset + 1);
                         this.extractedAttributes.push({
                             content: attributeContent,

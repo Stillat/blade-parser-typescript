@@ -201,9 +201,7 @@ suite('Pint Transformer Acceptance: support_resources_views_components_section_b
         ])
     >
         <div class="filament-section-component-header grid flex-1 gap-y-1">
-            <div
-                class="filament-section-component-header-heading-wrapper flex items-center gap-x-2"
-            >
+            <div class="filament-section-component-header-heading-wrapper flex items-center gap-x-2">
                 @if ($icon)
                     <x-filament::icon
                         :name="$icon"
@@ -228,17 +226,13 @@ suite('Pint Transformer Acceptance: support_resources_views_components_section_b
                     />
                 @endif
 
-                <h3
-                    class="filament-section-component-header-heading text-base font-semibold leading-6"
-                >
+                <h3 class="filament-section-component-header-heading text-base font-semibold leading-6">
                     {{ $heading }}
                 </h3>
             </div>
 
             @if ($description?->isNotEmpty())
-                <p
-                    class="filament-section-component-header-description text-sm text-gray-500 dark:text-gray-400"
-                >
+                <p class="filament-section-component-header-description text-sm text-gray-500 dark:text-gray-400">
                     {{ $description }}
                 </p>
             @endif

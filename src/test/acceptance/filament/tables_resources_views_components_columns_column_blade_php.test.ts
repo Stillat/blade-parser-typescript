@@ -112,19 +112,12 @@ suite('Pint Transformer Acceptance: tables_resources_views_components_columns_co
     $slot = $column->viewData(['recordKey' => $recordKey]);
 @endphp
 
-<div
-    @if ($tooltip)
+<div @if ($tooltip)
         x-data="{}"
         x-tooltip.raw="{{ $tooltip }}"
-    @endif
-    {{ $attributes->class(['filament-tables-column-wrapper']) }}
->
+    @endif {{ $attributes->class(['filament-tables-column-wrapper']) }}>
     @if (($url || ($recordUrl && $action === null)) && (! $isClickDisabled))
-        <a
-            href="{{ $url ?: $recordUrl }}"
-            @if ($shouldOpenUrlInNewTab) target="_blank" @endif
-            class="{{ $columnClasses }}"
-        >
+        <a href="{{ $url ?: $recordUrl }}" @if ($shouldOpenUrlInNewTab) target="_blank" @endif class="{{ $columnClasses }}">
             {{ $slot }}
         </a>
     @elseif (($action || $recordAction) && (! $isClickDisabled))
@@ -142,13 +135,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_components_columns_co
             }
         @endphp
 
-        <button
-            wire:click="{{ $wireClickAction }}"
-            wire:target="{{ $wireClickAction }}"
-            wire:loading.attr="disabled"
-            type="button"
-            class="{{ $columnClasses }}"
-        >
+        <button wire:click="{{ $wireClickAction }}" wire:target="{{ $wireClickAction }}" wire:loading.attr="disabled" type="button" class="{{ $columnClasses }}">
             {{ $slot }}
         </button>
     @else

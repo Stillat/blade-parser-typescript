@@ -176,53 +176,53 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_checkbox_li
 
     <div
         x-data="{
+            areAllCheckboxesChecked: false,
 
-        areAllCheckboxesChecked: false,
+            checkboxListOptions: Array.from($root.querySelectorAll(".filament-forms-checkbox-list-component-option-label")),
 
-        checkboxListOptions: Array.from($root.querySelectorAll('.filament-forms-checkbox-list-component-option-label')),
+            search: "",
 
-        search: '',
+            visibleCheckboxListOptions: [],
 
-        visibleCheckboxListOptions: [],
+            init: function () {
+                this.updateVisibleCheckboxListOptions();
+                this.checkIfAllCheckboxesAreChecked();
 
-        init: function () {
-            this.updateVisibleCheckboxListOptions()
-            this.checkIfAllCheckboxesAreChecked()
+                Livewire.hook("message.processed", () => {
+                    this.checkIfAllCheckboxesAreChecked();
+                });
 
-            Livewire.hook('message.processed', () => {
-                this.checkIfAllCheckboxesAreChecked()
-            })
+                $watch("search", () => {
+                    this.updateVisibleCheckboxListOptions();
+                    this.checkIfAllCheckboxesAreChecked();
+                });
+            },
 
-            $watch('search', () => {
-                this.updateVisibleCheckboxListOptions()
-                this.checkIfAllCheckboxesAreChecked()
-            })
-        },
+            checkIfAllCheckboxesAreChecked: function () {
+                this.areAllCheckboxesChecked =
+                    this.visibleCheckboxListOptions.length ===
+                    this.visibleCheckboxListOptions.filter((checkboxLabel) => checkboxLabel.querySelector("input[type=checkbox]:checked")).length;
+            },
 
-        checkIfAllCheckboxesAreChecked: function () {
-            this.areAllCheckboxesChecked = this.visibleCheckboxListOptions.length === this.visibleCheckboxListOptions.filter((checkboxLabel) => checkboxLabel.querySelector('input[type=checkbox]:checked')).length
-        },
+            toggleAllCheckboxes: function () {
+                state = !this.areAllCheckboxesChecked;
 
-        toggleAllCheckboxes: function () {
-            state = ! this.areAllCheckboxesChecked
+                this.visibleCheckboxListOptions.forEach((checkboxLabel) => {
+                    checkbox = checkboxLabel.querySelector("input[type=checkbox]");
 
-            this.visibleCheckboxListOptions.forEach((checkboxLabel) => {
-                checkbox = checkboxLabel.querySelector('input[type=checkbox]')
+                    checkbox.checked = state;
+                    checkbox.dispatchEvent(new Event("change"));
+                });
 
-                checkbox.checked = state
-                checkbox.dispatchEvent(new Event('change'))
-            })
+                this.areAllCheckboxesChecked = state;
+            },
 
-            this.areAllCheckboxesChecked = state
-        },
-
-        updateVisibleCheckboxListOptions: function () {
-            this.visibleCheckboxListOptions = this.checkboxListOptions.filter((checkboxListItem) => {
-                return checkboxListItem.querySelector('.filament-forms-checkbox-list-component-option-label-text').innerText.toLowerCase().includes(this.search.toLowerCase())
-            })
-        }
-
-    }"
+            updateVisibleCheckboxListOptions: function () {
+                this.visibleCheckboxListOptions = this.checkboxListOptions.filter((checkboxListItem) => {
+                    return checkboxListItem.querySelector(".filament-forms-checkbox-list-component-option-label-text").innerText.toLowerCase().includes(this.search.toLowerCase());
+                });
+            },
+        }"
     >
         @if (! $isDisabled)
             @if ($isSearchable)
@@ -235,11 +235,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_checkbox_li
             @endif
 
             @if ($isBulkToggleable && count($getOptions()))
-                <div
-                    x-cloak
-                    class="mb-2"
-                    wire:key="{{ $this->id }}.{{ $getStatePath() }}.{{ $field::class }}.actions"
-                >
+                <div x-cloak class="mb-2" wire:key="{{ $this->id }}.{{ $getStatePath() }}.{{ $field::class }}.actions">
                     <span
                         x-show="! areAllCheckboxesChecked"
                         x-on:click="toggleAllCheckboxes()"
@@ -274,9 +270,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_checkbox_li
             ]))"
         >
             @forelse ($getOptions() as $optionValue => $optionLabel)
-                <div
-                    wire:key="{{ $this->id }}.{{ $statePath }}.{{ $field::class }}.options.{{ $optionValue }}"
-                >
+                <div wire:key="{{ $this->id }}.{{ $statePath }}.{{ $field::class }}.options.{{ $optionValue }}">
                     <label
                         class="filament-forms-checkbox-list-component-option-label flex items-center space-x-3 rtl:space-x-reverse"
                         @if ($isSearchable)
@@ -305,17 +299,13 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_checkbox_li
                             }}
                         />
 
-                        <span
-                            class="filament-forms-checkbox-list-component-option-label-text text-sm text-gray-700 dark:text-gray-200"
-                        >
+                        <span class="filament-forms-checkbox-list-component-option-label-text text-sm text-gray-700 dark:text-gray-200">
                             {{ $optionLabel }}
                         </span>
                     </label>
                 </div>
             @empty
-                <div
-                    wire:key="{{ $this->id }}.{{ $statePath }}.{{ $field::class }}.empty"
-                ></div>
+                <div wire:key="{{ $this->id }}.{{ $statePath }}.{{ $field::class }}.empty"></div>
             @endforelse
         </x-filament::grid>
 

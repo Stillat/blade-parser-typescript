@@ -70,14 +70,14 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_markdown_ed
                 translations: @js(__('filament-forms::components.markdown_editor')),
                 uploadFileAttachmentUsing: async (file, onSuccess, onError) => {
                     $wire.upload(\`componentFileAttachments.{{ $statePath }}\`, file, () => {
-                        $wire.getFormComponentFileAttachmentUrl('{{ $statePath }}').then((url) => {
-                            if (! url) {
-                                return onError()
+                        $wire.getFormComponentFileAttachmentUrl("{{ $statePath }}").then((url) => {
+                            if (!url) {
+                                return onError();
                             }
 
-                            onSuccess(url)
-                        })
-                    })
+                            onSuccess(url);
+                        });
+                    });
                 },
             })"
             wire:ignore
@@ -91,9 +91,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_markdown_ed
             <textarea x-ref="editor" class="hidden"></textarea>
         </div>
     @else
-        <div
-            class="prose dark:prose-invert block w-full max-w-none rounded-lg border border-gray-300 bg-white p-3 opacity-70 shadow-sm dark:border-gray-600 dark:bg-gray-700"
-        >
+        <div class="prose dark:prose-invert block w-full max-w-none rounded-lg border border-gray-300 bg-white p-3 opacity-70 shadow-sm dark:border-gray-600 dark:bg-gray-700">
             {!! str($getState())->markdown()->sanitizeHtml() !!}
         </div>
     @endunless

@@ -48,9 +48,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_global_sea
     </label>
 
     <div class="group relative max-w-md">
-        <span
-            class="pointer-events-none absolute inset-y-0 start-0 flex h-10 w-10 items-center justify-center"
-        >
+        <span class="pointer-events-none absolute inset-y-0 start-0 flex h-10 w-10 items-center justify-center">
             <x-filament::icon
                 name="heroicon-m-magnifying-glass"
                 alias="app::global-search.input.prefix"
@@ -60,11 +58,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_global_sea
                 wire:target="search"
             />
 
-            <x-filament::loading-indicator
-                class="h-5 w-5 text-gray-500 dark:text-gray-400"
-                wire:loading.delay=""
-                wire:target="search"
-            />
+            <x-filament::loading-indicator class="h-5 w-5 text-gray-500 dark:text-gray-400" wire:loading.delay="" wire:target="search" />
         </span>
 
         <input

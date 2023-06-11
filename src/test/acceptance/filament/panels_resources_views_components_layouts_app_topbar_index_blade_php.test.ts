@@ -124,12 +124,8 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
     'navigation',
 ])
 
-<header
-    {{ $attributes->class(['filament-main-topbar sticky top-0 z-10 border-b bg-white dark:border-gray-700 dark:bg-gray-800']) }}
->
-    <div
-        class="-mt-px flex h-16 items-center justify-between px-2 sm:px-4 md:px-6 lg:px-8"
-    >
+<header {{ $attributes->class(['filament-main-topbar sticky top-0 z-10 border-b bg-white dark:border-gray-700 dark:bg-gray-800']) }}>
+    <div class="-mt-px flex h-16 items-center justify-between px-2 sm:px-4 md:px-6 lg:px-8">
         <div class="flex flex-1 items-center">
             {{ filament()->renderHook('topbar.start') }}
 
@@ -144,12 +140,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
                     'lg:hidden' => ! (filament()->isSidebarFullyCollapsibleOnDesktop()),
                 ])
             >
-                <x-filament::icon
-                    name="heroicon-o-bars-3"
-                    alias="app::topbar.buttons.toggle-sidebar"
-                    color="text-primary-500"
-                    size="h-6 w-6"
-                />
+                <x-filament::icon name="heroicon-o-bars-3" alias="app::topbar.buttons.toggle-sidebar" color="text-primary-500" size="h-6 w-6" />
             </button>
 
             @if (filament()->hasTopNavigation())
@@ -169,10 +160,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
                             @if ($groupLabel = $group->getLabel())
                                 <x-filament::dropdown placement="bottom-start">
                                     <x-slot name="trigger">
-                                        <x-filament::layouts.app.topbar.item
-                                            :active="$group->isActive()"
-                                            :icon="$group->getIcon()"
-                                        >
+                                        <x-filament::layouts.app.topbar.item :active="$group->isActive()" :icon="$group->getIcon()">
                                             {{ $groupLabel }}
                                         </x-filament::layouts.app.topbar.item>
                                     </x-slot>
@@ -209,9 +197,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
                     </ul>
                 @endif
             @elseif (count($breadcrumbs))
-                <x-filament::layouts.app.topbar.breadcrumbs
-                    :breadcrumbs="$breadcrumbs"
-                />
+                <x-filament::layouts.app.topbar.breadcrumbs :breadcrumbs="$breadcrumbs" />
             @endif
         </div>
 
@@ -231,12 +217,8 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
     </div>
 
     @if (filament()->hasTopNavigation() && count($breadcrumbs))
-        <div
-            class="hidden h-12 items-center border-t px-8 dark:border-gray-700 lg:flex"
-        >
-            <x-filament::layouts.app.topbar.breadcrumbs
-                :breadcrumbs="$breadcrumbs"
-            />
+        <div class="hidden h-12 items-center border-t px-8 dark:border-gray-700 lg:flex">
+            <x-filament::layouts.app.topbar.breadcrumbs :breadcrumbs="$breadcrumbs" />
         </div>
     @endif
 </header>

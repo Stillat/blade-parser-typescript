@@ -196,10 +196,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_select_blad
                 @endif
 
                 @foreach ($getOptions() as $value => $label)
-                    <option
-                        value="{{ $value }}"
-                        @disabled($isOptionDisabled($value, $label))
-                    >
+                    <option value="{{ $value }}" @disabled($isOptionDisabled($value, $label))>
                         @if ($isHtmlAllowed)
                             {!! $label !!}
                         @else
@@ -217,16 +214,16 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_select_blad
                     canSelectPlaceholder: @js($canSelectPlaceholder()),
                     isHtmlAllowed: @js($isHtmlAllowed()),
                     getOptionLabelUsing: async () => {
-                        return await $wire.getFormSelectOptionLabel(@js($statePath))
+                        return await $wire.getFormSelectOptionLabel(@js($statePath));
                     },
                     getOptionLabelsUsing: async () => {
-                        return await $wire.getFormSelectOptionLabels(@js($statePath))
+                        return await $wire.getFormSelectOptionLabels(@js($statePath));
                     },
                     getOptionsUsing: async () => {
-                        return await $wire.getFormSelectOptions(@js($statePath))
+                        return await $wire.getFormSelectOptions(@js($statePath));
                     },
                     getSearchResultsUsing: async (search) => {
-                        return await $wire.getFormSelectSearchResults(@js($statePath), search)
+                        return await $wire.getFormSelectSearchResults(@js($statePath), search);
                     },
                     isAutofocused: @js($isAutofocused()),
                     isDisabled: @js($isDisabled),

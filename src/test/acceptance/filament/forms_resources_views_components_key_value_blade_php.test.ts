@@ -161,34 +161,20 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_key_value_b
                 ->class(['filament-forms-key-value-component'])
         }}
     >
-        <div
-            class="divide-y overflow-hidden rounded-xl border border-gray-300 bg-white shadow-sm dark:divide-gray-600 dark:border-gray-600 dark:bg-gray-700"
-        >
-            <table
-                class="w-full table-auto divide-y text-start dark:divide-gray-700"
-            >
+        <div class="divide-y overflow-hidden rounded-xl border border-gray-300 bg-white shadow-sm dark:divide-gray-600 dark:border-gray-600 dark:bg-gray-700">
+            <table class="w-full table-auto divide-y text-start dark:divide-gray-700">
                 <thead>
                     <tr class="bg-gray-50 dark:bg-gray-800/60">
-                        <th
-                            class="whitespace-nowrap px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300"
-                            scope="col"
-                        >
+                        <th class="whitespace-nowrap px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300" scope="col">
                             {{ $getKeyLabel() }}
                         </th>
 
-                        <th
-                            class="whitespace-nowrap px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300"
-                            scope="col"
-                        >
+                        <th class="whitespace-nowrap px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300" scope="col">
                             {{ $getValueLabel() }}
                         </th>
 
                         @if (($deleteAction || $reorderAction) && (! $isDisabled))
-                            <th
-                                scope="col"
-                                x-show="rows.length"
-                                class="{{ ($deleteAction && $reorderAction) ? 'w-16' : 'w-12' }}"
-                            >
+                            <th scope="col" x-show="rows.length" class="{{ ($deleteAction && $reorderAction) ? 'w-16' : 'w-12' }}">
                                 <span class="sr-only"></span>
                             </th>
                         @endif
@@ -203,11 +189,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_key_value_b
                     x-ref="tableBody"
                     class="divide-y whitespace-nowrap dark:divide-gray-600"
                 >
-                    <template
-                        x-for="(row, index) in rows"
-                        x-bind:key="index"
-                        x-ref="rowTemplate"
-                    >
+                    <template x-for="(row, index) in rows" x-bind:key="index" x-ref="rowTemplate">
                         <tr
                             @if ($reorderAction)
                                 x-bind:x-sortable-item="row.key"
@@ -242,9 +224,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_key_value_b
 
                             @if (($deleteAction || $reorderAction) && (! $isDisabled))
                                 <td class="whitespace-nowrap">
-                                    <div
-                                        class="flex items-center justify-center px-2"
-                                    >
+                                    <div class="flex items-center justify-center px-2">
                                         @if ($reorderAction)
                                             <div x-sortable-handle>
                                                 {{ $reorderAction }}

@@ -109,11 +109,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_file_upload
     </div>
 </x-dynamic-component>
 `;
-        const output = `<x-dynamic-component
-    :component="$getFieldWrapperView()"
-    :field="$field"
-    :label-sr-only="$isLabelHidden()"
->
+        const output = `<x-dynamic-component :component="$getFieldWrapperView()" :field="$field" :label-sr-only="$isLabelHidden()">
     @php
         $imageCropAspectRatio = $getImageCropAspectRatio();
         $imageResizeTargetHeight = $getImageResizeTargetHeight();
@@ -129,10 +125,10 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_file_upload
         x-data="fileUploadFormComponent({
             acceptedFileTypes: @js($getAcceptedFileTypes()),
             deleteUploadedFileUsing: async (fileKey) => {
-                return await $wire.deleteUploadedFile(@js($statePath), fileKey)
+                return await $wire.deleteUploadedFile(@js($statePath), fileKey);
             },
             getUploadedFilesUsing: async () => {
-                return await $wire.getFormUploadedFiles(@js($statePath))
+                return await $wire.getFormUploadedFiles(@js($statePath));
             },
             imageCropAspectRatio: @js($imageCropAspectRatio),
             imagePreviewHeight: @js($getImagePreviewHeight()),
@@ -153,11 +149,11 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_file_upload
             maxSize: {{ ($size = $getMaxSize()) ? "'{$size} KB'" : 'null' }},
             minSize: {{ ($size = $getMinSize()) ? "'{$size} KB'" : 'null' }},
             removeUploadedFileUsing: async (fileKey) => {
-                return await $wire.removeFormUploadedFile(@js($statePath), fileKey)
+                return await $wire.removeFormUploadedFile(@js($statePath), fileKey);
             },
             removeUploadedFileButtonPosition: @js($getRemoveUploadedFileButtonPosition()),
             reorderUploadedFilesUsing: async (files) => {
-                return await $wire.reorderFormUploadedFiles(@js($statePath), files)
+                return await $wire.reorderFormUploadedFiles(@js($statePath), files);
             },
             shouldAppendFiles: @js($shouldAppendFiles()),
             shouldOrientImageFromExif: @js($shouldOrientImagesFromExif()),
@@ -166,9 +162,15 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_file_upload
             uploadButtonPosition: @js($getUploadButtonPosition()),
             uploadProgressIndicatorPosition: @js($getUploadProgressIndicatorPosition()),
             uploadUsing: (fileKey, file, success, error, progress) => {
-                $wire.upload(\`{{ $statePath }}.\${fileKey}\`, file, () => {
-                    success(fileKey)
-                }, error, progress)
+                $wire.upload(
+                    \`{{ $statePath }}.\${fileKey}\`,
+                    file,
+                    () => {
+                        success(fileKey);
+                    },
+                    error,
+                    progress
+                );
             },
         })"
         wire:ignore
@@ -192,9 +194,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_file_upload
         }}
     >
         <div
-            style="
-                min-height: {{ $isAvatar ? '8em' : ($getPanelLayout() === 'compact' ? '2.625em' : '4.75em') }};
-            "
+            style="min-height: {{ $isAvatar ? '8em' : ($getPanelLayout() === 'compact' ? '2.625em' : '4.75em') }}"
             @class([
                 'w-32' => $isAvatar,
                 'w-full' => ! $isAvatar,

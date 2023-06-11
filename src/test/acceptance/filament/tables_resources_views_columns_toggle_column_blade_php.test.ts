@@ -136,9 +136,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_toggle_column
     $state = $getState();
 @endphp
 
-<div
-    wire:key="{{ $this->id }}.table.record.{{ $recordKey }}.column.{{ $getName() }}.toggle-column.{{ $state ? 'true' : 'false' }}"
->
+<div wire:key="{{ $this->id }}.table.record.{{ $recordKey }}.column.{{ $getName() }}.toggle-column.{{ $state ? 'true' : 'false' }}">
     <div
         x-data="{
             error: undefined,

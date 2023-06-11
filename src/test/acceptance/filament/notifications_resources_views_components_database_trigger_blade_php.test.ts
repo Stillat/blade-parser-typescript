@@ -12,11 +12,7 @@ suite('Pint Transformer Acceptance: notifications_resources_views_components_dat
     {{ $slot }}
 </div>
 `;
-        const output = `<div
-    x-data="{}"
-    x-on:click="$dispatch('open-modal', { id: 'database-notifications' })"
-    {{ $attributes->class(['inline-block']) }}
->
+        const output = `<div x-data="{}" x-on:click="$dispatch('open-modal', { id: 'database-notifications' })" {{ $attributes->class(['inline-block']) }}>
     {{ $slot }}
 </div>
 `;

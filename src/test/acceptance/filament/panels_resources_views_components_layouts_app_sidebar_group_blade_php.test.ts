@@ -129,18 +129,10 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
         >
             <div class="flex items-center gap-4">
                 @if ($icon)
-                    <x-filament::icon
-                        :name="$icon"
-                        alias="app::sidebar.group"
-                        color="text-gray-600 dark:text-gray-300"
-                        size="h-3 w-3"
-                        class="ms-1 shrink-0"
-                    />
+                    <x-filament::icon :name="$icon" alias="app::sidebar.group" color="text-gray-600 dark:text-gray-300" size="h-3 w-3" class="ms-1 shrink-0" />
                 @endif
 
-                <p
-                    class="text-primary-600 dark:text-primary-500 flex-1 text-xs font-bold uppercase tracking-wider"
-                >
+                <p class="text-primary-600 dark:text-primary-500 flex-1 text-xs font-bold uppercase tracking-wider">
                     {{ $label }}
                 </p>
             </div>
