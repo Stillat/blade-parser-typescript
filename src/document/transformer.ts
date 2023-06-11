@@ -354,6 +354,12 @@ export class Transformer {
                 result = result.substring(1);
                 result = result.trimLeft();
             }
+
+            result = result.trim();
+
+            if (formatContent.trim().endsWith(';') == false && result.endsWith(';')) {
+                result = result.substring(0, result.length - 1);
+            }
         } catch (err) {
             console.log(err);
             console.log(toFormat);

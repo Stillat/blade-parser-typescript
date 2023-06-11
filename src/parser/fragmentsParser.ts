@@ -40,6 +40,7 @@ export class FragmentsParser implements StringIterator {
     private extractAttributePositions: boolean = false;
     private extractAttributeNames: string[] = [];
     private extractedAttributes: IExtractedAttribute[] = [];
+    private lastFragmentEnded: number = -1;
 
     advance(count: number) {
         for (let i = 0; i < count; i++) {
@@ -313,6 +314,12 @@ export class FragmentsParser implements StringIterator {
                 }
             }
 
+            const sanityCheck = this.fetchAt(candidateIndex, 2);
+
+            if (sanityCheck == '<=' || sanityCheck == '<>') {
+                return;
+            }
+
             newCandidates.push(candidateIndex);
         });
 
@@ -384,6 +391,10 @@ export class FragmentsParser implements StringIterator {
         for (let i = 0; i < this.fragmentStartIndex.length; i++) {
             const offset = this.fragmentStartIndex[i];
             this.resetIntermediateState();
+
+            if (offset < this.lastFragmentEnded) {
+                continue;
+            }
 
             this.seedOffset = offset;
             this.currentChunkOffset = offset;
@@ -675,6 +686,8 @@ export class FragmentsParser implements StringIterator {
                 break;
             }
         }
+
+        this.lastFragmentEnded = this.currentIndex + this.seedOffset;
     }
 
     private skipToEndOfStringWithIndex() {
