@@ -55,17 +55,25 @@ export function formatJson(text: string) {
     });
 }
 
-export function formatBladeString(text: string, options: FormattingOptions | null = null) {
+export function formatBladeString(text: string, options: FormattingOptions | null = null, prettierOptions: ParserOptions | null = null) {
     // Override settings and disable automatic option discovery. Useful for testing.
     setEnvSettings(options);
 
+    if (prettierOptions == null) {
+        return prettier.format(text, {
+            parser: 'blade',
+            plugins: [plugin as any as string],
+        });
+    }
+
     return prettier.format(text, {
+        ...prettierOptions,
         parser: 'blade',
         plugins: [plugin as any as string],
     });
 }
 
-export function formatBladeStringWithPint(text: string, options: FormattingOptions | null = null, transformOptions: TransformOptions | null = null) {
+export function formatBladeStringWithPint(text: string, options: FormattingOptions | null = null, transformOptions: TransformOptions | null = null, prettierOptions: ParserOptions | null = null) {
     let pintLocation = __dirname + '/../../../pint/pint',
         pintConfig = __dirname + '/../../../pint/pint.json',
         pintCacheDirectory = __dirname + '/../../../_test/_cache/',
@@ -100,7 +108,7 @@ export function formatBladeStringWithPint(text: string, options: FormattingOptio
         };
     }
 
-    return formatBladeString(text, curOptions);
+    return formatBladeString(text, curOptions, prettierOptions);
 }
 
 type PrettierOptionsAdjuster = (options: ParserOptions) => ParserOptions;

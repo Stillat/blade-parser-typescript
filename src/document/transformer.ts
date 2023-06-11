@@ -1,7 +1,7 @@
 import { getDefaultClassStringConfig } from '../formatting/classStringsConfig';
 import { FormattingOptions } from '../formatting/formattingOptions';
 import { PhpOperatorReflow } from '../formatting/phpOperatorReflow';
-import { formatBladeString, formatBladeStringWithPint, getPhpOptions } from '../formatting/prettier/utils';
+import { formatBladeString, formatBladeStringWithPint, getHtmlOptions, getPhpOptions } from '../formatting/prettier/utils';
 import { SyntaxReflow } from '../formatting/syntaxReflow';
 import { AbstractNode, BladeCommentNode, BladeComponentNode, BladeEchoNode, ConditionNode, DirectiveNode, ExecutionBranchNode, ForElseNode, FragmentPosition, InlinePhpNode, LiteralNode, ParameterNode, ParameterType, SwitchCaseNode, SwitchStatementNode } from '../nodes/nodes';
 import { DocumentParser } from '../parser/documentParser';
@@ -307,10 +307,18 @@ export class Transformer {
         let result = attribute.content;
 
         try {
+            const currentHtmlOptions = getHtmlOptions();
+
             if (this.transformOptions.useLaravelPint) {
-                result = formatBladeStringWithPint(tempTemplate, this.formattingOptions, this.transformOptions);
+                result = formatBladeStringWithPint(tempTemplate, this.formattingOptions, this.transformOptions, {
+                    ...currentHtmlOptions,
+                    printWidth: 180
+                });
             } else {
-                result = formatBladeString(tempTemplate, this.formattingOptions);
+                result = formatBladeString(tempTemplate, this.formattingOptions, {
+                    ...currentHtmlOptions,
+                    printWidth: 180
+                });
             }
 
             result = result.trim();
@@ -1924,7 +1932,7 @@ export class Transformer {
 
     private relativeIndentLevel(value: string, content: string): number {
         const tempStructureLines = StringUtilities.breakByNewLine(content);
-        
+
         for (let i = 0; i < tempStructureLines.length; i++) {
             const thisLine = tempStructureLines[i];
 
