@@ -153,7 +153,8 @@ export function formatAsJavaScript(text: string) {
     return prettier.format(text, {
         ...htmlOptions,
         parser: 'babel',
-        printWidth: Infinity
+        printWidth: Infinity,
+        singleQuote: true,
     });
 }
 

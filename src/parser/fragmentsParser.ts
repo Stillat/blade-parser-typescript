@@ -580,7 +580,13 @@ export class FragmentsParser implements StringIterator {
                         const attributeContent = this.getContentSubstring(fragmentParameter.startPosition.offset, fragmentParameter.endPosition.offset - fragmentParameter.startPosition.offset + 1),
                             tmpDocument = BladeDocument.fromText(attributeContent);
 
-                        if (!tmpDocument.getParser().getHasPairedStructures()) {
+                        let shouldAdd = true;
+
+                        if (attributeContent.trim() == '{}') {
+                            shouldAdd = false;
+                        }
+
+                        if (shouldAdd && !tmpDocument.getParser().getHasPairedStructures()) {
                             this.extractedAttributes.push({
                                 content: attributeContent,
                                 name: potentialName,

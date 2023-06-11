@@ -324,12 +324,12 @@ export class Transformer {
 
         tempTemplate += formatContent;
 
-        tempTemplate += ";\n";
+        tempTemplate += "\n";
 
         let result = attribute.content;
-
+        let toFormat = '';
         try {
-            const tmpDoc = BladeDocument.fromText('<script>' + formatContent + '</script>');
+            const tmpDoc = BladeDocument.fromText('<script>' + tempTemplate + '</script>');
 
             // TODO: Return original if it contains structures.
             const tmpTransformer = tmpDoc.transform()
@@ -339,7 +339,7 @@ export class Transformer {
                 
             const tmpResult = tmpTransformer.toStructure();
 
-            let toFormat = tmpResult.trim();
+            toFormat = tmpResult.trim();
             toFormat = toFormat.substring(8);
             toFormat = toFormat.trim();
             toFormat = toFormat.substring(0, toFormat.length - 9);
@@ -355,22 +355,9 @@ export class Transformer {
                 result = result.substring(1);
                 result = result.trimLeft();
             }
-
-            const resultLines = StringUtilities.breakByNewLine(result),
-                newLines: string[] = [];
-
-            for (let i = 0; i < resultLines.length; i++) {
-                const line = resultLines[i];
-
-                if ((line.length - line.trimLeft().length) >= 4) {
-                    newLines.push(line.substring(4));
-                } else {
-                    newLines.push(line);
-                }
-            }
-
-            result = newLines.join("\n");
         } catch (err) {
+            console.log(err);
+            console.log(toFormat);
             // Prevent failures from crashing formatting process.
             debugger;
         }
