@@ -6,6 +6,7 @@ import { SyntaxReflow } from '../formatting/syntaxReflow';
 import { AbstractNode, BladeCommentNode, BladeComponentNode, BladeEchoNode, ConditionNode, DirectiveNode, ExecutionBranchNode, ForElseNode, FragmentPosition, InlinePhpNode, LiteralNode, ParameterNode, ParameterType, SwitchCaseNode, SwitchStatementNode } from '../nodes/nodes';
 import { SimpleArrayParser } from '../parser/simpleArrayParser';
 import { StringUtilities } from '../utilities/stringUtilities';
+import { disableAttributeProcessing, enableAttributeProcessing } from './attributeRangeRemover';
 import { BladeDocument } from './bladeDocument';
 import { BlockPhpFormatter, JsonFormatter, PhpFormatter, PhpTagFormatter } from './formatters';
 import { PintTransformer } from './pintTransformer';
@@ -1281,6 +1282,7 @@ export class Transformer {
             return result;
         }
 
+
         if (this.dynamicElementConditions.has(condition.nodeContent)) {
             const existingSlug = this.dynamicElementConditions.get(condition.nodeContent) as string;
 
@@ -1523,11 +1525,14 @@ export class Transformer {
             value = this.removeLeadingWhitespace(value, slug);
             let attachedDoc = directive.directive.documentContent;
 
+            disableAttributeProcessing();
             if (this.transformOptions.useLaravelPint) {
                 attachedDoc = formatBladeStringWithPint(attachedDoc, this.formattingOptions, this.transformOptions).trim();
             } else {
                 attachedDoc = formatBladeString(attachedDoc, this.formattingOptions).trim();
             }
+            enableAttributeProcessing();
+
             const dirResult = this.printDirective(directive.directive, this.indentLevel(slug)).trim(),
                 relIndent = this.findNewLeadingStart(value, slug),
                 tmpDoc = dirResult + attachedDoc + "\n" + directive.directive.isClosedBy?.sourceContent ?? '';

@@ -1,6 +1,18 @@
 import { IExtractedAttribute } from '../parser/extractedAttribute';
 import { StringUtilities } from '../utilities/stringUtilities';
 
+let canProcessAttributes: boolean = true;
+
+export function disableAttributeProcessing() {
+    canProcessAttributes = false;
+}
+
+export function enableAttributeProcessing() {
+    canProcessAttributes = true;
+}
+
+export { canProcessAttributes };
+
 export class AttributeRangeRemover {
 
     private attributeMapping: Map<string, IExtractedAttribute> = new Map();

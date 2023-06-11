@@ -8,7 +8,7 @@ import { getEnvSettings, getPrettierFilePath } from '../optionDiscovery';
 import { PrettierDocumentFormatter } from './prettierDocumentFormatter';
 import { formatAsJavaScript, getHtmlOptions, getOptionsAdjuster, setOptions } from './utils';
 import { ClassStringEmulation } from '../classStringEmulation';
-import { AttributeRangeRemover } from '../../document/attributeRangeRemover';
+import { AttributeRangeRemover, canProcessAttributes } from '../../document/attributeRangeRemover';
 import { FragmentsParser } from '../../parser/fragmentsParser';
 import { IExtractedAttribute } from '../../parser/extractedAttribute';
 import { formatExtractedScript } from '../bladeJavaScriptFormatter';
@@ -55,32 +55,36 @@ const plugin: prettier.Plugin = {
                 const classConfig = transformOptions.classStrings,
                     phpValidator = new PhpParserPhpValidator();
 
-                const fragments = new FragmentsParser(),
-                    tmpDoc = BladeDocument.fromText(prettierText);
-                fragments.setIndexRanges(tmpDoc.getParser().getNodeIndexRanges());
+                if (canProcessAttributes) {
+                    const fragments = new FragmentsParser(),
+                        tmpDoc = BladeDocument.fromText(prettierText);
+                    fragments.setIndexRanges(tmpDoc.getParser().getNodeIndexRanges());
 
-                fragments.setExtractAttributeNames(['x-data', 'ax-load', 'ax-load-src']);
-                fragments.setExtractAttributes(true);
+                    fragments.setExtractAttributeNames(['x-data', 'ax-load', 'ax-load-src']);
+                    fragments.setExtractAttributes(true);
 
-                fragments.parse(prettierText);
-                const extractedAttributes = fragments.getExtractedAttributes();
+                    fragments.parse(prettierText);
+                    const extractedAttributes = fragments.getExtractedAttributes();
 
-                let attributeMap:Map<string, IExtractedAttribute> = new Map();
+                    let attributeMap: Map<string, IExtractedAttribute> = new Map();
 
-                if (extractedAttributes.length > 0) {
-                    const attributeRemover = new AttributeRangeRemover();
-                    const tmpText = attributeRemover.remove(prettierText, extractedAttributes);
-                    attributeMap = attributeRemover.getRemovedAttributes();
+                    if (extractedAttributes.length > 0) {
+                        const attributeRemover = new AttributeRangeRemover();
+                        const tmpText = attributeRemover.remove(prettierText, extractedAttributes);
+                        attributeMap = attributeRemover.getRemovedAttributes();
 
-                    attributeMap.forEach((attribute, slug) => {
-                        const aResult = formatExtractedScript(
-                            attribute,
-                            transformOptions,
-                            slug,
-                            tmpText
-                        );
-                        prettierText = prettierText.replace(attribute.content, aResult);
-                    });
+                        attributeMap.forEach((attribute, slug) => {
+                            const aResult = formatExtractedScript(
+                                attribute,
+                                transformOptions,
+                                slug,
+                                tmpText
+                            );
+                            prettierText = prettierText.replace(attribute.content, aResult);
+                        });
+                    }
+                } else {
+                    debugger;
                 }
 
                 if (classConfig.enabled) {
