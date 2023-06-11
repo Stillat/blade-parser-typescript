@@ -335,7 +335,7 @@ export class Transformer {
                 .cloneOptions(this)
                 .setFormattingOptions(this.formattingOptions)
                 .withOptions(this.transformOptions);
-                
+
             const tmpResult = tmpTransformer.toStructure();
 
             toFormat = tmpResult.trim();
@@ -595,11 +595,31 @@ export class Transformer {
             let appendFinal = ' '.repeat(targetIndent);
 
             // Target indent will be the starting location of the attribute itself.
-            targetIndent += this.transformOptions.tabSize;
+            //targetIndent += this.transformOptions.tabSize;
 
-            const transformedContent = IndentLevel.shiftIndent(attribute.transformedContent, targetIndent, false, this.transformOptions, false, false);
+            let transformedContent = attribute.transformedContent;
 
-            value = value.replace(slug, `\n${transformedContent}\n${appendFinal}`);
+            // IndentLevel.shiftIndent(attribute.transformedContent, targetIndent, false, this.transformOptions, false, false)
+
+            const origTransformedContent = attribute.transformedContent.trim();
+            if (origTransformedContent.startsWith('{') && origTransformedContent.endsWith('}')) {
+                transformedContent = IndentLevel.shiftIndent(
+                    origTransformedContent,
+                    targetIndent,
+                    true,
+                    this.transformOptions,
+                    false,
+                    false
+                );
+            } else {
+                if (transformedContent.includes("\n") == false) {
+                    transformedContent = transformedContent.trim();
+                } else {
+                    transformedContent = `\n${transformedContent}\n${appendFinal}`;
+                }
+            }
+
+            value = value.replace(slug, transformedContent);
         });
 
         return value;
