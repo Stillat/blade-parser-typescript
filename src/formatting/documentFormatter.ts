@@ -95,7 +95,6 @@ export class DocumentFormatter {
 
         document.transform()
             .setTransformHtmlAttributes(true)
-            .setExtractedAttributes(this.extractedAttributes)
             .withFilePath(this.filePath)
             .withBlockPhpFormatter(this.blockPhpFormatter)
             .withPhpFormatter(this.phpFormatter)
@@ -106,6 +105,8 @@ export class DocumentFormatter {
         if (this.transformOptions != null) {
             document.transform().withOptions(this.transformOptions);
         }
+
+        document.transform().setExtractedAttributes(this.extractedAttributes);
 
         const structure = document.transform().toStructure(),
             formatted = this.htmlFormatter(structure);
