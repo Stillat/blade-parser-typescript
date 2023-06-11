@@ -4,6 +4,7 @@ import { Position } from '../nodes/position';
 import { StringUtilities } from '../utilities/stringUtilities';
 import { DocumentOffset } from './documentOffset';
 import { DocumentParser } from './documentParser';
+import { AlpineJsAttributes } from './excludeAttributes/alpineJs';
 import { IExtractedAttribute } from './extractedAttribute';
 import { IndexRange } from './indexRange';
 import { isStartOfString } from './scanners/isStartOfString';
@@ -451,6 +452,25 @@ export class FragmentsParser implements StringIterator {
         return this.fragments.length > 0;
     }
 
+    private getCheckAttributeName(attributeName: string) {
+        if (attributeName.includes('.')) {
+            return attributeName.substring(0, attributeName.indexOf('.'));
+        }
+
+        return attributeName;
+    }
+
+    private shouldSkip(attributeName: string): boolean {
+        const name = this.getCheckAttributeName(attributeName).toLowerCase();
+
+        // TODO: Make better.
+        if (AlpineJsAttributes.includes(name)) {
+            return true;
+        }
+
+        return false;
+    }
+
     private skipToEndOfPhp() {
         for (this.currentIndex; this.currentIndex < this.inputLen; this.currentIndex += 1) {
             this.checkCurrentOffsets();
@@ -583,6 +603,10 @@ export class FragmentsParser implements StringIterator {
                         let shouldAdd = true;
 
                         if (attributeContent.trim() == '{}') {
+                            shouldAdd = false;
+                        }
+
+                        if (this.shouldSkip(potentialName)) {
                             shouldAdd = false;
                         }
 
