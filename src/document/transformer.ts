@@ -1,7 +1,7 @@
 import { getDefaultClassStringConfig } from '../formatting/classStringsConfig';
 import { FormattingOptions } from '../formatting/formattingOptions';
 import { PhpOperatorReflow } from '../formatting/phpOperatorReflow';
-import { formatBladeString, formatBladeStringWithPint, getHtmlOptions, getPhpOptions } from '../formatting/prettier/utils';
+import { formatAsJavaScript, formatBladeString, formatBladeStringWithPint, getHtmlOptions, getPhpOptions } from '../formatting/prettier/utils';
 import { SyntaxReflow } from '../formatting/syntaxReflow';
 import { AbstractNode, BladeCommentNode, BladeComponentNode, BladeEchoNode, ConditionNode, DirectiveNode, ExecutionBranchNode, ForElseNode, FragmentPosition, InlinePhpNode, LiteralNode, ParameterNode, ParameterType, SwitchCaseNode, SwitchStatementNode } from '../nodes/nodes';
 import { DocumentParser } from '../parser/documentParser';
@@ -213,6 +213,12 @@ export class Transformer {
 
     setParentTransformer(transformer: Transformer) {
         this.parentTransformer = transformer;
+        this.cloneOptions(transformer);
+
+        return this;
+    }
+
+    cloneOptions(transformer: Transformer) {
         this.setUsingLaravelPint(transformer.getUsingLaravelPint());
         this.setPintTransformer(transformer.getPintTransformer());
 
@@ -221,6 +227,8 @@ export class Transformer {
 
     setFormattingOptions(formattingOptions: FormattingOptions | null) {
         this.formattingOptions = formattingOptions;
+
+        return this;
     }
 
     withJsonFormatter(formatter: JsonFormatter | null) {
@@ -302,42 +310,51 @@ export class Transformer {
     }
 
     private formatExtractedScript(attribute: IExtractedAttribute): string {
-        const formatContent = attribute.content.substring(1, attribute.content.length - 1),
-            tempTemplate = "<script>\nlet _tmpFormat = " + formatContent + ";\n</script>";
+        let addedVarPlaceholder = false;
+
+        const formatContent = attribute.content.substring(1, attribute.content.length - 1).trim();
+
+        let tempTemplate = "\n";
+
+        if (formatContent.startsWith('{') && formatContent.endsWith('}')) {
+            tempTemplate += 'let _tmpFormat = ';
+            addedVarPlaceholder = true;
+            
+        }
+
+        tempTemplate += formatContent;
+
+        tempTemplate += ";\n";
+
         let result = attribute.content;
 
         try {
-            const currentHtmlOptions = getHtmlOptions();
+            const tmpDoc = BladeDocument.fromText('<script>' + formatContent + '</script>');
 
-            if (this.transformOptions.useLaravelPint) {
-                result = formatBladeStringWithPint(tempTemplate, this.formattingOptions, this.transformOptions, {
-                    ...currentHtmlOptions,
-                    printWidth: 180
-                });
-            } else {
-                result = formatBladeString(tempTemplate, this.formattingOptions, {
-                    ...currentHtmlOptions,
-                    printWidth: 180
-                });
+            // TODO: Return original if it contains structures.
+            const tmpTransformer = tmpDoc.transform()
+                .cloneOptions(this)
+                .setFormattingOptions(this.formattingOptions)
+                .withOptions(this.transformOptions);
+                
+            const tmpResult = tmpTransformer.toStructure();
+
+            let toFormat = tmpResult.trim();
+            toFormat = toFormat.substring(8);
+            toFormat = toFormat.trim();
+            toFormat = toFormat.substring(0, toFormat.length - 9);
+            result = formatAsJavaScript(toFormat);
+
+            result = tmpTransformer.fromStructure(result);
+            if (addedVarPlaceholder) {
+                result = result.trimLeft();
+                result = result.substring(3);
+                result = result.trimLeft();
+                result = result.substring(10);
+                result = result.trimLeft();
+                result = result.substring(1);
+                result = result.trimLeft();
             }
-
-            result = result.trim();
-            result = result.substring(8);
-            result = result.substring(0, result.length - 9);
-
-            result = result.trim();
-
-            if (attribute.content.trim().endsWith(';') == false && result.endsWith(';')) {
-                result = result.substring(0, result.length - 1);
-            }
-
-            result = result.trimLeft();
-            result = result.substring(3);
-            result = result.trimLeft();
-            result = result.substring(10);
-            result = result.trimLeft();
-            result = result.substring(1);
-            result = result.trimLeft();
 
             const resultLines = StringUtilities.breakByNewLine(result),
                 newLines: string[] = [];
@@ -582,9 +599,15 @@ export class Transformer {
         let value = content;
 
         this.extractedAttribute.forEach((attribute, slug) => {
-            const targetIndent = this.relativeIndentLevel(slug, value),
-                transformedContent = IndentLevel.shiftIndent(attribute.transformedContent, targetIndent, true, this.transformOptions, false, false);
-            value = value.replace(slug, transformedContent);
+            let targetIndent = this.relativeIndentLevel(slug, value);
+            let appendFinal = ' '.repeat(targetIndent);
+
+            // Target indent will be the starting location of the attribute itself.
+            targetIndent += this.transformOptions.tabSize;
+
+            const transformedContent = IndentLevel.shiftIndent(attribute.transformedContent, targetIndent, false, this.transformOptions, false, false);
+
+            value = value.replace(slug, `\n${transformedContent}\n${appendFinal}`);
         });
 
         return value;

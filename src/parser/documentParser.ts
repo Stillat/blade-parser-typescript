@@ -103,6 +103,7 @@ export class DocumentParser implements StringIterator {
     private phpValidator: PhpValidator | null = null;
     private didRecoveryLogic: boolean = false;
     private parseFragments: boolean = true;
+    private hasPairedStructures: boolean = false;
 
     constructor() {
         this.componentParser = new ComponentParser(this);
@@ -810,6 +811,10 @@ export class DocumentParser implements StringIterator {
         return null;
     }
 
+    getHasPairedStructures(): boolean {
+        return this.hasPairedStructures;
+    }
+
     positionFromCursor(line: number, char: number): Position | null {
         if (line == this.maxLine) {
             const lastIndex = this.lineIndex.get(line - 1);
@@ -1151,6 +1156,7 @@ export class DocumentParser implements StringIterator {
         this.nodes = ConditionalRewriteAnalyzer.rewrite(this.nodes);
         const pairAnalyzer = new DirectivePairAnalyzer();
         this.renderNodes = pairAnalyzer.associate(this.nodes, this);
+        this.hasPairedStructures = pairAnalyzer.getPairsCreated() > 0;
 
         InlineEchoAnalyzer.analyze(this.nodes);
         InlinePhpAnalyzer.analyze(this.nodes);

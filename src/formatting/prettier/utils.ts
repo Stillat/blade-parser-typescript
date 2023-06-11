@@ -149,6 +149,13 @@ export function setOptions(options: ParserOptions) {
     );
 }
 
+export function formatAsJavaScript(text: string) {
+    return prettier.format(text, {
+        ...htmlOptions,
+        parser: 'babel',
+        printWidth: Infinity
+    });
+}
 
 export function formatAsHtml(text: string) {
     return prettier.format(text, {

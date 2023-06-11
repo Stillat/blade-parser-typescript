@@ -19,6 +19,7 @@ export class DirectivePairAnalyzer {
     private closingDirectiveIndexCount: Map<number, Map<string, number>> = new Map();
     private closingDirectiveNames: Map<number, string[]> = new Map();
     private createdExecutionBranches: ExecutionBranchNode[] = [];
+    private pairsCreated: number = 0;
 
     private stackCount = 0;
 
@@ -139,6 +140,7 @@ export class DirectivePairAnalyzer {
             nodes.forEach((node) => {
                 if ((node instanceof DirectiveNode) && PairManager.canClose(node)) {
                     if (ConditionPairAnalyzer.isConditionalStructure(node)) {
+                        this.pairsCreated += 1;
                         return;
                     }
 
@@ -472,6 +474,10 @@ export class DirectivePairAnalyzer {
         };
     }
 
+    getPairsCreated(): number {
+        return this.pairsCreated;
+    }
+
     private findClosingPair(nodes: AbstractNode[], node: DirectiveNode, scanFor: string[]) {
         const nodeLength = nodes.length;
         let refStack = 0;
@@ -506,6 +512,7 @@ export class DirectivePairAnalyzer {
             if (refStack == 0 && scanFor.includes(directiveName)) {
                 directiveCandidate.isOpenedBy = node;
                 node.isClosedBy = directiveCandidate;
+                this.pairsCreated += 1;
                 break;
             }
         }

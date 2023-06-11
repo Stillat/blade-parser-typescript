@@ -1,3 +1,4 @@
+import { BladeDocument } from '../document/bladeDocument';
 import { FragmentNode, FragmentParameterNode, StructuralFragment } from '../nodes/nodes';
 import { Position } from '../nodes/position';
 import { StringUtilities } from '../utilities/stringUtilities';
@@ -45,7 +46,7 @@ export class FragmentsParser implements StringIterator {
             this.checkCurrentOffsets();
         }
     }
-    
+
     encounteredFailure() {
         return;
     }
@@ -498,7 +499,8 @@ export class FragmentsParser implements StringIterator {
             nameChars: string[] = [];
 
         let hasFoundName = false,
-            isClosingFragment = false;
+            isClosingFragment = false,
+            dynamicAttributeNameOverride: string | null = null;
 
         for (this.currentIndex = 0; this.currentIndex < this.inputLen; this.currentIndex += 1) {
             this.checkCurrentOffsets();
@@ -540,6 +542,25 @@ export class FragmentsParser implements StringIterator {
                 nameChars.push(this.cur as string);
             }
 
+            if (hasFoundName && this.cur == '{') {
+                const offsetIndex = this.currentIndex + this.seedOffset;
+
+                if (this.nodeIndexSkipMap.has(offsetIndex)) {
+                    const dynamicLen = this.nodeIndexSkipMap.get(offsetIndex) as number,
+                        dynamciAttributeNameCheck = this.fetchAt(offsetIndex, dynamicLen + 3);
+
+                    if (dynamciAttributeNameCheck.endsWith('"') || dynamciAttributeNameCheck.endsWith("'")) {
+                        const attributePrefix = this.scanBackToName(this.currentIndex - 1);
+
+                        if (attributePrefix.startsWith('x-') || this.extractAttributeNames.includes(attributePrefix)) {
+                            dynamicAttributeNameOverride = attributePrefix + dynamciAttributeNameCheck.substring(0, dynamciAttributeNameCheck.length - 2);
+                        }
+                    }
+                    this.advance(dynamicLen + 1);
+                    continue;
+                }
+            }
+
             if (isStartOfString(this.cur)) {
                 const stringStartedOn = this.currentIndex;
                 this.skipToEndOfStringWithIndex();
@@ -549,19 +570,28 @@ export class FragmentsParser implements StringIterator {
                 potentialParameterRanges.push(fragmentParameter);
 
                 if (this.extractAttributePositions == true) {
-                    const potentialName = this.scanBackToName(stringStartedOn - 2);
+                    let potentialName = this.scanBackToName(stringStartedOn - 2);
 
-                    if (potentialName.startsWith('x-') && this.extractAttributeNames.includes(potentialName)) {
-                        const attributeContent = this.getContentSubstring(fragmentParameter.startPosition.offset, fragmentParameter.endPosition.offset - fragmentParameter.startPosition.offset + 1);
-                        this.extractedAttributes.push({
-                            content: attributeContent,
-                            name: potentialName,
-                            startedOn: fragmentParameter.startPosition.offset,
-                            endedOn: fragmentParameter.endPosition.offset + 1
-                        });
+                    if (dynamicAttributeNameOverride != null) {
+                        potentialName = dynamicAttributeNameOverride;
+                    }
+
+                    if (potentialName.startsWith('x-') || this.extractAttributeNames.includes(potentialName)) {
+                        const attributeContent = this.getContentSubstring(fragmentParameter.startPosition.offset, fragmentParameter.endPosition.offset - fragmentParameter.startPosition.offset + 1),
+                            tmpDocument = BladeDocument.fromText(attributeContent);
+
+                        if (!tmpDocument.getParser().getHasPairedStructures()) {
+                            this.extractedAttributes.push({
+                                content: attributeContent,
+                                name: potentialName,
+                                startedOn: fragmentParameter.startPosition.offset,
+                                endedOn: fragmentParameter.endPosition.offset + 1
+                            });
+                        }
                     }
                 }
 
+                dynamicAttributeNameOverride = null;
                 continue;
             }
 
@@ -611,19 +641,19 @@ export class FragmentsParser implements StringIterator {
     private skipToEndOfStringWithIndex() {
         const stringInitializer = this.cur;
         this.incrementIndex();
-    
+
         for (this.currentIndex; this.currentIndex < this.inputLen; this.currentIndex++) {
             this.checkCurrentOffsets();
 
             const offsetIndex = this.currentIndex + this.seedOffset;
-    
+
             if (this.nodeIndexSkipMap.has(offsetIndex)) {
                 const skipCount = this.nodeIndexSkipMap.get(offsetIndex) as number;
                 this.advance(skipCount - 1);
                 continue;
             }
-            
-    
+
+
             if (this.cur == stringInitializer && this.prev != DocumentParser.String_EscapeCharacter) {
                 break;
             }
