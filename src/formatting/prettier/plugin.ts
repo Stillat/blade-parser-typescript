@@ -6,7 +6,7 @@ import { PhpParserPhpValidator } from '../../parser/php/phpParserPhpValidator';
 import { FormattingOptions } from '../formattingOptions';
 import { getEnvSettings, getPrettierFilePath } from '../optionDiscovery';
 import { PrettierDocumentFormatter } from './prettierDocumentFormatter';
-import { formatAsJavaScript, getHtmlOptions, getOptionsAdjuster, setOptions } from './utils';
+import { formatAsHtml, formatAsJavaScript, getHtmlOptions, getOptionsAdjuster, setOptions } from './utils';
 import { ClassStringEmulation } from '../classStringEmulation';
 import { AttributeRangeRemover, canProcessAttributes } from '../../document/attributeRangeRemover';
 import { FragmentsParser } from '../../parser/fragmentsParser';
@@ -70,7 +70,7 @@ const plugin: prettier.Plugin = {
 
                     if (extractedAttributes.length > 0) {
                         const attributeRemover = new AttributeRangeRemover();
-                        const tmpText = attributeRemover.remove(prettierText, extractedAttributes);
+                        const tmpText = formatAsHtml(attributeRemover.remove(prettierText, extractedAttributes));
                         attributeMap = attributeRemover.getRemovedAttributes();
 
                         attributeMap.forEach((attribute, slug) => {

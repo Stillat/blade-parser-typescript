@@ -77,7 +77,14 @@ export function formatExtractedScript(attribute: IExtractedAttribute, transformO
         if (transformedContent.includes("\n") == false) {
             transformedContent = '"' + transformedContent.trim() + '"';
         } else {
-            transformedContent = `"\n${transformedContent}\n${appendFinal}"`;
+            transformedContent = `"\n` + IndentLevel.shiftIndent(
+                origTransformedContent,
+                targetIndent + transformOptions.tabSize,
+                false,
+                transformOptions,
+                false,
+                false
+            ) + `\n${appendFinal}"`;
         }
     }
     return transformedContent;
