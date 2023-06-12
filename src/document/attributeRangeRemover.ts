@@ -1,5 +1,8 @@
+import { BladeCommentNode, BladeEchoNode, DirectiveNode, InlinePhpNode, LiteralNode } from '../nodes/nodes';
 import { IExtractedAttribute } from '../parser/extractedAttribute';
 import { StringUtilities } from '../utilities/stringUtilities';
+import { BladeDocument } from './bladeDocument';
+import { DocumentPadder } from './documentPadder';
 
 let canProcessAttributes: boolean = true;
 
@@ -67,6 +70,21 @@ export class AttributeRangeRemover {
                 newContent += '"' + rangeSlug + '" ' + "\n";
             }
         }
+
+        const doc = BladeDocument.fromText(newContent);
+
+        doc.getAllNodes().forEach((node) => {
+            if (node instanceof LiteralNode) { return; }
+            if (node instanceof DirectiveNode) {
+                newContent = newContent.replace(node.sourceContent, DocumentPadder.substitute(node.sourceContent, 'D'));
+            } else if (node instanceof BladeCommentNode) {
+                newContent = newContent.replace(node.sourceContent, DocumentPadder.substitute(node.sourceContent, 'C'));
+            } else if (node instanceof BladeEchoNode) {
+                newContent = newContent.replace(node.sourceContent, DocumentPadder.substitute(node.sourceContent, 'E'));
+            } else if (node instanceof InlinePhpNode) {
+                newContent = newContent.replace(node.sourceContent, DocumentPadder.substitute(node.sourceContent, 'P'));
+            }
+        });
 
         return newContent;
     }

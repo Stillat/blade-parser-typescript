@@ -12,4 +12,20 @@ export class DocumentPadder {
 
         return text;
     }
+
+    static substitute(content: string, char:string) {
+        let text = '';
+
+        for (let i = 0; i < content.length; i++) {
+            const sChar = content[i];
+
+            if (sChar == "\n") {
+                text += sChar;
+            } else {
+                text += char;
+            }
+        }
+
+        return text;
+    }
 }

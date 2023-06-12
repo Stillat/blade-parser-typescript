@@ -70,7 +70,8 @@ const plugin: prettier.Plugin = {
 
                     if (extractedAttributes.length > 0) {
                         const attributeRemover = new AttributeRangeRemover();
-                        const tmpText = formatAsHtml(attributeRemover.remove(prettierText, extractedAttributes));
+                        const remResult = attributeRemover.remove(prettierText, extractedAttributes),
+                            tmpText = formatAsHtml(remResult);
                         attributeMap = attributeRemover.getRemovedAttributes();
 
                         attributeMap.forEach((attribute, slug) => {
