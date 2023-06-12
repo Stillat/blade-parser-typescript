@@ -84,8 +84,6 @@ const plugin: prettier.Plugin = {
                             prettierText = prettierText.replace(attribute.content, aResult);
                         });
                     }
-                } else {
-                    debugger;
                 }
 
                 if (classConfig.enabled) {
