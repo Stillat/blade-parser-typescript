@@ -1,3 +1,4 @@
+import { JavaScriptStructuresAnalyzer } from '../analyzers/javaScriptStructuresAnalyzer';
 import { PhpStructuresAnalyzer } from '../analyzers/phpStructuresAnalyzer';
 import { ClassStringRuleEngine, IClassRuleset } from '../formatting/classStringsConfig';
 import { formatAsHtmlStrings } from '../formatting/prettier/utils';
@@ -8,23 +9,27 @@ import { StringRemover } from './stringRemover';
 
 export class ClassEmulator {
     private phpStructuresAnalyzer: PhpStructuresAnalyzer;
+    private jsStructuresAnalyzer: JavaScriptStructuresAnalyzer;
     private stringParser: InlineStringParser;
     private mergeRanges: ILabeledRange[] = [];
     private charsToAvoid: string[] = ["\n", '$', '{', '"', "'"];
-    private classRuleEngine:ClassStringRuleEngine;
+    private classRuleEngine: ClassStringRuleEngine;
 
-    constructor(rules:ClassStringRuleEngine) {
+    constructor(rules: ClassStringRuleEngine) {
         this.classRuleEngine = rules;
         this.phpStructuresAnalyzer = new PhpStructuresAnalyzer();
+        this.jsStructuresAnalyzer = new JavaScriptStructuresAnalyzer();
         this.stringParser = new InlineStringParser();
     }
 
-    setAllowedMethodNames(allowedMethodNames:string[]) {
+    setAllowedMethodNames(allowedMethodNames: string[]) {
         this.phpStructuresAnalyzer.setAllowedMethods(allowedMethodNames);
+        this.jsStructuresAnalyzer.setAllowedMethods(allowedMethodNames);
     }
 
     setExcludedLanguageStructures(structures: string[]) {
         this.phpStructuresAnalyzer.setExcludedStructures(structures);
+        this.jsStructuresAnalyzer.setExcludedStructures(structures);
     }
 
     withAdditionalRanges(mergeRanges: ILabeledRange[]) {
@@ -55,7 +60,11 @@ export class ClassEmulator {
         const uniqueSlug = StringUtilities.makeSlug(32),
             prefix = `Emulate:${uniqueSlug}=`;
 
-        this.stringParser.setIgnoreRanges(this.phpStructuresAnalyzer.getStructures().concat(this.mergeRanges));
+        this.stringParser.setIgnoreRanges(
+            this.phpStructuresAnalyzer.getStructures()
+                .concat(this.mergeRanges)
+                .concat(this.jsStructuresAnalyzer.getStructures())
+        );
         this.stringParser.parse(content);
 
         if (!this.stringParser.hasStringNodes()) {
@@ -156,5 +165,11 @@ export class ClassEmulator {
         this.phpStructuresAnalyzer.getStructureLocations(content, 0);
 
         return this.emulateString(content);
+    }
+
+    emulateJavaScriptString(content: string): string {
+        this.jsStructuresAnalyzer.getStructureLocations(content, 0);
+
+        return this.emulateString(content).trimLeft();
     }
 }

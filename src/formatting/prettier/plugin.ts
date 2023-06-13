@@ -11,6 +11,8 @@ import { ClassStringEmulation } from '../classStringEmulation';
 import { AttributeRangeRemover, canProcessAttributes } from '../../document/attributeRangeRemover';
 import { FragmentsParser } from '../../parser/fragmentsParser';
 import { IExtractedAttribute } from '../../parser/extractedAttribute';
+import { ClassStringRuleEngine } from '../classStringsConfig';
+import { ClassEmulator } from '../../parser/classEmulator';
 
 let prettierOptions: prettier.ParserOptions,
     transformOptions: TransformOptions,
@@ -86,6 +88,26 @@ const plugin: prettier.Plugin = {
                         .withParserOptions(parserOptions)
                         .withPhpValidator(phpValidator)
                         .transform(prettierText);
+
+                    if (attributeMap.size > 0) {
+                        const classStringRuleEngine = new ClassStringRuleEngine(classConfig),
+                            jsEmulator = new ClassEmulator(classStringRuleEngine);
+
+                        jsEmulator.setAllowedMethodNames(classConfig.allowedMethodNames);
+                        jsEmulator.setExcludedLanguageStructures(classConfig.ignoredLanguageStructures);
+
+                        attributeMap.forEach((attribute) => {
+                            try {
+                                let transformContent = attribute.content.substring(1, attribute.content.length - 1);
+
+                                transformContent = jsEmulator.emulateJavaScriptString(transformContent);
+
+                                attribute.content = '"' + transformContent + '"';
+                            } catch (err) {
+                                debugger;
+                            }
+                        });
+                    }
                 }
 
                 const document = new BladeDocument();
