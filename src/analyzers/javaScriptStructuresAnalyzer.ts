@@ -20,7 +20,7 @@ export class JavaScriptStructuresAnalyzer {
 
             this.findStructureLocations(ast, code, locationOffset);
         } catch (error) {
-            console.error('Error parsing JavaScript code:', error);
+            
         }
     }
 

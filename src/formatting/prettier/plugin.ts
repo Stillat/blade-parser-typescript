@@ -90,14 +90,15 @@ const plugin: prettier.Plugin = {
                         .transform(prettierText);
 
                     if (attributeMap.size > 0) {
-                        const classStringRuleEngine = new ClassStringRuleEngine(classConfig),
-                            jsEmulator = new ClassEmulator(classStringRuleEngine);
-
-                        jsEmulator.setAllowedMethodNames(classConfig.allowedMethodNames);
-                        jsEmulator.setExcludedLanguageStructures(classConfig.ignoredLanguageStructures);
-
                         attributeMap.forEach((attribute) => {
                             try {
+
+                                const classStringRuleEngine = new ClassStringRuleEngine(classConfig),
+                                    jsEmulator = new ClassEmulator(classStringRuleEngine);
+
+                                jsEmulator.setAllowedMethodNames(classConfig.allowedMethodNames);
+                                jsEmulator.setExcludedLanguageStructures(classConfig.ignoredLanguageStructures);
+
                                 let transformContent = attribute.content.substring(1, attribute.content.length - 1);
 
                                 transformContent = jsEmulator.emulateJavaScriptString(transformContent);
