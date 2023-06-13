@@ -14,6 +14,7 @@ export class ClassEmulator {
     private mergeRanges: ILabeledRange[] = [];
     private charsToAvoid: string[] = ["\n", '$', '{', '"', "'"];
     private classRuleEngine: ClassStringRuleEngine;
+    private foundAnyStrings: boolean = true;
 
     constructor(rules: ClassStringRuleEngine) {
         this.classRuleEngine = rules;
@@ -56,6 +57,10 @@ export class ClassEmulator {
         return this.classRuleEngine.canTransformString(value);
     }
 
+    getFoundAnyStrings(): boolean { 
+        return this.foundAnyStrings;
+    }
+
     emulateString(content: string): string {
         const uniqueSlug = StringUtilities.makeSlug(32),
             prefix = `Emulate:${uniqueSlug}=`;
@@ -68,6 +73,7 @@ export class ClassEmulator {
         this.stringParser.parse(content);
 
         if (!this.stringParser.hasStringNodes()) {
+            this.foundAnyStrings = false;
             return content;
         }
 

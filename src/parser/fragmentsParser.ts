@@ -464,20 +464,20 @@ export class FragmentsParser implements StringIterator {
     }
 
     private getCheckAttributeName(attributeName: string) {
-        if (attributeName.includes('.')) {
-            return attributeName.substring(0, attributeName.indexOf('.'));
+        const dotIndex = attributeName.indexOf('.');
+        const colonIndex = attributeName.indexOf(':');
+
+        if (dotIndex !== -1 && (colonIndex === -1 || dotIndex < colonIndex)) {
+            return attributeName.substring(0, dotIndex);
+        } else if (colonIndex !== -1 && (dotIndex === -1 || colonIndex < dotIndex)) {
+            return attributeName.substring(0, colonIndex);
         }
 
         return attributeName;
     }
 
     private shouldSkip(attributeName: string): boolean {
-        const name = this.getCheckAttributeName(attributeName).toLowerCase();
-
-        // TODO: Make better.
-        if (AlpineJsAttributes.includes(name)) {
-            return true;
-        }
+        // const name = this.getCheckAttributeName(attributeName).toLowerCase();
 
         return false;
     }

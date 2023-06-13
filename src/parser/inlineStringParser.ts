@@ -92,6 +92,7 @@ export class InlineStringParser implements StringIterator {
     }
 
     parse(value: string) {
+        this.nodes = [];
         this.strings = [];
         this.chars = value.split('');
         this.inputLen = this.chars.length;

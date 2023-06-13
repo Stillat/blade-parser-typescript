@@ -99,13 +99,17 @@ const plugin: prettier.Plugin = {
                                 jsEmulator.setAllowedMethodNames(classConfig.allowedMethodNames);
                                 jsEmulator.setExcludedLanguageStructures(classConfig.ignoredLanguageStructures);
 
-                                let transformContent = attribute.content.substring(1, attribute.content.length - 1);
+                                let transformContent = attribute.content.substring(1, attribute.content.length - 1),
+                                    newTransformContent = jsEmulator.emulateJavaScriptString(transformContent);
 
-                                transformContent = jsEmulator.emulateJavaScriptString(transformContent);
+                                if (transformContent == newTransformContent && !jsEmulator.getFoundAnyStrings()) {
+                                    attribute.content = jsEmulator.emulateJavaScriptString(attribute.content);
+                                } else {
+                                    attribute.content = '"' + transformContent + '"';
+                                }
 
-                                attribute.content = '"' + transformContent + '"';
                             } catch (err) {
-                                debugger;
+                                return;
                             }
                         });
                     }
