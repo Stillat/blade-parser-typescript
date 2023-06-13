@@ -573,6 +573,15 @@ export class FragmentsParser implements StringIterator {
                 nameChars.push(this.cur as string);
             }
 
+            if (hasFoundName && this.cur == '@') {
+                const offsetIndex = this.currentIndex + this.seedOffset + 1;
+                if (this.nodeIndexSkipMap.has(offsetIndex)) {
+                    const dynamicLen = this.nodeIndexSkipMap.get(offsetIndex) as number;
+                    this.advance(dynamicLen);
+                    continue;
+                }
+            }
+
             if (hasFoundName && this.cur == '{') {
                 const offsetIndex = this.currentIndex + this.seedOffset;
 

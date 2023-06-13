@@ -18,6 +18,11 @@ let prettierOptions: prettier.ParserOptions,
     parserOptions: ParserOptions;
 let bladeOptions: FormattingOptions | null = null;
 
+interface IAttributeRemovedDocument {
+    doc: BladeDocument;
+    attributeMap: Map<string, IExtractedAttribute>
+}
+
 const plugin: prettier.Plugin = {
     languages: [
         {
@@ -54,6 +59,7 @@ const plugin: prettier.Plugin = {
 
                 const classConfig = transformOptions.classStrings,
                     phpValidator = new PhpParserPhpValidator();
+                let attributeMap: Map<string, IExtractedAttribute> = new Map();
 
                 if (canProcessAttributes) {
                     const fragments = new FragmentsParser(),
@@ -66,23 +72,11 @@ const plugin: prettier.Plugin = {
                     fragments.parse(prettierText);
                     const extractedAttributes = fragments.getExtractedAttributes();
 
-                    let attributeMap: Map<string, IExtractedAttribute> = new Map();
-
                     if (extractedAttributes.length > 0) {
                         const attributeRemover = new AttributeRangeRemover();
-                        const remResult = attributeRemover.remove(prettierText, extractedAttributes),
-                            tmpText = formatAsHtml(remResult);
+                        const remResult = attributeRemover.remove(prettierText, extractedAttributes);
                         attributeMap = attributeRemover.getRemovedAttributes();
-
-                        attributeMap.forEach((attribute, slug) => {
-                            const aResult = formatExtractedScript(
-                                attribute,
-                                transformOptions,
-                                slug,
-                                tmpText
-                            );
-                            prettierText = prettierText.replace(attribute.content, aResult);
-                        });
+                        prettierText = remResult;
                     }
                 }
 
@@ -100,7 +94,13 @@ const plugin: prettier.Plugin = {
                     .withParserOptions(parserOptions)
                     .withPhpValidator(phpValidator);
 
-                return document.loadString(prettierText);
+                const doc = document.loadString(prettierText),
+                    result: IAttributeRemovedDocument = {
+                        doc: doc,
+                        attributeMap: attributeMap
+                    };
+
+                return result;
             },
             locStart: () => 0,
             locEnd: () => 0,
@@ -110,11 +110,12 @@ const plugin: prettier.Plugin = {
     printers: {
         blade: {
             print(path: prettier.AstPath) {
-                const doc = path.stack[0] as BladeDocument,
+                const doc = path.stack[0] as IAttributeRemovedDocument,
                     formatter = new PrettierDocumentFormatter(prettierOptions, transformOptions);
 
                 return formatter
-                    .formatDocument(doc);
+                    .withRemovedAttributes(doc.attributeMap)
+                    .formatDocument(doc.doc);
             }
         }
     },

@@ -32,7 +32,7 @@ export function formatBladeFilesInDirecetory(directory: string) {
     bladeFiles.forEach((file) => {
         try {
             formatted += 1;
-            console.log(`Formatting ${formatted}/${bladeFiles.length}: ${path.basename(file)}`);
+            console.log(`Formatting ${formatted}/${bladeFiles.length}: ${file}`);
             const contents = fs.readFileSync(file, { encoding: 'utf8' });
             setPrettierFilePath(file);
             fs.writeFileSync(file, formatBladeStringWithPint(contents), { encoding: 'utf8' });

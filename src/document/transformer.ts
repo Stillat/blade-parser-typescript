@@ -1,9 +1,11 @@
+import { formatExtractedScript } from '../formatting/bladeJavaScriptFormatter';
 import { getDefaultClassStringConfig } from '../formatting/classStringsConfig';
 import { FormattingOptions } from '../formatting/formattingOptions';
 import { PhpOperatorReflow } from '../formatting/phpOperatorReflow';
 import { formatBladeString, formatBladeStringWithPint, getPhpOptions } from '../formatting/prettier/utils';
 import { SyntaxReflow } from '../formatting/syntaxReflow';
 import { AbstractNode, BladeCommentNode, BladeComponentNode, BladeEchoNode, ConditionNode, DirectiveNode, ExecutionBranchNode, ForElseNode, FragmentPosition, InlinePhpNode, LiteralNode, ParameterNode, ParameterType, SwitchCaseNode, SwitchStatementNode } from '../nodes/nodes';
+import { IExtractedAttribute } from '../parser/extractedAttribute';
 import { SimpleArrayParser } from '../parser/simpleArrayParser';
 import { StringUtilities } from '../utilities/stringUtilities';
 import { disableAttributeProcessing, enableAttributeProcessing } from './attributeRangeRemover';
@@ -148,6 +150,7 @@ export class Transformer {
     private filePath: string = '';
     private formattingOptions: FormattingOptions | null = null;
     private didPintFail: boolean = false;
+    private removedAttributes: Map<string, IExtractedAttribute> = new Map();
 
     private phpFormatter: PhpFormatter | null = null;
     private blockPhpFormatter: BlockPhpFormatter | null = null;
@@ -190,6 +193,12 @@ export class Transformer {
 
     getUsingLaravelPint(): boolean {
         return this.useLaravelPint;
+    }
+
+    withRemovedAttributes(attributes: Map<string, IExtractedAttribute>) {
+        this.removedAttributes = attributes;
+
+        return this;
     }
 
     setParentTransformer(transformer: Transformer) {
@@ -2134,6 +2143,17 @@ export class Transformer {
         return result;
     }
 
+    private transformRemovedAttibutes(content: string): string {
+        let result = content;
+
+        this.removedAttributes.forEach((attribute, slug) => {
+            const attributeResult = formatExtractedScript(attribute, this.transformOptions, slug, result);
+            result = result.replace('"' + slug + '"', attributeResult);
+        });
+
+        return result;
+    }
+
     fromStructure(content: string) {
         if (this.didPintFail) {
             return this.doc.getContent();
@@ -2169,6 +2189,7 @@ export class Transformer {
         results = this.transformEmbeddedDirectives(results);
         results = this.transformExtractedDocuments(results);
         results = this.transformPhpBlock(results);
+        results = this.transformRemovedAttibutes(results);
 
         this.ignoredLiteralBlocks.forEach((nodes, slug) => {
             const replace = this.selfClosing(slug),

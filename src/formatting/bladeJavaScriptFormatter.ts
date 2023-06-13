@@ -84,7 +84,7 @@ export function formatExtractedScript(attribute: IExtractedAttribute, transformO
                 transformOptions,
                 false,
                 false
-            ) + `\n${appendFinal}"`;
+            ) + `${appendFinal}"`;
         }
     }
     return transformedContent;
