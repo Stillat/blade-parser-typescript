@@ -215,6 +215,10 @@ export class Transformer {
         return this;
     }
 
+    getFormattingOptions() {
+        return this.formattingOptions;
+    }
+
     setFormattingOptions(formattingOptions: FormattingOptions | null) {
         this.formattingOptions = formattingOptions;
 
@@ -225,6 +229,10 @@ export class Transformer {
         this.jsonFormatter = formatter;
 
         return this;
+    }
+
+    getJsonFormatter() {
+        return this.jsonFormatter;
     }
 
     withFilePath(path: string) {
@@ -239,16 +247,28 @@ export class Transformer {
         return this;
     }
 
+    getBlockPhpFormatter() {
+        return this.blockPhpFormatter;
+    }
+
     withPhpTagFormatter(formatter: PhpTagFormatter | null) {
         this.phpTagFormatter = formatter;
 
         return this;
     }
 
+    getPhpTagFormatter() {
+        return this.phpTagFormatter;
+    }
+
     withPhpFormatter(formatter: PhpFormatter | null) {
         this.phpFormatter = formatter;
 
         return this;
+    }
+
+    getPhpFormatter() {
+        return this.phpFormatter;
     }
 
     /**
@@ -2147,7 +2167,7 @@ export class Transformer {
         let result = content;
 
         this.removedAttributes.forEach((attribute, slug) => {
-            const attributeResult = formatExtractedScript(attribute, this.transformOptions, slug, result);
+            const attributeResult = formatExtractedScript(attribute, this.transformOptions, slug, result, this, this.doc);
             result = StringUtilities.safeReplace(result, '"' + slug + '"', attributeResult)
         });
 

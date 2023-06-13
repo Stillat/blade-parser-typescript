@@ -139,6 +139,10 @@ export class DocumentParser implements StringIterator {
         return this;
     }
 
+    getParserOptions() {
+        return this.parserOptions;
+    }
+
     hasUnclosedIfStructures() {
         return this.doesHaveUnclosedIfStructures;
     }

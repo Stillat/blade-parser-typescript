@@ -1,11 +1,17 @@
 import { BladeDocument } from '../document/bladeDocument';
 import { IndentLevel } from '../document/printers/indentLevel';
 import { TransformOptions } from '../document/transformOptions';
+import { Transformer } from '../document/transformer';
 import { IExtractedAttribute } from '../parser/extractedAttribute';
 import { GeneralSyntaxReflow } from './generalSyntaxReflow';
 import { formatAsJavaScript } from './prettier/utils';
 
-export function formatExtractedScript(attribute: IExtractedAttribute, transformOptions: TransformOptions, slug: string, tmpContent: string): string {
+export function formatExtractedScript(attribute: IExtractedAttribute,
+    transformOptions: TransformOptions,
+    slug: string,
+    tmpContent: string,
+    parentTransformer: Transformer,
+    originalDoc: BladeDocument): string {
     let addedVarPlaceholder = false;
 
     const formatContent = attribute.content.substring(1, attribute.content.length - 1).trim();
@@ -24,10 +30,23 @@ export function formatExtractedScript(attribute: IExtractedAttribute, transformO
     let result = attribute.content;
     let toFormat = '';
     try {
-        const tmpDoc = BladeDocument.fromText('<script>' + tempTemplate + '</script>');
+        const tmpDoc = new BladeDocument();
+
+        tmpDoc.getParser().withParserOptions(originalDoc.getParser().getParserOptions());
+        tmpDoc.getParser().withPhpValidator(originalDoc.getParser().getPhpValidator());
+        
+        tmpDoc.loadString('<script>' + tempTemplate + '</script>');
+
+        tmpDoc.getParser()
 
         // TODO: Return original if it contains structures.
         const tmpTransformer = tmpDoc.transform();
+        tmpTransformer.withOptions(transformOptions);
+        tmpTransformer.setFormattingOptions(parentTransformer.getFormattingOptions());
+        tmpTransformer.withJsonFormatter(parentTransformer.getJsonFormatter());
+        tmpTransformer.withBlockPhpFormatter(parentTransformer.getBlockPhpFormatter());
+        tmpTransformer.withPhpTagFormatter(parentTransformer.getPhpTagFormatter());
+        tmpTransformer.withPhpFormatter(parentTransformer.getPhpFormatter());
 
         const tmpResult = tmpTransformer.toStructure();
 
