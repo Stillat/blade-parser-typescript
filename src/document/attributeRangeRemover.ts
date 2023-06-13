@@ -48,7 +48,7 @@ export class AttributeRangeRemover {
                 const part = content.substring(0, range.startedOn);
                 lastEnd = range.startedOn + range.content.length;
                 newContent += part;
-                newContent += '"' + rangeSlug + '" ';// + "\n";
+                newContent += '"' + rangeSlug + '"';// + "\n";
 
                 if (ranges.length == 1) {
                     newContent += content.substring(lastEnd);
@@ -61,13 +61,13 @@ export class AttributeRangeRemover {
                 const part = content.substring(lastEnd, range.startedOn);
                 lastEnd = range.startedOn + range.content.length;
                 newContent += part;
-                newContent += '"' + rangeSlug + '" ';// + "\n";
+                newContent += '"' + rangeSlug + '"';// + "\n";
                 newContent += content.substring(lastEnd);
             } else {
                 const part = content.substring(lastEnd, range.startedOn);
                 lastEnd = range.startedOn + range.content.length;
                 newContent += part;
-                newContent += '"' + rangeSlug + '" ';// + "\n";
+                newContent += '"' + rangeSlug + '"';// + "\n";
             }
         }
         

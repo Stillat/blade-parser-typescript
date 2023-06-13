@@ -15,7 +15,7 @@ suite('Inline PHP Transformer', () => {
 </<?= echo $element; ?>>`).trim(),
             `<<?php echo $element; ?>>
 
-<?php echo $inline----  $$$; ?>
+<?php echo $inline----  $$$$$; ?>
 
 <p>Text <?php echo $inline             ; ?> here.</p>
 </<?php echo $element; ?>>

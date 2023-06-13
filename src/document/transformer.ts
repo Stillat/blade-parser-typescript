@@ -537,15 +537,15 @@ export class Transformer {
                 );
             }
 
-            value = value.replace(open, result);
+            value = StringUtilities.safeReplace(value, open, result);
         });
 
         this.dynamicElementPhpNodes.forEach((php, slug) => {
-            value = StringUtilities.replaceAllInString(value, slug, this.printInlinePhp(php));
+            value = StringUtilities.safeReplaceAllInString(value, slug, this.printInlinePhp(php));
         });
 
         this.inlinePhpNodes.forEach((php, slug) => {
-            value = value.replace(slug, this.printInlinePhp(php));
+            value = StringUtilities.safeReplace(value, slug, this.printInlinePhp(php));
         });
 
         return value;
@@ -565,7 +565,7 @@ export class Transformer {
                 phpContent = SyntaxReflow.instance.reflow(phpContent);
             }
 
-            phpContent = StringUtilities.replaceAllInString(phpContent, "\n", ' ');
+            phpContent = StringUtilities.safeReplaceAllInString(phpContent, "\n", ' ');
         }
 
         return phpContent;
@@ -1418,7 +1418,7 @@ export class Transformer {
             const search = this.selfClosing(slug),
                 replace = this.printDirective(directive, this.indentLevel(search));
 
-            value = value.replace(search, replace);
+            value = StringUtilities.safeReplace(value, search, replace);
         });
 
         return value;
@@ -1443,7 +1443,7 @@ export class Transformer {
                 }
             }
 
-            value = value.replace(slug, directiveResult);
+            value = StringUtilities.safeReplace(value, slug, directiveResult);
         });
 
         return value;
@@ -1454,7 +1454,7 @@ export class Transformer {
         this.dynamicEchoBlocks.forEach((echo: BladeEchoNode, slug: string) => {
             const echoContent = EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug), this.pintTransformer);
 
-            value = StringUtilities.replaceAllInString(value, slug, echoContent);
+            value = StringUtilities.safeReplaceAllInString(value, slug, echoContent);
         });
 
         return value;
@@ -1466,7 +1466,7 @@ export class Transformer {
         this.dynamicElementDirectiveNodes.forEach((directive, slug) => {
             const directiveContent = this.printDirective(directive, this.indentLevel(slug));
 
-            value = StringUtilities.replaceAllInString(value, slug, directiveContent);
+            value = StringUtilities.safeReplaceAllInString(value, slug, directiveContent);
         });
 
         return value;
@@ -1547,7 +1547,7 @@ export class Transformer {
                 tmpDoc = dirResult + attachedDoc + "\n" + directive.directive.isClosedBy?.sourceContent ?? '';
 
             let insertResult = IndentLevel.shiftIndent(tmpDoc, relIndent + this.transformOptions.tabSize, true, this.transformOptions, false, true);
-            value = value.replace(slug, insertResult);
+            value = StringUtilities.safeReplace(value, slug, insertResult);
         });
 
         this.pairedDirectives.forEach((directive: TransformedPairedDirective, slug: string) => {
@@ -1580,8 +1580,8 @@ export class Transformer {
                             this.transformOptions
                         );
 
-                        value = value.replace(open, replacePhp);
-                        value = value.replace(virtualOpen, formattedPhp);
+                        value = StringUtilities.safeReplace(value, open, replacePhp);
+                        value = StringUtilities.safeReplace(value, virtualOpen, formattedPhp);
                     } else {
                         if (this.pintTransformer != null) {
                             formattedPhp = this.pintTransformer.getDirectivePhpContent(originalDirective).trim();
@@ -1599,31 +1599,31 @@ export class Transformer {
                             formattedPhp = reflow.join("\n");
 
 
-                            value = value.replace(open, replacePhp + "\n" + formattedPhp);
-                            value = value.replace(virtualOpen, '');
+                            value = StringUtilities.safeReplace(value, open, replacePhp + "\n" + formattedPhp);
+                            value = StringUtilities.safeReplace(value, virtualOpen, '');
                         } else {
-                            value = value.replace(open, replacePhp);
-                            value = value.replace(virtualOpen, formattedPhp);
+                            value = StringUtilities.safeReplace(value, open, replacePhp);
+                            value = StringUtilities.safeReplace(value, virtualOpen, formattedPhp);
                         }
                     }
                 } else {
-                    value = value.replace(open, replacePhp + "\n" + formattedPhp);
-                    value = value.replace(virtualOpen, '');
+                    value = StringUtilities.safeReplace(value, open, replacePhp + "\n" + formattedPhp);
+                    value = StringUtilities.safeReplace(value, virtualOpen, '');
                 }
             } else if (originalDirective.directiveName.trim().toLowerCase() == 'verbatim') {
                 const replaceVerbatim = directive.directive.sourceContent + "\n" + IndentLevel.shiftClean(
                     originalDirective.innerContent, this.transformOptions.tabSize
                 );
-                value = value.replace(open, replaceVerbatim);
+                value = StringUtilities.safeReplace(value, open, replaceVerbatim);
             } else {
-                value = value.replace(open, this.printDirective(directive.directive, this.indentLevel(open)));
+                value = StringUtilities.safeReplace(value, open, this.printDirective(directive.directive, this.indentLevel(open)));
             }
 
-            value = value.replace(close, directive.directive.isClosedBy?.sourceContent as string);
+            value = StringUtilities.safeReplace(value, close, directive.directive.isClosedBy?.sourceContent as string);
         });
 
         this.inlineDirectives.forEach((directive, slug) => {
-            value = StringUtilities.replaceAllInString(value, slug, directive.directive.nodeContent);
+            value = StringUtilities.safeReplaceAllInString(value, slug, directive.directive.nodeContent);
         });
 
         return value;
@@ -1638,8 +1638,8 @@ export class Transformer {
                 close = this.close(forElse.truthSlug),
                 openContent = this.printDirective(construction, this.indentLevel(open)),
                 closeContent = construction.isClosedBy?.sourceContent as string;
-            value = value.replace(open, openContent);
-            value = value.replace(close, closeContent);
+            value = StringUtilities.safeReplace(value, open, openContent);
+            value = StringUtilities.safeReplace(value, close, closeContent);
         });
 
         return value;
@@ -1653,9 +1653,9 @@ export class Transformer {
                 construction = forElse.forElse.constructedFrom as DirectiveNode,
                 constructionContent = this.printDirective(construction, this.indentLevel(truthOpen));
 
-            value = value.replace(truthOpen, constructionContent);
-            value = value.replace(forElse.pairClose, construction.isClosedBy?.sourceContent as string);
-            value = value.replace(forElse.emptyOpen, forElse.forElse.elseNode?.sourceContent as string);
+            value = StringUtilities.safeReplace(value, truthOpen, constructionContent);
+            value = StringUtilities.safeReplace(value, forElse.pairClose, construction.isClosedBy?.sourceContent as string);
+            value = StringUtilities.safeReplace(value, forElse.emptyOpen, forElse.forElse.elseNode?.sourceContent as string);
             this.removeLines.push(forElse.truthClose);
         });
 
@@ -1668,11 +1668,11 @@ export class Transformer {
         this.inlineEchos.forEach((echo: BladeEchoNode, slug: string) => {
             const inline = this.selfClosing(slug);
 
-            value = value.replace(inline, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug), this.pintTransformer));
+            value = StringUtilities.safeReplace(value, inline, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug), this.pintTransformer));
         });
 
         this.spanEchos.forEach((echo: BladeEchoNode, slug: string) => {
-            value = value.replace(slug, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug), this.pintTransformer));
+            value = StringUtilities.safeReplace(value, slug, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug), this.pintTransformer));
         });
 
         return value;
@@ -1703,7 +1703,7 @@ export class Transformer {
                 const structureDirective = structure.branch.head as DirectiveNode;
 
                 if (structure.isLiteralContent) {
-                    value = value.replace(structure.virtualBreakOpen, structure.doc.trim());
+                    value = StringUtilities.safeReplace(value, structure.virtualBreakOpen, structure.doc.trim());
                 }
 
                 if (structure.virtualBreakOpen.length > 0) {
@@ -1711,7 +1711,7 @@ export class Transformer {
                 }
 
                 if (structure.virtualBreakClose.length > 0) {
-                    value = value.replace(structure.virtualBreakClose, structure.virtualBreakClose + "\n");
+                    value = StringUtilities.safeReplace(value, structure.virtualBreakClose, structure.virtualBreakClose + "\n");
                     this.removeLines.push(structure.virtualBreakClose);
                 }
 
@@ -1721,11 +1721,11 @@ export class Transformer {
 
                 if (!structure.isLast) {
                     this.removeLines.push(structure.pairClose);
-                    value = value.replace(structure.pairOpen, this.printDirective(structureDirective, this.indentLevel(structure.pairOpen)));
+                    value = StringUtilities.safeReplace(value, structure.pairOpen, this.printDirective(structureDirective, this.indentLevel(structure.pairOpen)));
                 } else {
-                    value = value.replace(structure.pairOpen, this.printDirective(structureDirective, this.indentLevel(structure.pairOpen)));
+                    value = StringUtilities.safeReplace(value, structure.pairOpen, this.printDirective(structureDirective, this.indentLevel(structure.pairOpen)));
                     const closeDirective = structureDirective.isClosedBy as DirectiveNode;
-                    value = value.replace(structure.pairClose, this.printDirective(closeDirective, this.indentLevel(structure.pairClose)));
+                    value = StringUtilities.safeReplace(value, structure.pairClose, this.printDirective(closeDirective, this.indentLevel(structure.pairClose)));
                 }
             });
         });
@@ -1739,9 +1739,9 @@ export class Transformer {
         this.switchStatements.forEach((switchStatement) => {
             const open = switchStatement.switchNode.constructedFrom as DirectiveNode;
 
-            value = value.replace(switchStatement.virtualSwitchOpen, this.printDirective(open, this.indentLevel(switchStatement.virtualSwitchOpen)));
+            value = StringUtilities.safeReplace(value, switchStatement.virtualSwitchOpen, this.printDirective(open, this.indentLevel(switchStatement.virtualSwitchOpen)));
             const closeDirective = open.isClosedBy as DirectiveNode;
-            value = value.replace(switchStatement.virtualSwitchClose, closeDirective.sourceContent);
+            value = StringUtilities.safeReplace(value, switchStatement.virtualSwitchClose, closeDirective.sourceContent);
 
             switchStatement.structures.forEach((structure) => {
                 const structureDirective = structure.case.head as DirectiveNode;
@@ -1750,13 +1750,13 @@ export class Transformer {
                 if (!structure.isLast) {
                     if (structure.isFirst) {
                         this.removeLines.push(structure.pairClose);
-                        value = value.replace(structure.pairOpen, this.printDirective(structureDirective, this.indentLevel(structure.pairOpen)));
+                        value = StringUtilities.safeReplace(value, structure.pairOpen, this.printDirective(structureDirective, this.indentLevel(structure.pairOpen)));
                     } else {
                         this.removeLines.push(structure.pairClose);
-                        value = value.replace(structure.pairOpen, this.printDirective(structureDirective, this.indentLevel(structure.pairOpen)));
+                        value = StringUtilities.safeReplace(value, structure.pairOpen, this.printDirective(structureDirective, this.indentLevel(structure.pairOpen)));
                     }
                 } else {
-                    value = value.replace(structure.pairOpen, this.printDirective(structureDirective, this.indentLevel(structure.pairOpen)));
+                    value = StringUtilities.safeReplace(value, structure.pairOpen, this.printDirective(structureDirective, this.indentLevel(structure.pairOpen)));
                     this.removeLines.push(structure.pairClose);
                 }
             });
@@ -1788,7 +1788,7 @@ export class Transformer {
 
 
                             const arrayParser = new SimpleArrayParser(),
-                                array = arrayParser.parse(StringUtilities.replaceAllInString(tResult, "\n", ' ')),
+                                array = arrayParser.parse(StringUtilities.safeReplaceAllInString(tResult, "\n", ' ')),
                                 targetIndent = this.indentLevel(open);
 
                             if (arrayParser.getIsAssoc()) {
@@ -1813,7 +1813,7 @@ export class Transformer {
                 content = directive.sourceContent;
             }
 
-            value = value.replace(open, content);
+            value = StringUtilities.safeReplace(value, open, content);
         });
 
         return value;
@@ -1827,7 +1827,7 @@ export class Transformer {
                 open = this.open(slug);
             this.removeLines.push(close);
 
-            value = value.replace(open, directive.sourceContent);
+            value = StringUtilities.safeReplace(value, open, directive.sourceContent);
         });
 
         return value;
@@ -1839,7 +1839,7 @@ export class Transformer {
         this.inlineComments.forEach((comment, slug) => {
             const open = this.selfClosing(slug);
 
-            value = value.replace(open, CommentPrinter.printComment(comment, this.transformOptions.tabSize, 0));
+            value = StringUtilities.safeReplace(value, open, CommentPrinter.printComment(comment, this.transformOptions.tabSize, 0));
         });
 
         return value;
@@ -1864,7 +1864,7 @@ export class Transformer {
         this.blockComments.forEach((structure) => {
             const comment = structure.node as BladeCommentNode;
 
-            value = value.replace(structure.pairOpen, CommentPrinter.printComment(comment, this.transformOptions.tabSize, this.indentLevel(structure.pairOpen)));
+            value = StringUtilities.safeReplace(value, structure.pairOpen, CommentPrinter.printComment(comment, this.transformOptions.tabSize, this.indentLevel(structure.pairOpen)));
             this.removeLines.push(structure.pairClose);
             this.removeLines.push(structure.virtualElement);
         });
@@ -1876,7 +1876,7 @@ export class Transformer {
         let value = content;
 
         this.dynamicElementForElseNodes.forEach((forElse, slug) => {
-            value = StringUtilities.replaceAllInString(value, slug, forElse.nodeContent);
+            value = StringUtilities.safeReplaceAllInString(value, slug, forElse.nodeContent);
         });
 
         return value;
@@ -1904,7 +1904,7 @@ export class Transformer {
 
         this.dynamicElementConditionNodes.forEach((condition, slug) => {
             value = this.removeTrailingWhitespaceAfterSubstring(value, slug);
-            value = StringUtilities.replaceAllInString(value, slug, condition.nodeContent);
+            value = StringUtilities.safeReplaceAllInString(value, slug, condition.nodeContent);
         });
 
         return value;
@@ -1914,7 +1914,7 @@ export class Transformer {
         let value = content;
 
         this.dynamicElementSwitchNodes.forEach((switchNode, slug) => {
-            value = StringUtilities.replaceAllInString(value, slug, switchNode.nodeContent);
+            value = StringUtilities.safeReplaceAllInString(value, slug, switchNode.nodeContent);
         });
 
         return value;
@@ -1926,7 +1926,7 @@ export class Transformer {
         this.directiveParameters.forEach((param, slug) => {
             const paramDirective = param.directive as DirectiveNode;
 
-            value = value.replace(slug, this.printDirective(paramDirective, this.indentLevel(slug)));
+            value = StringUtilities.safeReplace(value, slug, this.printDirective(paramDirective, this.indentLevel(slug)));
         });
 
         return value;
@@ -1936,7 +1936,7 @@ export class Transformer {
         let value = content;
 
         this.expressionParameters.forEach((param, slug) => {
-            value = value.replace(slug, param.content);
+            value = StringUtilities.safeReplace(value, slug, param.content);
         });
 
         return value;
@@ -1949,12 +1949,12 @@ export class Transformer {
             // Handle case of comments.
             if (param.inlineEcho?.sourceContent.startsWith('{{--') && param.inlineEcho.sourceContent.endsWith('--}}')) {
                 let commentContent = param.inlineEcho.content.substring(2, param.inlineEcho.content.length - 2);
-                value = value.replace(slug, '{{-- ' + commentContent.trim() + ' --}}');
+                value = StringUtilities.safeReplace(value, slug, '{{-- ' + commentContent.trim() + ' --}}');
             }
             if (param.inlineEcho != null) {
-                value = value.replace(slug, EchoPrinter.printEcho(param.inlineEcho, this.transformOptions, this.phpFormatter, 0, this.pintTransformer));
+                value = StringUtilities.safeReplace(value, slug, EchoPrinter.printEcho(param.inlineEcho, this.transformOptions, this.phpFormatter, 0, this.pintTransformer));
             } else {
-                value = value.replace(slug, '');
+                value = StringUtilities.safeReplace(value, slug, '');
             }
         });
 
@@ -1965,7 +1965,7 @@ export class Transformer {
         let value = content;
 
         this.embeddedEchos.forEach((echo, slug) => {
-            value = value.replace(slug, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug), this.pintTransformer));
+            value = StringUtilities.safeReplace(value, slug, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug), this.pintTransformer));
         });
 
         return value;
@@ -1975,7 +1975,7 @@ export class Transformer {
         let value = content;
 
         this.embeddedDirectives.forEach((directive, slug) => {
-            value = value.replace(slug, this.printDirective(directive, this.indentLevel(slug)));
+            value = StringUtilities.safeReplace(value, slug, this.printDirective(directive, this.indentLevel(slug)));
         });
 
         return value;
@@ -2001,7 +2001,7 @@ export class Transformer {
             }
 
             if (value.includes(target)) {
-                value = value.replace(target, IndentLevel.indentRelative(document.content, indent, this.transformOptions.tabSize));
+                value = StringUtilities.safeReplace(value, target, IndentLevel.indentRelative(document.content, indent, this.transformOptions.tabSize));
             }
         });
 
@@ -2012,7 +2012,7 @@ export class Transformer {
         let value = content;
 
         this.removeLines.forEach((line) => {
-            value = value.replace(line, '');
+            value = StringUtilities.safeReplace(value, line, '');
         });
 
         return value;
@@ -2086,7 +2086,7 @@ export class Transformer {
                 let newLine = contentLines[i];
                 this.removeLines.forEach((line) => {
                     if (newLine.includes(line)) {
-                        newLine = newLine.replace(line, '');
+                        newLine = StringUtilities.safeReplace(newLine, line, '');
                     }
                 });
                 newLines.push(newLine);
@@ -2148,7 +2148,7 @@ export class Transformer {
 
         this.removedAttributes.forEach((attribute, slug) => {
             const attributeResult = formatExtractedScript(attribute, this.transformOptions, slug, result);
-            result = result.replace('"' + slug + '"', attributeResult);
+            result = StringUtilities.safeReplace(result, '"' + slug + '"', attributeResult)
         });
 
         return result;
@@ -2195,7 +2195,7 @@ export class Transformer {
             const replace = this.selfClosing(slug),
                 startIndent = this.indentLevel(replace);
 
-            results = results.replace(replace, this.dumpPreservedNodes(nodes));
+            results = StringUtilities.safeReplace(results, replace, this.dumpPreservedNodes(nodes));
         });
 
         return results;

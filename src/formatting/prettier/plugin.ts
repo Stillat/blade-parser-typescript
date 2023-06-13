@@ -6,12 +6,11 @@ import { PhpParserPhpValidator } from '../../parser/php/phpParserPhpValidator';
 import { FormattingOptions } from '../formattingOptions';
 import { getEnvSettings, getPrettierFilePath } from '../optionDiscovery';
 import { PrettierDocumentFormatter } from './prettierDocumentFormatter';
-import { formatAsHtml, formatAsJavaScript, getHtmlOptions, getOptionsAdjuster, setOptions } from './utils';
+import { getHtmlOptions, getOptionsAdjuster, setOptions } from './utils';
 import { ClassStringEmulation } from '../classStringEmulation';
 import { AttributeRangeRemover, canProcessAttributes } from '../../document/attributeRangeRemover';
 import { FragmentsParser } from '../../parser/fragmentsParser';
 import { IExtractedAttribute } from '../../parser/extractedAttribute';
-import { formatExtractedScript } from '../bladeJavaScriptFormatter';
 
 let prettierOptions: prettier.ParserOptions,
     transformOptions: TransformOptions,

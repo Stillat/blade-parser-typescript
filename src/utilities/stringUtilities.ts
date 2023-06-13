@@ -194,4 +194,17 @@ export class StringUtilities {
 
         return result;
     }
+
+    static safeReplaceAllInString(originalString: string, searchValue: string, replaceValue: string): string {
+        const regex = new RegExp(searchValue, 'g'),
+            replacedString = originalString.split(regex).join(replaceValue);
+
+        return replacedString;
+    }
+
+    static safeReplace(originalString: string, searchValue: string, replaceValue: string): string {
+        const replacedString = originalString.split(searchValue).join(replaceValue);
+
+        return replacedString;
+    }
 }
