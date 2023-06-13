@@ -84,6 +84,14 @@ export class GeneralSyntaxReflow implements StringIterator {
         return GeneralSyntaxReflow.breakOperators.some(sb => input.includes(sb));
     }
 
+    safeReflow(input: string): string {
+        if (! GeneralSyntaxReflow.couldReflow(input)) {
+            return input;
+        }
+
+        return this.reflow(input);
+    }
+
     parse(text: string): void {
         this.tokens = [];
         this.content = StringUtilities.normalizeLineEndings(text);

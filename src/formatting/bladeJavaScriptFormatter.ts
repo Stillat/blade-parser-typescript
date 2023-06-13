@@ -64,7 +64,7 @@ export function formatExtractedScript(attribute: IExtractedAttribute, transformO
     const origTransformedContent = result.trim();
     if (origTransformedContent.startsWith('{') && origTransformedContent.endsWith('}')) {
         transformedContent = '"' + IndentLevel.shiftIndent(
-            origTransformedContent,
+            GeneralSyntaxReflow.instance.safeReflow(origTransformedContent),
             targetIndent,
             true,
             transformOptions,
@@ -73,10 +73,10 @@ export function formatExtractedScript(attribute: IExtractedAttribute, transformO
         ) + '"';
     } else {
         if (transformedContent.includes("\n") == false) {
-            transformedContent = '"' + transformedContent.trim() + '"';
+            transformedContent = '"' + GeneralSyntaxReflow.instance.safeReflow(transformedContent.trim()) + '"';
         } else {
             transformedContent = `"\n` + IndentLevel.shiftIndent(
-                origTransformedContent,
+                GeneralSyntaxReflow.instance.safeReflow(origTransformedContent),
                 targetIndent + transformOptions.tabSize,
                 false,
                 transformOptions,
@@ -84,10 +84,6 @@ export function formatExtractedScript(attribute: IExtractedAttribute, transformO
                 false
             ) + `\n${appendFinal}"`;
         }
-    }
-
-    if (GeneralSyntaxReflow.couldReflow(transformedContent)) {
-        transformedContent = GeneralSyntaxReflow.instance.reflow(transformedContent);
     }
 
     return transformedContent;
