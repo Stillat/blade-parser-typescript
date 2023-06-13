@@ -2,6 +2,7 @@ import { BladeDocument } from '../document/bladeDocument';
 import { IndentLevel } from '../document/printers/indentLevel';
 import { TransformOptions } from '../document/transformOptions';
 import { IExtractedAttribute } from '../parser/extractedAttribute';
+import { GeneralSyntaxReflow } from './generalSyntaxReflow';
 import { formatAsJavaScript } from './prettier/utils';
 
 export function formatExtractedScript(attribute: IExtractedAttribute, transformOptions: TransformOptions, slug: string, tmpContent: string): string {
@@ -84,5 +85,10 @@ export function formatExtractedScript(attribute: IExtractedAttribute, transformO
             ) + `\n${appendFinal}"`;
         }
     }
+
+    if (GeneralSyntaxReflow.couldReflow(transformedContent)) {
+        transformedContent = GeneralSyntaxReflow.instance.reflow(transformedContent);
+    }
+
     return transformedContent;
 }
