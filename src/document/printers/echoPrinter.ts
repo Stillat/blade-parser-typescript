@@ -1,4 +1,4 @@
-import { PhpOperatorReflow } from '../../formatting/phpOperatorReflow';
+import { GeneralSyntaxReflow } from '../../formatting/generalSyntaxReflow';
 import { getEchoPhpOptions } from '../../formatting/prettier/utils';
 import { SyntaxReflow } from '../../formatting/syntaxReflow';
 import { BladeEchoNode, BladeEntitiesEchoNode, BladeEscapedEchoNode } from '../../nodes/nodes';
@@ -60,8 +60,8 @@ export class EchoPrinter {
                             tResult = undoPrettierWorkaround(tResult);
                         }
 
-                        if (PhpOperatorReflow.couldReflow(tResult)) {
-                            tResult = PhpOperatorReflow.instance.reflow(tResult);
+                        if (GeneralSyntaxReflow.couldReflow(tResult)) {
+                            tResult = GeneralSyntaxReflow.instance.reflow(tResult);
                         }
 
                         if (SyntaxReflow.couldReflow(tResult)) {
@@ -100,8 +100,8 @@ export class EchoPrinter {
                     } else {
                         tResult = phpFormatter('<?php ' + innerContent + ';', formattingOptions, { ...echoOptions, printWidth: Infinity });
                         tResult = tResult.trimRight().substring(0, tResult.trimRight().length - 1);
-                        if (PhpOperatorReflow.couldReflow(tResult)) {
-                            tResult = PhpOperatorReflow.instance.reflow(tResult);
+                        if (GeneralSyntaxReflow.couldReflow(tResult)) {
+                            tResult = GeneralSyntaxReflow.instance.reflow(tResult);
                         }
 
                         if (SyntaxReflow.couldReflow(tResult)) {

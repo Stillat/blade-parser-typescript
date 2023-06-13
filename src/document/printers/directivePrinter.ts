@@ -1,4 +1,3 @@
-import { PhpOperatorReflow } from '../../formatting/phpOperatorReflow';
 import { getPhpOptions } from '../../formatting/prettier/utils';
 import { SyntaxReflow } from '../../formatting/syntaxReflow';
 import { DirectiveNode } from '../../nodes/nodes';
@@ -11,6 +10,7 @@ import { IndentLevel } from './indentLevel';
 import { ParserOptions } from "prettier";
 import { getPrintWidth, preparePrettierWorkaround, undoPrettierWorkaround } from './printWidthUtils';
 import { PintTransformer } from '../pintTransformer';
+import { GeneralSyntaxReflow } from '../../formatting/generalSyntaxReflow';
 
 export class DirectivePrinter {
     private static defaultControlDirectiveNames: string[] = [
@@ -126,8 +126,8 @@ export class DirectivePrinter {
                                 );
                             }
 
-                            if (PhpOperatorReflow.couldReflow(tResult)) {
-                                tResult = PhpOperatorReflow.instance.reflow(tResult);
+                            if (GeneralSyntaxReflow.couldReflow(tResult)) {
+                                tResult = GeneralSyntaxReflow.instance.reflow(tResult);
                             }
 
                             if (SyntaxReflow.couldReflow(tResult)) {
@@ -179,8 +179,8 @@ export class DirectivePrinter {
                         tResult = tResult.substring(0, tResult.length - 14);
                     }
 
-                    if (PhpOperatorReflow.couldReflow(tResult)) {
-                        tResult = PhpOperatorReflow.instance.reflow(tResult);
+                    if (GeneralSyntaxReflow.couldReflow(tResult)) {
+                        tResult = GeneralSyntaxReflow.instance.reflow(tResult);
                     }
 
                     if (SyntaxReflow.couldReflow(tResult)) {

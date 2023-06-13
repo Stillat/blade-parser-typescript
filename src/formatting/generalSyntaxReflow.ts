@@ -7,7 +7,7 @@ import { skipToEndOfStringTraced } from '../parser/scanners/skipToEndOfString';
 import { StringIterator } from '../parser/stringIterator';
 import { StringUtilities } from '../utilities/stringUtilities';
 
-export class PhpOperatorReflow implements StringIterator {
+export class GeneralSyntaxReflow implements StringIterator {
     private content = '';
     private chars: string[] = [];
     private inputLen = 0;
@@ -18,7 +18,7 @@ export class PhpOperatorReflow implements StringIterator {
     private currentContent: string[] = [];
     private tokens: AbstractNode[] = [];
     private static breakOperators: string[] = ['!'];
-    public static instance: PhpOperatorReflow = new PhpOperatorReflow();
+    public static instance: GeneralSyntaxReflow = new GeneralSyntaxReflow();
     advance(count: number) {
         for (let i = 0; i < count; i++) {
             this.currentIndex++;
@@ -81,7 +81,7 @@ export class PhpOperatorReflow implements StringIterator {
     }
 
     static couldReflow(input: string): boolean {
-        return PhpOperatorReflow.breakOperators.some(sb => input.includes(sb));
+        return GeneralSyntaxReflow.breakOperators.some(sb => input.includes(sb));
     }
 
     parse(text: string): void {

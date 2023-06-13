@@ -1,7 +1,7 @@
 import { formatExtractedScript } from '../formatting/bladeJavaScriptFormatter';
 import { getDefaultClassStringConfig } from '../formatting/classStringsConfig';
 import { FormattingOptions } from '../formatting/formattingOptions';
-import { PhpOperatorReflow } from '../formatting/phpOperatorReflow';
+import { GeneralSyntaxReflow } from '../formatting/generalSyntaxReflow';
 import { formatBladeString, formatBladeStringWithPint, getPhpOptions } from '../formatting/prettier/utils';
 import { SyntaxReflow } from '../formatting/syntaxReflow';
 import { AbstractNode, BladeCommentNode, BladeComponentNode, BladeEchoNode, ConditionNode, DirectiveNode, ExecutionBranchNode, ForElseNode, FragmentPosition, InlinePhpNode, LiteralNode, ParameterNode, ParameterType, SwitchCaseNode, SwitchStatementNode } from '../nodes/nodes';
@@ -519,8 +519,8 @@ export class Transformer {
                     if (this.phpTagFormatter != null) {
                         result = this.phpTagFormatter(result, this.transformOptions, null);
 
-                        if (PhpOperatorReflow.couldReflow(result)) {
-                            result = PhpOperatorReflow.instance.reflow(result);
+                        if (GeneralSyntaxReflow.couldReflow(result)) {
+                            result = GeneralSyntaxReflow.instance.reflow(result);
                         }
 
                         if (SyntaxReflow.couldReflow(result)) {
@@ -557,8 +557,8 @@ export class Transformer {
         if (this.phpTagFormatter && php.hasValidPhp()) {
             phpContent = this.phpTagFormatter(phpContent, this.transformOptions, null);
 
-            if (PhpOperatorReflow.couldReflow(phpContent)) {
-                phpContent = PhpOperatorReflow.instance.reflow(phpContent);
+            if (GeneralSyntaxReflow.couldReflow(phpContent)) {
+                phpContent = GeneralSyntaxReflow.instance.reflow(phpContent);
             }
 
             if (SyntaxReflow.couldReflow(phpContent)) {
@@ -1491,8 +1491,8 @@ export class Transformer {
             value = "\n" + value + "\n";
         }
 
-        if (PhpOperatorReflow.couldReflow(value)) {
-            value = PhpOperatorReflow.instance.reflow(value);
+        if (GeneralSyntaxReflow.couldReflow(value)) {
+            value = GeneralSyntaxReflow.instance.reflow(value);
         }
 
         if (SyntaxReflow.couldReflow(value)) {

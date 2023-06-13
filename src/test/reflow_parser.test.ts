@@ -1,12 +1,12 @@
 import assert from 'assert';
-import { PhpOperatorReflow } from '../formatting/phpOperatorReflow';
 import { LiteralNode, OperatorNode } from '../nodes/nodes';
 import { assertCount, assertInstanceOf } from './testUtils/assertions';
+import { GeneralSyntaxReflow } from '../formatting/generalSyntaxReflow';
 
 suite('PHP Operator Reflow Parser', () => {
     test('it breaks strings apart', () => {
         const template = ` !$foo /** !!! */ ** true //! `,
-            parser = new PhpOperatorReflow();
+            parser = new GeneralSyntaxReflow();
         parser.parse(template);
 
         const tokens = parser.getTokens();
@@ -26,7 +26,7 @@ suite('PHP Operator Reflow Parser', () => {
     });
 
     test('it reflows operators', () => {
-        const parser = new PhpOperatorReflow();
+        const parser = new GeneralSyntaxReflow();
 
         assert.strictEqual(
             parser.reflow(' !$foo /** !!! */ && true //! '),
