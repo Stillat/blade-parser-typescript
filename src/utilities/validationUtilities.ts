@@ -25,7 +25,7 @@ function getBladePhpFiles(directory: string): string[] {
     return bladePhpFiles;
 }
 
-export function formatBladeFilesInDirecetory(directory: string) {
+export function formatBladeFilesInDirectory(directory: string) {
     const bladeFiles = getBladePhpFiles(directory);
     let formatted = 0;
 
