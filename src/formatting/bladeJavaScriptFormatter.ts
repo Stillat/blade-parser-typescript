@@ -53,10 +53,7 @@ export function formatExtractedScript(attribute: IExtractedAttribute, transformO
             result = result.substring(0, result.length - 1);
         }
     } catch (err) {
-        console.log(err);
-        console.log(toFormat);
-        // Prevent failures from crashing formatting process.
-        debugger;
+        return attribute.content;
     }
 
     let targetIndent = IndentLevel.relativeIndentLevel(slug, tmpContent),
@@ -84,7 +81,7 @@ export function formatExtractedScript(attribute: IExtractedAttribute, transformO
                 transformOptions,
                 false,
                 false
-            ) + `${appendFinal}"`;
+            ) + `\n${appendFinal}"`;
         }
     }
     return transformedContent;
