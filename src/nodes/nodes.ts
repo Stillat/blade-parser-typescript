@@ -115,6 +115,10 @@ export enum ParameterType {
 }
 
 export class ParameterNode extends AbstractNode {
+    private cachedHasValidPhp: boolean | null = null;
+    private cachedPhpLastError: SyntaxError | null = null;
+
+
     public name = '';
     public realName = '';
     public value = '';
@@ -130,6 +134,23 @@ export class ParameterNode extends AbstractNode {
 
     public isEscapedExpression = false;
     public isExpression = false;
+
+    public overrideValue = '';
+
+    hasValidPhpExpression(): boolean {
+        if (this.cachedHasValidPhp == null) {
+            const validator = this.getParser()?.getPhpValidator();
+
+            if (validator != null) {
+                this.cachedHasValidPhp = validator.isValid(this.value, false);
+                this.cachedPhpLastError = validator.getLastError();
+            } else {
+                this.cachedHasValidPhp = false;
+            }
+        }
+
+        return this.cachedHasValidPhp as boolean;
+    }
 }
 
 export class ComponentNameNode extends AbstractNode {

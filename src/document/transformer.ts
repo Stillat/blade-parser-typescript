@@ -1974,7 +1974,26 @@ export class Transformer {
         let value = content;
 
         this.expressionParameters.forEach((param, slug) => {
-            value = StringUtilities.safeReplace(value, slug, param.content);
+            let content = param.content;
+
+            if (this.transformOptions.useLaravelPint && this.pintTransformer != null) {
+                content = this.pintTransformer.getComponentParameterContent(param);
+            }
+
+            if (content.includes("\n")) {
+                const relativeIndent = this.indentLevel(slug);
+
+                content = IndentLevel.shiftIndent(
+                    content,
+                    relativeIndent + this.transformOptions.tabSize,
+                    true,
+                    this.transformOptions,
+                    false,
+                    true
+                );
+            }
+            
+            value = StringUtilities.safeReplace(value, slug, content);
         });
 
         return value;

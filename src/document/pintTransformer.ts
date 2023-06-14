@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 const { execSync } = require('child_process');
-import { BladeComponentNode, BladeEchoNode, DirectiveNode, InlinePhpNode, ParameterType } from '../nodes/nodes';
+import { BladeComponentNode, BladeEchoNode, DirectiveNode, InlinePhpNode, ParameterNode, ParameterType } from '../nodes/nodes';
 import { BladeDocument } from './bladeDocument';
 import { StringUtilities } from '../utilities/stringUtilities';
 import { PintCache } from './pintCache';
@@ -179,6 +179,35 @@ export class PintTransformer {
         }
 
         return echo.content;
+    }
+
+    getComponentParameterContent(parameter:ParameterNode): string {
+        if (parameter.overrideValue != null && this.resultMapping.has(parameter.overrideValue)) {
+            const insertContent = this.resultMapping.get(parameter.overrideValue) as string
+            
+            if (insertContent.includes("\n")) {
+                return `${parameter.name}="\n${insertContent}\n"`;
+            } else {
+                return parameter.name + '="' + insertContent.trim() + '"';
+            }
+        }
+
+        const preparedValue = this.prepareContent(parameter.value);
+        if (this.contentMapping.has(preparedValue)) {
+            const originalIndex = this.contentMapping.get(preparedValue) as string;
+
+            if (this.resultMapping.has(originalIndex)) {
+                const insertContent = this.resultMapping.get(originalIndex) as string;
+
+                if (insertContent.includes("\n")) {
+                    return `${parameter.name}="\n${insertContent}\n"`;
+                } else {
+                    return parameter.name + '="' + insertContent.trim() + '"';
+                }
+            }
+        }
+
+        return parameter.content;
     }
 
     getDirectiveContent(directive: DirectiveNode): string {
@@ -390,6 +419,27 @@ export class PintTransformer {
                             }
 
                             replaceIndex += 1;
+                        } else if (param.isExpression && !param.isEscapedExpression && param.hasValidPhpExpression()) {
+                            const candidate = param.value.trim();
+                            results += '// ' + replaceIndex.toString() + '=CPV' + this.markerSuffix;
+                            results += "\n";
+                            results += 'echo ';
+
+                            StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
+                                results += cLine.trimLeft() + "\n";
+                            });
+
+                            results = results.trimRight();
+                            results += ';';
+                            results += "\n";
+                            param.overrideValue = '__pint' + replaceIndex.toString();
+
+                            const preparedParameters = this.prepareContent(param.value);
+                            if (!this.contentMapping.has(preparedParameters)) {
+                                this.contentMapping.set(preparedParameters, param.overrideValue);
+                            }
+
+                            replaceIndex += 1;
                         }
                     });
                 }
@@ -550,6 +600,17 @@ export class PintTransformer {
             tResult = tResult.substring(0, tResult.length - 1).trimRight();
             tResult = tResult.substring(0, tResult.length - 1).trimRight();
         } else if (type == 'ECH') {
+            tResult = result.trim();
+            tResult = tResult.substring(4).trimLeft();
+            tResult = tResult.trimRight();
+            tResult = tResult.trimRight();
+            if (tResult.endsWith('?')) {
+                tResult = tResult.substring(0, tResult.length - 1).trimRight()
+            }
+            if (tResult.endsWith(';')) {
+                tResult = tResult.substring(0, tResult.length - 1).trimRight()
+            }
+        } else if (type == 'CPV') {
             tResult = result.trim();
             tResult = tResult.substring(4).trimLeft();
             tResult = tResult.trimRight();
