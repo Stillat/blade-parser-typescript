@@ -103,6 +103,7 @@ export class Transformer {
     private ignoredLiteralBlocks: Map<string, AbstractNode[]> = new Map();
     private activeLiteralSlug: string = '';
     private doc: BladeDocument;
+    private shadowDoc: BladeDocument | null = null;
     private inlineDirectiveBlocks: Map<string, DirectiveNode> = new Map();
     private contentDirectives: Map<string, DirectiveNode> = new Map();
     private dynamicEchoBlocks: Map<string, BladeEchoNode> = new Map();
@@ -177,6 +178,12 @@ export class Transformer {
 
     constructor(doc: BladeDocument) {
         this.doc = doc;
+    }
+
+    withShadowDocument(shadow: BladeDocument | null = null) {
+        this.shadowDoc = shadow;
+
+        return this;
     }
 
     getPintTransformer(): PintTransformer | null {
@@ -1341,7 +1348,18 @@ export class Transformer {
                     this.transformOptions.pintConfigPath
                 );
                 this.pintTransformer.setTemplateFilePath(this.filePath);
-                this.pintTransformer.format(this.doc);
+
+                // If the shadow document is available we will
+                // use that instead. When this happens, it is
+                // very likely that the "doc" we have access
+                // to has been modified to accomodate things
+                // like the formatting of AlpineJS attributes.
+                if (this.shadowDoc != null) {
+                    this.pintTransformer.format(this.shadowDoc);
+                } else {
+                    this.pintTransformer.format(this.doc);
+                }
+
                 this.didPintFail = this.pintTransformer.getDidFail();
             }
         }
@@ -2183,7 +2201,15 @@ export class Transformer {
 
         this.structureLines = StringUtilities.breakByNewLine(reflowedContent);
 
-        let results = this.transformInlineDirectives(reflowedContent);
+        let results = this.transformRemovedAttibutes(reflowedContent);
+
+        return this.transformStructures(results);
+    }
+
+    transformStructures(content: string) {
+        let results = content;
+
+        results = this.transformInlineDirectives(results);
         results = this.transformContentDirectives(results);
         results = this.transformDynamicEcho(results);
         results = this.transformPairedDirectives(results);
@@ -2209,7 +2235,6 @@ export class Transformer {
         results = this.transformEmbeddedDirectives(results);
         results = this.transformExtractedDocuments(results);
         results = this.transformPhpBlock(results);
-        results = this.transformRemovedAttibutes(results);
 
         this.ignoredLiteralBlocks.forEach((nodes, slug) => {
             const replace = this.selfClosing(slug),

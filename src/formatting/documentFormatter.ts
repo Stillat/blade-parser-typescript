@@ -81,7 +81,7 @@ export class DocumentFormatter {
         return this.formatDocument(BladeDocument.fromText(text));
     }
 
-    formatDocument(document: BladeDocument): string {
+    formatDocument(document: BladeDocument, shadowDocument: BladeDocument | null = null): string {
         if (this.preFormatter != null) {
             const preformatResult = this.preFormatter(document);
 
@@ -95,6 +95,7 @@ export class DocumentFormatter {
         }
 
         document.transform()
+            .withShadowDocument(shadowDocument)
             .withFilePath(this.filePath)
             .withBlockPhpFormatter(this.blockPhpFormatter)
             .withPhpFormatter(this.phpFormatter)

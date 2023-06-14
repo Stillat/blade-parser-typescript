@@ -21,6 +21,7 @@ let bladeOptions: FormattingOptions | null = null;
 
 interface IAttributeRemovedDocument {
     doc: BladeDocument;
+    shadowDocument: BladeDocument,
     attributeMap: Map<string, IExtractedAttribute>
 }
 
@@ -115,15 +116,28 @@ const plugin: prettier.Plugin = {
                     }
                 }
 
-                const document = new BladeDocument();
+                const document = new BladeDocument(),
+                    shadow = new BladeDocument();
+
                 document.getParser()
                     .withParserOptions(parserOptions)
                     .withPhpValidator(phpValidator);
 
-                const doc = document.loadString(prettierText),
-                    result: IAttributeRemovedDocument = {
-                        doc: doc,
-                        attributeMap: attributeMap
+                // The document "shadow" will contain the
+                // structures of the original document,
+                // without any modificationns. We will
+                // use this later when formatting.
+                shadow.getParser()
+                    .withParserOptions(parserOptions)
+                    .withPhpValidator(phpValidator);
+
+                document.loadString(prettierText);
+                shadow.loadString(text);
+
+                const result: IAttributeRemovedDocument = {
+                        doc: document,
+                        attributeMap: attributeMap,
+                        shadowDocument: shadow
                     };
 
                 return result;
@@ -141,7 +155,7 @@ const plugin: prettier.Plugin = {
 
                 return formatter
                     .withRemovedAttributes(doc.attributeMap)
-                    .formatDocument(doc.doc);
+                    .formatDocument(doc.doc, doc.shadowDocument);
             }
         }
     },

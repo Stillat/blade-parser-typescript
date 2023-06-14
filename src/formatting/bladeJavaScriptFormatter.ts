@@ -41,6 +41,8 @@ export function formatExtractedScript(attribute: IExtractedAttribute,
 
         // TODO: Return original if it contains structures.
         const tmpTransformer = tmpDoc.transform();
+
+        tmpTransformer.setParentTransformer(parentTransformer);
         tmpTransformer.withOptions(transformOptions);
         tmpTransformer.setFormattingOptions(parentTransformer.getFormattingOptions());
         tmpTransformer.withJsonFormatter(parentTransformer.getJsonFormatter());
@@ -72,6 +74,8 @@ export function formatExtractedScript(attribute: IExtractedAttribute,
         if (formatContent.trim().endsWith(';') == false && result.endsWith(';')) {
             result = result.substring(0, result.length - 1);
         }
+
+        result = parentTransformer.transformStructures(result);
     } catch (err) {
         return attribute.content;
     }
