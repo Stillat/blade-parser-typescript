@@ -58,6 +58,7 @@ const plugin: prettier.Plugin = {
                 parserOptions = bladeOptions as ParserOptions;
                 transformOptions.tabSize = getHtmlOptions().tabWidth;
 
+                // TODO: Only produce shadows if we have extracted attributes 🚀
                 let prettierText = text,
                     shadowText = text;
 
