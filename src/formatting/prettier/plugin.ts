@@ -58,7 +58,8 @@ const plugin: prettier.Plugin = {
                 parserOptions = bladeOptions as ParserOptions;
                 transformOptions.tabSize = getHtmlOptions().tabWidth;
 
-                let prettierText = text;
+                let prettierText = text,
+                    shadowText = text;
 
                 const classConfig = transformOptions.classStrings,
                     phpValidator = new PhpParserPhpValidator();
@@ -76,7 +77,6 @@ const plugin: prettier.Plugin = {
                     fragments.parse(prettierText);
                     const extractedAttributes = fragments.getExtractedAttributes();
 
-                    const ttt = prettierText.split('');
                     tmpDoc.getAllNodes().forEach((node) => {
                         if (node instanceof BladeComponentNode && node.hasParameters) {
                             node.parameters.forEach((param) => {
@@ -109,6 +109,11 @@ const plugin: prettier.Plugin = {
                         .withParserOptions(parserOptions)
                         .withPhpValidator(phpValidator)
                         .transform(prettierText);
+
+                    shadowText = classStringEmulation
+                        .withParserOptions(parserOptions)
+                        .withPhpValidator(phpValidator)
+                        .transform(shadowText);
 
                     if (attributeMap.size > 0) {
                         attributeMap.forEach((attribute) => {
@@ -152,13 +157,13 @@ const plugin: prettier.Plugin = {
                     .withPhpValidator(phpValidator);
 
                 document.loadString(prettierText);
-                shadow.loadString(text);
+                shadow.loadString(shadowText);
 
                 const result: IAttributeRemovedDocument = {
-                        doc: document,
-                        attributeMap: attributeMap,
-                        shadowDocument: shadow
-                    };
+                    doc: document,
+                    attributeMap: attributeMap,
+                    shadowDocument: shadow
+                };
 
                 return result;
             },
