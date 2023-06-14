@@ -1,8 +1,5 @@
-import { BladeCommentNode, BladeEchoNode, DirectiveNode, InlinePhpNode, LiteralNode } from '../nodes/nodes';
 import { IExtractedAttribute } from '../parser/extractedAttribute';
 import { StringUtilities } from '../utilities/stringUtilities';
-import { BladeDocument } from './bladeDocument';
-import { DocumentPadder } from './documentPadder';
 
 let canProcessAttributes: boolean = true;
 
