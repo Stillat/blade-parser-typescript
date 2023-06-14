@@ -13,6 +13,7 @@ import { FragmentsParser } from '../../parser/fragmentsParser';
 import { IExtractedAttribute } from '../../parser/extractedAttribute';
 import { ClassStringRuleEngine } from '../classStringsConfig';
 import { ClassEmulator } from '../../parser/classEmulator';
+import { BladeComponentNode } from '../../nodes/nodes';
 
 let prettierOptions: prettier.ParserOptions,
     transformOptions: TransformOptions,
@@ -68,15 +69,34 @@ const plugin: prettier.Plugin = {
                         tmpDoc = BladeDocument.fromText(prettierText);
                     fragments.setIndexRanges(tmpDoc.getParser().getNodeIndexRanges());
 
+                    // TODO: Configurable.
                     fragments.setExtractAttributeNames(['x-data', 'ax-load', 'ax-load-src']);
                     fragments.setExtractAttributes(true);
 
                     fragments.parse(prettierText);
                     const extractedAttributes = fragments.getExtractedAttributes();
 
+                    const ttt = prettierText.split('');
+                    tmpDoc.getAllNodes().forEach((node) => {
+                        if (node instanceof BladeComponentNode && node.hasParameters) {
+                            node.parameters.forEach((param) => {
+                                if (param.isEscapedExpression && param.valuePosition != null &&
+                                    param.valuePosition.start != null && param.valuePosition.end != null) {
+                                    extractedAttributes.push({
+                                        content: param.wrappedValue,
+                                        name: param.name,
+                                        startedOn: param.valuePosition.start.offset,
+                                        endedOn: param.valuePosition.end.offset
+                                    });
+                                }
+                            });
+                        }
+                    });
+
                     if (extractedAttributes.length > 0) {
                         const attributeRemover = new AttributeRangeRemover();
                         const remResult = attributeRemover.remove(prettierText, extractedAttributes);
+
                         attributeMap = attributeRemover.getRemovedAttributes();
                         prettierText = remResult;
                     }
