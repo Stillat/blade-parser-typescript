@@ -6,6 +6,10 @@ import { IExtractedAttribute } from '../parser/extractedAttribute';
 import { GeneralSyntaxReflow } from './generalSyntaxReflow';
 import { formatAsJavaScript } from './prettier/utils';
 
+const safetyChars: string[] = [
+    '(', ')', '{', '}', , ':', '->', '<', '>'
+];
+
 export function formatExtractedScript(attribute: IExtractedAttribute,
     transformOptions: TransformOptions,
     slug: string,
@@ -15,6 +19,20 @@ export function formatExtractedScript(attribute: IExtractedAttribute,
     let addedVarPlaceholder = false;
 
     const formatContent = attribute.content.substring(1, attribute.content.length - 1).trim();
+
+    let shouldContinue = false;
+
+    for (let i = 0; i < safetyChars.length; i++) {
+        if (formatContent.includes(safetyChars[i])) {
+            shouldContinue = true;
+            break;
+        }
+    }
+
+    if (! shouldContinue) {
+        return attribute.content;
+    }
+
 
     let tempTemplate = "\n";
 
@@ -34,7 +52,7 @@ export function formatExtractedScript(attribute: IExtractedAttribute,
 
         tmpDoc.getParser().withParserOptions(originalDoc.getParser().getParserOptions());
         tmpDoc.getParser().withPhpValidator(originalDoc.getParser().getPhpValidator());
-        
+
         tmpDoc.loadString('<script>' + tempTemplate + '</script>');
 
         tmpDoc.getParser()

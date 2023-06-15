@@ -4,7 +4,7 @@ import { Position } from '../nodes/position';
 import { StringUtilities } from '../utilities/stringUtilities';
 import { DocumentOffset } from './documentOffset';
 import { DocumentParser } from './documentParser';
-import { AlpineJsAttributes } from './excludeAttributes/alpineJs';
+import { UnsafeAlpineJsAttributes } from './excludeAttributes/alpineJs';
 import { IExtractedAttribute } from './extractedAttribute';
 import { IndexRange } from './indexRange';
 import { isStartOfString } from './scanners/isStartOfString';
@@ -477,7 +477,11 @@ export class FragmentsParser implements StringIterator {
     }
 
     private shouldSkip(attributeName: string): boolean {
-        // const name = this.getCheckAttributeName(attributeName).toLowerCase();
+        const name = this.getCheckAttributeName(attributeName).toLowerCase();
+
+        if (UnsafeAlpineJsAttributes.includes(name)) {
+            return true;
+        }
 
         return false;
     }

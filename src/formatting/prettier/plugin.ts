@@ -96,8 +96,8 @@ const plugin: prettier.Plugin = {
                     });
 
                     if (extractedAttributes.length > 0) {
-                        const attributeRemover = new AttributeRangeRemover();
-                        const remResult = attributeRemover.remove(prettierText, extractedAttributes);
+                        const attributeRemover = new AttributeRangeRemover(),
+                            remResult = attributeRemover.remove(prettierText, extractedAttributes);
 
                         attributeMap = attributeRemover.getRemovedAttributes();
                         prettierText = remResult;

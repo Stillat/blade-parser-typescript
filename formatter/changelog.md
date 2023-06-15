@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.6.0
+
+- Corrects an extreme edge case where some input strings would be duplicated or strangely converted
+- Formats PHP inside Blade component parameters (i.e., `<x-alert :parameter="!$something" />`)
+- Formats JavaScript inside Blade component parameters (i.e., `<x-alert ::parameter="1+1+1" />`)
+- Formats JavaScript inside HTML attributes, such as AlpineJS directives
+- Improves placement of Blade component attribute contents
+- Improves newline management of attributes containing multiple lines
+- Improves relative indentation of multi-line directives inside attributes and Blade component parameters
+
 ## 1.5.6
 
 - Corrects an issue that would break up attribute and directive names, such as `@click.prevent` (#58)

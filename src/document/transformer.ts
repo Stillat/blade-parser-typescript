@@ -2038,7 +2038,13 @@ export class Transformer {
         let value = content;
 
         this.embeddedDirectives.forEach((directive, slug) => {
-            value = StringUtilities.safeReplace(value, slug, this.printDirective(directive, this.indentLevel(slug)));
+            let targetIndent = this.indentLevel(slug);
+        
+            if (targetIndent == 0 && directive.sourceContent.includes("\n")) {
+                targetIndent = IndentLevel.relativeIndentLevel(slug, value) + (2 * this.transformOptions.tabSize);
+            }
+
+            value = StringUtilities.safeReplace(value, slug, this.printDirective(directive, targetIndent));
         });
 
         return value;
@@ -2226,7 +2232,19 @@ export class Transformer {
 
         this.structureLines = StringUtilities.breakByNewLine(reflowedContent);
 
-        let results = this.transformRemovedAttibutes(reflowedContent);
+        // TODO: Migrate remaining dynamic element stuff here as well.
+        // IMPROVE: If the if/block/etc. is just inside the fragment
+        //          but NOT inside the name or a param, can sub-doc block that :)
+
+        // Dynamic blocks might be hiding some attributes. We need to restore
+        // those first before transforming the removed attributes safely.
+        let results = this.transformDynamicElementConditions(reflowedContent);
+        results = this.transformDynamicEcho(results);
+        results = this.transformDynamicElementForElse(results);
+        results = this.transformDynamicElementSwitch(results);
+        results = this.transformDynamicDirectives(results);
+
+        results =  this.transformRemovedAttibutes(results);
 
         return this.transformStructures(results);
     }
