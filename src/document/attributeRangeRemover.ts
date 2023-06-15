@@ -31,6 +31,8 @@ export class AttributeRangeRemover {
     }
 
     remove(content: string, ranges: IExtractedAttribute[]) {
+        ranges = ranges.sort((a, b) => a.startedOn - b.startedOn);
+        
         let newContent = '',
             lastEnd = 0;
 

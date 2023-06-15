@@ -56,6 +56,7 @@ export function formatExtractedScript(attribute: IExtractedAttribute,
         toFormat = toFormat.substring(8);
         toFormat = toFormat.trim();
         toFormat = toFormat.substring(0, toFormat.length - 9);
+
         result = formatAsJavaScript(toFormat);
 
         result = tmpTransformer.fromStructure(result);

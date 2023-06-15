@@ -2022,7 +2022,13 @@ export class Transformer {
         let value = content;
 
         this.embeddedEchos.forEach((echo, slug) => {
-            value = StringUtilities.safeReplace(value, slug, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug), this.pintTransformer));
+            let indentLevel = this.indentLevel(slug);
+
+            // TODO: REVIEW!!!
+            if (indentLevel == 0) {
+                indentLevel = this.transformOptions.tabSize;
+            }
+            value = StringUtilities.safeReplace(value, slug, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, indentLevel, this.pintTransformer));
         });
 
         return value;

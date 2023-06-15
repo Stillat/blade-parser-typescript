@@ -83,6 +83,7 @@ const plugin: prettier.Plugin = {
                             node.parameters.forEach((param) => {
                                 if (param.isEscapedExpression && param.valuePosition != null &&
                                     param.valuePosition.start != null && param.valuePosition.end != null) {
+
                                     extractedAttributes.push({
                                         content: param.wrappedValue,
                                         name: param.name,

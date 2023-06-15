@@ -155,6 +155,7 @@ export function formatAsJavaScript(text: string) {
         parser: 'babel',
         printWidth: 80,
         singleQuote: true,
+        quoteProps: 'preserve'
     });
 }
 
