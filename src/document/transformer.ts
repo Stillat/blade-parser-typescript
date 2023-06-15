@@ -1992,7 +1992,7 @@ export class Transformer {
                     true
                 );
             }
-            
+
             value = StringUtilities.safeReplace(value, slug, content);
         });
 
@@ -2039,7 +2039,7 @@ export class Transformer {
 
         this.embeddedDirectives.forEach((directive, slug) => {
             let targetIndent = this.indentLevel(slug);
-        
+
             if (targetIndent == 0 && directive.sourceContent.includes("\n")) {
                 targetIndent = IndentLevel.relativeIndentLevel(slug, value) + (2 * this.transformOptions.tabSize);
             }
@@ -2244,7 +2244,7 @@ export class Transformer {
         results = this.transformDynamicElementSwitch(results);
         results = this.transformDynamicDirectives(results);
 
-        results =  this.transformRemovedAttibutes(results);
+        results = this.transformRemovedAttibutes(results);
 
         return this.transformStructures(results);
     }
@@ -2279,12 +2279,21 @@ export class Transformer {
         results = this.transformExtractedDocuments(results);
         results = this.transformPhpBlock(results);
 
-        this.ignoredLiteralBlocks.forEach((nodes, slug) => {
-            const replace = this.selfClosing(slug),
-                startIndent = this.indentLevel(replace);
+        if (this.ignoredLiteralBlocks.size > 0) {
+            this.ignoredLiteralBlocks.forEach((nodes, slug) => {
+                const replace = this.selfClosing(slug);
 
-            results = StringUtilities.safeReplace(results, replace, this.dumpPreservedNodes(nodes));
-        });
+                results = StringUtilities.safeReplace(results, replace, this.dumpPreservedNodes(nodes));
+            });
+
+            if (this.removedAttributes.size > 0) {
+                this.removedAttributes.forEach((attribute, slug) => {
+                    const contentToInsert = attribute.content.substring(1, attribute.content.length - 1);
+
+                    results = StringUtilities.safeReplace(results, slug, contentToInsert);
+                });
+            }
+        }
 
         return results;
     }

@@ -6,7 +6,7 @@ import { IExtractedAttribute } from '../parser/extractedAttribute';
 import { GeneralSyntaxReflow } from './generalSyntaxReflow';
 import { formatAsJavaScript } from './prettier/utils';
 
-const safetyChars: string[] = [
+const safetyChars = [
     '(', ')', '{', '}', , ':', '->', '<', '>'
 ];
 
@@ -23,7 +23,7 @@ export function formatExtractedScript(attribute: IExtractedAttribute,
     let shouldContinue = false;
 
     for (let i = 0; i < safetyChars.length; i++) {
-        if (formatContent.includes(safetyChars[i])) {
+        if (formatContent.includes(safetyChars[i] as string)) {
             shouldContinue = true;
             break;
         }
