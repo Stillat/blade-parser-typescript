@@ -152,41 +152,45 @@ suite('Pint Transformer Acceptance: admin_resources_views_widgets_chart_widget_b
                     chart: null,
 
                     init: function () {
-                        let chart = this.initChart()
+                        let chart = this.initChart();
 
                         $wire.on('updateChartData', async ({ data }) => {
-                            chart.data = this.applyColorToData(data)
-                            chart.update('resize')
-                        })
+                            chart.data = this.applyColorToData(data);
+                            chart.update('resize');
+                        });
 
                         $wire.on('filterChartData', async ({ data }) => {
-                            chart.destroy()
-                            chart = this.initChart(data)
-                        })
+                            chart.destroy();
+                            chart = this.initChart(data);
+                        });
                     },
 
                     initChart: function (data = null) {
-                        data = data ?? {{ json_encode($this->getCachedData()) }}
+                        data = data ?? {{ json_encode($this->getCachedData()) }};
 
-                        return this.chart = new Chart($el, {
+                        return (this.chart = new Chart($el, {
                             type: '{{ $this->getType() }}',
                             data: this.applyColorToData(data),
                             options: {{ json_encode($this->getOptions()) }} ?? {},
-                        })
+                        }));
                     },
 
                     applyColorToData: function (data) {
                         data.datasets.forEach((dataset, datasetIndex) => {
                             if (! dataset.backgroundColor) {
-                                data.datasets[datasetIndex].backgroundColor = getComputedStyle($refs.backgroundColorElement).color
+                                data.datasets[datasetIndex].backgroundColor = getComputedStyle(
+                                    $refs.backgroundColorElement
+                                ).color;
                             }
 
                             if (! dataset.borderColor) {
-                                data.datasets[datasetIndex].borderColor = getComputedStyle($refs.borderColorElement).color
+                                data.datasets[datasetIndex].borderColor = getComputedStyle(
+                                    $refs.borderColorElement
+                                ).color;
                             }
-                        })
+                        });
 
-                        return data
+                        return data;
                     },
                 }"
                 wire:ignore

@@ -294,8 +294,10 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
             <input
                 x-data="{}"
                 x-bind:class="{
-                    'border-gray-300 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:focus:border-primary-500': ! (@js($statePath) in $wire.__instance.serverMemo.errors),
-                    'border-danger-600 ring-danger-600 dark:border-danger-400 dark:ring-danger-400': (@js($statePath) in $wire.__instance.serverMemo.errors),
+                    'border-gray-300 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:focus:border-primary-500':
+                        ! (@js($statePath) in $wire.__instance.serverMemo.errors),
+                    'border-danger-600 ring-danger-600 dark:border-danger-400 dark:ring-danger-400':
+                        @js($statePath) in $wire.__instance.serverMemo.errors,
                 }"
                 {{
                     $getExtraInputAttributeBag()
@@ -326,14 +328,17 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
                 x-ignore
                 ax-load
                 ax-load-src="{{ \\Filament\\Support\\Facades\\FilamentAsset::getAlpineComponentSrc('date-time-picker', 'filament/forms') }}"
-                x-data="dateTimePickerFormComponent({
-                    displayFormat: "{{ convert_date_format($getDisplayFormat())->to('day.js') }}",
-                    firstDayOfWeek: {{ $getFirstDayOfWeek() }},
-                    isAutofocused: @js($isAutofocused()),
-                    locale: @js(app()->getLocale()),
-                    shouldCloseOnDateSelection: @js($shouldCloseOnDateSelection()),
-                    state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')") }},
-                })"
+                x-data="
+                    dateTimePickerFormComponent({
+                        displayFormat:
+                            '{{ convert_date_format($getDisplayFormat())->to('day.js') }}',
+                        firstDayOfWeek: {{ $getFirstDayOfWeek() }},
+                        isAutofocused: @js($isAutofocused()),
+                        locale: @js(app()->getLocale()),
+                        shouldCloseOnDateSelection: @js($shouldCloseOnDateSelection()),
+                        state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')") }},
+                    })
+                "
                 x-on:keydown.esc="isOpen() && $event.stopPropagation()"
                 {{
                     $attributes
@@ -342,14 +347,30 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
                         ->class(['filament-forms-date-time-picker-component relative'])
                 }}
             >
-                <input x-ref="maxDate" type="hidden" value="{{ $getMaxDate() }}" />
-                <input x-ref="minDate" type="hidden" value="{{ $getMinDate() }}" />
-                <input x-ref="disabledDates" type="hidden" value="{{ json_encode($getDisabledDates()) }}" />
+                <input
+                    x-ref="maxDate"
+                    type="hidden"
+                    value="{{ $getMaxDate() }}"
+                />
+                <input
+                    x-ref="minDate"
+                    type="hidden"
+                    value="{{ $getMinDate() }}"
+                />
+                <input
+                    x-ref="disabledDates"
+                    type="hidden"
+                    value="{{ json_encode($getDisabledDates()) }}"
+                />
 
                 <button
                     x-ref="button"
                     x-on:click="togglePanelVisibility()"
-                    x-on:keydown.enter.stop.prevent="if (! $el.disabled) { isOpen() ? selectDate() : togglePanelVisibility() }"
+                    x-on:keydown.enter.stop.prevent="
+                        if (! $el.disabled) {
+                            isOpen() ? selectDate() : togglePanelVisibility();
+                        }
+                    "
                     x-on:keydown.arrow-left.stop.prevent="if (! $el.disabled) focusPreviousDay()"
                     x-on:keydown.arrow-right.stop.prevent="if (! $el.disabled) focusNextDay()"
                     x-on:keydown.arrow-up.stop.prevent="if (! $el.disabled) focusPreviousWeek()"
@@ -389,7 +410,9 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
                     />
 
                     @if ($icon !== false)
-                        <span class="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2">
+                        <span
+                            class="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2"
+                        >
                             <x-filament::icon
                                 name="heroicon-m-calendar"
                                 alias="filament-forms::components.date-time-picker.suffix"
@@ -413,14 +436,21 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
                 >
                     <div class="space-y-3">
                         @if ($hasDate())
-                            <div class="flex items-center justify-between space-x-1 rtl:space-x-reverse">
+                            <div
+                                class="flex items-center justify-between space-x-1 rtl:space-x-reverse"
+                            >
                                 <select
                                     x-model="focusedMonth"
                                     class="grow cursor-pointer border-0 px-1 py-0 text-lg font-medium text-gray-800 outline-none focus:ring-0 dark:bg-gray-700 dark:text-gray-200"
                                     dusk="filament.forms.{{ $statePath }}.focusedMonth"
                                 >
-                                    <template x-for="(month, index) in months">
-                                        <option x-bind:value="index" x-text="month"></option>
+                                    <template
+                                        x-for="(month, index) in months"
+                                    >
+                                        <option
+                                            x-bind:value="index"
+                                            x-text="month"
+                                        ></option>
                                     </template>
                                 </select>
 
@@ -434,17 +464,31 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
                             </div>
 
                             <div class="grid grid-cols-7 gap-1">
-                                <template x-for="(day, index) in dayLabels" x-bind:key="index">
-                                    <div x-text="day" class="text-center text-xs font-medium text-gray-800 dark:text-gray-200"></div>
+                                <template
+                                    x-for="(day, index) in dayLabels"
+                                    x-bind:key="index"
+                                >
+                                    <div
+                                        x-text="day"
+                                        class="text-center text-xs font-medium text-gray-800 dark:text-gray-200"
+                                    ></div>
                                 </template>
                             </div>
 
                             <div role="grid" class="grid grid-cols-7 gap-1">
-                                <template x-for="day in emptyDaysInFocusedMonth" x-bind:key="day">
-                                    <div class="border border-transparent text-center text-sm"></div>
+                                <template
+                                    x-for="day in emptyDaysInFocusedMonth"
+                                    x-bind:key="day"
+                                >
+                                    <div
+                                        class="border border-transparent text-center text-sm"
+                                    ></div>
                                 </template>
 
-                                <template x-for="day in daysInFocusedMonth" x-bind:key="day">
+                                <template
+                                    x-for="day in daysInFocusedMonth"
+                                    x-bind:key="day"
+                                >
                                     <div
                                         x-text="day"
                                         x-on:click="dayIsDisabled(day) || selectDate(day)"
@@ -454,8 +498,13 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
                                         x-bind:class="{
                                             'text-gray-700 dark:text-gray-300': ! dayIsSelected(day),
                                             'cursor-pointer': ! dayIsDisabled(day),
-                                            'bg-primary-50 dark:bg-primary-100 dark:text-gray-600': dayIsToday(day) && ! dayIsSelected(day) && focusedDate.date() !== day && ! dayIsDisabled(day),
-                                            'bg-primary-200 dark:text-gray-600': focusedDate.date() === day && ! dayIsSelected(day),
+                                            'bg-primary-50 dark:bg-primary-100 dark:text-gray-600':
+                                                dayIsToday(day) &&
+                                                ! dayIsSelected(day) &&
+                                                focusedDate.date() !== day &&
+                                                ! dayIsDisabled(day),
+                                            'bg-primary-200 dark:text-gray-600':
+                                                focusedDate.date() === day && ! dayIsSelected(day),
                                             'bg-primary-500 text-white': dayIsSelected(day),
                                             'pointer-events-none': dayIsDisabled(day),
                                             'opacity-50': focusedDate.date() !== day && dayIsDisabled(day),
@@ -468,7 +517,9 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
                         @endif
 
                         @if ($hasTime())
-                            <div class="flex items-center justify-center rounded-lg bg-gray-50 py-2 rtl:flex-row-reverse dark:bg-gray-800">
+                            <div
+                                class="flex items-center justify-center rounded-lg bg-gray-50 py-2 rtl:flex-row-reverse dark:bg-gray-800"
+                            >
                                 <input
                                     max="23"
                                     min="0"
@@ -480,7 +531,11 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
                                     dusk="filament.forms.{{ $statePath }}.hour"
                                 />
 
-                                <span class="bg-gray-50 text-xl font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-200">:</span>
+                                <span
+                                    class="bg-gray-50 text-xl font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                                >
+                                    :
+                                </span>
 
                                 <input
                                     max="59"
@@ -494,7 +549,11 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
                                 />
 
                                 @if ($hasSeconds())
-                                    <span class="bg-gray-50 text-xl font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-200">:</span>
+                                    <span
+                                        class="bg-gray-50 text-xl font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                                    >
+                                        :
+                                    </span>
 
                                     <input
                                         max="59"

@@ -21,10 +21,12 @@ suite('Pint Transformer Acceptance: admin_resources_views_resources_pages_create
 </x-filament::page>
 `;
         const output = `<x-filament::page
-    :class="\\Illuminate\\Support\\Arr::toCssClasses([
-        'filament-resources-create-record-page',
-        'filament-resources-' . str_replace('/', '-', $this->getResource()::getSlug()),
-    ])"
+    :class="
+        \\Illuminate\\Support\\Arr::toCssClasses([
+            'filament-resources-create-record-page',
+            'filament-resources-' . str_replace('/', '-', $this->getResource()::getSlug()),
+        ])
+    "
 >
     <x-filament::form wire:submit.prevent="create">
         {{ $this->form }}

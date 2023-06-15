@@ -19,7 +19,7 @@ export function formatExtractedScript(attribute: IExtractedAttribute,
     let addedVarPlaceholder = false;
 
     const formatContent = attribute.content.substring(1, attribute.content.length - 1).trim();
-
+    
     let shouldContinue = false;
 
     for (let i = 0; i < safetyChars.length; i++) {
@@ -29,7 +29,7 @@ export function formatExtractedScript(attribute: IExtractedAttribute,
         }
     }
 
-    if (! shouldContinue) {
+    if (!shouldContinue) {
         return attribute.content;
     }
 

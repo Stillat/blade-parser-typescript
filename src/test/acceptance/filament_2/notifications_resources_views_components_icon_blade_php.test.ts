@@ -30,16 +30,18 @@ suite('Pint Transformer Acceptance: notifications_resources_views_components_ico
 
 <x-dynamic-component
     :component="$icon"
-    :class="\\Illuminate\\Support\\Arr::toCssClasses([
-        'filament-notifications-icon h-6 w-6',
-        match ($color) {
-            'success' => 'text-success-400',
-            'warning' => 'text-warning-400',
-            'danger' => 'text-danger-400',
-            'primary' => 'text-primary-400',
-            'secondary' => 'text-gray-400',
-        },
-    ])"
+    :class="
+        \\Illuminate\\Support\\Arr::toCssClasses([
+            'filament-notifications-icon h-6 w-6',
+            match ($color) {
+                'success' => 'text-success-400',
+                'warning' => 'text-warning-400',
+                'danger' => 'text-danger-400',
+                'primary' => 'text-primary-400',
+                'secondary' => 'text-gray-400',
+            },
+        ])
+    "
 />
 `;
 

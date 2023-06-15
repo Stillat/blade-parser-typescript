@@ -174,7 +174,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_affixes_bla
             @if (filled($statePath))
                 x-bind:class="{
                     'text-gray-400': ! (@js($statePath) in $wire.__instance.serverMemo.errors),
-                    'text-danger-400': (@js($statePath) in $wire.__instance.serverMemo.errors),
+                    'text-danger-400': @js($statePath) in $wire.__instance.serverMemo.errors,
                 }"
             @endif
         >
@@ -197,7 +197,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_affixes_bla
             @if (filled($statePath))
                 x-bind:class="{
                     'text-gray-400': ! (@js($statePath) in $wire.__instance.serverMemo.errors),
-                    'text-danger-400': (@js($statePath) in $wire.__instance.serverMemo.errors),
+                    'text-danger-400': @js($statePath) in $wire.__instance.serverMemo.errors,
                 }"
             @endif
         >
@@ -219,7 +219,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_affixes_bla
             @if (filled($statePath))
                 x-bind:class="{
                     'text-gray-400': ! (@js($statePath) in $wire.__instance.serverMemo.errors),
-                    'text-danger-400': (@js($statePath) in $wire.__instance.serverMemo.errors),
+                    'text-danger-400': @js($statePath) in $wire.__instance.serverMemo.errors,
                 }"
             @endif
         >
@@ -236,7 +236,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_affixes_bla
             @if (filled($statePath))
                 x-bind:class="{
                     'text-gray-400': ! (@js($statePath) in $wire.__instance.serverMemo.errors),
-                    'text-danger-400': (@js($statePath) in $wire.__instance.serverMemo.errors),
+                    'text-danger-400': @js($statePath) in $wire.__instance.serverMemo.errors,
                 }"
             @endif
         >

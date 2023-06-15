@@ -18,10 +18,12 @@ suite('Pint Transformer Acceptance: admin_resources_views_resources_pages_list_r
 </x-filament::page>
 `;
         const output = `<x-filament::page
-    :class="\\Illuminate\\Support\\Arr::toCssClasses([
-        'filament-resources-list-records-page',
-        'filament-resources-' . str_replace('/', '-', $this->getResource()::getSlug()),
-    ])"
+    :class="
+        \\Illuminate\\Support\\Arr::toCssClasses([
+            'filament-resources-list-records-page',
+            'filament-resources-' . str_replace('/', '-', $this->getResource()::getSlug()),
+        ])
+    "
 >
     {{ \\Filament\\Facades\\Filament::renderHook('resource.pages.list-records.table.start') }}
 

@@ -172,7 +172,10 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_user_menu_
 
 <x-filament::dropdown placement="bottom-end" class="filament-user-menu">
     <x-slot name="trigger" class="ms-4">
-        <button class="block" aria-label="{{ __('filament::layout.buttons.user_menu.label') }}">
+        <button
+            class="block"
+            aria-label="{{ __('filament::layout.buttons.user_menu.label') }}"
+        >
             <x-filament::avatar.user :user="$user" />
         </button>
     </x-slot>
@@ -196,41 +199,61 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_user_menu_
                 theme: null,
 
                 init: function () {
-                    this.theme = localStorage.getItem("theme") || "system";
+                    this.theme = localStorage.getItem('theme') || 'system';
 
-                    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (event) => {
-                        if (this.theme !== "system") {
-                            return;
-                        }
+                    window
+                        .matchMedia('(prefers-color-scheme: dark)')
+                        .addEventListener('change', (event) => {
+                            if (this.theme !== 'system') {
+                                return;
+                            }
 
-                        if (event.matches && !document.documentElement.classList.contains("dark")) {
-                            document.documentElement.classList.add("dark");
-                        } else if (!event.matches && document.documentElement.classList.contains("dark")) {
-                            document.documentElement.classList.remove("dark");
-                        }
-                    });
+                            if (
+                                event.matches &&
+                                ! document.documentElement.classList.contains('dark')
+                            ) {
+                                document.documentElement.classList.add('dark');
+                            } else if (
+                                ! event.matches &&
+                                document.documentElement.classList.contains('dark')
+                            ) {
+                                document.documentElement.classList.remove('dark');
+                            }
+                        });
 
-                    $watch("theme", () => {
-                        localStorage.setItem("theme", this.theme);
+                    $watch('theme', () => {
+                        localStorage.setItem('theme', this.theme);
 
-                        if (this.theme === "dark" && !document.documentElement.classList.contains("dark")) {
-                            document.documentElement.classList.add("dark");
-                        } else if (this.theme === "light" && document.documentElement.classList.contains("dark")) {
-                            document.documentElement.classList.remove("dark");
-                        } else if (this.theme === "system") {
-                            if (this.isSystemDark() && !document.documentElement.classList.contains("dark")) {
-                                document.documentElement.classList.add("dark");
-                            } else if (!this.isSystemDark() && document.documentElement.classList.contains("dark")) {
-                                document.documentElement.classList.remove("dark");
+                        if (
+                            this.theme === 'dark' &&
+                            ! document.documentElement.classList.contains('dark')
+                        ) {
+                            document.documentElement.classList.add('dark');
+                        } else if (
+                            this.theme === 'light' &&
+                            document.documentElement.classList.contains('dark')
+                        ) {
+                            document.documentElement.classList.remove('dark');
+                        } else if (this.theme === 'system') {
+                            if (
+                                this.isSystemDark() &&
+                                ! document.documentElement.classList.contains('dark')
+                            ) {
+                                document.documentElement.classList.add('dark');
+                            } else if (
+                                ! this.isSystemDark() &&
+                                document.documentElement.classList.contains('dark')
+                            ) {
+                                document.documentElement.classList.remove('dark');
                             }
                         }
 
-                        $dispatch("theme-changed", this.theme);
+                        $dispatch('theme-changed', this.theme);
                     });
                 },
 
                 isSystemDark: function () {
-                    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+                    return window.matchMedia('(prefers-color-scheme: dark)').matches;
                 },
             }"
             class="filament-theme-switcher flex items-center divide-x divide-gray-950/5 border-b border-gray-950/5 dark:divide-gray-700 dark:border-gray-700"
@@ -243,7 +266,11 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_user_menu_
                 x-bind:class="theme === 'light' ? 'text-primary-500' : 'text-gray-700 dark:text-gray-200'"
                 class="flex flex-1 items-center justify-center p-2 hover:bg-gray-500/10 focus:bg-gray-500/10"
             >
-                <x-filament::icon name="heroicon-m-sun" alias="app::theme.light" size="h-5 w-5" />
+                <x-filament::icon
+                    name="heroicon-m-sun"
+                    alias="app::theme.light"
+                    size="h-5 w-5"
+                />
             </button>
 
             <button
@@ -254,7 +281,11 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_user_menu_
                 x-bind:class="theme === 'dark' ? 'text-primary-500' : 'text-gray-700 dark:text-gray-200'"
                 class="flex flex-1 items-center justify-center p-2 text-gray-700 hover:bg-gray-500/10 focus:bg-gray-500/10"
             >
-                <x-filament::icon name="heroicon-m-moon" alias="app::theme.dark" size="h-5 w-5" />
+                <x-filament::icon
+                    name="heroicon-m-moon"
+                    alias="app::theme.dark"
+                    size="h-5 w-5"
+                />
             </button>
 
             <button
@@ -265,14 +296,23 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_user_menu_
                 x-bind:class="theme === 'system' ? 'text-primary-500' : 'text-gray-700 dark:text-gray-200'"
                 class="flex flex-1 items-center justify-center p-2 text-gray-700 hover:bg-gray-500/10 focus:bg-gray-500/10"
             >
-                <x-filament::icon name="heroicon-m-computer-desktop" alias="app::theme.system" size="h-5 w-5" />
+                <x-filament::icon
+                    name="heroicon-m-computer-desktop"
+                    alias="app::theme.system"
+                    size="h-5 w-5"
+                />
             </button>
         </div>
     @endif
 
     <x-filament::dropdown.list>
         @foreach ($items as $key => $item)
-            <x-filament::dropdown.list.item :color="$item->getColor() ?? 'gray'" :icon="$item->getIcon()" :href="$item->getUrl()" tag="a">
+            <x-filament::dropdown.list.item
+                :color="$item->getColor() ?? 'gray'"
+                :icon="$item->getIcon()"
+                :href="$item->getUrl()"
+                tag="a"
+            >
                 {{ $item->getLabel() }}
             </x-filament::dropdown.list.item>
         @endforeach

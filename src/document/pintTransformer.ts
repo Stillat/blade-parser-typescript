@@ -169,7 +169,16 @@ export class PintTransformer {
         }
 
         // Handle the case of nested child documents having different index values.
-        const preparedEchoContent = this.prepareContent(echo.content);
+        let preparedEchoContent = this.prepareContent(echo.content);
+        if (this.contentMapping.has(preparedEchoContent)) {
+            const originalIndex = this.contentMapping.get(preparedEchoContent) as string;
+
+            if (this.resultMapping.has(originalIndex)) {
+                return this.resultMapping.get(originalIndex) as string;
+            }
+        }
+
+        preparedEchoContent = this.prepareContent(echo.content.trim());
         if (this.contentMapping.has(preparedEchoContent)) {
             const originalIndex = this.contentMapping.get(preparedEchoContent) as string;
 

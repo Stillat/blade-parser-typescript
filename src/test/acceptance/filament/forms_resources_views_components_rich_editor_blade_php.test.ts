@@ -430,26 +430,34 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_rich_editor
         x-ignore
         ax-load
         ax-load-src="{{ \\Filament\\Support\\Facades\\FilamentAsset::getAlpineComponentSrc('rich-editor', 'filament/forms') }}"
-        x-data="richEditorFormComponent({
-            state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')") }},
-        })"
-        x-on:trix-change="state = $event.target.value"
-        x-on:trix-attachment-add="
-            if (! $event.attachment.file) return
-
-            let attachment = $event.attachment
-
-            $wire.upload(\`componentFileAttachments.{{ $statePath }}\`, attachment.file, () => {
-                $wire.getFormComponentFileAttachmentUrl('{{ $statePath }}').then((url) => {
-                    attachment.setAttributes({
-                        url: url,
-                        href: url,
-                    })
-                })
+        x-data="
+            richEditorFormComponent({
+                state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')") }},
             })
         "
+        x-on:trix-change="state = $event.target.value"
+        x-on:trix-attachment-add="
+            if (! $event.attachment.file) return;
+
+            let attachment = $event.attachment;
+
+            $wire.upload(
+                \`componentFileAttachments.{{ $statePath }}\`,
+                attachment.file,
+                () => {
+                    $wire
+                        .getFormComponentFileAttachmentUrl('{{ $statePath }}')
+                        .then((url) => {
+                            attachment.setAttributes({
+                                url: url,
+                                href: url,
+                            });
+                        });
+                }
+            )
+        "
         x-on:trix-file-accept="
-            if ({{ $hasToolbarButton('attachFiles') ? 'true' : 'false' }}) return
+            if ({{ $hasToolbarButton('attachFiles') ? 'true' : 'false' }}) return;
 
             $event.preventDefault()
         "
@@ -463,13 +471,23 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_rich_editor
         @unless ($isDisabled())
             <input id="trix-value-{{ $id }}" type="hidden" />
 
-            <trix-toolbar id="trix-toolbar-{{ $id }}" @class([
-                'hidden' => ! count($getToolbarButtons()),
-            ])>
-                <div class="flex items-stretch justify-between space-x-4 overflow-x-auto overflow-y-hidden rtl:space-x-reverse">
-                    <div class="flex items-stretch space-x-4 outline-none rtl:space-x-reverse">
+            <trix-toolbar
+                id="trix-toolbar-{{ $id }}"
+                @class([
+                    'hidden' => ! count($getToolbarButtons()),
+                ])
+            >
+                <div
+                    class="flex items-stretch justify-between space-x-4 overflow-x-auto overflow-y-hidden rtl:space-x-reverse"
+                >
+                    <div
+                        class="flex items-stretch space-x-4 outline-none rtl:space-x-reverse"
+                    >
                         @if ($hasToolbarButton(['bold', 'italic', 'underline', 'strike', 'link']))
-                            <div data-trix-button-group="text-tools" class="flex items-stretch space-x-1 rtl:space-x-reverse">
+                            <div
+                                data-trix-button-group="text-tools"
+                                class="flex items-stretch space-x-1 rtl:space-x-reverse"
+                            >
                                 @if ($hasToolbarButton('bold'))
                                     <x-filament-forms::rich-editor.toolbar-button
                                         data-trix-attribute="bold"
@@ -601,7 +619,10 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_rich_editor
                         @endif
 
                         @if ($hasToolbarButton(['h1', 'h2', 'h3']))
-                            <div data-trix-button-group="heading-tools" class="flex items-stretch space-x-1 rtl:space-x-reverse">
+                            <div
+                                data-trix-button-group="heading-tools"
+                                class="flex items-stretch space-x-1 rtl:space-x-reverse"
+                            >
                                 @if ($hasToolbarButton('h1'))
                                     <x-filament-forms::rich-editor.toolbar-button
                                         data-trix-attribute="heading1"
@@ -635,7 +656,10 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_rich_editor
                         @endif
 
                         @if ($hasToolbarButton(['blockquote', 'codeBlock', 'bulletList', 'orderedList']))
-                            <div data-trix-button-group="block-tools" class="flex items-stretch space-x-1 rtl:space-x-reverse">
+                            <div
+                                data-trix-button-group="block-tools"
+                                class="flex items-stretch space-x-1 rtl:space-x-reverse"
+                            >
                                 @if ($hasToolbarButton('blockquote'))
                                     <x-filament-forms::rich-editor.toolbar-button
                                         data-trix-attribute="quote"
@@ -735,7 +759,10 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_rich_editor
                         @endif
 
                         @if ($hasToolbarButton('attachFiles'))
-                            <div data-trix-button-group="file-tools" class="flex items-stretch space-x-1 rtl:space-x-reverse">
+                            <div
+                                data-trix-button-group="file-tools"
+                                class="flex items-stretch space-x-1 rtl:space-x-reverse"
+                            >
                                 <x-filament-forms::rich-editor.toolbar-button
                                     data-trix-action="attachFiles"
                                     title="{{ __('filament-forms::components.rich_editor.toolbar_buttons.attach_files') }}"
@@ -762,7 +789,10 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_rich_editor
                     </div>
 
                     @if ($hasToolbarButton(['undo', 'redo']))
-                        <div data-trix-button-group="history-tools" class="flex items-center space-x-1 rtl:space-x-reverse">
+                        <div
+                            data-trix-button-group="history-tools"
+                            class="flex items-center space-x-1 rtl:space-x-reverse"
+                        >
                             @if ($hasToolbarButton('undo'))
                                 <x-filament-forms::rich-editor.toolbar-button
                                     data-trix-action="undo"
@@ -817,7 +847,11 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_rich_editor
                 </div>
 
                 <div data-trix-dialogs class="trix-dialogs" x-cloak>
-                    <div data-trix-dialog="href" data-trix-dialog-attribute="href" class="trix-dialog trix-dialog--link">
+                    <div
+                        data-trix-dialog="href"
+                        data-trix-dialog-attribute="href"
+                        class="trix-dialog trix-dialog--link"
+                    >
                         <div class="trix-dialog__link-fields">
                             <input
                                 name="href"
@@ -861,8 +895,10 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_rich_editor
                 dusk="filament.forms.{{ $statePath }}"
                 {{ $getExtraInputAttributeBag()->class(['prose dark:prose-invert block w-full max-w-none break-words rounded-lg bg-white shadow-sm outline-none transition duration-75 focus:ring-1 focus:ring-inset dark:bg-gray-700']) }}
                 x-bind:class="{
-                    'border-gray-300 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:focus:border-primary-500': ! (@js($statePath) in $wire.__instance.serverMemo.errors),
-                    'border-danger-600 ring-danger-600 dark:border-danger-400 dark:ring-danger-400': (@js($statePath) in $wire.__instance.serverMemo.errors),
+                    'border-gray-300 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:focus:border-primary-500':
+                        ! (@js($statePath) in $wire.__instance.serverMemo.errors),
+                    'border-danger-600 ring-danger-600 dark:border-danger-400 dark:ring-danger-400':
+                        @js($statePath) in $wire.__instance.serverMemo.errors,
                 }"
             ></trix-editor>
         @else

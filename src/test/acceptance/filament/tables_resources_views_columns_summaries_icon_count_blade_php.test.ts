@@ -66,16 +66,18 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_summaries_ico
                     <x-filament::icon
                         :name="$icon"
                         alias="filament-tables::columns.summaries.icon-count"
-                        :color="match ($color) {
-                            'danger' => 'text-danger-500',
-                            'gray', null => 'text-gray-500',
-                            'info' => 'text-info-500',
-                            'primary' => 'text-primary-500',
-                            'secondary' => 'text-secondary-500',
-                            'success' => 'text-success-500',
-                            'warning' => 'text-warning-500',
-                            default => $color,
-                        }"
+                        :color="
+                            match ($color) {
+                                'danger' => 'text-danger-500',
+                                'gray', null => 'text-gray-500',
+                                'info' => 'text-info-500',
+                                'primary' => 'text-primary-500',
+                                'secondary' => 'text-secondary-500',
+                                'success' => 'text-success-500',
+                                'warning' => 'text-warning-500',
+                                default => $color,
+                            }
+                        "
                         size="h-4 w-4"
                     />
                 </div>

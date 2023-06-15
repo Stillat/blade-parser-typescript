@@ -2024,7 +2024,6 @@ export class Transformer {
         this.embeddedEchos.forEach((echo, slug) => {
             let indentLevel = this.indentLevel(slug);
 
-            // TODO: REVIEW!!!
             if (indentLevel == 0) {
                 indentLevel = this.transformOptions.tabSize;
             }
@@ -2231,10 +2230,6 @@ export class Transformer {
         const reflowedContent = this.reflowSlugs(content);
 
         this.structureLines = StringUtilities.breakByNewLine(reflowedContent);
-
-        // TODO: Migrate remaining dynamic element stuff here as well.
-        // IMPROVE: If the if/block/etc. is just inside the fragment
-        //          but NOT inside the name or a param, can sub-doc block that :)
 
         // Dynamic blocks might be hiding some attributes. We need to restore
         // those first before transforming the removed attributes safely.

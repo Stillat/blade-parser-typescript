@@ -240,11 +240,15 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_builder_bla
     <div>
         @if ((count($containers) > 1) && $isCollapsible)
             <div class="space-x-2 rtl:space-x-reverse" x-data="{}">
-                <span x-on:click="$dispatch('builder-collapse', '{{ $statePath }}')">
+                <span
+                    x-on:click="$dispatch('builder-collapse', '{{ $statePath }}')"
+                >
                     {{ $getAction('collapseAll') }}
                 </span>
 
-                <span x-on:click="$dispatch('builder-expand', '{{ $statePath }}')">
+                <span
+                    x-on:click="$dispatch('builder-expand', '{{ $statePath }}')"
+                >
                     {{ $getAction('expandAll') }}
                 </span>
             </div>
@@ -291,19 +295,27 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_builder_bla
                         wire:key="{{ $this->id }}.{{ $item->getStatePath() }}.{{ $field::class }}.item"
                         x-sortable-item="{{ $uuid }}"
                         x-on:expand-concealing-component.window="
-                            error = $el.querySelector('[data-validation-error]')
+                            error = $el.querySelector('[data-validation-error]');
 
                             if (! error) {
-                                return
+                                return;
                             }
 
-                            isCollapsed = false
+                            isCollapsed = false;
 
                             if (document.body.querySelector('[data-validation-error]') !== error) {
-                                return
+                                return;
                             }
 
-                            setTimeout(() => $el.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' }), 200)
+                            setTimeout(
+                                () =>
+                                    $el.scrollIntoView({
+                                        behavior: 'smooth',
+                                        block: 'start',
+                                        inline: 'start',
+                                    }),
+                                200
+                            )
                         "
                         class="filament-forms-builder-component-item relative rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-800 dark:ring-white/20"
                     >
@@ -322,7 +334,9 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_builder_bla
                                 @endif
 
                                 @if ($hasBlockLabels)
-                                    <p class="flex-none truncate px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
+                                    <p
+                                        class="flex-none truncate px-4 text-xs font-medium text-gray-600 dark:text-gray-400"
+                                    >
                                         @php
                                             $block = $item->getParentComponent();
 
@@ -336,47 +350,64 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_builder_bla
                                         @endphp
 
                                         @if ($hasBlockNumbers)
-                                            <small class="font-mono">{{ $loop->iteration }}</small>
+                                            <small class="font-mono">
+                                                {{ $loop->iteration }}
+                                            </small>
                                         @endif
                                     </p>
                                 @endif
 
                                 <div class="flex-1"></div>
 
-                                <ul class="flex divide-x rtl:divide-x-reverse dark:divide-gray-700">
+                                <ul
+                                    class="flex divide-x rtl:divide-x-reverse dark:divide-gray-700"
+                                >
                                     @if ($isReorderableWithButtons)
                                         @if (! $loop->first)
-                                            <li class="flex items-center justify-center">
+                                            <li
+                                                class="flex items-center justify-center"
+                                            >
                                                 {{ $moveUpAction(['item' => $uuid]) }}
                                             </li>
                                         @endif
 
                                         @if (! $loop->last)
-                                            <li class="flex items-center justify-center">
+                                            <li
+                                                class="flex items-center justify-center"
+                                            >
                                                 {{ $moveDownAction(['item' => $uuid]) }}
                                             </li>
                                         @endif
                                     @endif
 
                                     @if ($cloneAction)
-                                        <li class="flex items-center justify-center">
+                                        <li
+                                            class="flex items-center justify-center"
+                                        >
                                             {{ $cloneAction(['item' => $uuid]) }}
                                         </li>
                                     @endif
 
                                     @if ($deleteAction)
-                                        <li class="flex items-center justify-center">
+                                        <li
+                                            class="flex items-center justify-center"
+                                        >
                                             {{ $deleteAction(['item' => $uuid]) }}
                                         </li>
                                     @endif
 
                                     @if ($isCollapsible)
-                                        <li x-on:click.stop="isCollapsed = ! isCollapsed">
+                                        <li
+                                            x-on:click.stop="isCollapsed = ! isCollapsed"
+                                        >
                                             <div x-show="!isCollapsed">
                                                 {{ $getAction('collapse') }}
                                             </div>
 
-                                            <div x-show="isCollapsed" x-cloak>
+                                            <div
+                                                x-show="isCollapsed"
+                                                x-cloak
+                                            >
                                                 {{ $getAction('expand') }}
                                             </div>
                                         </li>
@@ -385,17 +416,35 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_builder_bla
                             </header>
                         @endif
 
-                        <div x-bind:class="{ 'invisible h-0 !m-0 overflow-y-hidden': isCollapsed, 'p-6': !isCollapsed}">
+                        <div
+                            x-bind:class="{
+                                'invisible h-0 !m-0 overflow-y-hidden': isCollapsed,
+                                'p-6': ! isCollapsed,
+                            }"
+                        >
                             {{ $item }}
                         </div>
 
-                        <div class="p-2 text-center text-xs text-gray-400" x-show="isCollapsed" x-cloak>
+                        <div
+                            class="p-2 text-center text-xs text-gray-400"
+                            x-show="isCollapsed"
+                            x-cloak
+                        >
                             {{ __('filament-forms::components.builder.collapsed') }}
                         </div>
 
                         @if ((! $loop->last) && $addBetweenAction && $reorderAction)
-                            <div x-show="isAddButtonVisible" x-transition class="absolute inset-x-0 bottom-0 -mb-12 flex h-12 items-center justify-center">
-                                <x-filament-forms::builder.block-picker :action="$addBetweenAction" :blocks="$getBlocks()" :after-item="$uuid" :state-path="$statePath">
+                            <div
+                                x-show="isAddButtonVisible"
+                                x-transition
+                                class="absolute inset-x-0 bottom-0 -mb-12 flex h-12 items-center justify-center"
+                            >
+                                <x-filament-forms::builder.block-picker
+                                    :action="$addBetweenAction"
+                                    :blocks="$getBlocks()"
+                                    :after-item="$uuid"
+                                    :state-path="$statePath"
+                                >
                                     <x-slot name="trigger">
                                         {{ $addBetweenAction }}
                                     </x-slot>
@@ -408,7 +457,12 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_builder_bla
         @endif
 
         @if ($addAction)
-            <x-filament-forms::builder.block-picker :action="$addAction" :blocks="$getBlocks()" :state-path="$statePath" class="flex justify-center">
+            <x-filament-forms::builder.block-picker
+                :action="$addAction"
+                :blocks="$getBlocks()"
+                :state-path="$statePath"
+                class="flex justify-center"
+            >
                 <x-slot name="trigger">
                     {{ $addAction }}
                 </x-slot>

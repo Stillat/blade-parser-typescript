@@ -108,10 +108,16 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
 ])
 
 <li
-    x-data="{ label: {{ \\Illuminate\\Support\\Js::from((filled($parentGroup) ? "{$parentGroup}." : null) . $label) }} }"
+    x-data="{
+        label: {{ \\Illuminate\\Support\\Js::from((filled($parentGroup) ? "{$parentGroup}." : null) . $label) }},
+    }"
     class="filament-sidebar-group"
     @if (filled($parentGroup))
-        x-bind:class="{{ config('filament.layout.sidebar.is_collapsible_on_desktop') ? '$store.sidebar.isOpen' : 'true' }} ? 'ms-11 pe-3 pt-3' : 'hidden'"
+        x-bind:class="
+            {{ config('filament.layout.sidebar.is_collapsible_on_desktop') ? '$store.sidebar.isOpen' : 'true' }}
+                ? 'ms-11 pe-3 pt-3'
+                : 'hidden'
+        "
     @endif
 >
     @if ($label)
@@ -121,7 +127,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
             @endif
             @if (filament()->isSidebarCollapsibleOnDesktop())
                 x-show="$store.sidebar.isOpen"
-                x-transition:enter="lg:transition delay-100"
+                x-transition:enter="delay-100 lg:transition"
                 x-transition:enter-start="opacity-0"
                 x-transition:enter-end="opacity-100"
             @endif
@@ -129,10 +135,18 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
         >
             <div class="flex items-center gap-4">
                 @if ($icon)
-                    <x-filament::icon :name="$icon" alias="app::sidebar.group" color="text-gray-600 dark:text-gray-300" size="h-3 w-3" class="ms-1 shrink-0" />
+                    <x-filament::icon
+                        :name="$icon"
+                        alias="app::sidebar.group"
+                        color="text-gray-600 dark:text-gray-300"
+                        size="h-3 w-3"
+                        class="ms-1 shrink-0"
+                    />
                 @endif
 
-                <p class="text-primary-600 dark:text-primary-500 flex-1 text-xs font-bold uppercase tracking-wider">
+                <p
+                    class="text-primary-600 dark:text-primary-500 flex-1 text-xs font-bold uppercase tracking-wider"
+                >
                     {{ $label }}
                 </p>
             </div>
@@ -150,9 +164,14 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
     @endif
 
     <ul
-        x-show="! ($store.sidebar.groupIsCollapsed(label) && {{ filament()->isSidebarCollapsibleOnDesktop() ? '$store.sidebar.isOpen' : 'true' }})"
+        x-show="
+            ! (
+                $store.sidebar.groupIsCollapsed(label) &&
+                {{ filament()->isSidebarCollapsibleOnDesktop() ? '$store.sidebar.isOpen' : 'true' }}
+            )
+        "
         @if (filament()->isSidebarCollapsibleOnDesktop())
-            x-transition:enter="lg:transition delay-100"
+            x-transition:enter="delay-100 lg:transition"
             x-transition:enter-start="opacity-0"
             x-transition:enter-end="opacity-100"
         @endif

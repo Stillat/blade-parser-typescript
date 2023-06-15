@@ -136,7 +136,9 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_toggle_column
     $state = $getState();
 @endphp
 
-<div wire:key="{{ $this->id }}.table.record.{{ $recordKey }}.column.{{ $getName() }}.toggle-column.{{ $state ? 'true' : 'false' }}">
+<div
+    wire:key="{{ $this->id }}.table.record.{{ $recordKey }}.column.{{ $getName() }}.toggle-column.{{ $state ? 'true' : 'false' }}"
+>
     <div
         x-data="{
             error: undefined,
@@ -161,48 +163,50 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_toggle_column
             x-bind:aria-checked="state.toString()"
             x-on:click="
                 if (isLoading) {
-                    return
+                    return;
                 }
 
-                state = ! state
+                state = ! state;
 
-                isLoading = true
-                response = await $wire.updateTableColumnState(@js($getName()), @js($recordKey), state)
-                error = response?.error ?? undefined
+                isLoading = true;
+                response = await $wire.updateTableColumnState(@js($getName()), @js($recordKey), state);
+                error = response?.error ?? undefined;
 
                 if (error) {
-                    state = ! state
+                    state = ! state;
                 }
 
                 isLoading = false
             "
             x-tooltip="error"
             x-bind:class="
-                (state ? '{{
-                    match ($getOnColor()) {
-                        'danger' => 'bg-danger-600',
-                        'gray' => 'bg-gray-600',
-                        'info' => 'bg-info-600',
-                        'primary', null => 'bg-primary-600',
-                        'secondary' => 'bg-secondary-600',
-                        'success' => 'bg-success-600',
-                        'warning' => 'bg-warning-600',
-                        default => $onColor,
-                    }
-                }}' : '{{
-                    match ($getOffColor()) {
-                        'danger' => 'bg-danger-600',
-                        'gray' => 'bg-gray-600',
-                        'info' => 'bg-info-600',
-                        'primary' => 'bg-primary-600',
-                        'secondary' => 'bg-secondary-600',
-                        'success' => 'bg-success-600',
-                        'warning' => 'bg-warning-600',
-                        null => 'bg-gray-200 dark:bg-gray-700',
-                        default => $offColor,
-                    }
-                }}') +
-                (isLoading ? ' opacity-70 pointer-events-none' : '')
+                (state
+                    ? '{{
+                        match ($getOnColor()) {
+                            'danger' => 'bg-danger-600',
+                            'gray' => 'bg-gray-600',
+                            'info' => 'bg-info-600',
+                            'primary', null => 'bg-primary-600',
+                            'secondary' => 'bg-secondary-600',
+                            'success' => 'bg-success-600',
+                            'warning' => 'bg-warning-600',
+                            default => $onColor,
+                        }
+                    }}'
+                    : '{{
+                        match ($getOffColor()) {
+                            'danger' => 'bg-danger-600',
+                            'gray' => 'bg-gray-600',
+                            'info' => 'bg-info-600',
+                            'primary' => 'bg-primary-600',
+                            'secondary' => 'bg-secondary-600',
+                            'success' => 'bg-success-600',
+                            'warning' => 'bg-warning-600',
+                            null => 'bg-gray-200 dark:bg-gray-700',
+                            default => $offColor,
+                        }
+                    }}') +
+                    (isLoading ? ' opacity-70 pointer-events-none' : '')
             "
             @disabled($isDisabled())
             type="button"
@@ -219,17 +223,19 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_toggle_column
                     <x-filament::icon
                         :name="$getOffIcon()"
                         alias="filament-tables::columns.toggle.off"
-                        :color="match ($offColor) {
-                            'danger' => 'text-danger-600',
-                            'gray' => 'text-gray-600',
-                            'info' => 'text-info-600',
-                            'primary' => 'text-primary-600',
-                            'secondary' => 'text-secondary-600',
-                            'success' => 'text-success-600',
-                            'warning' => 'text-warning-600',
-                            null => 'text-gray-400 dark:text-gray-700',
-                            default => $offColor,
-                        }"
+                        :color="
+                            match ($offColor) {
+                                'danger' => 'text-danger-600',
+                                'gray' => 'text-gray-600',
+                                'info' => 'text-info-600',
+                                'primary' => 'text-primary-600',
+                                'secondary' => 'text-secondary-600',
+                                'success' => 'text-success-600',
+                                'warning' => 'text-warning-600',
+                                null => 'text-gray-400 dark:text-gray-700',
+                                default => $offColor,
+                            }
+                        "
                         size="h-3 w-3"
                     />
                 @endif
@@ -247,16 +253,18 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_toggle_column
                     <x-filament::icon
                         :name="$getOnIcon()"
                         alias="filament-tables::columns.toggle.on"
-                        :color="match ($onColor) {
-                            'danger' => 'text-danger-600',
-                            'gray' => 'text-gray-600',
-                            'info' => 'text-info-600',
-                            'primary', null => 'text-primary-600',
-                            'secondary' => 'text-secondary-600',
-                            'success' => 'text-success-600',
-                            'warning' => 'text-warning-600',
-                            default => $onColor,
-                        }"
+                        :color="
+                            match ($onColor) {
+                                'danger' => 'text-danger-600',
+                                'gray' => 'text-gray-600',
+                                'info' => 'text-info-600',
+                                'primary', null => 'text-primary-600',
+                                'secondary' => 'text-secondary-600',
+                                'success' => 'text-success-600',
+                                'warning' => 'text-warning-600',
+                                default => $onColor,
+                            }
+                        "
                         size="h-3 w-3"
                         x-cloak="x-cloak"
                     />

@@ -36,21 +36,32 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tabs_tab_bl
     id="{{ $getId() }}"
     role="tabpanel"
     tabindex="0"
-    x-bind:class="{ 'invisible h-0 p-0 overflow-y-hidden': tab !== '{{ $getId() }}', 'p-6': tab === '{{ $getId() }}' }"
+    x-bind:class="{
+        'invisible h-0 p-0 overflow-y-hidden': tab !== '{{ $getId() }}',
+        'p-6': tab === '{{ $getId() }}',
+    }"
     x-on:expand-concealing-component.window="
-        error = $el.querySelector('[data-validation-error]')
+        error = $el.querySelector('[data-validation-error]');
 
         if (! error) {
-            return
+            return;
         }
 
-        tab = @js($getId())
+        tab = @js($getId());
 
         if (document.body.querySelector('[data-validation-error]') !== error) {
-            return
+            return;
         }
 
-        setTimeout(() => $el.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' }), 200)
+        setTimeout(
+            () =>
+                $el.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start',
+                    inline: 'start',
+                }),
+            200
+        )
     "
     {{ $attributes->merge($getExtraAttributes())->class(['filament-forms-tabs-component-tab outline-none']) }}
     wire:key="{{ $this->id }}.{{ $getStatePath() }}.{{ \\Filament\\Forms\\Components\\Tab::class }}.tabs.{{ $getId() }}"

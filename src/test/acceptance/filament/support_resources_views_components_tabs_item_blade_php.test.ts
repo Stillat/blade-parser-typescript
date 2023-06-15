@@ -126,8 +126,10 @@ suite('Pint Transformer Acceptance: support_resources_views_components_tabs_item
     @endif
     @if ($alpineActive)
         x-bind:class="{
-            'hover:text-gray-800 focus:text-primary-600 dark:text-gray-400 dark:hover:text-gray-300 dark:focus:text-gray-400': ! ({{ $alpineActive }}),
-            'text-primary-600 shadow bg-white dark:text-white dark:bg-primary-600': {{ $alpineActive }},
+            'hover:text-gray-800 focus:text-primary-600 dark:text-gray-400 dark:hover:text-gray-300 dark:focus:text-gray-400':
+                ! {{ $alpineActive }},
+            'text-primary-600 shadow bg-white dark:text-white dark:bg-primary-600':
+                {{ $alpineActive }},
         }"
     @endif
     {{
@@ -175,7 +177,7 @@ suite('Pint Transformer Acceptance: support_resources_views_components_tabs_item
         <span
             @if ($alpineActive)
                 x-bind:class="{
-                    'bg-gray-200 dark:bg-gray-600': ! ({{ $alpineActive }}),
+                    'bg-gray-200 dark:bg-gray-600': ! {{ $alpineActive }},
                     'bg-white text-primary-600 font-medium': {{ $alpineActive }},
                 }"
             @endif

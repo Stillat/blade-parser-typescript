@@ -40,7 +40,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_color_column_
         style="background-color: {{ $state }}"
         @if ($isCopyable)
             x-on:click="
-                window.navigator.clipboard.writeText(@js($state))
+                window.navigator.clipboard.writeText(@js($state));
                 $tooltip(@js($getCopyMessage()), { timeout: @js($getCopyMessageDuration()) })
             "
         @endif

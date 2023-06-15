@@ -101,20 +101,20 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_text_input_co
     x-init="
         Livewire.hook('message.processed', (component) => {
             if (component.component.id !== @js($this->id)) {
-                return
+                return;
             }
 
             if (! $refs.newState) {
-                return
+                return;
             }
 
-            let newState = $refs.newState.value
+            let newState = $refs.newState.value;
 
             if (state === newState) {
-                return
+                return;
             }
 
-            state = newState
+            state = newState;
         })
     "
     {{
@@ -123,15 +123,23 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_text_input_co
             ->class(['filament-tables-text-input-column'])
     }}
 >
-    <input type="hidden" value="{{ str($state)->replace('"', '\\\\"') }}" x-ref="newState" />
+    <input
+        type="hidden"
+        value="{{ str($state)->replace('"', '\\\\"') }}"
+        x-ref="newState"
+    />
 
     <input
         x-model="state"
         x-on:change{{ $type === 'number' ? '.debounce.1s' : null }}="
-            isLoading = true
-            response = await $wire.updateTableColumnState(@js($getName()), @js($recordKey), $event.target.value)
-            error = response?.error ?? undefined
-            if (! error) state = response
+            isLoading = true;
+            response = await $wire.updateTableColumnState(
+                @js($getName()),
+                @js($recordKey),
+                $event.target.value
+            );
+            error = response?.error ?? undefined;
+            if (! error) state = response;
             isLoading = false
         "
         x-bind:readonly="isLoading"
@@ -139,7 +147,8 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_text_input_co
         x-tooltip="error"
         x-bind:class="{
             'border-gray-300 dark:border-gray-600': ! error,
-            'border-danger-600 ring-1 ring-inset ring-danger-600 dark:border-danger-400 dark:ring-danger-400': error,
+            'border-danger-600 ring-1 ring-inset ring-danger-600 dark:border-danger-400 dark:ring-danger-400':
+                error,
         }"
         {{
             $attributes

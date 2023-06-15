@@ -255,22 +255,27 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_stats_card_
                 values: {{ json_encode(array_values($chart)) }},
 
                 init: function () {
-                    this.chart ? this.updateChart() : this.initChart()
+                    this.chart ? this.updateChart() : this.initChart();
                 },
 
                 initChart: function () {
-                    return this.chart = new Chart(this.$refs.canvas, {
+                    return (this.chart = new Chart(this.$refs.canvas, {
                         type: 'line',
                         data: {
                             labels: this.labels,
-                            datasets: [{
-                                data: this.values,
-                                backgroundColor: getComputedStyle($refs.backgroundColorElement).color,
-                                borderColor: getComputedStyle($refs.borderColorElement).color,
-                                borderWidth: 2,
-                                fill: 'start',
-                                tension: 0.5,
-                            }],
+                            datasets: [
+                                {
+                                    data: this.values,
+                                    backgroundColor: getComputedStyle(
+                                        $refs.backgroundColorElement
+                                    ).color,
+                                    borderColor: getComputedStyle($refs.borderColorElement)
+                                        .color,
+                                    borderWidth: 2,
+                                    fill: 'start',
+                                    tension: 0.5,
+                                },
+                            ],
                         },
                         options: {
                             elements: {
@@ -285,10 +290,10 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_stats_card_
                                 },
                             },
                             scales: {
-                                x:  {
+                                x: {
                                     display: false,
                                 },
-                                y:  {
+                                y: {
                                     display: false,
                                 },
                             },
@@ -296,17 +301,17 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_stats_card_
                                 enabled: false,
                             },
                         },
-                    })
+                    }));
                 },
 
                 updateChart: function () {
-                    this.chart.data.labels = this.labels
-                    this.chart.data.datasets[0].data = this.values
-                    this.chart.update()
+                    this.chart.data.labels = this.labels;
+                    this.chart.data.datasets[0].data = this.values;
+                    this.chart.update();
                 },
             }"
             x-on:dark-mode-toggled.window="
-                chart.destroy()
+                chart.destroy();
                 initChart()
             "
             class="absolute inset-x-0 bottom-0 overflow-hidden rounded-b-2xl"

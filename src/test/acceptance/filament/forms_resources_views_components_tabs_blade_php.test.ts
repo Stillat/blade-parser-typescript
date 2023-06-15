@@ -86,7 +86,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tabs_blade_
         tab: null,
 
         init: function () {
-            this.$watch("tab", () => this.updateQueryString());
+            this.$watch('tab', () => this.updateQueryString());
 
             this.tab = this.getTabs()[@js($getActiveTab()) - 1];
         },
@@ -96,7 +96,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tabs_blade_
         },
 
         updateQueryString: function () {
-            if (!@js($isTabPersistedInQueryString())) {
+            if (! @js($isTabPersistedInQueryString())) {
                 return;
             }
 

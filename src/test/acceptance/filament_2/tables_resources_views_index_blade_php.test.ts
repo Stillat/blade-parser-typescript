@@ -1189,7 +1189,6 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
 
 <div
     x-data="{
-
         hasHeader: true,
 
         isLoading: false,
@@ -1199,89 +1198,90 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
         shouldCheckUniqueSelection: true,
 
         init: function () {
-            $wire.on('deselectAllTableRecords', () => this.deselectAllRecords())
+            $wire.on('deselectAllTableRecords', () => this.deselectAllRecords());
 
             $watch('selectedRecords', () => {
                 if (! this.shouldCheckUniqueSelection) {
-                    this.shouldCheckUniqueSelection = true
+                    this.shouldCheckUniqueSelection = true;
 
-                    return
+                    return;
                 }
 
-                this.selectedRecords = [...new Set(this.selectedRecords)]
+                this.selectedRecords = [...new Set(this.selectedRecords)];
 
-                this.shouldCheckUniqueSelection = false
-            })
+                this.shouldCheckUniqueSelection = false;
+            });
         },
 
         mountBulkAction: function (name) {
-            $wire.mountTableBulkAction(name, this.selectedRecords)
+            $wire.mountTableBulkAction(name, this.selectedRecords);
         },
 
         toggleSelectRecordsOnPage: function () {
-            let keys = this.getRecordsOnPage()
+            let keys = this.getRecordsOnPage();
 
             if (this.areRecordsSelected(keys)) {
-                this.deselectRecords(keys)
+                this.deselectRecords(keys);
 
-                return
+                return;
             }
 
-            this.selectRecords(keys)
+            this.selectRecords(keys);
         },
 
         getRecordsOnPage: function () {
-            let keys = []
+            let keys = [];
 
-            for (checkbox of $el.getElementsByClassName('filament-tables-record-checkbox')) {
-                keys.push(checkbox.value)
+            for (checkbox of $el.getElementsByClassName(
+                'filament-tables-record-checkbox'
+            )) {
+                keys.push(checkbox.value);
             }
 
-            return keys
+            return keys;
         },
 
         selectRecords: function (keys) {
             for (key of keys) {
                 if (this.isRecordSelected(key)) {
-                    continue
+                    continue;
                 }
 
-                this.selectedRecords.push(key)
+                this.selectedRecords.push(key);
             }
         },
 
         deselectRecords: function (keys) {
             for (key of keys) {
-                let index = this.selectedRecords.indexOf(key)
+                let index = this.selectedRecords.indexOf(key);
 
                 if (index === -1) {
-                    continue
+                    continue;
                 }
 
-                this.selectedRecords.splice(index, 1)
+                this.selectedRecords.splice(index, 1);
             }
         },
 
         selectAllRecords: async function () {
-            this.isLoading = true
+            this.isLoading = true;
 
-            this.selectedRecords = await $wire.getAllSelectableTableRecordKeys()
+            this.selectedRecords = await $wire.getAllSelectableTableRecordKeys();
 
-            this.isLoading = false
+            this.isLoading = false;
         },
 
         deselectAllRecords: function () {
-            this.selectedRecords = []
+            this.selectedRecords = [];
         },
 
         isRecordSelected: function (key) {
-            return this.selectedRecords.includes(key)
+            return this.selectedRecords.includes(key);
         },
 
         areRecordsSelected: function (keys) {
-            return keys.every(key => this.isRecordSelected(key))
+            return keys.every((key) => this.isRecordSelected(key));
         },
-
     }"
     class="filament-tables-component"
     @if (! $isLoaded)
@@ -1291,7 +1291,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
     <x-tables::container>
         <div
             class="filament-tables-header-container"
-            x-show="hasHeader = (@js($renderHeader = ($header || $heading || ($headerActions && (! $isReordering)) || $isReorderable || $isGlobalSearchVisible || $hasFilters || $isColumnToggleFormVisible)) || selectedRecords.length)"
+            x-show="hasHeader = @js($renderHeader = ($header || $heading || ($headerActions && (! $isReordering)) || $isReorderable || $isGlobalSearchVisible || $hasFilters || $isColumnToggleFormVisible)) || selectedRecords.length"
             {!! ! $renderHeader ? 'x-cloak' : null !!}
         >
             @if ($header)
@@ -1404,20 +1404,24 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
         @if ($isReordering)
             <x-tables::reorder.indicator
                 :colspan="$columnsCount"
-                :class="\\Illuminate\\Support\\Arr::toCssClasses([
-                    'border-t',
-                    'dark:border-gray-700' => config('tables.dark_mode'),
-                ])"
+                :class="
+                    \\Illuminate\\Support\\Arr::toCssClasses([
+                        'border-t',
+                        'dark:border-gray-700' => config('tables.dark_mode'),
+                    ])
+                "
             />
         @elseif ($isSelectionEnabled && $isLoaded)
             <x-tables::selection-indicator
                 :all-selectable-records-count="$allSelectableRecordsCount"
                 :colspan="$columnsCount"
                 x-show="selectedRecords.length"
-                :class="\\Illuminate\\Support\\Arr::toCssClasses([
-                    'border-t',
-                    'dark:border-gray-700' => config('tables.dark_mode'),
-                ])"
+                :class="
+                    \\Illuminate\\Support\\Arr::toCssClasses([
+                        'border-t',
+                        'dark:border-gray-700' => config('tables.dark_mode'),
+                    ])
+                "
             >
                 <x-slot name="selectedRecordsCount">
                     <span x-text="selectedRecords.length"></span>
@@ -1427,10 +1431,12 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
 
         <x-tables::filters.indicators
             :indicators="$filterIndicators"
-            :class="\\Illuminate\\Support\\Arr::toCssClasses([
-                'border-t',
-                'dark:border-gray-700' => config('tables.dark_mode'),
-            ])"
+            :class="
+                \\Illuminate\\Support\\Arr::toCssClasses([
+                    'border-t',
+                    'dark:border-gray-700' => config('tables.dark_mode'),
+                ])
+            "
         />
 
         <div
@@ -1482,9 +1488,11 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
 
                                     return null
                                 "
-                                :class="\\Illuminate\\Support\\Arr::toCssClasses([
-                                    'hidden' => $isReordering,
-                                ])"
+                                :class="
+                                    \\Illuminate\\Support\\Arr::toCssClasses([
+                                        'hidden' => $isReordering,
+                                    ])
+                                "
                             />
                         @endif
 
@@ -1497,16 +1505,16 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                 x-init="
                                     $watch('column', function (newColumn, oldColumn) {
                                         if (! newColumn) {
-                                            direction = null
+                                            direction = null;
 
-                                            return
+                                            return;
                                         }
 
                                         if (oldColumn) {
-                                            return
+                                            return;
                                         }
 
-                                        direction = 'asc'
+                                        direction = 'asc';
                                     })
                                 "
                                 class="flex flex-wrap items-center gap-1 py-1 text-xs sm:text-sm"
@@ -1581,11 +1589,13 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                         :lg="$contentGrid['lg'] ?? null"
                         :xl="$contentGrid['xl'] ?? null"
                         :two-xl="$contentGrid['2xl'] ?? null"
-                        :class="\\Illuminate\\Support\\Arr::toCssClasses([
-                            'divide-y' => ! $contentGrid,
-                            'p-2 gap-2' => $contentGrid,
-                            'dark:divide-gray-700' => config('tables.dark_mode'),
-                        ])"
+                        :class="
+                            \\Illuminate\\Support\\Arr::toCssClasses([
+                                'divide-y' => ! $contentGrid,
+                                'p-2 gap-2' => $contentGrid,
+                                'dark:divide-gray-700' => config('tables.dark_mode'),
+                            ])
+                        "
                     >
                         @foreach ($records as $record)
                             @php
@@ -1612,7 +1622,8 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                             >
                                 <div
                                     x-bind:class="{
-                                        'bg-gray-50 {{ config('tables.dark_mode') ? 'dark:bg-gray-500/10' : '' }}': isRecordSelected('{{ $recordKey }}'),
+                                        'bg-gray-50 {{ config('tables.dark_mode') ? 'dark:bg-gray-500/10' : '' }}':
+                                            isRecordSelected('{{ $recordKey }}'),
                                     }"
                                     @class(array_merge(
                                         [
@@ -1634,11 +1645,13 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                         ])
                                     >
                                         <x-tables::reorder.handle
-                                            :class="\\Illuminate\\Support\\Arr::toCssClasses([
-                                            'absolute top-3 right-3 rtl:right-auto rtl:left-3',
-                                            'md:relative md:top-0 md:right-0 rtl:md:left-0' => ! $contentGrid,
-                                            'hidden' => ! $isReordering,
-                                        ])"
+                                            :class="
+                                                \\Illuminate\\Support\\Arr::toCssClasses([
+                                                    'absolute top-3 right-3 rtl:right-auto rtl:left-3',
+                                                    'md:relative md:top-0 md:right-0 rtl:md:left-0' => ! $contentGrid,
+                                                    'hidden' => ! $isReordering,
+                                                ])
+                                            "
                                         />
 
                                         @if ($isSelectionEnabled)
@@ -1646,11 +1659,13 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                                 x-model="selectedRecords"
                                                 :value="$recordKey"
                                                 :label="__('tables::table.fields.bulk_select_record.label', ['key' => $recordKey])"
-                                                :class="\\Illuminate\\Support\\Arr::toCssClasses([
-                                                    'filament-tables-record-checkbox absolute top-3 right-3 rtl:right-auto rtl:left-3',
-                                                    'md:relative md:top-0 md:right-0 rtl:md:left-0' => ! $contentGrid,
-                                                    'hidden' => $isReordering,
-                                                ])"
+                                                :class="
+                                                    \\Illuminate\\Support\\Arr::toCssClasses([
+                                                        'filament-tables-record-checkbox absolute top-3 right-3 rtl:right-auto rtl:left-3',
+                                                        'md:relative md:top-0 md:right-0 rtl:md:left-0' => ! $contentGrid,
+                                                        'hidden' => $isReordering,
+                                                    ])
+                                                "
                                             />
                                         @endif
 
@@ -1728,13 +1743,15 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                                 :alignment="$actionsPosition === ActionsPosition::AfterContent ? 'left' : 'left md:right'"
                                                 :record="$record"
                                                 wrap="-md"
-                                                :class="\\Illuminate\\Support\\Arr::toCssClasses([
-                                                    'absolute bottom-1 right-1 rtl:right-auto rtl:left-1' => $actionsPosition === ActionsPosition::BottomCorner,
-                                                    'md:relative md:bottom-0 md:right-0 rtl:md:left-0' => $actionsPosition === ActionsPosition::BottomCorner && (! $contentGrid),
-                                                    'mb-3' => $actionsPosition === ActionsPosition::AfterContent,
-                                                    'md:mb-0' => $actionsPosition === ActionsPosition::AfterContent && (! $contentGrid),
-                                                    'hidden' => $isReordering,
-                                                ])"
+                                                :class="
+                                                    \\Illuminate\\Support\\Arr::toCssClasses([
+                                                        'absolute bottom-1 right-1 rtl:right-auto rtl:left-1' => $actionsPosition === ActionsPosition::BottomCorner,
+                                                        'md:relative md:bottom-0 md:right-0 rtl:md:left-0' => $actionsPosition === ActionsPosition::BottomCorner && (! $contentGrid),
+                                                        'mb-3' => $actionsPosition === ActionsPosition::AfterContent,
+                                                        'md:mb-0' => $actionsPosition === ActionsPosition::AfterContent && (! $contentGrid),
+                                                        'hidden' => $isReordering,
+                                                    ])
+                                                "
                                             />
                                         @endif
                                     </div>
@@ -1927,17 +1944,21 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                 x-bind:class="{
                                     'bg-gray-50 {{ config('tables.dark_mode') ? 'dark:bg-gray-500/10' : '' }}': isRecordSelected('{{ $recordKey }}'),
                                 }"
-                                :class="\\Illuminate\\Support\\Arr::toCssClasses(array_merge(
-                                    [
-                                        'group cursor-move' => $isReordering,
-                                    ],
-                                    $getRecordClasses($record),
-                                ))"
+                                :class="
+                                    \\Illuminate\\Support\\Arr::toCssClasses(array_merge(
+                                        [
+                                            'group cursor-move' => $isReordering,
+                                        ],
+                                        $getRecordClasses($record),
+                                    ))
+                                "
                             >
                                 <x-tables::reorder.cell
-                                    :class="\\Illuminate\\Support\\Arr::toCssClasses([
-                                    'hidden' => ! $isReordering,
-                                ])"
+                                    :class="
+                                        \\Illuminate\\Support\\Arr::toCssClasses([
+                                            'hidden' => ! $isReordering,
+                                        ])
+                                    "
                                 >
                                     @if ($isReordering)
                                         <x-tables::reorder.handle />
@@ -1946,9 +1967,11 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
 
                                 @if (count($actions) && $actionsPosition === ActionsPosition::BeforeCells)
                                     <x-tables::actions.cell
-                                        :class="\\Illuminate\\Support\\Arr::toCssClasses([
-                                            'hidden' => $isReordering,
-                                        ])"
+                                        :class="
+                                            \\Illuminate\\Support\\Arr::toCssClasses([
+                                                'hidden' => $isReordering,
+                                            ])
+                                        "
                                     >
                                         <x-tables::actions
                                             :actions="$actions"
@@ -1960,9 +1983,11 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                 @if ($isSelectionEnabled && $recordCheckboxPosition === RecordCheckboxPosition::BeforeCells)
                                     @if ($isRecordSelectable($record))
                                         <x-tables::checkbox.cell
-                                            :class="\\Illuminate\\Support\\Arr::toCssClasses([
-                                            'hidden' => $isReordering,
-                                        ])"
+                                            :class="
+                                                \\Illuminate\\Support\\Arr::toCssClasses([
+                                                    'hidden' => $isReordering,
+                                                ])
+                                            "
                                         >
                                             <x-tables::checkbox
                                                 x-model="selectedRecords"
@@ -1978,9 +2003,11 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
 
                                 @if (count($actions) && $actionsPosition === ActionsPosition::BeforeColumns)
                                     <x-tables::actions.cell
-                                        :class="\\Illuminate\\Support\\Arr::toCssClasses([
-                                            'hidden' => $isReordering,
-                                        ])"
+                                        :class="
+                                            \\Illuminate\\Support\\Arr::toCssClasses([
+                                                'hidden' => $isReordering,
+                                            ])
+                                        "
                                     >
                                         <x-tables::actions
                                             :actions="$actions"
@@ -2015,9 +2042,11 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
 
                                 @if (count($actions) && $actionsPosition === ActionsPosition::AfterColumns)
                                     <x-tables::actions.cell
-                                        :class="\\Illuminate\\Support\\Arr::toCssClasses([
-                                            'hidden' => $isReordering,
-                                        ])"
+                                        :class="
+                                            \\Illuminate\\Support\\Arr::toCssClasses([
+                                                'hidden' => $isReordering,
+                                            ])
+                                        "
                                     >
                                         <x-tables::actions
                                             :actions="$actions"
@@ -2029,9 +2058,11 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                 @if ($isSelectionEnabled && $recordCheckboxPosition === RecordCheckboxPosition::AfterCells)
                                     @if ($isRecordSelectable($record))
                                         <x-tables::checkbox.cell
-                                            :class="\\Illuminate\\Support\\Arr::toCssClasses([
-                                            'hidden' => $isReordering,
-                                        ])"
+                                            :class="
+                                                \\Illuminate\\Support\\Arr::toCssClasses([
+                                                    'hidden' => $isReordering,
+                                                ])
+                                            "
                                         >
                                             <x-tables::checkbox
                                                 x-model="selectedRecords"
@@ -2047,9 +2078,11 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
 
                                 @if (count($actions) && $actionsPosition === ActionsPosition::AfterCells)
                                     <x-tables::actions.cell
-                                        :class="\\Illuminate\\Support\\Arr::toCssClasses([
-                                            'hidden' => $isReordering,
-                                        ])"
+                                        :class="
+                                            \\Illuminate\\Support\\Arr::toCssClasses([
+                                                'hidden' => $isReordering,
+                                            ])
+                                        "
                                     >
                                         <x-tables::actions
                                             :actions="$actions"

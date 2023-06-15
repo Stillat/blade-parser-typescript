@@ -114,7 +114,11 @@ suite('Pint Transformer Acceptance: widgets_resources_views_chart_widget_blade_p
                 @if ($filters)
                     <div class="flex items-center gap-3">
                         @if ($hasFilterLoadingIndicator)
-                            <x-filament::loading-indicator class="h-8 w-8 text-gray-500" wire:loading wire:target="filter" />
+                            <x-filament::loading-indicator
+                                class="h-8 w-8 text-gray-500"
+                                wire:loading
+                                wire:target="filter"
+                            />
                         @endif
 
                         <select
@@ -133,25 +137,38 @@ suite('Pint Transformer Acceptance: widgets_resources_views_chart_widget_blade_p
             </div>
         @endif
 
-        <div @if ($pollingInterval = $this->getPollingInterval()) wire:poll.{{ $pollingInterval }}="updateChartData" @endif>
+        <div
+            @if ($pollingInterval = $this->getPollingInterval()) wire:poll.{{ $pollingInterval }}="updateChartData" @endif
+        >
             <div
                 x-ignore
                 ax-load
                 ax-load-src="{{ \\Filament\\Support\\Facades\\FilamentAsset::getAlpineComponentSrc('chart', 'filament/widgets') }}"
-                x-data="chart({
-                    cachedData: @js($this->getCachedData()),
-                    options: @js($this->getOptions()),
-                    type: @js($this->getType()),
-                })"
+                x-data="
+                    chart({
+                        cachedData: @js($this->getCachedData()),
+                        options: @js($this->getOptions()),
+                        type: @js($this->getType()),
+                    })
+                "
                 wire:ignore
             >
-                <canvas x-ref="canvas" @if ($maxHeight = $this->getMaxHeight())
+                <canvas
+                    x-ref="canvas"
+                    @if ($maxHeight = $this->getMaxHeight())
                         style="max-height: {{ $maxHeight }}"
-                    @endif></canvas>
+                    @endif
+                ></canvas>
 
-                <span x-ref="backgroundColorElement" class="text-gray-50 dark:text-gray-300"></span>
+                <span
+                    x-ref="backgroundColorElement"
+                    class="text-gray-50 dark:text-gray-300"
+                ></span>
 
-                <span x-ref="borderColorElement" class="text-gray-500 dark:text-gray-200"></span>
+                <span
+                    x-ref="borderColorElement"
+                    class="text-gray-500 dark:text-gray-200"
+                ></span>
             </div>
         </div>
     </x-filament::card>

@@ -257,11 +257,18 @@ suite('Pint Transformer Acceptance: support_resources_views_components_dropdown_
         @endif
 
         @if ($image)
-            <div class="{{ $imageClasses }}" style="background-image: url('{{ $image }}')"></div>
+            <div
+                class="{{ $imageClasses }}"
+                style="background-image: url('{{ $image }}')"
+            ></div>
         @endif
 
         @if ($hasLoadingIndicator)
-            <x-filament::loading-indicator wire:loading.delay="" :wire:target="$loadingIndicatorTarget" :class="$iconClasses . ' ' . $iconSize" />
+            <x-filament::loading-indicator
+                wire:loading.delay=""
+                :wire:target="$loadingIndicatorTarget"
+                :class="$iconClasses . ' ' . $iconSize"
+            />
         @endif
 
         <span class="{{ $labelClasses }}">
@@ -283,11 +290,19 @@ suite('Pint Transformer Acceptance: support_resources_views_components_dropdown_
         {{ $attributes->class([$buttonClasses]) }}
     >
         @if ($icon)
-            <x-filament::icon :name="$icon" alias="support::dropdown.list.item" :size="$iconSize" :class="$iconClasses" />
+            <x-filament::icon
+                :name="$icon"
+                alias="support::dropdown.list.item"
+                :size="$iconSize"
+                :class="$iconClasses"
+            />
         @endif
 
         @if ($image)
-            <div class="{{ $imageClasses }}" style="background-image: url('{{ $image }}')"></div>
+            <div
+                class="{{ $imageClasses }}"
+                style="background-image: url('{{ $image }}')"
+            ></div>
         @endif
 
         <span class="{{ $labelClasses }}">
@@ -301,7 +316,9 @@ suite('Pint Transformer Acceptance: support_resources_views_components_dropdown_
         @endif
     </a>
 @elseif ($tag === 'form')
-    <form {{ $attributes->only(['action', 'class', 'method', 'wire:submit.prevent']) }}>
+    <form
+        {{ $attributes->only(['action', 'class', 'method', 'wire:submit.prevent']) }}
+    >
         @csrf
 
         <button
@@ -317,7 +334,12 @@ suite('Pint Transformer Acceptance: support_resources_views_components_dropdown_
             }}
         >
             @if ($icon)
-                <x-filament::icon :name="$icon" alias="support::dropdown.list.item" :size="$iconSize" :class="$iconClasses" />
+                <x-filament::icon
+                    :name="$icon"
+                    alias="support::dropdown.list.item"
+                    :size="$iconSize"
+                    :class="$iconClasses"
+                />
             @endif
 
             <span class="{{ $labelClasses }}">

@@ -63,7 +63,7 @@ suite('Pint Transformer Acceptance: infolists_resources_views_components_color_e
                     style="background-color: {{ $state }}"
                     @if ($isCopyable)
                         x-on:click="
-                            window.navigator.clipboard.writeText(@js($state))
+                            window.navigator.clipboard.writeText(@js($state));
                             $tooltip(@js($copyMessage), { timeout: @js($copyMessageDuration) })
                         "
                     @endif

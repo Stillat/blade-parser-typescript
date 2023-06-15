@@ -100,20 +100,20 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_select_column
     x-init="
         Livewire.hook('message.processed', (component) => {
             if (component.component.id !== @js($this->id)) {
-                return
+                return;
             }
 
             if (! $refs.newState) {
-                return
+                return;
             }
 
-            let newState = $refs.newState.value
+            let newState = $refs.newState.value;
 
             if (state === newState) {
-                return
+                return;
             }
 
-            state = newState
+            state = newState;
         })
     "
     {{
@@ -122,15 +122,23 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_select_column
         ])
     }}
 >
-    <input type="hidden" value="{{ str($state)->replace('"', '\\\\"') }}" x-ref="newState" />
+    <input
+        type="hidden"
+        value="{{ str($state)->replace('"', '\\\\"') }}"
+        x-ref="newState"
+    />
 
     <select
         x-model="state"
         x-on:change="
-            isLoading = true
-            response = await $wire.updateTableColumnState(@js($getName()), @js($recordKey), $event.target.value)
-            error = response?.error ?? undefined
-            if (! error) state = response
+            isLoading = true;
+            response = await $wire.updateTableColumnState(
+                @js($getName()),
+                @js($recordKey),
+                $event.target.value
+            );
+            error = response?.error ?? undefined;
+            if (! error) state = response;
             isLoading = false
         "
         @if (! $isDisabled)
@@ -139,7 +147,8 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_select_column
         x-tooltip="error"
         x-bind:class="{
             'border-gray-300 dark:border-gray-600': ! error,
-            'border-danger-600 ring-1 ring-inset ring-danger-600 dark:border-danger-400 dark:ring-danger-400': error,
+            'border-danger-600 ring-1 ring-inset ring-danger-600 dark:border-danger-400 dark:ring-danger-400':
+                error,
         }"
         {{
             $attributes
@@ -156,7 +165,10 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_select_column
         @endif
 
         @foreach ($getOptions() as $value => $label)
-            <option value="{{ $value }}" @disabled($isOptionDisabled($value, $label))>
+            <option
+                value="{{ $value }}"
+                @disabled($isOptionDisabled($value, $label))
+            >
                 {{ $label }}
             </option>
         @endforeach

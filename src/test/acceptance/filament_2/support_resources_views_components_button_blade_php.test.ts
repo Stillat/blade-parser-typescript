@@ -292,14 +292,14 @@ suite('Pint Transformer Acceptance: support_resources_views_components_button_bl
         }"
         x-bind:disabled="isUploadingFile"
         x-init="
-            form = $el.closest('form')
+            form = $el.closest('form');
 
             form?.addEventListener('file-upload-started', () => {
-                isUploadingFile = true
-            })
+                isUploadingFile = true;
+            });
 
             form?.addEventListener('file-upload-finished', () => {
-                isUploadingFile = false
+                isUploadingFile = false;
             })
         "
         x-bind:class="{ 'enabled:opacity-70 enabled:cursor-wait': isUploadingFile }"

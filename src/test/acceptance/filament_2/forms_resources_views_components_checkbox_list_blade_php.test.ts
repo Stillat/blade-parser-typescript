@@ -204,54 +204,67 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_checkbox_li
 >
     <div
         x-data="{
+            areAllCheckboxesChecked: false,
 
-        areAllCheckboxesChecked: false,
+            checkboxListOptions: Array.from(
+                $root.querySelectorAll(
+                    '.filament-forms-checkbox-list-component-option-label'
+                )
+            ),
 
-        checkboxListOptions: Array.from($root.querySelectorAll('.filament-forms-checkbox-list-component-option-label')),
+            search: '',
 
-        search: '',
+            visibleCheckboxListOptions: [],
 
-        visibleCheckboxListOptions: [],
+            init: function () {
+                this.updateVisibleCheckboxListOptions();
 
-        init: function () {
-            this.updateVisibleCheckboxListOptions()
+                this.checkIfAllCheckboxesAreChecked();
 
-            this.checkIfAllCheckboxesAreChecked()
+                Livewire.hook('message.processed', () => {
+                    this.checkIfAllCheckboxesAreChecked();
+                });
 
-            Livewire.hook('message.processed', () => {
-                this.checkIfAllCheckboxesAreChecked()
-            })
+                $watch('search', () => {
+                    this.updateVisibleCheckboxListOptions();
+                    this.checkIfAllCheckboxesAreChecked();
+                });
+            },
 
-            $watch('search', () => {
-                this.updateVisibleCheckboxListOptions()
-                this.checkIfAllCheckboxesAreChecked()
-            })
-        },
+            checkIfAllCheckboxesAreChecked: function () {
+                this.areAllCheckboxesChecked =
+                    this.visibleCheckboxListOptions.length ===
+                    this.visibleCheckboxListOptions.filter((checkboxLabel) =>
+                        checkboxLabel.querySelector('input[type=checkbox]:checked')
+                    ).length;
+            },
 
-        checkIfAllCheckboxesAreChecked: function () {
-            this.areAllCheckboxesChecked = this.visibleCheckboxListOptions.length === this.visibleCheckboxListOptions.filter((checkboxLabel) => checkboxLabel.querySelector('input[type=checkbox]:checked')).length
-        },
+            toggleAllCheckboxes: function () {
+                state = ! this.areAllCheckboxesChecked;
 
-        toggleAllCheckboxes: function () {
-            state = ! this.areAllCheckboxesChecked
+                this.visibleCheckboxListOptions.forEach((checkboxLabel) => {
+                    checkbox = checkboxLabel.querySelector('input[type=checkbox]');
 
-            this.visibleCheckboxListOptions.forEach((checkboxLabel) => {
-                checkbox = checkboxLabel.querySelector('input[type=checkbox]')
+                    checkbox.checked = state;
+                    checkbox.dispatchEvent(new Event('change'));
+                });
 
-                checkbox.checked = state
-                checkbox.dispatchEvent(new Event('change'))
-            })
+                this.areAllCheckboxesChecked = state;
+            },
 
-            this.areAllCheckboxesChecked = state
-        },
-
-        updateVisibleCheckboxListOptions: function () {
-            this.visibleCheckboxListOptions = this.checkboxListOptions.filter((checkboxListItem) => {
-                return checkboxListItem.querySelector('.filament-forms-checkbox-list-component-option-label-text').innerText.toLowerCase().includes(this.search.toLowerCase())
-            })
-        }
-
-    }"
+            updateVisibleCheckboxListOptions: function () {
+                this.visibleCheckboxListOptions = this.checkboxListOptions.filter(
+                    (checkboxListItem) => {
+                        return checkboxListItem
+                            .querySelector(
+                                '.filament-forms-checkbox-list-component-option-label-text'
+                            )
+                            .innerText.toLowerCase()
+                            .includes(this.search.toLowerCase());
+                    }
+                );
+            },
+        }"
     >
         @if (! $isDisabled())
             @if ($isSearchable())
@@ -304,10 +317,12 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_checkbox_li
             :two-xl="$getColumns('2xl')"
             :direction="$gridDirection ?? 'column'"
             :x-show="$isSearchable() ? 'visibleCheckboxListOptions.length' : null"
-            :attributes="\\Filament\\Support\\prepare_inherited_attributes($attributes->class([
-                'filament-forms-checkbox-list-component gap-1',
-                'space-y-2' => $gridDirection !== 'row',
-            ]))"
+            :attributes="
+                \\Filament\\Support\\prepare_inherited_attributes($attributes->class([
+                    'filament-forms-checkbox-list-component gap-1',
+                    'space-y-2' => $gridDirection !== 'row',
+                ]))
+            "
         >
             @forelse ($getOptions() as $optionValue => $optionLabel)
                 <div
@@ -316,7 +331,11 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_checkbox_li
                     <label
                         class="filament-forms-checkbox-list-component-option-label flex items-center space-x-3 rtl:space-x-reverse"
                         @if ($isSearchable())
-                            x-show="$el.querySelector('.filament-forms-checkbox-list-component-option-label-text').innerText.toLowerCase().includes(search.toLowerCase())"
+                            x-show="
+                                $el.querySelector('.filament-forms-checkbox-list-component-option-label-text')
+                                    .innerText.toLowerCase()
+                                    .includes(search.toLowerCase())
+                            "
                         @endif
                     >
                         <input

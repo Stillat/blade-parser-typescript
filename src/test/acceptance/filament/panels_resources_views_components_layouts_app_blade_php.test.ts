@@ -115,7 +115,10 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
                 'flex lg:ps-[--sidebar-width]' => ! (filament()->isSidebarCollapsibleOnDesktop() || filament()->isSidebarFullyCollapsibleOnDesktop() || filament()->hasTopNavigation()),
             ])
         >
-            <x-filament::layouts.app.topbar :breadcrumbs="filament()->hasBreadcrumbs() ? $livewire->getBreadcrumbs() : []" :navigation="$navigation" />
+            <x-filament::layouts.app.topbar
+                :breadcrumbs="filament()->hasBreadcrumbs() ? $livewire->getBreadcrumbs() : []"
+                :navigation="$navigation"
+            />
 
             <div
                 @class([

@@ -93,13 +93,13 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
             x-init="
                 Alpine.effect(() => {
                     if (Alpine.store('sidebar').isOpen) {
-                        tooltip = false
+                        tooltip = false;
                     } else {
                         tooltip = {
                             content: @js($slot->toHtml()),
                             theme: Alpine.store('theme') === 'light' ? 'dark' : 'light',
                             placement: document.dir === 'rtl' ? 'left' : 'right',
-                        }
+                        };
                     }
                 })
             "
@@ -121,7 +121,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
         <div
             @if (filament()->isSidebarCollapsibleOnDesktop())
                 x-show="$store.sidebar.isOpen"
-                x-transition:enter="lg:transition delay-100"
+                x-transition:enter="delay-100 lg:transition"
                 x-transition:enter-start="opacity-0"
                 x-transition:enter-end="opacity-100"
             @endif

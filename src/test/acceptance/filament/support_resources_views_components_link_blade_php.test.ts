@@ -281,13 +281,23 @@ suite('Pint Transformer Acceptance: support_resources_views_components_link_blad
         {{ $attributes->class($linkClasses) }}
     >
         @if ($icon && $iconPosition === 'before')
-            <x-filament::icon :name="$icon" group="support::link.prefix" :size="$iconSize" :class="$iconClasses" />
+            <x-filament::icon
+                :name="$icon"
+                group="support::link.prefix"
+                :size="$iconSize"
+                :class="$iconClasses"
+            />
         @endif
 
         {{ $slot }}
 
         @if ($icon && $iconPosition === 'after')
-            <x-filament::icon :name="$icon" group="support::link.suffix" :size="$iconSize" :class="$iconClasses" />
+            <x-filament::icon
+                :name="$icon"
+                group="support::link.suffix"
+                :size="$iconSize"
+                :class="$iconClasses"
+            />
         @endif
 
         @if ($indicator)
@@ -329,7 +339,11 @@ suite('Pint Transformer Acceptance: support_resources_views_components_link_blad
             @endif
 
             @if ($hasLoadingIndicator)
-                <x-filament::loading-indicator wire:loading.delay="" :wire:target="$loadingIndicatorTarget" :class="$iconClasses . ' ' . $iconSize" />
+                <x-filament::loading-indicator
+                    wire:loading.delay=""
+                    :wire:target="$loadingIndicatorTarget"
+                    :class="$iconClasses . ' ' . $iconSize"
+                />
             @endif
         @endif
 
@@ -348,7 +362,11 @@ suite('Pint Transformer Acceptance: support_resources_views_components_link_blad
             @endif
 
             @if ($hasLoadingIndicator)
-                <x-filament::loading-indicator wire:loading.delay="" :wire:target="$loadingIndicatorTarget" :class="$iconClasses . ' ' . $iconSize" />
+                <x-filament::loading-indicator
+                    wire:loading.delay=""
+                    :wire:target="$loadingIndicatorTarget"
+                    :class="$iconClasses . ' ' . $iconSize"
+                />
             @endif
         @endif
 

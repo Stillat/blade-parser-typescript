@@ -30,7 +30,10 @@ suite('Pint Transformer Acceptance: infolists_resources_views_components_tabs_ta
 @endphp
 
 <div
-    x-bind:class="{ 'invisible h-0 p-0 overflow-y-hidden': tab !== '{{ $id }}', 'p-6': tab === '{{ $id }}' }"
+    x-bind:class="{
+        'invisible h-0 p-0 overflow-y-hidden': tab !== '{{ $id }}',
+        'p-6': tab === '{{ $id }}',
+    }"
     {{
         $attributes
             ->merge([

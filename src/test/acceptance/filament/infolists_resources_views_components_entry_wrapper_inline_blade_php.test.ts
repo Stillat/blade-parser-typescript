@@ -184,9 +184,14 @@ suite('Pint Transformer Acceptance: infolists_resources_views_components_entry_w
 
     <div class="grid gap-2 sm:grid-cols-3 sm:items-start sm:gap-4">
         @if (($label && (! $labelSrOnly)) || $labelPrefix || $labelSuffix || $hint || $hintIcon)
-            <div class="flex items-center justify-between gap-2 sm:flex-col sm:items-start sm:gap-1 sm:pt-1">
+            <div
+                class="flex items-center justify-between gap-2 sm:flex-col sm:items-start sm:gap-1 sm:pt-1"
+            >
                 @if ($label && (! $labelSrOnly))
-                    <x-filament-infolists::entry-wrapper.label :prefix="$labelPrefix" :suffix="$labelSuffix">
+                    <x-filament-infolists::entry-wrapper.label
+                        :prefix="$labelPrefix"
+                        :suffix="$labelSuffix"
+                    >
                         {{ $label }}
                     </x-filament-infolists::entry-wrapper.label>
                 @elseif ($labelPrefix)
@@ -196,7 +201,11 @@ suite('Pint Transformer Acceptance: infolists_resources_views_components_entry_w
                 @endif
 
                 @if ($hint || $hintIcon || count($hintActions))
-                    <x-filament-infolists::entry-wrapper.hint :actions="$hintActions" :color="$hintColor" :icon="$hintIcon">
+                    <x-filament-infolists::entry-wrapper.hint
+                        :actions="$hintActions"
+                        :color="$hintColor"
+                        :icon="$hintIcon"
+                    >
                         {{ filled($hint) ? ($hint instanceof \\Illuminate\\Support\\HtmlString ? $hint : str($hint)->markdown()->sanitizeHtml()->toHtmlString()) : null }}
                     </x-filament-infolists::entry-wrapper.hint>
                 @endif
@@ -222,7 +231,11 @@ suite('Pint Transformer Acceptance: infolists_resources_views_components_entry_w
                 ])
             >
                 @if ($url)
-                    <a href="{{ $url }}" @if ($shouldOpenUrlInNewTab) target="_blank" @endif class="block">
+                    <a
+                        href="{{ $url }}"
+                        @if ($shouldOpenUrlInNewTab) target="_blank" @endif
+                        class="block"
+                    >
                         {{ $slot }}
                     </a>
                 @elseif ($action)
@@ -230,7 +243,13 @@ suite('Pint Transformer Acceptance: infolists_resources_views_components_entry_w
                         $wireClickAction = $action->getLivewireClickHandler();
                     @endphp
 
-                    <button wire:click="{{ $wireClickAction }}" wire:target="{{ $wireClickAction }}" wire:loading.attr="disabled" type="button" class="block">
+                    <button
+                        wire:click="{{ $wireClickAction }}"
+                        wire:target="{{ $wireClickAction }}"
+                        wire:loading.attr="disabled"
+                        type="button"
+                        class="block"
+                    >
                         {{ $slot }}
                     </button>
                 @else

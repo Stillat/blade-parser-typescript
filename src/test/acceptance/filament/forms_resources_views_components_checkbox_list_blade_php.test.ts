@@ -178,9 +178,13 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_checkbox_li
         x-data="{
             areAllCheckboxesChecked: false,
 
-            checkboxListOptions: Array.from($root.querySelectorAll(".filament-forms-checkbox-list-component-option-label")),
+            checkboxListOptions: Array.from(
+                $root.querySelectorAll(
+                    '.filament-forms-checkbox-list-component-option-label'
+                )
+            ),
 
-            search: "",
+            search: '',
 
             visibleCheckboxListOptions: [],
 
@@ -188,11 +192,11 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_checkbox_li
                 this.updateVisibleCheckboxListOptions();
                 this.checkIfAllCheckboxesAreChecked();
 
-                Livewire.hook("message.processed", () => {
+                Livewire.hook('message.processed', () => {
                     this.checkIfAllCheckboxesAreChecked();
                 });
 
-                $watch("search", () => {
+                $watch('search', () => {
                     this.updateVisibleCheckboxListOptions();
                     this.checkIfAllCheckboxesAreChecked();
                 });
@@ -201,26 +205,35 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_checkbox_li
             checkIfAllCheckboxesAreChecked: function () {
                 this.areAllCheckboxesChecked =
                     this.visibleCheckboxListOptions.length ===
-                    this.visibleCheckboxListOptions.filter((checkboxLabel) => checkboxLabel.querySelector("input[type=checkbox]:checked")).length;
+                    this.visibleCheckboxListOptions.filter((checkboxLabel) =>
+                        checkboxLabel.querySelector('input[type=checkbox]:checked')
+                    ).length;
             },
 
             toggleAllCheckboxes: function () {
-                state = !this.areAllCheckboxesChecked;
+                state = ! this.areAllCheckboxesChecked;
 
                 this.visibleCheckboxListOptions.forEach((checkboxLabel) => {
-                    checkbox = checkboxLabel.querySelector("input[type=checkbox]");
+                    checkbox = checkboxLabel.querySelector('input[type=checkbox]');
 
                     checkbox.checked = state;
-                    checkbox.dispatchEvent(new Event("change"));
+                    checkbox.dispatchEvent(new Event('change'));
                 });
 
                 this.areAllCheckboxesChecked = state;
             },
 
             updateVisibleCheckboxListOptions: function () {
-                this.visibleCheckboxListOptions = this.checkboxListOptions.filter((checkboxListItem) => {
-                    return checkboxListItem.querySelector(".filament-forms-checkbox-list-component-option-label-text").innerText.toLowerCase().includes(this.search.toLowerCase());
-                });
+                this.visibleCheckboxListOptions = this.checkboxListOptions.filter(
+                    (checkboxListItem) => {
+                        return checkboxListItem
+                            .querySelector(
+                                '.filament-forms-checkbox-list-component-option-label-text'
+                            )
+                            .innerText.toLowerCase()
+                            .includes(this.search.toLowerCase());
+                    }
+                );
             },
         }"
     >
@@ -235,7 +248,11 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_checkbox_li
             @endif
 
             @if ($isBulkToggleable && count($getOptions()))
-                <div x-cloak class="mb-2" wire:key="{{ $this->id }}.{{ $getStatePath() }}.{{ $field::class }}.actions">
+                <div
+                    x-cloak
+                    class="mb-2"
+                    wire:key="{{ $this->id }}.{{ $getStatePath() }}.{{ $field::class }}.actions"
+                >
                     <span
                         x-show="! areAllCheckboxesChecked"
                         x-on:click="toggleAllCheckboxes()"
@@ -264,17 +281,25 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_checkbox_li
             :two-xl="$getColumns('2xl')"
             :direction="$gridDirection ?? 'column'"
             :x-show="$isSearchable ? 'visibleCheckboxListOptions.length' : null"
-            :attributes="\\Filament\\Support\\prepare_inherited_attributes($attributes->class([
-                'filament-forms-checkbox-list-component gap-1',
-                'space-y-2' => $gridDirection !== 'row',
-            ]))"
+            :attributes="
+                \\Filament\\Support\\prepare_inherited_attributes($attributes->class([
+                    'filament-forms-checkbox-list-component gap-1',
+                    'space-y-2' => $gridDirection !== 'row',
+                ]))
+            "
         >
             @forelse ($getOptions() as $optionValue => $optionLabel)
-                <div wire:key="{{ $this->id }}.{{ $statePath }}.{{ $field::class }}.options.{{ $optionValue }}">
+                <div
+                    wire:key="{{ $this->id }}.{{ $statePath }}.{{ $field::class }}.options.{{ $optionValue }}"
+                >
                     <label
                         class="filament-forms-checkbox-list-component-option-label flex items-center space-x-3 rtl:space-x-reverse"
                         @if ($isSearchable)
-                            x-show="$el.querySelector('.filament-forms-checkbox-list-component-option-label-text').innerText.toLowerCase().includes(search.toLowerCase())"
+                            x-show="
+                                $el.querySelector('.filament-forms-checkbox-list-component-option-label-text')
+                                    .innerText.toLowerCase()
+                                    .includes(search.toLowerCase())
+                            "
                         @endif
                     >
                         <input
@@ -299,13 +324,17 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_checkbox_li
                             }}
                         />
 
-                        <span class="filament-forms-checkbox-list-component-option-label-text text-sm text-gray-700 dark:text-gray-200">
+                        <span
+                            class="filament-forms-checkbox-list-component-option-label-text text-sm text-gray-700 dark:text-gray-200"
+                        >
                             {{ $optionLabel }}
                         </span>
                     </label>
                 </div>
             @empty
-                <div wire:key="{{ $this->id }}.{{ $statePath }}.{{ $field::class }}.empty"></div>
+                <div
+                    wire:key="{{ $this->id }}.{{ $statePath }}.{{ $field::class }}.empty"
+                ></div>
             @endforelse
         </x-filament::grid>
 

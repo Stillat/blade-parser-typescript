@@ -53,23 +53,31 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_wizard_step
     x-ref="step-{{ $id }}"
     x-bind:class="{ 'invisible h-0 overflow-y-hidden': step !== @js($id) }"
     x-on:expand-concealing-component.window="
-        error = $el.querySelector('[data-validation-error]')
+        error = $el.querySelector('[data-validation-error]');
 
         if (! error) {
-            return
+            return;
         }
 
         if (! isStepAccessible(step, @js($id))) {
-            return
+            return;
         }
 
-        step = @js($id)
+        step = @js($id);
 
         if (document.body.querySelector('[data-validation-error]') !== error) {
-            return
+            return;
         }
 
-        setTimeout(() => $el.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' }), 200)
+        setTimeout(
+            () =>
+                $el.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start',
+                    inline: 'start',
+                }),
+            200
+        )
     "
     {{
         $attributes

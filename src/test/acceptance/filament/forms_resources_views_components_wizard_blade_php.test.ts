@@ -257,7 +257,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_wizard_blad
         step: null,
 
         init: function () {
-            this.$watch("step", () => this.updateQueryString());
+            this.$watch('step', () => this.updateQueryString());
 
             this.step = this.getSteps()[{{ $getStartStep() }} - 1];
         },
@@ -289,11 +289,15 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_wizard_blad
         },
 
         scrollToTop: function () {
-            this.$root.scrollIntoView({ behavior: "smooth", block: "start" });
+            this.$root.scrollIntoView({ behavior: 'smooth', block: 'start' });
         },
 
         autofocusFields: function () {
-            $nextTick(() => this.$refs[\`step-\${this.step}\`].querySelector("[autofocus]")?.focus());
+            $nextTick(() =>
+                this.$refs[\`step-\${this.step}\`]
+                    .querySelector('[autofocus]')
+                    ?.focus()
+            );
         },
 
         getStepIndex: function (step) {
@@ -317,7 +321,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_wizard_blad
         },
 
         updateQueryString: function () {
-            if (!@js($isStepPersistedInQueryString())) {
+            if (! @js($isStepPersistedInQueryString())) {
                 return;
             }
 
@@ -357,7 +361,9 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_wizard_blad
         class="filament-forms-wizard-component-header divide-y divide-gray-300 overflow-hidden rounded-xl border border-gray-300 bg-white shadow-sm dark:divide-gray-700 dark:border-gray-700 dark:bg-gray-800 md:flex md:divide-y-0"
     >
         @foreach ($getChildComponentContainer()->getComponents() as $step)
-            <li class="filament-forms-wizard-component-header-step group relative overflow-hidden md:flex-1">
+            <li
+                class="filament-forms-wizard-component-header-step group relative overflow-hidden md:flex-1"
+            >
                 <button
                     type="button"
                     x-on:click="if (isStepAccessible(step, {{ $loop->index }})) step = '{{ $step->getId() }}'"
@@ -371,20 +377,24 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_wizard_blad
                     <div
                         x-bind:class="{
                             'bg-primary-600': getStepIndex(step) === {{ $loop->index }},
-                            'bg-transparent group-hover:bg-gray-200 dark:group-hover:bg-gray-600': getStepIndex(step) > {{ $loop->index }},
+                            'bg-transparent group-hover:bg-gray-200 dark:group-hover:bg-gray-600':
+                                getStepIndex(step) > {{ $loop->index }},
                         }"
                         class="absolute start-0 top-0 h-full w-1 md:bottom-0 md:top-auto md:h-1 md:w-full"
                         aria-hidden="true"
                     ></div>
 
-                    <div class="flex items-center gap-3 px-5 py-4 text-sm font-medium">
+                    <div
+                        class="flex items-center gap-3 px-5 py-4 text-sm font-medium"
+                    >
                         <div class="shrink-0">
                             <div
                                 x-bind:class="{
                                     'bg-primary-600': getStepIndex(step) > {{ $loop->index }},
                                     'border-2': getStepIndex(step) <= {{ $loop->index }},
                                     'border-primary-500': getStepIndex(step) === {{ $loop->index }},
-                                    'border-gray-300 dark:border-gray-500': getStepIndex(step) < {{ $loop->index }},
+                                    'border-gray-300 dark:border-gray-500':
+                                        getStepIndex(step) < {{ $loop->index }},
                                 }"
                                 class="filament-forms-wizard-component-header-step-icon flex h-10 w-10 items-center justify-center rounded-full"
                             >
@@ -413,7 +423,8 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_wizard_blad
                                     <span
                                         x-show="getStepIndex(step) <= {{ $loop->index }}"
                                         x-bind:class="{
-                                            'text-gray-500 dark:text-gray-400': getStepIndex(step) !== {{ $loop->index }},
+                                            'text-gray-500 dark:text-gray-400':
+                                                getStepIndex(step) !== {{ $loop->index }},
                                             'text-primary-500': getStepIndex(step) === {{ $loop->index }},
                                         }"
                                     >
@@ -424,12 +435,16 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_wizard_blad
                         </div>
 
                         <div class="flex flex-col items-start justify-center">
-                            <div class="filament-forms-wizard-component-header-step-label text-sm font-medium">
+                            <div
+                                class="filament-forms-wizard-component-header-step-label text-sm font-medium"
+                            >
                                 {{ $step->getLabel() }}
                             </div>
 
                             @if (filled($description = $step->getDescription()))
-                                <div class="filament-forms-wizard-component-header-step-description text-sm font-medium leading-4 text-gray-500 dark:text-gray-400">
+                                <div
+                                    class="filament-forms-wizard-component-header-step-description text-sm font-medium leading-4 text-gray-500 dark:text-gray-400"
+                                >
                                     {{ $description }}
                                 </div>
                             @endif
@@ -438,9 +453,21 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_wizard_blad
                 </button>
 
                 @if (! $loop->first)
-                    <div class="absolute inset-0 start-0 top-0 hidden w-3 md:block" aria-hidden="true">
-                        <svg class="h-full w-full text-gray-300 rtl:rotate-180 dark:text-gray-700" viewBox="0 0 12 82" fill="none" preserveAspectRatio="none">
-                            <path d="M0.5 0V31L10.5 41L0.5 51V82" stroke="currentcolor" vector-effect="non-scaling-stroke" />
+                    <div
+                        class="absolute inset-0 start-0 top-0 hidden w-3 md:block"
+                        aria-hidden="true"
+                    >
+                        <svg
+                            class="h-full w-full text-gray-300 rtl:rotate-180 dark:text-gray-700"
+                            viewBox="0 0 12 82"
+                            fill="none"
+                            preserveAspectRatio="none"
+                        >
+                            <path
+                                d="M0.5 0V31L10.5 41L0.5 51V82"
+                                stroke="currentcolor"
+                                vector-effect="non-scaling-stroke"
+                            />
                         </svg>
                     </div>
                 @endif
@@ -456,7 +483,11 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_wizard_blad
 
     <div class="flex items-center justify-between">
         <div>
-            <div x-on:click="previousStep" x-show="! isFirstStep()" x-cloak>
+            <div
+                x-on:click="previousStep"
+                x-show="! isFirstStep()"
+                x-cloak
+            >
                 {{ $getAction('previous') }}
             </div>
 
@@ -466,7 +497,17 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_wizard_blad
         </div>
 
         <div>
-            <div x-on:click="$wire.dispatchFormEvent('wizard::nextStep', '{{ $statePath }}', getStepIndex(step))" x-show="! isLastStep()" x-cloak>
+            <div
+                x-on:click="
+                    $wire.dispatchFormEvent(
+                        'wizard::nextStep',
+                        '{{ $statePath }}',
+                        getStepIndex(step)
+                    )
+                "
+                x-show="! isLastStep()"
+                x-cloak
+            >
                 {{ $getAction('next') }}
             </div>
 

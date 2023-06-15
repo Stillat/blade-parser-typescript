@@ -162,19 +162,27 @@ suite('Pint Transformer Acceptance: support_resources_views_components_section_b
         x-on:collapse-section.window="if ($event.detail.id == $el.id) isCollapsed = true"
         x-on:toggle-section.window="if ($event.detail.id == $el.id) isCollapsed = ! isCollapsed"
         x-on:expand-concealing-component.window="
-            error = $el.querySelector('[data-validation-error]')
+            error = $el.querySelector('[data-validation-error]');
 
             if (! error) {
-                return
+                return;
             }
 
-            isCollapsed = false
+            isCollapsed = false;
 
             if (document.body.querySelector('[data-validation-error]') !== error) {
-                return
+                return;
             }
 
-            setTimeout(() => $el.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' }), 200)
+            setTimeout(
+                () =>
+                    $el.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start',
+                        inline: 'start',
+                    }),
+                200
+            )
         "
     @endif
     {{
@@ -201,38 +209,48 @@ suite('Pint Transformer Acceptance: support_resources_views_components_section_b
         ])
     >
         <div class="filament-section-component-header grid flex-1 gap-y-1">
-            <div class="filament-section-component-header-heading-wrapper flex items-center gap-x-2">
+            <div
+                class="filament-section-component-header-heading-wrapper flex items-center gap-x-2"
+            >
                 @if ($icon)
                     <x-filament::icon
                         :name="$icon"
                         alias="support::section.icon"
-                        :color="match ($iconColor) {
-                            'danger' => 'text-danger-400',
-                            'gray', null => 'text-gray-400',
-                            'info' => 'text-info-400',
-                            'primary' => 'text-primary-400',
-                            'secondary' => 'text-secondary-400',
-                            'success' => 'text-success-400',
-                            'warning' => 'text-warning-400',
-                            default => $iconColor,
-                        }"
-                        :size="match ($iconSize) {
-                            'sm' => 'h-4 w-4',
-                            'md' => 'h-5 w-5',
-                            'lg' => 'h-6 w-6',
-                            default => $iconSize,
-                        }"
+                        :color="
+                            match ($iconColor) {
+                                'danger' => 'text-danger-400',
+                                'gray', null => 'text-gray-400',
+                                'info' => 'text-info-400',
+                                'primary' => 'text-primary-400',
+                                'secondary' => 'text-secondary-400',
+                                'success' => 'text-success-400',
+                                'warning' => 'text-warning-400',
+                                default => $iconColor,
+                            }
+                        "
+                        :size="
+                            match ($iconSize) {
+                                'sm' => 'h-4 w-4',
+                                'md' => 'h-5 w-5',
+                                'lg' => 'h-6 w-6',
+                                default => $iconSize,
+                            }
+                        "
                         class="filament-section-component-header-icon"
                     />
                 @endif
 
-                <h3 class="filament-section-component-header-heading text-base font-semibold leading-6">
+                <h3
+                    class="filament-section-component-header-heading text-base font-semibold leading-6"
+                >
                     {{ $heading }}
                 </h3>
             </div>
 
             @if ($description?->isNotEmpty())
-                <p class="filament-section-component-header-description text-sm text-gray-500 dark:text-gray-400">
+                <p
+                    class="filament-section-component-header-description text-sm text-gray-500 dark:text-gray-400"
+                >
                     {{ $description }}
                 </p>
             @endif
@@ -252,7 +270,7 @@ suite('Pint Transformer Acceptance: support_resources_views_components_section_b
 
     <div
         @if ($collapsible)
-            x-bind:aria-expanded="(!isCollapsed).toString()"
+            x-bind:aria-expanded="(! isCollapsed).toString()"
             @if ($collapsed)
                 x-cloak
             @endif

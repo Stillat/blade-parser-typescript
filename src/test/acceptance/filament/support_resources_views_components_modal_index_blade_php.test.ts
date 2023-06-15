@@ -272,13 +272,17 @@ suite('Pint Transformer Acceptance: support_resources_views_components_modal_ind
         close: function () {
             this.isOpen = false;
 
-            this.$refs.modalContainer.dispatchEvent(new CustomEvent("modal-closed", { id: "{{ $id }}" }));
+            this.$refs.modalContainer.dispatchEvent(
+                new CustomEvent('modal-closed', { id: '{{ $id }}' })
+            );
         },
 
         open: function () {
             this.isOpen = true;
 
-            this.$refs.modalContainer.dispatchEvent(new CustomEvent("modal-opened", { id: "{{ $id }}" }));
+            this.$refs.modalContainer.dispatchEvent(
+                new CustomEvent('modal-opened', { id: '{{ $id }}' })
+            );
         },
     }"
     x-trap.noscroll="isOpen"
@@ -335,10 +339,12 @@ suite('Pint Transformer Acceptance: support_resources_views_components_modal_ind
         >
             <div
                 x-data="{ isShown: false }"
-                x-init="$nextTick(() => {
-                    isShown = isOpen
-                    $watch('isOpen', () => isShown = isOpen)
-                })"
+                x-init="
+                    $nextTick(() => {
+                        isShown = isOpen;
+                        $watch('isOpen', () => (isShown = isOpen));
+                    })
+                "
                 x-show="isShown"
                 x-cloak
                 @if (filled($id))
@@ -407,9 +413,11 @@ suite('Pint Transformer Acceptance: support_resources_views_components_modal_ind
                     </button>
                 @endif
 
-                <div @class([
-                    'flex h-full flex-col' => ($width === 'screen') || $slideOver,
-                ])>
+                <div
+                    @class([
+                        'flex h-full flex-col' => ($width === 'screen') || $slideOver,
+                    ])
+                >
                     <div class="space-y-2">
                         @if ($header)
                             <div class="filament-modal-header px-6 py-2">
@@ -418,7 +426,10 @@ suite('Pint Transformer Acceptance: support_resources_views_components_modal_ind
                         @endif
 
                         @if ($header && ($actions || $heading || $slot->isNotEmpty() || $subheading))
-                            <x-dynamic-component :component="$hrComponent" class="px-2" />
+                            <x-dynamic-component
+                                :component="$hrComponent"
+                                class="px-2"
+                            />
                         @endif
                     </div>
 
@@ -436,13 +447,18 @@ suite('Pint Transformer Acceptance: support_resources_views_components_modal_ind
                                 ])
                             >
                                 @if ($heading)
-                                    <x-dynamic-component :component="$headingComponent" :id="$id . '.heading'">
+                                    <x-dynamic-component
+                                        :component="$headingComponent"
+                                        :id="$id . '.heading'"
+                                    >
                                         {{ $heading }}
                                     </x-dynamic-component>
                                 @endif
 
                                 @if ($subheading)
-                                    <x-dynamic-component :component="$subheadingComponent">
+                                    <x-dynamic-component
+                                        :component="$subheadingComponent"
+                                    >
                                         {{ $subheading }}
                                     </x-dynamic-component>
                                 @endif
@@ -460,7 +476,10 @@ suite('Pint Transformer Acceptance: support_resources_views_components_modal_ind
 
                     <div class="space-y-2">
                         @if ($footer && ($actions || $heading || $slot->isNotEmpty() || $subheading))
-                            <x-dynamic-component :component="$hrComponent" class="px-2" />
+                            <x-dynamic-component
+                                :component="$hrComponent"
+                                class="px-2"
+                            />
                         @endif
 
                         @if ($footer)

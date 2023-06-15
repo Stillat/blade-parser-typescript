@@ -86,13 +86,13 @@ suite('Pint Transformer Acceptance: support_resources_views_components_dropdown_
     {{ $attributes->class(['filament-dropdown']) }}
     x-data="{
         toggle: function (event) {
-            $refs.panel.toggle(event)
+            $refs.panel.toggle(event);
         },
         open: function (event) {
-            $refs.panel.open(event)
+            $refs.panel.open(event);
         },
         close: function (event) {
-            $refs.panel.close(event)
+            $refs.panel.close(event);
         },
     }"
 >
@@ -107,8 +107,8 @@ suite('Pint Transformer Acceptance: support_resources_views_components_dropdown_
         x-ref="panel"
         x-float{{ $placement ? ".placement.{$placement}" : '' }}.flip{{ $shift ? '.shift' : '' }}{{ $teleport ? '.teleport' : '' }}{{ $offset ? '.offset' : '' }}="{ offset: {{ $offset }} }"
         x-cloak
-        x-transition:enter-start="opacity-0 scale-95"
-        x-transition:leave-end="opacity-0 scale-95"
+        x-transition:enter-start="scale-95 opacity-0"
+        x-transition:leave-end="scale-95 opacity-0"
         @if ($attributes->has('wire:key'))
             wire:ignore.self
             wire:key="{{ $attributes->get('wire:key') }}.panel"

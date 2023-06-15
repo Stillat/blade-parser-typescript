@@ -267,14 +267,17 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
     :state-path="$getStatePath()"
 >
     <div
-        x-data="dateTimePickerFormComponent({
-            displayFormat: '{{ convert_date_format($getDisplayFormat())->to('day.js') }}',
-            firstDayOfWeek: {{ $getFirstDayOfWeek() }},
-            isAutofocused: @js($isAutofocused()),
-            locale: @js(app()->getLocale()),
-            shouldCloseOnDateSelection: @js($shouldCloseOnDateSelection()),
-            state: $wire.{{ $applyStateBindingModifiers('entangle(\\'' . $getStatePath() . '\\')') }},
-        })"
+        x-data="
+            dateTimePickerFormComponent({
+                displayFormat:
+                    '{{ convert_date_format($getDisplayFormat())->to('day.js') }}',
+                firstDayOfWeek: {{ $getFirstDayOfWeek() }},
+                isAutofocused: @js($isAutofocused()),
+                locale: @js(app()->getLocale()),
+                shouldCloseOnDateSelection: @js($shouldCloseOnDateSelection()),
+                state: $wire.{{ $applyStateBindingModifiers('entangle(\\'' . $getStatePath() . '\\')') }},
+            })
+        "
         x-on:keydown.esc="isOpen() && $event.stopPropagation()"
         {{ $getExtraAlpineAttributeBag() }}
         {{
@@ -294,7 +297,11 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
         <button
             x-ref="button"
             x-on:click="togglePanelVisibility()"
-            x-on:keydown.enter.stop.prevent="if (! $el.disabled) { isOpen() ? selectDate() : togglePanelVisibility() }"
+            x-on:keydown.enter.stop.prevent="
+                if (! $el.disabled) {
+                    isOpen() ? selectDate() : togglePanelVisibility();
+                }
+            "
             x-on:keydown.arrow-left.stop.prevent="if (! $el.disabled) focusPreviousDay()"
             x-on:keydown.arrow-right.stop.prevent="if (! $el.disabled) focusNextDay()"
             x-on:keydown.arrow-up.stop.prevent="if (! $el.disabled) focusPreviousWeek()"

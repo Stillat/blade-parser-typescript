@@ -131,9 +131,11 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tags_input_
         x-ignore
         ax-load
         ax-load-src="{{ \\Filament\\Support\\Facades\\FilamentAsset::getAlpineComponentSrc('tags-input', 'filament/forms') }}"
-        x-data="tagsInputFormComponent({
-            state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')") }},
-        })"
+        x-data="
+            tagsInputFormComponent({
+                state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')") }},
+            })
+        "
         {{
             $attributes
                 ->merge($getExtraAttributes(), escape: false)
@@ -159,35 +161,40 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tags_input_
                             @if ($placeholder = $getPlaceholder()) placeholder="{{ $placeholder }}" @endif
                             type="text"
                             dusk="filament.forms.{{ $statePath }}"
-                            x-on:keydown="() => {
-                                if (['Enter', ...@js($splitKeys)].includes($event.key)) {
-                                    $event.preventDefault()
-                                    $event.stopPropagation()
+                            x-on:keydown="
+                                () => {
+                                    if (['Enter', ...@js($splitKeys)].includes($event.key)) {
+                                        $event.preventDefault();
+                                        $event.stopPropagation();
 
-                                    createTag()
+                                        createTag();
+                                    }
                                 }
-                            }"
+                            "
                             x-on:blur="createTag()"
-                            x-on:paste="$nextTick(() => {
-                                const pattern = @js($splitKeys)
-                                    .map((key) => key.replace(/[/\\-\\\\^$*+?.()|[\\]{}]/g, '\\\\$&'))
-                                    .join('|')
+                            x-on:paste="
+                                $nextTick(() => {
+                                    const pattern = @js($splitKeys).map((key) =>
+                                        key.replace(/[/\\-\\\\^$*+?.()|[\\]{}]/g, '\\\\$&')
+                                    ).join('|');
 
-                                newTag
-                                    .split(new RegExp(pattern, 'g'))
-                                    .forEach((tag) => {
-                                        newTag = tag
+                                    newTag.split(new RegExp(pattern, 'g')).forEach((tag) => {
+                                        newTag = tag;
 
-                                        createTag()
-                                    })
-                            })"
+                                        createTag();
+                                    });
+                                })
+                            "
                             x-model="newTag"
                             {{ $getExtraInputAttributeBag()->class(['webkit-calendar-picker-indicator:opacity-0 block w-full border-0 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-400 sm:text-sm']) }}
                         />
 
                         <datalist id="{{ $id }}-suggestions">
                             @foreach ($getSuggestions() as $suggestion)
-                                <template x-if="! state.includes(@js($suggestion))" x-bind:key="@js($suggestion)">
+                                <template
+                                    x-if="! state.includes(@js($suggestion))"
+                                    x-bind:key="@js($suggestion)"
+                                >
                                     <option value="{{ $suggestion }}" />
                                 </template>
                             @endforeach
@@ -197,8 +204,14 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tags_input_
 
                 <div wire:ignore>
                     <template x-if="state?.length" x-cloak>
-                        <div class="relative flex w-full flex-wrap gap-1 overflow-hidden border-t p-2 dark:border-gray-600">
-                            <template class="hidden" x-for="tag in state" x-bind:key="tag">
+                        <div
+                            class="relative flex w-full flex-wrap gap-1 overflow-hidden border-t p-2 dark:border-gray-600"
+                        >
+                            <template
+                                class="hidden"
+                                x-for="tag in state"
+                                x-bind:key="tag"
+                            >
                                 <button
                                     @unless ($isDisabled)
                                         x-on:click="deleteTag(tag)"
@@ -210,7 +223,10 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tags_input_
                                         'cursor-default' => $isDisabled,
                                     ])
                                 >
-                                    <span class="text-start" x-text="tag"></span>
+                                    <span
+                                        class="text-start"
+                                        x-text="tag"
+                                    ></span>
 
                                     @unless ($isDisabled)
                                         <x-filament::icon

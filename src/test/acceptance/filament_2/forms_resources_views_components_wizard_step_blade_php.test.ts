@@ -43,23 +43,31 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_wizard_step
     tabindex="0"
     x-bind:class="{ 'invisible h-0 overflow-y-hidden': step !== @js($getId()) }"
     x-on:expand-concealing-component.window="
-        error = $el.querySelector('[data-validation-error]')
+        error = $el.querySelector('[data-validation-error]');
 
         if (! error) {
-            return
+            return;
         }
 
         if (! isStepAccessible(step, @js($getId()))) {
-            return
+            return;
         }
 
-        step = @js($getId())
+        step = @js($getId());
 
         if (document.body.querySelector('[data-validation-error]') !== error) {
-            return
+            return;
         }
 
-        setTimeout(() => $el.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' }), 200)
+        setTimeout(
+            () =>
+                $el.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start',
+                    inline: 'start',
+                }),
+            200
+        )
     "
     {{ $attributes->merge($getExtraAttributes())->class(['filament-forms-wizard-component-step outline-none']) }}
 >

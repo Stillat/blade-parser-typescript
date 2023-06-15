@@ -151,17 +151,17 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_toggle_column
             x-bind:aria-checked="state.toString()"
             x-on:click="
                 if (isLoading) {
-                    return
+                    return;
                 }
 
-                state = ! state
+                state = ! state;
 
-                isLoading = true
-                response = await $wire.updateTableColumnState(@js($getName()), @js($recordKey), state)
-                error = response?.error ?? undefined
+                isLoading = true;
+                response = await $wire.updateTableColumnState(@js($getName()), @js($recordKey), state);
+                error = response?.error ?? undefined;
 
                 if (error) {
-                    state = ! state
+                    state = ! state;
                 }
 
                 isLoading = false
@@ -210,16 +210,18 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_toggle_column
                     @if ($hasOffIcon())
                         <x-dynamic-component
                             :component="$getOffIcon()"
-                            :class="\\Illuminate\\Support\\Arr::toCssClasses([
-                                'h-3 w-3',
-                                match ($getOffColor()) {
-                                    'danger' => 'text-danger-500',
-                                    'primary' => 'text-primary-500',
-                                    'success' => 'text-success-500',
-                                    'warning' => 'text-warning-500',
-                                    default => 'text-gray-400',
-                                },
-                            ])"
+                            :class="
+                                \\Illuminate\\Support\\Arr::toCssClasses([
+                                    'h-3 w-3',
+                                    match ($getOffColor()) {
+                                        'danger' => 'text-danger-500',
+                                        'primary' => 'text-primary-500',
+                                        'success' => 'text-success-500',
+                                        'warning' => 'text-warning-500',
+                                        default => 'text-gray-400',
+                                    },
+                                ])
+                            "
                         />
                     @endif
                 </span>
@@ -236,16 +238,18 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_toggle_column
                         <x-dynamic-component
                             :component="$getOnIcon()"
                             x-cloak
-                            :class="\\Illuminate\\Support\\Arr::toCssClasses([
-                                'h-3 w-3',
-                                match ($getOnColor()) {
-                                    'danger' => 'text-danger-500',
-                                    'secondary' => 'text-gray-400',
-                                    'success' => 'text-success-500',
-                                    'warning' => 'text-warning-500',
-                                    default => 'text-primary-500',
-                                },
-                            ])"
+                            :class="
+                                \\Illuminate\\Support\\Arr::toCssClasses([
+                                    'h-3 w-3',
+                                    match ($getOnColor()) {
+                                        'danger' => 'text-danger-500',
+                                        'secondary' => 'text-gray-400',
+                                        'success' => 'text-success-500',
+                                        'warning' => 'text-warning-500',
+                                        default => 'text-primary-500',
+                                    },
+                                ])
+                            "
                         />
                     @endif
                 </span>
