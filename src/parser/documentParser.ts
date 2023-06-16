@@ -104,6 +104,7 @@ export class DocumentParser implements StringIterator {
     private didRecoveryLogic: boolean = false;
     private parseFragments: boolean = true;
     private hasPairedStructures: boolean = false;
+    private hasComponents: boolean = false;
 
     constructor() {
         this.componentParser = new ComponentParser(this);
@@ -817,6 +818,10 @@ export class DocumentParser implements StringIterator {
 
     getHasPairedStructures(): boolean {
         return this.hasPairedStructures;
+    }
+
+    getHasComponents(): boolean {
+        return this.hasComponents;
     }
 
     positionFromCursor(line: number, char: number): Position | null {
@@ -1579,6 +1584,7 @@ export class DocumentParser implements StringIterator {
 
             if (isClosingComponent || createErrorNode) {
                 const tagComponent = new BladeComponentNode();
+                this.hasComponents = true;
                 tagComponent.withParser(this);
                 tagComponent.startPosition = this.positionFromOffset(startedOn + this.seedOffset, startedOn + this.seedOffset);
                 tagComponent.endPosition = this.positionFromOffset(this.currentIndex + this.seedOffset, this.currentIndex + this.seedOffset);

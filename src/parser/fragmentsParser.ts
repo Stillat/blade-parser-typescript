@@ -643,7 +643,7 @@ export class FragmentsParser implements StringIterator {
                             shouldAdd = false;
                         }
 
-                        if (shouldAdd && !tmpDocument.getParser().getHasPairedStructures()) {
+                        if (shouldAdd && !tmpDocument.getParser().getHasPairedStructures() && tmpDocument.getParser().getFragmentsContainingStructures().length == 0) {
                             this.extractedAttributes.push({
                                 content: attributeContent,
                                 name: potentialName,

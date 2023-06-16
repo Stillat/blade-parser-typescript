@@ -9,6 +9,8 @@
 - Improves placement of Blade component attribute contents
 - Improves newline management of attributes containing multiple lines
 - Improves relative indentation of multi-line directives inside attributes and Blade component parameters
+- Laravel Pint will no longer be called if no Blade structures were eligible to be formatted.
+- `@verbatim @endverbatim` blocks that appear on the same line will no longer be formatted across multiple lines
 
 ## 1.5.6
 

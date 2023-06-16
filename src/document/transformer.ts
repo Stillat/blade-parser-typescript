@@ -1602,6 +1602,8 @@ export class Transformer {
             const open = this.open(slug),
                 close = this.close(slug);
 
+            let placeClosingDirective = true;
+
             if (originalDirective.directiveName.trim().toLowerCase() == 'php') {
                 const virtualOpen = this.open(directive.virtualElementSlug),
                     targetIndent = this.indentLevel(virtualOpen),
@@ -1636,7 +1638,6 @@ export class Transformer {
 
                             formattedPhp = reflow.join("\n");
 
-
                             value = StringUtilities.safeReplace(value, open, replacePhp + "\n" + formattedPhp);
                             value = StringUtilities.safeReplace(value, virtualOpen, '');
                         } else {
@@ -1649,15 +1650,24 @@ export class Transformer {
                     value = StringUtilities.safeReplace(value, virtualOpen, '');
                 }
             } else if (originalDirective.directiveName.trim().toLowerCase() == 'verbatim') {
-                const replaceVerbatim = directive.directive.sourceContent + "\n" + IndentLevel.shiftClean(
-                    originalDirective.innerContent, this.transformOptions.tabSize
-                );
-                value = StringUtilities.safeReplace(value, open, replaceVerbatim);
+                if (originalDirective.isClosedBy != null && originalDirective.startPosition?.line == originalDirective.isClosedBy.startPosition?.line) {
+                    value = StringUtilities.safeReplace(value, open, directive.directive.nodeContent);
+                    placeClosingDirective = false;
+                } else {
+                    const replaceVerbatim = directive.directive.sourceContent + "\n" + IndentLevel.shiftClean(
+                        originalDirective.innerContent, this.transformOptions.tabSize
+                    );
+                    value = StringUtilities.safeReplace(value, open, replaceVerbatim);
+                }
             } else {
                 value = StringUtilities.safeReplace(value, open, this.printDirective(directive.directive, this.indentLevel(open)));
             }
 
-            value = StringUtilities.safeReplace(value, close, directive.directive.isClosedBy?.sourceContent as string);
+            if (placeClosingDirective) {
+                value = StringUtilities.safeReplace(value, close, directive.directive.isClosedBy?.sourceContent as string);
+            } else {
+                value = StringUtilities.safeReplace(value, close, '');
+            }
         });
 
         this.inlineDirectives.forEach((directive, slug) => {
@@ -2224,6 +2234,10 @@ export class Transformer {
 
     fromStructure(content: string) {
         if (this.didPintFail) {
+            if (this.shadowDoc != null) {
+                return this.shadowDoc.getContent();
+            }
+
             return this.doc.getContent();
         }
 

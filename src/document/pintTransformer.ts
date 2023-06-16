@@ -256,9 +256,10 @@ export class PintTransformer {
         return directive.documentContent;
     }
 
-    transform(document: BladeDocument): string {
+    transform(document: BladeDocument): string | null {
         let results = '<?php ' + "\n",
-            replaceIndex = 0;
+            replaceIndex = 0,
+            itemsInOutput = 0;
 
         document.getAllNodes().forEach((node) => {
             if (node instanceof DirectiveNode) {
@@ -266,6 +267,8 @@ export class PintTransformer {
                     const candidate = node.documentContent.trim();
 
                     if (candidate.length == 0) { return; }
+
+                    itemsInOutput += 1;
 
                     let phpDoc = '';
 
@@ -289,6 +292,8 @@ export class PintTransformer {
 
                             if (candidate.length == 0) { return; }
 
+                            itemsInOutput += 1;
+
                             results += '// ' + replaceIndex.toString() + '=IPD' + this.markerSuffix;
                             results += "\n";
 
@@ -311,6 +316,8 @@ export class PintTransformer {
                             const candidate = node.directiveParameters.substring(1, node.directiveParameters.length - 1).trim();
 
                             if (candidate.length == 0) { return; }
+                            
+                            itemsInOutput += 1;
 
                             results += '// ' + replaceIndex.toString() + '=FRL' + this.markerSuffix;
                             results += "\n";
@@ -335,6 +342,8 @@ export class PintTransformer {
                             const candidate = node.directiveParameters.substring(1, node.directiveParameters.length - 1).trim();
 
                             if (candidate.length == 0) { return; }
+                            
+                            itemsInOutput += 1;
 
                             results += '// ' + replaceIndex.toString() + '=DIR' + this.markerSuffix;
                             results += "\n";
@@ -361,6 +370,8 @@ export class PintTransformer {
                 const candidate = node.content.trim();
 
                 if (candidate.length == 0) { return; }
+                
+                itemsInOutput += 1;
 
                 results += '// ' + replaceIndex.toString() + '=ECH' + this.markerSuffix;
                 results += "\n";
@@ -388,6 +399,8 @@ export class PintTransformer {
                             const candidate = param.directive.directiveParameters.substring(1, param.directive.directiveParameters.length - 1).trim();
 
                             if (candidate.length == 0) { return; }
+                            
+                            itemsInOutput += 1;
 
                             results += '// ' + replaceIndex.toString() + '=DIR' + this.markerSuffix;
                             results += "\n";
@@ -408,6 +421,8 @@ export class PintTransformer {
 
                             replaceIndex += 1;
                         } else if (param.type == ParameterType.InlineEcho && param.inlineEcho != null && param.inlineEcho.hasValidPhp()) {
+                            itemsInOutput += 1;
+
                             const candidate = param.inlineEcho.content.trim();
                             results += '// ' + replaceIndex.toString() + '=ECH' + this.markerSuffix;
                             results += "\n";
@@ -429,6 +444,8 @@ export class PintTransformer {
 
                             replaceIndex += 1;
                         } else if (param.isExpression && !param.isEscapedExpression && param.hasValidPhpExpression()) {
+                            itemsInOutput += 1;
+
                             const candidate = param.value.trim();
                             results += '// ' + replaceIndex.toString() + '=CPV' + this.markerSuffix;
                             results += "\n";
@@ -459,6 +476,8 @@ export class PintTransformer {
                 checkCandidate = checkCandidate.trimRight().substring(0, checkCandidate.length - 2).trim();
 
                 if (checkCandidate.length == 0) { return; }
+                
+                itemsInOutput += 1;
 
                 node.overrideContent = '__pint' + replaceIndex.toString();
 
@@ -473,11 +492,19 @@ export class PintTransformer {
             }
         });
 
+        if (itemsInOutput == 0) {
+            return null;
+        }
+
         return results;
     }
 
     format(document: BladeDocument): Map<string, string> {
         const transformResults = this.transform(document);
+
+        if (transformResults == null) {
+            return this.resultMapping;
+        }
 
         this.wasCached = false;
         if (this.cache.canCache(this.templateFile)) {
