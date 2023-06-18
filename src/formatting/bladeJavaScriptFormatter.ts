@@ -75,7 +75,7 @@ export function formatExtractedScript(attribute: IExtractedAttribute,
         toFormat = toFormat.trim();
         toFormat = toFormat.substring(0, toFormat.length - 9);
 
-        result = formatAsJavaScript(toFormat);
+        result = formatAsJavaScript(toFormat, transformOptions);
 
         result = tmpTransformer.fromStructure(result);
         if (addedVarPlaceholder) {

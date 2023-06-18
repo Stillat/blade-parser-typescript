@@ -166,6 +166,7 @@ export class Transformer {
         formatDirectivePhpParameters: true,
         formatInsideEcho: true,
         phpOptions: null,
+        attributeJsOptions: null,
         echoStyle: 'block',
         useLaravelPint: false,
         pintCommand: 'pint {filename}',
@@ -173,7 +174,12 @@ export class Transformer {
         pintCacheDirectory: '',
         pintCacheEnabled: true,
         pintConfigPath: '',
-        classStrings: getDefaultClassStringConfig()
+        classStrings: getDefaultClassStringConfig(),
+        formatJsAttributes: true,
+        excludeJsAttributes: [],
+        includeJsAttributes: [
+            '^x-'
+        ]
     }
 
     constructor(doc: BladeDocument) {

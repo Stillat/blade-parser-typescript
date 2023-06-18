@@ -4,7 +4,7 @@ import { Position } from '../nodes/position';
 import { StringUtilities } from '../utilities/stringUtilities';
 import { DocumentOffset } from './documentOffset';
 import { DocumentParser } from './documentParser';
-import { UnsafeAlpineJsAttributes } from './excludeAttributes/alpineJs';
+import { UnsafeJsAttributes } from './excludeAttributes/unsafe';
 import { IExtractedAttribute } from './extractedAttribute';
 import { IndexRange } from './indexRange';
 import { isStartOfString } from './scanners/isStartOfString';
@@ -38,6 +38,7 @@ export class FragmentsParser implements StringIterator {
     private embeddedIndexedFragments: Map<number, FragmentNode> = new Map();
     private extractAttributePositions: boolean = false;
     private extractAttributeNames: string[] = [];
+    private excludeAttributeNames: string[] = [];
     private extractedAttributes: IExtractedAttribute[] = [];
     private lastFragmentEnded: number = -1;
     private parsingTracedStringHitEof = false;
@@ -105,6 +106,10 @@ export class FragmentsParser implements StringIterator {
         }
 
         return null;
+    }
+
+    setExcludeAttributes(excludeAttributes: string[] ) {
+        this.excludeAttributeNames = excludeAttributes;
     }
 
     setExtractAttributes(extractAttributes: boolean) {
@@ -482,7 +487,7 @@ export class FragmentsParser implements StringIterator {
     private shouldSkip(attributeName: string): boolean {
         const name = this.getCheckAttributeName(attributeName).toLowerCase();
 
-        if (UnsafeAlpineJsAttributes.includes(name)) {
+        if (UnsafeJsAttributes.includes(name)) {
             return true;
         }
 
@@ -527,6 +532,26 @@ export class FragmentsParser implements StringIterator {
         }
 
         return chars.reverse().join('');
+    }
+
+    private shouldExtract(candidate: string): boolean {
+        for (let i = 0; i < this.excludeAttributeNames.length; i++) {
+            if (new RegExp(this.excludeAttributeNames[i]).test(candidate)) {
+                return false;
+            }
+        }
+        
+        if (this.extractAttributeNames.length > 0) {
+            for (let i = 0; i < this.extractAttributeNames.length; i++) {
+                if (new RegExp(this.extractAttributeNames[i]).test(candidate)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        return true;
     }
 
     private parseIntermediateText() {
@@ -602,7 +627,7 @@ export class FragmentsParser implements StringIterator {
                     if (dynamciAttributeNameCheck.endsWith('"') || dynamciAttributeNameCheck.endsWith("'")) {
                         const attributePrefix = this.scanBackToName(this.currentIndex - 1);
 
-                        if (attributePrefix.startsWith('x-') || this.extractAttributeNames.includes(attributePrefix)) {
+                        if (this.shouldExtract(attributePrefix)) {
                             dynamicAttributeNameOverride = attributePrefix + dynamciAttributeNameCheck.substring(0, dynamciAttributeNameCheck.length - 2);
                         }
                     }
@@ -626,7 +651,7 @@ export class FragmentsParser implements StringIterator {
                         potentialName = dynamicAttributeNameOverride;
                     }
 
-                    if (potentialName.startsWith('x-') || this.extractAttributeNames.includes(potentialName)) {
+                    if (this.shouldExtract(potentialName)) {
                         const attributeContent = this.getContentSubstring(fragmentParameter.startPosition.offset, fragmentParameter.endPosition.offset - fragmentParameter.startPosition.offset + 1),
                             tmpDocument = BladeDocument.fromText(attributeContent);
 

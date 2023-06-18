@@ -69,13 +69,13 @@ const plugin: prettier.Plugin = {
                 let attributeMap: Map<string, IExtractedAttribute> = new Map(),
                     canSafelyContinue = true;
 
-                if (canProcessAttributes) {
+                if (transformOptions.formatJsAttributes && canProcessAttributes) {
                     const fragments = new FragmentsParser(),
                         tmpDoc = BladeDocument.fromText(prettierText);
                     fragments.setIndexRanges(tmpDoc.getParser().getNodeIndexRanges());
 
-                    // TODO: Configurable.
-                    fragments.setExtractAttributeNames(['x-data', 'ax-load', 'ax-load-src']);
+                    fragments.setExtractAttributeNames(transformOptions.includeJsAttributes);
+                    fragments.setExcludeAttributes(transformOptions.excludeJsAttributes);
                     fragments.setExtractAttributes(true);
 
                     fragments.parse(prettierText);

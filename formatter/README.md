@@ -336,6 +336,52 @@ Strings will be ignored if any of the following conditions are met (these behavi
 * The string contains the `, ` (comma space) character sequence
 * Strings inside `{{-- format-ignore-start --}}{{-- format-ignore-end --}}` regions will **not** be changed
 
+## Formatting JavaScript Inside Attributes
+
+The Blade formatter will format JavaScript inside Alpine.js directives by default (starting with 1.6.0). This can be disabled by adding a `formatJsAttributes` configuration item to your `.blade.format.json`:
+
+```json
+{
+    "formatJsAttributes": false,
+}
+```
+
+If you would like to exclude a list of attributes from being formatted, you may add a list of regular expressions to the `.blade.format.json` file. By default, it contains the following items:
+
+```json
+{
+    "formatJsAttributes": true,
+    "excludeJsAttributes": [
+        "^v-"
+    ]
+}
+```
+
+If you'd like to expand the list of attributes to be formatted, you may add a list of regular expressions to the `.blade.format.json` file. By default this list contains the following items:
+
+```json
+{
+    "formatJsAttributes": true,
+    "includeJsAttributes": [
+        "^x-",
+        "^ax-"
+    ]
+}
+```
+
+### Modifying JavaScript Prettier Options
+
+You can change which prettier options are applied to attribute content by adding a `attributeJsOptions` configuration object to your `.blade.format.json` file. For example, to increase the print width and disable the insertion of semicolons, you could add the following:
+
+```json
+{
+    "attributeJsOptions": {
+        "semi": false,
+        "printWidth": 120
+    }
+}
+```
+
 ## Configuring the Blade Parser (Optional)
 
 You may optionally configure the Blade parser by creating a file named `.blade.format.json` at the root of your project. The options that can be used currently are:

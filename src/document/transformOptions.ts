@@ -8,6 +8,7 @@ export interface TransformOptions {
     formatDirectiveJsonParameters: boolean,
     formatInsideEcho: boolean,
     phpOptions: any | undefined,
+    attributeJsOptions: any | null | undefined,
     echoStyle: string,
     useLaravelPint: boolean,
     pintCommand: string,
@@ -15,5 +16,8 @@ export interface TransformOptions {
     pintCacheDirectory: string,
     pintCacheEnabled: boolean,
     pintConfigPath: string,
-    classStrings: IClassStringConfiguration
+    classStrings: IClassStringConfiguration,
+    formatJsAttributes: boolean,
+    includeJsAttributes: string[],
+    excludeJsAttributes: string[],
 }

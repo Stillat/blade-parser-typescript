@@ -149,13 +149,23 @@ export function setOptions(options: ParserOptions) {
     );
 }
 
-export function formatAsJavaScript(text: string) {
+export function formatAsJavaScript(text: string, transformOptions: TransformOptions) {
+    if (transformOptions.attributeJsOptions != null) {
+        return prettier.format(text, {
+            ...htmlOptions,
+            ...transformOptions.attributeJsOptions,
+            parser: 'babel',
+            singleQuote: true,
+            quoteProps: 'preserve'
+        });
+    }
+
     return prettier.format(text, {
         ...htmlOptions,
         parser: 'babel',
         printWidth: 80,
         singleQuote: true,
-        quoteProps: 'preserve'
+        quoteProps: 'preserve',
     });
 }
 

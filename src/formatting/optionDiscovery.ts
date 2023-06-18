@@ -26,11 +26,20 @@ const defaultSettings: FormattingOptions = {
     phpOptions: {
         phpVersion: '8.0'
     },
+    attributeJsOptions: null,
     pintCacheDirectory: '',
     pintTempDirectory: '',
     pintCacheEnabled: true,
     pintConfigPath: '',
-    classStrings: getDefaultClassStringConfig()
+    classStrings: getDefaultClassStringConfig(),
+    formatJsAttributes: true,
+    excludeJsAttributes: [
+        '^v-',
+    ],
+    includeJsAttributes: [
+        '^x-',
+        '^ax-',
+    ]
 };
 
 export { defaultSettings };
@@ -126,6 +135,7 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         customIfs: string[] = [],
         directives: string[] = [],
         phpOptions: any | null = null,
+        jsOptions: any | null = null,
         echoStyle: string = 'block',
         useLaravelPint = false,
         pintCommand = '',
@@ -133,7 +143,10 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         pintCacheDir = '',
         pintCacheEnabled = true,
         pintConfigPath = '',
-        classStrings = getDefaultClassStringConfig();
+        classStrings = getDefaultClassStringConfig(),
+        formatJsAttributes = defaultSettings.formatJsAttributes,
+        includeJsAttributes = defaultSettings.includeJsAttributes,
+        excludeJsAttributes = defaultSettings.excludeJsAttributes;
 
     if (typeof configObject.ignoreDirectives !== 'undefined' && configObject.ignoreDirectives !== null) {
         ignoreDirectives = configObject.ignoreDirectives as string[];
@@ -183,6 +196,10 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         phpOptions = configObject.phpOptions;
     }
 
+    if (typeof configObject.attributeJsOptions !== 'undefined') {
+        jsOptions = configObject.attributeJsOptions;
+    }
+
     if (typeof configObject.pintCommand !== 'undefined') {
         pintCommand = (configObject.pintCommand as string).trim();
     }
@@ -201,6 +218,18 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
 
     if (typeof configObject.pintCacheEnabled !== 'undefined') {
         pintCacheEnabled = configObject.pintCacheEnabled as boolean;
+    }
+
+    if (typeof configObject.formatJsAttributes !== 'undefined') {
+        formatJsAttributes = configObject.formatJsAttributes as boolean;
+    }
+
+    if (typeof configObject.includeJsAttributes !== 'undefined') {
+        includeJsAttributes = configObject.includeJsAttributes as string[];
+    }
+
+    if (typeof configObject.excludeJsAttributes !== 'undefined') {
+        excludeJsAttributes = configObject.excludeJsAttributes as string[];
     }
 
     if (spacesAfterDirective < 0) {
@@ -241,7 +270,11 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         pintTempDirectory: pintTempDir,
         pintCacheEnabled: pintCacheEnabled,
         pintConfigPath: pintConfigPath,
-        classStrings:classStrings
+        classStrings:classStrings,
+        attributeJsOptions: jsOptions,
+        formatJsAttributes: formatJsAttributes,
+        includeJsAttributes: includeJsAttributes,
+        excludeJsAttributes: excludeJsAttributes
     };
 }
 
