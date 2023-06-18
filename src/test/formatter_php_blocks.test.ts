@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { formatBladeString } from '../formatting/prettier/utils';
+import { formatBladeString, formatBladeStringWithPint } from '../formatting/prettier/utils';
 import { defaultSettings } from '../formatting/optionDiscovery';
 
 suite('@php @endphp Formatting', () => {
@@ -178,5 +178,12 @@ fn () => true;
             ...defaultSettings,
             formatDirectivePhpParameters: false,
         }), out);
+    });
+
+    test('formatting unclosed php inside attributes aborts formatting', () => {
+        const input = `
+<button x-data="<?php $someoneWillDoThis ?> <?= $moreStuff ?"></button>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), input);
     });
 });

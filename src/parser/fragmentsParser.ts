@@ -24,7 +24,6 @@ export class FragmentsParser implements StringIterator {
     private seedOffset = 0;
     private shiftLine = 0;
     private chars: string[] = [];
-    private allTheChars: string[] = [];
     private currentIndex = 0;
     private lastDocumentOffsetKey: number | null = null;
     private cur: string | null = null;
@@ -41,12 +40,17 @@ export class FragmentsParser implements StringIterator {
     private extractAttributeNames: string[] = [];
     private extractedAttributes: IExtractedAttribute[] = [];
     private lastFragmentEnded: number = -1;
+    private parsingTracedStringHitEof = false;
 
     advance(count: number) {
         for (let i = 0; i < count; i++) {
             this.currentIndex++;
             this.checkCurrentOffsets();
         }
+    }
+
+    getParsingTracedStringHitEof(): boolean {
+        return this.parsingTracedStringHitEof;
     }
 
     encounteredFailure() {
@@ -379,7 +383,6 @@ export class FragmentsParser implements StringIterator {
     }
 
     parse(text: string) {
-        this.allTheChars = text.split('');
         this.resetState().processInputText(text);
 
         const indexCount = this.fragmentStartIndex.length;
@@ -537,6 +540,8 @@ export class FragmentsParser implements StringIterator {
             isClosingFragment = false,
             dynamicAttributeNameOverride: string | null = null;
 
+        let justSkippedPhp = false;
+
         for (this.currentIndex = 0; this.currentIndex < this.inputLen; this.currentIndex += 1) {
             this.checkCurrentOffsets();
 
@@ -544,7 +549,7 @@ export class FragmentsParser implements StringIterator {
                 hasFoundName = true;
             }
 
-            if (this.next == DocumentParser.Punctuation_LessThan) {
+            if (!isStartOfString(this.cur) && this.next == DocumentParser.Punctuation_LessThan) {
                 let shift = 1;
 
                 if (this.cur == DocumentParser.Punctuation_ForwardSlash) {
@@ -555,6 +560,7 @@ export class FragmentsParser implements StringIterator {
 
                 if (curFetch.toLowerCase() == '<?php' || curFetch.startsWith('<?=')) {
                     this.skipToEndOfPhp();
+                    justSkippedPhp = true;
                     continue;
                 }
             }
@@ -715,6 +721,11 @@ export class FragmentsParser implements StringIterator {
             if (this.nodeIndexSkipMap.has(offsetIndex)) {
                 const skipCount = this.nodeIndexSkipMap.get(offsetIndex) as number;
                 this.advance(skipCount - 1);
+                
+
+                if (this.next == null) {
+                    this.parsingTracedStringHitEof = true;
+                }
                 continue;
             }
 

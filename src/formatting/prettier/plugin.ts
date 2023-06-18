@@ -23,7 +23,9 @@ let bladeOptions: FormattingOptions | null = null;
 interface IAttributeRemovedDocument {
     doc: BladeDocument;
     shadowDocument: BladeDocument,
-    attributeMap: Map<string, IExtractedAttribute>
+    attributeMap: Map<string, IExtractedAttribute>,
+    canSafelyContinue: boolean,
+    originalText: string
 }
 
 const plugin: prettier.Plugin = {
@@ -64,7 +66,8 @@ const plugin: prettier.Plugin = {
 
                 const classConfig = transformOptions.classStrings,
                     phpValidator = new PhpParserPhpValidator();
-                let attributeMap: Map<string, IExtractedAttribute> = new Map();
+                let attributeMap: Map<string, IExtractedAttribute> = new Map(),
+                    canSafelyContinue = true;
 
                 if (canProcessAttributes) {
                     const fragments = new FragmentsParser(),
@@ -76,31 +79,38 @@ const plugin: prettier.Plugin = {
                     fragments.setExtractAttributes(true);
 
                     fragments.parse(prettierText);
-                    const extractedAttributes = fragments.getExtractedAttributes();
 
-                    tmpDoc.getAllNodes().forEach((node) => {
-                        if (node instanceof BladeComponentNode && node.hasParameters) {
-                            node.parameters.forEach((param) => {
-                                if (param.isEscapedExpression && param.valuePosition != null &&
-                                    param.valuePosition.start != null && param.valuePosition.end != null) {
+                    if (fragments.getParsingTracedStringHitEof()) {
+                        canSafelyContinue = false;
+                    }
 
-                                    extractedAttributes.push({
-                                        content: param.wrappedValue,
-                                        name: param.name,
-                                        startedOn: param.valuePosition.start.offset,
-                                        endedOn: param.valuePosition.end.offset
-                                    });
-                                }
-                            });
+                    if (canSafelyContinue) {
+                        const extractedAttributes = fragments.getExtractedAttributes();
+
+                        tmpDoc.getAllNodes().forEach((node) => {
+                            if (node instanceof BladeComponentNode && node.hasParameters) {
+                                node.parameters.forEach((param) => {
+                                    if (param.isEscapedExpression && param.valuePosition != null &&
+                                        param.valuePosition.start != null && param.valuePosition.end != null) {
+
+                                        extractedAttributes.push({
+                                            content: param.wrappedValue,
+                                            name: param.name,
+                                            startedOn: param.valuePosition.start.offset,
+                                            endedOn: param.valuePosition.end.offset
+                                        });
+                                    }
+                                });
+                            }
+                        });
+
+                        if (extractedAttributes.length > 0) {
+                            const attributeRemover = new AttributeRangeRemover(),
+                                remResult = attributeRemover.remove(prettierText, extractedAttributes);
+
+                            attributeMap = attributeRemover.getRemovedAttributes();
+                            prettierText = remResult;
                         }
-                    });
-
-                    if (extractedAttributes.length > 0) {
-                        const attributeRemover = new AttributeRangeRemover(),
-                            remResult = attributeRemover.remove(prettierText, extractedAttributes);
-
-                        attributeMap = attributeRemover.getRemovedAttributes();
-                        prettierText = remResult;
                     }
                 }
 
@@ -164,7 +174,9 @@ const plugin: prettier.Plugin = {
                 const result: IAttributeRemovedDocument = {
                     doc: document,
                     attributeMap: attributeMap,
-                    shadowDocument: shadow
+                    shadowDocument: shadow,
+                    canSafelyContinue: canSafelyContinue,
+                    originalText: text
                 };
 
                 return result;
@@ -179,6 +191,10 @@ const plugin: prettier.Plugin = {
             print(path: prettier.AstPath) {
                 const doc = path.stack[0] as IAttributeRemovedDocument,
                     formatter = new PrettierDocumentFormatter(prettierOptions, transformOptions);
+
+                if (!doc.canSafelyContinue) {
+                    return doc.originalText;
+                }
 
                 return formatter
                     .withRemovedAttributes(doc.attributeMap)

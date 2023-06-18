@@ -105,6 +105,7 @@ export class DocumentParser implements StringIterator {
     private parseFragments: boolean = true;
     private hasPairedStructures: boolean = false;
     private hasComponents: boolean = false;
+    private hasPhpContent: boolean = false;
 
     constructor() {
         this.componentParser = new ComponentParser(this);
@@ -242,6 +243,10 @@ export class DocumentParser implements StringIterator {
         this.charLen = 0;
         this.bladeStartIndex = [];
         this.lastBladeEndIndex = -1;
+    }
+
+    getHasPhpContent(): boolean {
+        return this.hasPhpContent;
     }
 
     getDidRecovery(): boolean {
@@ -1520,6 +1525,7 @@ export class DocumentParser implements StringIterator {
 
             if ((this.cur == DocumentParser.Punctuation_QuestionMark && this.next == DocumentParser.Punctuation_GreaterThan) || this.next == null) {
                 let inlinePhp = new InlinePhpNode();
+                this.hasPhpContent = true;
 
                 if (isShorthand) {
                     inlinePhp = new ShorthandInlinePhpNode();
