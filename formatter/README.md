@@ -2,6 +2,10 @@
 
 This package provides a Prettier plugin that can parse and format Laravel Blade template files.
 
+If you'd like to view the source, report issues, etc. you can do so on the formatter's repository on GitHub:
+
+[https://github.com/stillat/blade-parser-typescript](https://github.com/stillat/blade-parser-typescript)
+
 ## Installation
 
 The Blade Prettier Plugin can be installed with `npm` using the following command:
