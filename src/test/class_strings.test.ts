@@ -431,4 +431,21 @@ $thing = 'text-white px-4 sm:px-8 py-2 sm:py-3 bg-sky-700 hover:bg-sky-800 aaaaa
             })
         }), expected);
     });
+
+    test('class strings can be sorted inside alpinejs attribtues', () => {
+        const input = `
+<div>
+<button
+x-thing="text-white px-4 sm:px-8 py-2 sm:py-3 bg-sky-700 hover:bg-sky-800">
+</button>
+</div>
+`;
+        const out = `<div>
+    <button
+        x-thing="bg-sky-700 px-4 py-2 text-white hover:bg-sky-800 sm:px-8 sm:py-3"
+    ></button>
+</div>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), out);
+    });
 });
