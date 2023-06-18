@@ -57,7 +57,6 @@ export function formatExtractedScript(attribute: IExtractedAttribute,
 
         tmpDoc.getParser()
 
-        // TODO: Return original if it contains structures.
         const tmpTransformer = tmpDoc.transform();
 
         tmpTransformer.setParentTransformer(parentTransformer);
