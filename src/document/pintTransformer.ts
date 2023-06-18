@@ -151,7 +151,16 @@ export class PintTransformer {
         }
 
         // Handle the case of nested child documents having different index values.
-        const preparedPhpContent = this.prepareContent(php.sourceContent);
+        let preparedPhpContent = this.prepareContent(php.sourceContent);
+        if (this.contentMapping.has(preparedPhpContent)) {
+            const originalIndex = this.contentMapping.get(preparedPhpContent) as string;
+
+            if (this.resultMapping.has(originalIndex)) {
+                return this.resultMapping.get(originalIndex) as string;
+            }
+        }
+
+        preparedPhpContent = this.prepareContent(php.sourceContent.trim());
         if (this.contentMapping.has(preparedPhpContent)) {
             const originalIndex = this.contentMapping.get(preparedPhpContent) as string;
 
@@ -190,10 +199,10 @@ export class PintTransformer {
         return echo.content;
     }
 
-    getComponentParameterContent(parameter:ParameterNode): string {
+    getComponentParameterContent(parameter: ParameterNode): string {
         if (parameter.overrideValue != null && this.resultMapping.has(parameter.overrideValue)) {
             const insertContent = this.resultMapping.get(parameter.overrideValue) as string
-            
+
             if (insertContent.includes("\n")) {
                 return `${parameter.name}="\n${insertContent}\n"`;
             } else {
@@ -201,7 +210,22 @@ export class PintTransformer {
             }
         }
 
-        const preparedValue = this.prepareContent(parameter.value);
+        let preparedValue = this.prepareContent(parameter.value);
+        if (this.contentMapping.has(preparedValue)) {
+            const originalIndex = this.contentMapping.get(preparedValue) as string;
+
+            if (this.resultMapping.has(originalIndex)) {
+                const insertContent = this.resultMapping.get(originalIndex) as string;
+
+                if (insertContent.includes("\n")) {
+                    return `${parameter.name}="\n${insertContent}\n"`;
+                } else {
+                    return parameter.name + '="' + insertContent.trim() + '"';
+                }
+            }
+        }
+
+        preparedValue = this.prepareContent(parameter.value.trim());
         if (this.contentMapping.has(preparedValue)) {
             const originalIndex = this.contentMapping.get(preparedValue) as string;
 
@@ -225,7 +249,16 @@ export class PintTransformer {
         }
 
         // Handle the case of nested child documents having different index values.
-        const preparedParams = this.prepareContent(directive.directiveParameters);
+        let preparedParams = this.prepareContent(directive.directiveParameters);
+        if (this.contentMapping.has(preparedParams)) {
+            const originalIndex = this.contentMapping.get(preparedParams) as string;
+
+            if (this.resultMapping.has(originalIndex)) {
+                return '(' + this.resultMapping.get(originalIndex) as string + ')';
+            }
+        }
+
+        preparedParams = this.prepareContent(directive.directiveParameters.trim());
         if (this.contentMapping.has(preparedParams)) {
             const originalIndex = this.contentMapping.get(preparedParams) as string;
 
@@ -244,7 +277,16 @@ export class PintTransformer {
         }
 
         // Handle the case of nested child documents having different index values.
-        const preparedContent = this.prepareContent(directive.documentContent);
+        let preparedContent = this.prepareContent(directive.documentContent);
+        if (this.contentMapping.has(preparedContent)) {
+            const originalIndex = this.contentMapping.get(preparedContent) as string;
+
+            if (this.resultMapping.has(originalIndex)) {
+                return this.resultMapping.get(originalIndex) as string;
+            }
+        }
+
+        preparedContent = this.prepareContent(directive.documentContent.trim());
         if (this.contentMapping.has(preparedContent)) {
             const originalIndex = this.contentMapping.get(preparedContent) as string;
 
@@ -316,7 +358,7 @@ export class PintTransformer {
                             const candidate = node.directiveParameters.substring(1, node.directiveParameters.length - 1).trim();
 
                             if (candidate.length == 0) { return; }
-                            
+
                             itemsInOutput += 1;
 
                             results += '// ' + replaceIndex.toString() + '=FRL' + this.markerSuffix;
@@ -342,7 +384,7 @@ export class PintTransformer {
                             const candidate = node.directiveParameters.substring(1, node.directiveParameters.length - 1).trim();
 
                             if (candidate.length == 0) { return; }
-                            
+
                             itemsInOutput += 1;
 
                             results += '// ' + replaceIndex.toString() + '=DIR' + this.markerSuffix;
@@ -370,7 +412,7 @@ export class PintTransformer {
                 const candidate = node.content.trim();
 
                 if (candidate.length == 0) { return; }
-                
+
                 itemsInOutput += 1;
 
                 results += '// ' + replaceIndex.toString() + '=ECH' + this.markerSuffix;
@@ -399,7 +441,7 @@ export class PintTransformer {
                             const candidate = param.directive.directiveParameters.substring(1, param.directive.directiveParameters.length - 1).trim();
 
                             if (candidate.length == 0) { return; }
-                            
+
                             itemsInOutput += 1;
 
                             results += '// ' + replaceIndex.toString() + '=DIR' + this.markerSuffix;
@@ -476,7 +518,7 @@ export class PintTransformer {
                 checkCandidate = checkCandidate.trimRight().substring(0, checkCandidate.length - 2).trim();
 
                 if (checkCandidate.length == 0) { return; }
-                
+
                 itemsInOutput += 1;
 
                 node.overrideContent = '__pint' + replaceIndex.toString();
@@ -532,7 +574,7 @@ export class PintTransformer {
             theRes = this.callLaravelPint(transformResults);
         } catch (err) {
             this.didFail = true;
-            
+
             this.cleanupFiles.forEach((fileName) => {
                 fs.unlinkSync(fileName);
             });
