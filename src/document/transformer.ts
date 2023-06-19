@@ -464,6 +464,36 @@ export class Transformer {
 
         this.registerContentDirective(slug, directive);
 
+        if (directive.nextNode != null) {
+            const placementDiff = (directive.nextNode.startPosition?.offset ?? 0) - (directive.endPosition?.offset ?? 0);
+
+            if (directive.nextNode instanceof LiteralNode) {
+                const trailingLiteral = directive.nextNode;
+
+                if ((trailingLiteral.content.length - trailingLiteral.content.trimLeft().length) > 0) {
+                    return slug;
+                } else {
+                    if (trailingLiteral.content.length == 0) {
+                        return slug;
+                    } else {
+                        const firstTrailingChar = trailingLiteral.content[0];
+
+                        if (StringUtilities.ctypePunct(firstTrailingChar) || StringUtilities.ctypeSpace(firstTrailingChar)) {
+                            return slug;
+                        } else {
+                            return slug + ' ';
+                        }
+                    }
+                }
+            } else {
+                if (placementDiff > 0) {
+                    return slug + ' ';
+                } else {
+                    return slug;
+                }
+            }
+        }
+
         return slug;
     }
 
@@ -1336,6 +1366,45 @@ export class Transformer {
 
         if (condition.fragmentPosition == FragmentPosition.InsideFragmentParameter ||
             condition.fragmentPosition == FragmentPosition.InsideFragment) {
+
+            if (condition.logicBranches.length > 0) {
+                // Get the very last item.
+                const lastBranch = condition.logicBranches[condition.logicBranches.length - 1];
+
+                if (lastBranch.head != null && lastBranch.head.isClosedBy != null) {
+                    // Check for distance between nodes.
+                    if (lastBranch.head.isClosedBy.nextNode != null) {
+                        const placementDiff = (lastBranch.head.isClosedBy.nextNode.startPosition?.offset ?? 0) - (lastBranch.head.isClosedBy.endPosition?.offset ?? 0);
+
+                        if (lastBranch.head.isClosedBy.nextNode instanceof LiteralNode) {
+                            const trailingLiteral = lastBranch.head.isClosedBy.nextNode;
+
+                            if ((trailingLiteral.content.length - trailingLiteral.content.trimLeft().length) > 0) {
+                                return slug;
+                            } else {
+                                if (trailingLiteral.content.length == 0) {
+                                    return slug;
+                                } else {
+                                    const firstTrailingChar = trailingLiteral.content[0];
+
+                                    if (StringUtilities.ctypePunct(firstTrailingChar) || StringUtilities.ctypeSpace(firstTrailingChar)) {
+                                        return slug;
+                                    } else {
+                                        return slug + ' ';
+                                    }
+                                }
+                            }
+                        } else {
+                            if (placementDiff > 0) {
+                                return slug + ' ';
+                            } else {
+                                return slug;
+                            }
+                        }
+                    }
+                }
+            }
+
             return slug;
         }
 

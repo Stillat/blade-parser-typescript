@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.2
+
+- Corrects an issue with condition spacing inside HTML attributes (#61)
+
 ## 1.6.1
 
 - Corrects an issue where some Alpine.js directives would receive a leading semicolon (#60)

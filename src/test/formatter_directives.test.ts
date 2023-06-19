@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { formatBladeString } from '../formatting/prettier/utils';
+import { formatBladeString, formatBladeStringWithPint } from '../formatting/prettier/utils';
 
 suite('Directives Formatting', () => {
     test('it can format PHP in directives', () => {
@@ -517,5 +517,14 @@ asdf
 `;
         assert.strictEqual(formatBladeString(input), out);
         assert.strictEqual(formatBladeString(out), out);
+    });
+
+    test('directives inside html classes do not wreck output', () => {
+        const template = `<div class="@something here @endSomething h-3 rounded-full border border-white"></div>`;
+        const out = `<div
+    class="@something here @endSomething h-3 rounded-full border border-white"
+></div>
+`;
+        assert.strictEqual(formatBladeStringWithPint(template), out);
     });
 });

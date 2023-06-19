@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { formatBladeString } from '../formatting/prettier/utils';
+import { formatBladeString, formatBladeStringWithPint } from '../formatting/prettier/utils';
 
 suite('If Statements', () => {
     test('it can format if statements without any HTML hints', () => {
@@ -390,5 +390,13 @@ A
 </div>
 `;
         assert.strictEqual(formatBladeString(input), out);
+    });
+
+    test('it places a space after conditions that appear before classes', () => {
+        const template = `<div class="@if($step === 1 || $step === 2 || $step === 3 ) bg-white @endif h-3 rounded-full border border-white"></div>`;
+        const out = `<div
+    class="@if($step === 1 || $step === 2 || $step === 3 ) bg-white @endif h-3 rounded-full border border-white"
+></div>`;
+        assert.strictEqual(formatBladeStringWithPint(template).trim(), out);
     });
 });
