@@ -386,6 +386,11 @@ You can change which prettier options are applied to attribute content by adding
 }
 ```
 
+The formatter will override the following settings internally for safety reasons:
+
+* `singleQuote`: `true`
+* `quoteProps`: `preserve`
+
 ## Configuring the Blade Parser (Optional)
 
 You may optionally configure the Blade parser by creating a file named `.blade.format.json` at the root of your project. The options that can be used currently are:
