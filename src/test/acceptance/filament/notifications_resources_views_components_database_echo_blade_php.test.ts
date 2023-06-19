@@ -30,8 +30,8 @@ suite('Pint Transformer Acceptance: notifications_resources_views_components_dat
     x-init="
         window.addEventListener('EchoLoaded', () => {
             window.Echo.private(@js($channel)).listen('.database-notifications.sent', () => {
-                setTimeout(() => $wire.call('$refresh'), 500);
-            });
+                setTimeout(() => $wire.call('$refresh'), 500)
+            })
         })
     "
     {{ $attributes }}

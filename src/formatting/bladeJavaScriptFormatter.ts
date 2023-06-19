@@ -93,6 +93,10 @@ export function formatExtractedScript(attribute: IExtractedAttribute,
             result = result.substring(0, result.length - 1);
         }
 
+        if (result.startsWith(';')) {
+            result = result.substring(1);
+        }
+
         result = parentTransformer.transformStructures(result);
     } catch (err) {
         return attribute.content;

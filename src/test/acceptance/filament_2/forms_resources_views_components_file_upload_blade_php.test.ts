@@ -122,13 +122,10 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_file_upload
                 canPreview: {{ $canPreview() ? 'true' : 'false' }},
                 canReorder: {{ $canReorder() ? 'true' : 'false' }},
                 deleteUploadedFileUsing: async (fileKey) => {
-                    return await $wire.deleteUploadedFile(
-                        '{{ $getStatePath() }}',
-                        fileKey
-                    );
+                    return await $wire.deleteUploadedFile('{{ $getStatePath() }}', fileKey)
                 },
                 getUploadedFileUrlsUsing: async () => {
-                    return await $wire.getUploadedFileUrls('{{ $getStatePath() }}');
+                    return await $wire.getUploadedFileUrls('{{ $getStatePath() }}')
                 },
                 imageCropAspectRatio:
                     {{ $imageCropAspectRatio ? "'{$imageCropAspectRatio}'" : 'null' }},
@@ -150,18 +147,12 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_file_upload
                 maxSize: {{ ($size = $getMaxSize()) ? "'{$size} KB'" : 'null' }},
                 minSize: {{ ($size = $getMinSize()) ? "'{$size} KB'" : 'null' }},
                 removeUploadedFileUsing: async (fileKey) => {
-                    return await $wire.removeUploadedFile(
-                        '{{ $getStatePath() }}',
-                        fileKey
-                    );
+                    return await $wire.removeUploadedFile('{{ $getStatePath() }}', fileKey)
                 },
                 removeUploadedFileButtonPosition:
                     '{{ $getRemoveUploadedFileButtonPosition() }}',
                 reorderUploadedFilesUsing: async (files) => {
-                    return await $wire.reorderUploadedFiles(
-                        '{{ $getStatePath() }}',
-                        files
-                    );
+                    return await $wire.reorderUploadedFiles('{{ $getStatePath() }}', files)
                 },
                 shouldAppendFiles: {{ $shouldAppendFiles() ? 'true' : 'false' }},
                 shouldOrientImageFromExif:
@@ -176,11 +167,11 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_file_upload
                         \`{{ $getStatePath() }}.\${fileKey}\`,
                         file,
                         () => {
-                            success(fileKey);
+                            success(fileKey)
                         },
                         error,
-                        progress
-                    );
+                        progress,
+                    )
                 },
             })
         "

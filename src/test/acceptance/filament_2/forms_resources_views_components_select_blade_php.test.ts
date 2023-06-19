@@ -228,16 +228,16 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_select_blad
                         selectFormComponent({
                             isHtmlAllowed: @js($isHtmlAllowed()),
                             getOptionLabelUsing: async () => {
-                                return await $wire.getSelectOptionLabel(@js($getStatePath()));
+                                return await $wire.getSelectOptionLabel(@js($getStatePath()))
                             },
                             getOptionLabelsUsing: async () => {
-                                return await $wire.getSelectOptionLabels(@js($getStatePath()));
+                                return await $wire.getSelectOptionLabels(@js($getStatePath()))
                             },
                             getOptionsUsing: async () => {
-                                return await $wire.getSelectOptions(@js($getStatePath()));
+                                return await $wire.getSelectOptions(@js($getStatePath()))
                             },
                             getSearchResultsUsing: async (search) => {
-                                return await $wire.getSelectSearchResults(@js($getStatePath()), search);
+                                return await $wire.getSelectSearchResults(@js($getStatePath()), search)
                             },
                             isAutofocused: @js($isAutofocused()),
                             isMultiple: @js($isMultiple()),

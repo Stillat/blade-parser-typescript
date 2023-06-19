@@ -49,7 +49,7 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_form_action
             evaluatePageScrollPosition: function () {
                 this.isSticky =
                     window.scrollY + window.innerHeight * 2 <=
-                    document.body.scrollHeight;
+                    document.body.scrollHeight
             },
         }"
         x-init="evaluatePageScrollPosition"

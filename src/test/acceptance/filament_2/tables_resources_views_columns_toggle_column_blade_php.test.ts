@@ -151,17 +151,17 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_toggle_column
             x-bind:aria-checked="state.toString()"
             x-on:click="
                 if (isLoading) {
-                    return;
+                    return
                 }
 
-                state = ! state;
+                state = ! state
 
-                isLoading = true;
-                response = await $wire.updateTableColumnState(@js($getName()), @js($recordKey), state);
-                error = response?.error ?? undefined;
+                isLoading = true
+                response = await $wire.updateTableColumnState(@js($getName()), @js($recordKey), state)
+                error = response?.error ?? undefined
 
                 if (error) {
-                    state = ! state;
+                    state = ! state
                 }
 
                 isLoading = false

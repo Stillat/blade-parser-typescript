@@ -84,20 +84,20 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_checkbox_colu
     x-init="
         Livewire.hook('message.processed', (component) => {
             if (component.component.id !== @js($this->id)) {
-                return;
+                return
             }
 
             if (! $refs.newState) {
-                return;
+                return
             }
 
-            let newState = $refs.newState.value === '1' ? true : false;
+            let newState = $refs.newState.value === '1' ? true : false
 
             if (state === newState) {
-                return;
+                return
             }
 
-            state = newState;
+            state = newState
         })
     "
     {{
@@ -113,13 +113,13 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_checkbox_colu
         {!! $isDisabled() ? 'disabled' : null !!}
         type="checkbox"
         x-on:change="
-            isLoading = true;
+            isLoading = true
             response = await $wire.updateTableColumnState(
                 @js($getName()),
                 @js($recordKey),
-                $event.target.checked
-            );
-            error = response?.error ?? undefined;
+                $event.target.checked,
+            )
+            error = response?.error ?? undefined
             isLoading = false
         "
         x-tooltip="error"

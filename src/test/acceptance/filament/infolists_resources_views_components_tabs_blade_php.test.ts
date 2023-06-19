@@ -72,23 +72,23 @@ suite('Pint Transformer Acceptance: infolists_resources_views_components_tabs_bl
         tab: null,
 
         init: function () {
-            this.$watch('tab', () => this.updateQueryString());
+            this.$watch('tab', () => this.updateQueryString())
 
             this.tab = @js(collect($getChildComponentContainer()->getComponents())
                         ->filter(static fn (\\Filament\\Infolists\\Components\\Tabs\\Tab $tab): bool => $tab->isVisible())
                         ->get($getActiveTab() - 1)
-                        ->getId());
+                        ->getId())
         },
 
         updateQueryString: function () {
             if (! @js($isTabPersistedInQueryString())) {
-                return;
+                return
             }
 
-            const url = new URL(window.location.href);
-            url.searchParams.set(@js($getTabQueryStringKey()), this.tab);
+            const url = new URL(window.location.href)
+            url.searchParams.set(@js($getTabQueryStringKey()), this.tab)
 
-            history.pushState(null, document.title, url.toString());
+            history.pushState(null, document.title, url.toString())
         },
     }"
     x-cloak

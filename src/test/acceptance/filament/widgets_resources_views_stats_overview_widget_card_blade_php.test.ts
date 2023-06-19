@@ -220,7 +220,7 @@ suite('Pint Transformer Acceptance: widgets_resources_views_stats_overview_widge
             "
             wire:ignore
             x-on:theme-changed.window="
-                chart.destroy();
+                chart.destroy()
                 initChart()
             "
             class="absolute inset-x-0 bottom-0 overflow-hidden rounded-b-xl"

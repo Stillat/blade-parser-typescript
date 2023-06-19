@@ -97,20 +97,20 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_text_input_co
     x-init="
         Livewire.hook('message.processed', (component) => {
             if (component.component.id !== @js($this->id)) {
-                return;
+                return
             }
 
             if (! $refs.newState) {
-                return;
+                return
             }
 
-            let newState = $refs.newState.value;
+            let newState = $refs.newState.value
 
             if (state === newState) {
-                return;
+                return
             }
 
-            state = newState;
+            state = newState
         })
     "
     {{
@@ -133,14 +133,14 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_text_input_co
         {!! ($placeholder = $getPlaceholder()) ? "placeholder=\\"{$placeholder}\\"" : null !!}
         {!! ($interval = $getStep()) ? "step=\\"{$interval}\\"" : null !!}
         x-on:change{{ $getType() === 'number' ? '.debounce.1s' : null }}="
-            isLoading = true;
+            isLoading = true
             response = await $wire.updateTableColumnState(
                 @js($getName()),
                 @js($recordKey),
-                $event.target.value
-            );
-            error = response?.error ?? undefined;
-            if (! error) state = response;
+                $event.target.value,
+            )
+            error = response?.error ?? undefined
+            if (! error) state = response
             isLoading = false
         "
         :readonly="isLoading"

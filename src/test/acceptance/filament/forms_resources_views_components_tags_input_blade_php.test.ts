@@ -164,10 +164,10 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tags_input_
                             x-on:keydown="
                                 () => {
                                     if (['Enter', ...@js($splitKeys)].includes($event.key)) {
-                                        $event.preventDefault();
-                                        $event.stopPropagation();
+                                        $event.preventDefault()
+                                        $event.stopPropagation()
 
-                                        createTag();
+                                        createTag()
                                     }
                                 }
                             "
@@ -175,14 +175,14 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tags_input_
                             x-on:paste="
                                 $nextTick(() => {
                                     const pattern = @js($splitKeys).map((key) =>
-                                        key.replace(/[/\\-\\\\^$*+?.()|[\\]{}]/g, '\\\\$&')
-                                    ).join('|');
+                                        key.replace(/[/\\-\\\\^$*+?.()|[\\]{}]/g, '\\\\$&'),
+                                    ).join('|')
 
                                     newTag.split(new RegExp(pattern, 'g')).forEach((tag) => {
-                                        newTag = tag;
+                                        newTag = tag
 
-                                        createTag();
-                                    });
+                                        createTag()
+                                    })
                                 })
                             "
                             x-model="newTag"

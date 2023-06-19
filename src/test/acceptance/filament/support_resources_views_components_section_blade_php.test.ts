@@ -162,16 +162,16 @@ suite('Pint Transformer Acceptance: support_resources_views_components_section_b
         x-on:collapse-section.window="if ($event.detail.id == $el.id) isCollapsed = true"
         x-on:toggle-section.window="if ($event.detail.id == $el.id) isCollapsed = ! isCollapsed"
         x-on:expand-concealing-component.window="
-            error = $el.querySelector('[data-validation-error]');
+            error = $el.querySelector('[data-validation-error]')
 
             if (! error) {
-                return;
+                return
             }
 
-            isCollapsed = false;
+            isCollapsed = false
 
             if (document.body.querySelector('[data-validation-error]') !== error) {
-                return;
+                return
             }
 
             setTimeout(
@@ -181,7 +181,7 @@ suite('Pint Transformer Acceptance: support_resources_views_components_section_b
                         block: 'start',
                         inline: 'start',
                     }),
-                200
+                200,
             )
         "
     @endif

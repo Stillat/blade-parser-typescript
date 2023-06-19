@@ -1341,107 +1341,107 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
         shouldCheckUniqueSelection: true,
 
         init: function () {
-            $wire.on('deselectAllTableRecords', () => this.deselectAllRecords());
+            $wire.on('deselectAllTableRecords', () => this.deselectAllRecords())
 
             $watch('selectedRecords', () => {
                 if (! this.shouldCheckUniqueSelection) {
-                    this.shouldCheckUniqueSelection = true;
+                    this.shouldCheckUniqueSelection = true
 
-                    return;
+                    return
                 }
 
-                this.selectedRecords = [...new Set(this.selectedRecords)];
+                this.selectedRecords = [...new Set(this.selectedRecords)]
 
-                this.shouldCheckUniqueSelection = false;
-            });
+                this.shouldCheckUniqueSelection = false
+            })
         },
 
         mountBulkAction: function (name) {
-            $wire.mountTableBulkAction(name, this.selectedRecords);
+            $wire.mountTableBulkAction(name, this.selectedRecords)
         },
 
         toggleSelectRecordsOnPage: function () {
-            let keys = this.getRecordsOnPage();
+            let keys = this.getRecordsOnPage()
 
             if (this.areRecordsSelected(keys)) {
-                this.deselectRecords(keys);
+                this.deselectRecords(keys)
 
-                return;
+                return
             }
 
-            this.selectRecords(keys);
+            this.selectRecords(keys)
         },
 
         getRecordsOnPage: function () {
-            let keys = [];
+            let keys = []
 
             for (checkbox of $el.getElementsByClassName(
-                'filament-tables-record-checkbox'
+                'filament-tables-record-checkbox',
             )) {
-                keys.push(checkbox.value);
+                keys.push(checkbox.value)
             }
 
-            return keys;
+            return keys
         },
 
         selectRecords: function (keys) {
             for (key of keys) {
                 if (this.isRecordSelected(key)) {
-                    continue;
+                    continue
                 }
 
-                this.selectedRecords.push(key);
+                this.selectedRecords.push(key)
             }
         },
 
         deselectRecords: function (keys) {
             for (key of keys) {
-                let index = this.selectedRecords.indexOf(key);
+                let index = this.selectedRecords.indexOf(key)
 
                 if (index === -1) {
-                    continue;
+                    continue
                 }
 
-                this.selectedRecords.splice(index, 1);
+                this.selectedRecords.splice(index, 1)
             }
         },
 
         selectAllRecords: async function () {
-            this.isLoading = true;
+            this.isLoading = true
 
-            this.selectedRecords = await $wire.getAllSelectableTableRecordKeys();
+            this.selectedRecords = await $wire.getAllSelectableTableRecordKeys()
 
-            this.isLoading = false;
+            this.isLoading = false
         },
 
         deselectAllRecords: function () {
-            this.selectedRecords = [];
+            this.selectedRecords = []
         },
 
         isRecordSelected: function (key) {
-            return this.selectedRecords.includes(key);
+            return this.selectedRecords.includes(key)
         },
 
         areRecordsSelected: function (keys) {
-            return keys.every((key) => this.isRecordSelected(key));
+            return keys.every((key) => this.isRecordSelected(key))
         },
 
         toggleCollapseGroup: function (group) {
             if (this.isGroupCollapsed(group)) {
-                this.collapsedGroups.splice(this.collapsedGroups.indexOf(group), 1);
+                this.collapsedGroups.splice(this.collapsedGroups.indexOf(group), 1)
 
-                return;
+                return
             }
 
-            this.collapsedGroups.push(group);
+            this.collapsedGroups.push(group)
         },
 
         isGroupCollapsed: function (group) {
-            return this.collapsedGroups.includes(group);
+            return this.collapsedGroups.includes(group)
         },
 
         resetCollapsedGroups: function () {
-            this.collapsedGroups = [];
+            this.collapsedGroups = []
         },
     }"
     class="filament-tables-component"
@@ -1659,16 +1659,16 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                 x-init="
                                     $watch('column', function (newColumn, oldColumn) {
                                         if (! newColumn) {
-                                            direction = null;
+                                            direction = null
 
-                                            return;
+                                            return
                                         }
 
                                         if (oldColumn) {
-                                            return;
+                                            return
                                         }
 
-                                        direction = 'asc';
+                                        direction = 'asc'
                                     })
                                 "
                                 class="flex flex-wrap items-center gap-1 py-1 text-xs sm:text-sm"

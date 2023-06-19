@@ -255,7 +255,7 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_stats_card_
                 values: {{ json_encode(array_values($chart)) }},
 
                 init: function () {
-                    this.chart ? this.updateChart() : this.initChart();
+                    this.chart ? this.updateChart() : this.initChart()
                 },
 
                 initChart: function () {
@@ -267,7 +267,7 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_stats_card_
                                 {
                                     data: this.values,
                                     backgroundColor: getComputedStyle(
-                                        $refs.backgroundColorElement
+                                        $refs.backgroundColorElement,
                                     ).color,
                                     borderColor: getComputedStyle($refs.borderColorElement)
                                         .color,
@@ -301,17 +301,17 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_stats_card_
                                 enabled: false,
                             },
                         },
-                    }));
+                    }))
                 },
 
                 updateChart: function () {
-                    this.chart.data.labels = this.labels;
-                    this.chart.data.datasets[0].data = this.values;
-                    this.chart.update();
+                    this.chart.data.labels = this.labels
+                    this.chart.data.datasets[0].data = this.values
+                    this.chart.update()
                 },
             }"
             x-on:dark-mode-toggled.window="
-                chart.destroy();
+                chart.destroy()
                 initChart()
             "
             class="absolute inset-x-0 bottom-0 overflow-hidden rounded-b-2xl"

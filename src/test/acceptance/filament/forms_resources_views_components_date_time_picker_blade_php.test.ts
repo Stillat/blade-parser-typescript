@@ -368,7 +368,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
                     x-on:click="togglePanelVisibility()"
                     x-on:keydown.enter.stop.prevent="
                         if (! $el.disabled) {
-                            isOpen() ? selectDate() : togglePanelVisibility();
+                            isOpen() ? selectDate() : togglePanelVisibility()
                         }
                     "
                     x-on:keydown.arrow-left.stop.prevent="if (! $el.disabled) focusPreviousDay()"

@@ -130,10 +130,10 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_file_upload
             fileUploadFormComponent({
                 acceptedFileTypes: @js($getAcceptedFileTypes()),
                 deleteUploadedFileUsing: async (fileKey) => {
-                    return await $wire.deleteUploadedFile(@js($statePath), fileKey);
+                    return await $wire.deleteUploadedFile(@js($statePath), fileKey)
                 },
                 getUploadedFilesUsing: async () => {
-                    return await $wire.getFormUploadedFiles(@js($statePath));
+                    return await $wire.getFormUploadedFiles(@js($statePath))
                 },
                 imageCropAspectRatio: @js($imageCropAspectRatio),
                 imagePreviewHeight: @js($getImagePreviewHeight()),
@@ -154,11 +154,11 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_file_upload
                 maxSize: {{ ($size = $getMaxSize()) ? "'{$size} KB'" : 'null' }},
                 minSize: {{ ($size = $getMinSize()) ? "'{$size} KB'" : 'null' }},
                 removeUploadedFileUsing: async (fileKey) => {
-                    return await $wire.removeFormUploadedFile(@js($statePath), fileKey);
+                    return await $wire.removeFormUploadedFile(@js($statePath), fileKey)
                 },
                 removeUploadedFileButtonPosition: @js($getRemoveUploadedFileButtonPosition()),
                 reorderUploadedFilesUsing: async (files) => {
-                    return await $wire.reorderFormUploadedFiles(@js($statePath), files);
+                    return await $wire.reorderFormUploadedFiles(@js($statePath), files)
                 },
                 shouldAppendFiles: @js($shouldAppendFiles()),
                 shouldOrientImageFromExif: @js($shouldOrientImagesFromExif()),
@@ -171,11 +171,11 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_file_upload
                         \`{{ $statePath }}.\${fileKey}\`,
                         file,
                         () => {
-                            success(fileKey);
+                            success(fileKey)
                         },
                         error,
-                        progress
-                    );
+                        progress,
+                    )
                 },
             })
         "

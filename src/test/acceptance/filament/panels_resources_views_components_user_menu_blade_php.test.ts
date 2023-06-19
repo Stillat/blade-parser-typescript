@@ -199,61 +199,61 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_user_menu_
                 theme: null,
 
                 init: function () {
-                    this.theme = localStorage.getItem('theme') || 'system';
+                    this.theme = localStorage.getItem('theme') || 'system'
 
                     window
                         .matchMedia('(prefers-color-scheme: dark)')
                         .addEventListener('change', (event) => {
                             if (this.theme !== 'system') {
-                                return;
+                                return
                             }
 
                             if (
                                 event.matches &&
                                 ! document.documentElement.classList.contains('dark')
                             ) {
-                                document.documentElement.classList.add('dark');
+                                document.documentElement.classList.add('dark')
                             } else if (
                                 ! event.matches &&
                                 document.documentElement.classList.contains('dark')
                             ) {
-                                document.documentElement.classList.remove('dark');
+                                document.documentElement.classList.remove('dark')
                             }
-                        });
+                        })
 
                     $watch('theme', () => {
-                        localStorage.setItem('theme', this.theme);
+                        localStorage.setItem('theme', this.theme)
 
                         if (
                             this.theme === 'dark' &&
                             ! document.documentElement.classList.contains('dark')
                         ) {
-                            document.documentElement.classList.add('dark');
+                            document.documentElement.classList.add('dark')
                         } else if (
                             this.theme === 'light' &&
                             document.documentElement.classList.contains('dark')
                         ) {
-                            document.documentElement.classList.remove('dark');
+                            document.documentElement.classList.remove('dark')
                         } else if (this.theme === 'system') {
                             if (
                                 this.isSystemDark() &&
                                 ! document.documentElement.classList.contains('dark')
                             ) {
-                                document.documentElement.classList.add('dark');
+                                document.documentElement.classList.add('dark')
                             } else if (
                                 ! this.isSystemDark() &&
                                 document.documentElement.classList.contains('dark')
                             ) {
-                                document.documentElement.classList.remove('dark');
+                                document.documentElement.classList.remove('dark')
                             }
                         }
 
-                        $dispatch('theme-changed', this.theme);
-                    });
+                        $dispatch('theme-changed', this.theme)
+                    })
                 },
 
                 isSystemDark: function () {
-                    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    return window.matchMedia('(prefers-color-scheme: dark)').matches
                 },
             }"
             class="filament-theme-switcher flex items-center divide-x divide-gray-950/5 border-b border-gray-950/5 dark:divide-gray-700 dark:border-gray-700"

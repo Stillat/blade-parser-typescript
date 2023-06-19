@@ -110,16 +110,16 @@ suite('Pint Transformer Acceptance: tables_resources_views_components_groups_bla
     x-init="
         $watch('group', function (newGroup, oldGroup) {
             if (! newGroup) {
-                direction = null;
+                direction = null
 
-                return;
+                return
             }
 
             if (oldGroup) {
-                return;
+                return
             }
 
-            direction = 'asc';
+            direction = 'asc'
         })
     "
 >

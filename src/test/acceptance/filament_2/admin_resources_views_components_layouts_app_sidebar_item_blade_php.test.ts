@@ -90,13 +90,13 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_layouts_app
             x-init="
                 Alpine.effect(() => {
                     if (Alpine.store('sidebar').isOpen) {
-                        tooltip = false;
+                        tooltip = false
                     } else {
                         tooltip = {
                             content: {{ \\Illuminate\\Support\\Js::from($slot->toHtml()) }},
                             theme: Alpine.store('theme') === 'light' ? 'dark' : 'light',
                             placement: document.dir === 'rtl' ? 'left' : 'right',
-                        };
+                        }
                     }
                 })
             "

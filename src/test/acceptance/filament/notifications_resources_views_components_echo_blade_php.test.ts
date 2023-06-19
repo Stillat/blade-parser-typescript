@@ -34,12 +34,12 @@ suite('Pint Transformer Acceptance: notifications_resources_views_components_ech
     x-init="
         window.addEventListener('EchoLoaded', () => {
             window.Echo.private(@js($channel)).notification((notification) => {
-                setTimeout(() => $wire.handleBroadcastNotification(notification), 500);
-            });
-        });
+                setTimeout(() => $wire.handleBroadcastNotification(notification), 500)
+            })
+        })
 
         if (window.Echo) {
-            window.dispatchEvent(new CustomEvent('EchoLoaded'));
+            window.dispatchEvent(new CustomEvent('EchoLoaded'))
         }
     "
     {{ $attributes }}

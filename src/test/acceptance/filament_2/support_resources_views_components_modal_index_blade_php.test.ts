@@ -267,19 +267,19 @@ suite('Pint Transformer Acceptance: support_resources_views_components_modal_ind
         livewire: null,
 
         close: function () {
-            this.isOpen = false;
+            this.isOpen = false
 
             this.$refs.modalContainer.dispatchEvent(
-                new CustomEvent('modal-closed', { id: '{{ $id }}' })
-            );
+                new CustomEvent('modal-closed', { id: '{{ $id }}' }),
+            )
         },
 
         open: function () {
-            this.isOpen = true;
+            this.isOpen = true
 
             this.$refs.modalContainer.dispatchEvent(
-                new CustomEvent('modal-opened', { id: '{{ $id }}' })
-            );
+                new CustomEvent('modal-opened', { id: '{{ $id }}' }),
+            )
         },
     }"
     x-trap.noscroll="isOpen"
@@ -336,8 +336,8 @@ suite('Pint Transformer Acceptance: support_resources_views_components_modal_ind
                 x-data="{ isShown: false }"
                 x-init="
                     $nextTick(() => {
-                        isShown = isOpen;
-                        $watch('isOpen', () => (isShown = isOpen));
+                        isShown = isOpen
+                        $watch('isOpen', () => (isShown = isOpen))
                     })
                 "
                 x-show="isShown"

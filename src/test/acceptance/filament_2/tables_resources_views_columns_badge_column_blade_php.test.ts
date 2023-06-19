@@ -117,7 +117,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_badge_column_
             <span
                 @if ($isCopyable)
                     x-on:click="
-                        window.navigator.clipboard.writeText(@js($getState()));
+                        window.navigator.clipboard.writeText(@js($getState()))
                         $tooltip(@js($getCopyMessage()), { timeout: @js($getCopyMessageDuration()) })
                     "
                 @endif

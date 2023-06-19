@@ -242,16 +242,16 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_repeater_bl
                             wire:key="{{ $this->id }}.{{ $item->getStatePath() }}.{{ $field::class }}.item"
                             x-sortable-item="{{ $uuid }}"
                             x-on:expand-concealing-component.window="
-                                error = $el.querySelector('[data-validation-error]');
+                                error = $el.querySelector('[data-validation-error]')
 
                                 if (! error) {
-                                    return;
+                                    return
                                 }
 
-                                isCollapsed = false;
+                                isCollapsed = false
 
                                 if (document.body.querySelector('[data-validation-error]') !== error) {
-                                    return;
+                                    return
                                 }
 
                                 setTimeout(
@@ -261,7 +261,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_repeater_bl
                                             block: 'start',
                                             inline: 'start',
                                         }),
-                                    200
+                                    200,
                                 )
                             "
                             class="filament-forms-repeater-component-item relative rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-800 dark:ring-white/20"

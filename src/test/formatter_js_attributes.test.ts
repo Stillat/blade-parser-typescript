@@ -115,9 +115,9 @@ x-bind:class="
 <div>
     <button
         x-bind:class="
-            {{-- A simple Blade comment. --}};
+            {{-- A simple Blade comment. --}}
 
-            var somethingHere = 'that';
+            var somethingHere = 'that'
         "
     >
         <p>Test.</p>
@@ -127,9 +127,9 @@ x-bind:class="
 <div>
     <button
         x-bind:class="
-            <?php $doesThis = 'break Things'; ?>;
+            <?php $doesThis = 'break Things'; ?>
 
-            var somethingHere = 'that';
+            var somethingHere = 'that'
         "
     >
         <p>Test.</p>
@@ -139,9 +139,9 @@ x-bind:class="
 <div>
     <button
         x-bind:class="
-            <?= $whatAboutThis ?>;
+            <?= $whatAboutThis ?>
 
-            var somethingHere = 'that';
+            var somethingHere = 'that'
         "
     >
         <p>Test.</p>

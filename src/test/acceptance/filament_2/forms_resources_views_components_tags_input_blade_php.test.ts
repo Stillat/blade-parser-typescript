@@ -160,10 +160,10 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tags_input_
                             $nextTick(() => {
                                 if (newTag.includes(',')) {
                                     newTag.split(',').forEach((tag) => {
-                                        newTag = tag;
+                                        newTag = tag
 
-                                        createTag();
-                                    });
+                                        createTag()
+                                    })
                                 }
                             })
                         "

@@ -437,9 +437,9 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_rich_editor
         "
         x-on:trix-change="state = $event.target.value"
         x-on:trix-attachment-add="
-            if (! $event.attachment.file) return;
+            if (! $event.attachment.file) return
 
-            let attachment = $event.attachment;
+            let attachment = $event.attachment
 
             $wire.upload(
                 \`componentFileAttachments.{{ $statePath }}\`,
@@ -451,13 +451,13 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_rich_editor
                             attachment.setAttributes({
                                 url: url,
                                 href: url,
-                            });
-                        });
-                }
+                            })
+                        })
+                },
             )
         "
         x-on:trix-file-accept="
-            if ({{ $hasToolbarButton('attachFiles') ? 'true' : 'false' }}) return;
+            if ({{ $hasToolbarButton('attachFiles') ? 'true' : 'false' }}) return
 
             $event.preventDefault()
         "

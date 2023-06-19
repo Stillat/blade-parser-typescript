@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.1
+
+- Corrects an issue where some Alpine.js directives would receive a leading semicolon (#60)
+- Updates default Alpine.js JavaScript formatting style to better reflect community defaults
+
 ## 1.6.0
 
 - Corrects an extreme edge case where some input strings would be duplicated or strangely converted

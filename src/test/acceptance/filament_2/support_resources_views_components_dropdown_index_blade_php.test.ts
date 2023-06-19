@@ -88,13 +88,13 @@ suite('Pint Transformer Acceptance: support_resources_views_components_dropdown_
     {{ $attributes->class(['filament-dropdown']) }}
     x-data="{
         toggle: function (event) {
-            $refs.panel.toggle(event);
+            $refs.panel.toggle(event)
         },
         open: function (event) {
-            $refs.panel.open(event);
+            $refs.panel.open(event)
         },
         close: function (event) {
-            $refs.panel.close(event);
+            $refs.panel.close(event)
         },
     }"
 >

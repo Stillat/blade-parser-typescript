@@ -578,9 +578,9 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_markdown_ed
                         x-on:keyup.enter="checkForAutoInsertion"
                         x-on:file-attachment-accepted.window="
                             if ($event?.srcElement.querySelector('textarea')?.id === '{{ $getId() }}') {
-                                attachment = $event.detail?.attachments?.[0];
+                                attachment = $event.detail?.attachments?.[0]
 
-                                if (! attachment || ! attachment.file) return;
+                                if (! attachment || ! attachment.file) return
 
                                 $wire.upload(
                                     \`componentFileAttachments.{{ $getStatePath() }}\`,
@@ -590,27 +590,27 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_markdown_ed
                                             .getComponentFileAttachmentUrl('{{ $getStatePath() }}')
                                             .then((url) => {
                                                 if (! url) {
-                                                    return;
+                                                    return
                                                 }
 
-                                                $refs.imageTrigger.click();
+                                                $refs.imageTrigger.click()
 
-                                                const urlStart = $refs.textarea.selectionStart + 2;
-                                                const urlEnd = urlStart + 3;
+                                                const urlStart = $refs.textarea.selectionStart + 2
+                                                const urlEnd = urlStart + 3
 
                                                 state = [
                                                     $refs.textarea.value.substring(0, urlStart),
                                                     url,
                                                     $refs.textarea.value.substring(urlEnd),
-                                                ].join('');
+                                                ].join('')
 
-                                                $refs.textarea.selectionStart = urlStart - 2;
-                                                $refs.textarea.selectionEnd = urlStart - 2;
+                                                $refs.textarea.selectionStart = urlStart - 2
+                                                $refs.textarea.selectionEnd = urlStart - 2
 
-                                                render();
-                                            });
-                                    }
-                                );
+                                                render()
+                                            })
+                                    },
+                                )
                             }
                         "
                         x-ref="textarea"

@@ -180,8 +180,8 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_checkbox_li
 
             checkboxListOptions: Array.from(
                 $root.querySelectorAll(
-                    '.filament-forms-checkbox-list-component-option-label'
-                )
+                    '.filament-forms-checkbox-list-component-option-label',
+                ),
             ),
 
             search: '',
@@ -189,38 +189,38 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_checkbox_li
             visibleCheckboxListOptions: [],
 
             init: function () {
-                this.updateVisibleCheckboxListOptions();
-                this.checkIfAllCheckboxesAreChecked();
+                this.updateVisibleCheckboxListOptions()
+                this.checkIfAllCheckboxesAreChecked()
 
                 Livewire.hook('message.processed', () => {
-                    this.checkIfAllCheckboxesAreChecked();
-                });
+                    this.checkIfAllCheckboxesAreChecked()
+                })
 
                 $watch('search', () => {
-                    this.updateVisibleCheckboxListOptions();
-                    this.checkIfAllCheckboxesAreChecked();
-                });
+                    this.updateVisibleCheckboxListOptions()
+                    this.checkIfAllCheckboxesAreChecked()
+                })
             },
 
             checkIfAllCheckboxesAreChecked: function () {
                 this.areAllCheckboxesChecked =
                     this.visibleCheckboxListOptions.length ===
                     this.visibleCheckboxListOptions.filter((checkboxLabel) =>
-                        checkboxLabel.querySelector('input[type=checkbox]:checked')
-                    ).length;
+                        checkboxLabel.querySelector('input[type=checkbox]:checked'),
+                    ).length
             },
 
             toggleAllCheckboxes: function () {
-                state = ! this.areAllCheckboxesChecked;
+                state = ! this.areAllCheckboxesChecked
 
                 this.visibleCheckboxListOptions.forEach((checkboxLabel) => {
-                    checkbox = checkboxLabel.querySelector('input[type=checkbox]');
+                    checkbox = checkboxLabel.querySelector('input[type=checkbox]')
 
-                    checkbox.checked = state;
-                    checkbox.dispatchEvent(new Event('change'));
-                });
+                    checkbox.checked = state
+                    checkbox.dispatchEvent(new Event('change'))
+                })
 
-                this.areAllCheckboxesChecked = state;
+                this.areAllCheckboxesChecked = state
             },
 
             updateVisibleCheckboxListOptions: function () {
@@ -228,12 +228,12 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_checkbox_li
                     (checkboxListItem) => {
                         return checkboxListItem
                             .querySelector(
-                                '.filament-forms-checkbox-list-component-option-label-text'
+                                '.filament-forms-checkbox-list-component-option-label-text',
                             )
                             .innerText.toLowerCase()
-                            .includes(this.search.toLowerCase());
-                    }
-                );
+                            .includes(this.search.toLowerCase())
+                    },
+                )
             },
         }"
     >

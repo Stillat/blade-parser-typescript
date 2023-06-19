@@ -257,78 +257,78 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_wizard_blad
         step: null,
 
         init: function () {
-            this.$watch('step', () => this.updateQueryString());
+            this.$watch('step', () => this.updateQueryString())
 
-            this.step = this.getSteps()[{{ $getStartStep() }} - 1];
+            this.step = this.getSteps()[{{ $getStartStep() }} - 1]
         },
 
         nextStep: function () {
-            let nextStepIndex = this.getStepIndex(this.step) + 1;
+            let nextStepIndex = this.getStepIndex(this.step) + 1
 
             if (nextStepIndex >= this.getSteps().length) {
-                return;
+                return
             }
 
-            this.step = this.getSteps()[nextStepIndex];
+            this.step = this.getSteps()[nextStepIndex]
 
-            this.autofocusFields();
-            this.scrollToTop();
+            this.autofocusFields()
+            this.scrollToTop()
         },
 
         previousStep: function () {
-            let previousStepIndex = this.getStepIndex(this.step) - 1;
+            let previousStepIndex = this.getStepIndex(this.step) - 1
 
             if (previousStepIndex < 0) {
-                return;
+                return
             }
 
-            this.step = this.getSteps()[previousStepIndex];
+            this.step = this.getSteps()[previousStepIndex]
 
-            this.autofocusFields();
-            this.scrollToTop();
+            this.autofocusFields()
+            this.scrollToTop()
         },
 
         scrollToTop: function () {
-            this.$root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            this.$root.scrollIntoView({ behavior: 'smooth', block: 'start' })
         },
 
         autofocusFields: function () {
             $nextTick(() =>
                 this.$refs[\`step-\${this.step}\`]
                     .querySelector('[autofocus]')
-                    ?.focus()
-            );
+                    ?.focus(),
+            )
         },
 
         getStepIndex: function (step) {
-            return this.getSteps().findIndex((indexedStep) => indexedStep === step);
+            return this.getSteps().findIndex((indexedStep) => indexedStep === step)
         },
 
         getSteps: function () {
-            return JSON.parse(this.$refs.stepsData.value);
+            return JSON.parse(this.$refs.stepsData.value)
         },
 
         isFirstStep: function () {
-            return this.getStepIndex(this.step) <= 0;
+            return this.getStepIndex(this.step) <= 0
         },
 
         isLastStep: function () {
-            return this.getStepIndex(this.step) + 1 >= this.getSteps().length;
+            return this.getStepIndex(this.step) + 1 >= this.getSteps().length
         },
 
         isStepAccessible: function (step, index) {
-            return @js($isSkippable()) || this.getStepIndex(step) > index;
+            return @js($isSkippable()) || this.getStepIndex(step) > index
         },
 
         updateQueryString: function () {
             if (! @js($isStepPersistedInQueryString())) {
-                return;
+                return
             }
 
-            const url = new URL(window.location.href);
-            url.searchParams.set(@js($getStepQueryStringKey()), this.step);
+            const url = new URL(window.location.href)
+            url.searchParams.set(@js($getStepQueryStringKey()), this.step)
 
-            history.pushState(null, document.title, url.toString());
+            history.pushState(null, document.title, url.toString())
         },
     }"
     x-on:next-wizard-step.window="if ($event.detail.statePath === '{{ $statePath }}') nextStep()"
@@ -502,7 +502,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_wizard_blad
                     $wire.dispatchFormEvent(
                         'wizard::nextStep',
                         '{{ $statePath }}',
-                        getStepIndex(step)
+                        getStepIndex(step),
                     )
                 "
                 x-show="! isLastStep()"

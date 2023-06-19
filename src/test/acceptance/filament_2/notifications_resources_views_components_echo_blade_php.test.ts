@@ -40,16 +40,16 @@ suite('Pint Transformer Acceptance: notifications_resources_views_components_ech
                 .notification((notification) => {
                     setTimeout(
                         () => $wire.handleBroadcastNotification(notification),
-                        500
-                    );
+                        500,
+                    )
                 })
                 .listen('.database-notifications.sent', () => {
-                    setTimeout(() => $wire.call('$refresh'), 500);
-                });
-        });
+                    setTimeout(() => $wire.call('$refresh'), 500)
+                })
+        })
 
         if (window.Echo) {
-            window.dispatchEvent(new CustomEvent('EchoLoaded'));
+            window.dispatchEvent(new CustomEvent('EchoLoaded'))
         }
     "
     {{ $attributes }}

@@ -75,12 +75,12 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_markdown_ed
                                 .getFormComponentFileAttachmentUrl('{{ $statePath }}')
                                 .then((url) => {
                                     if (! url) {
-                                        return onError();
+                                        return onError()
                                     }
 
-                                    onSuccess(url);
-                                });
-                        });
+                                    onSuccess(url)
+                                })
+                        })
                     },
                 })
             "

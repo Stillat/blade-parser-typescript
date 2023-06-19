@@ -166,6 +166,8 @@ export function formatAsJavaScript(text: string, transformOptions: TransformOpti
         printWidth: 80,
         singleQuote: true,
         quoteProps: 'preserve',
+        semi: false,
+        trailingComma: 'all',
     });
 }
 
