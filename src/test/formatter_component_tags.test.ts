@@ -137,7 +137,9 @@ suite('Component Tags', () => {
         >
                     {{ $message }}
             </div>`).trim(),
-        `<div {{ $attributes->merge(["class" => "alert alert-" . $type]) }}>
+        `<div
+    {{ $attributes->merge(["class" => "alert alert-" . $type]) }}
+>
     {{ $message }}
 </div>`
         );

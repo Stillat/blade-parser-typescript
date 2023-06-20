@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { formatBladeString } from '../formatting/prettier/utils';
+import { formatBladeString, formatBladeStringWithPint } from '../formatting/prettier/utils';
 
 suite('Echo Formatting', () => {
     test('it formats valid PHP code', () => {
@@ -311,5 +311,32 @@ $foo->bar([
 ></div>
 `;
         assert.strictEqual(formatBladeString(input), out);
+    });
+
+    test('it can align echos as if they were attributes or content', () => {
+        const input = `
+<div
+x-float{{ $placement ? ".placement.{$placement}" : '' }}.flip{{ $shift ? '.shift' : '' }}{{ $teleport ? '.teleport' : '' }}{{ $offset ? '.offset' : '' }}="{ offset: {{ $offset }} }"
+x-on:input.debounce.{{ $debounce ?? '500ms' }}="updateState"
+
+ {{ match ($foo) {
+  "foo" => "foo",
+  default => "bar",
+  } }}><p>Hello, world.</p></div>
+`;
+        const out = `<div
+    x-float{{ $placement ? ".placement.{$placement}" : '' }}.flip{{ $shift ? '.shift' : '' }}{{ $teleport ? '.teleport' : '' }}{{ $offset ? '.offset' : '' }}="{ offset: {{ $offset }} }"
+    x-on:input.debounce.{{ $debounce ?? '500ms' }}="updateState"
+    {{
+        match ($foo) {
+            'foo' => 'foo',
+            default => 'bar',
+        }
+    }}
+>
+    <p>Hello, world.</p>
+</div>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), out);
     });
 });

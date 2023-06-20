@@ -107,6 +107,7 @@ export class Transformer {
     private inlineDirectiveBlocks: Map<string, DirectiveNode> = new Map();
     private contentDirectives: Map<string, DirectiveNode> = new Map();
     private dynamicEchoBlocks: Map<string, BladeEchoNode> = new Map();
+    private dynamicAttributeEchoBlocks: Map<string, BladeEchoNode> = new Map();
     private pairedDirectives: Map<string, TransformedPairedDirective> = new Map();
     private dynamicInlineDirectives: Map<string, string> = new Map();
     private inlineDirectives: Map<string, TransformedPairedDirective> = new Map();
@@ -973,6 +974,17 @@ export class Transformer {
         }
     }
 
+    private registerDynamicAttributeFragmentEcho(echo: BladeEchoNode): string {
+        if (this.parentTransformer != null) {
+            return this.parentTransformer.registerDynamicFragmentEcho(echo);
+        } else {
+            const slug = this.makeSlug(echo.sourceContent.length);
+            this.dynamicAttributeEchoBlocks.set(slug, echo);
+
+            return `${slug}="${slug}"`;
+        }
+    }
+
     private registerInlineEcho(echo: BladeEchoNode): string {
         if (this.parentTransformer != null) {
             return this.parentTransformer.registerInlineEcho(echo);
@@ -1072,8 +1084,37 @@ export class Transformer {
 
         if (echo.fragmentPosition == FragmentPosition.IsDynamicFragmentName) {
             return this.registerDynamicFragmentEcho(echo);
-        } else if (echo.fragmentPosition == FragmentPosition.InsideFragment || echo.fragmentPosition == FragmentPosition.InsideFragmentParameter) {
+        } else if (echo.fragmentPosition == FragmentPosition.InsideFragmentParameter) {
             return this.registerDynamicFragmentEcho(echo);
+        } else if (echo.fragmentPosition == FragmentPosition.InsideFragment) {
+            if (echo.prevNode != null && !(echo.prevNode instanceof LiteralNode)) {
+                return this.registerInlineEcho(echo);
+            }
+
+            if (echo.nextNode != null) {
+                if (echo.nextNode instanceof LiteralNode) {
+                    const trailingLiteral = echo.nextNode;
+    
+                    if ((trailingLiteral.content.length - trailingLiteral.content.trimLeft().length) > 0) {
+                        return this.registerDynamicAttributeFragmentEcho(echo);
+                    } else {
+                        if (trailingLiteral.content.length == 0) {
+                            
+                            return this.registerDynamicAttributeFragmentEcho(echo);
+                        } else {
+                            const firstTrailingChar = trailingLiteral.content[0];
+    
+                            if (! StringUtilities.ctypeSpace(firstTrailingChar)) {
+                                return this.registerDynamicFragmentEcho(echo);
+                            }
+                        }
+                    }
+                } else {
+                    return this.registerInlineEcho(echo);
+                }
+            }
+
+            return this.registerDynamicAttributeFragmentEcho(echo);
         }
 
         return this.registerInlineEcho(echo);
@@ -2116,6 +2157,16 @@ export class Transformer {
                 indentLevel = this.transformOptions.tabSize;
             }
             value = StringUtilities.safeReplace(value, slug, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, indentLevel, this.pintTransformer));
+        });
+
+        this.dynamicAttributeEchoBlocks.forEach((echo, slug) => {
+            let indentLevel = this.indentLevel(slug),
+                targetReplace = `${slug}="${slug}"`;
+
+            if (indentLevel == 0) {
+                indentLevel = this.transformOptions.tabSize;
+            }
+            value = StringUtilities.safeReplace(value, targetReplace, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, indentLevel, this.pintTransformer));
         });
 
         return value;

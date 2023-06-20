@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.4
+
+- Improves the layout of echos inside HTML element content
+
 ## 1.6.3
 
 - Adds a "safe mode" for attribute newline management to prevent issues with front-end libraries (#62)

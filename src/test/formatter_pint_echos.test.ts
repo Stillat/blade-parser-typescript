@@ -341,12 +341,14 @@ $foo = 'foo';
     $foo = 'foo';
 @endphp
 
-<div {{
-    $attributes->class([
-        'foo',
-        'bar',
-    ])
-}}></div>
+<div
+    {{
+        $attributes->class([
+            'foo',
+            'bar',
+        ])
+    }}
+></div>
 `;
         assert.strictEqual(formatBladeStringWithPint(input), expected);
     });
