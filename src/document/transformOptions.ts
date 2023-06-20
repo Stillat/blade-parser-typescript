@@ -18,6 +18,7 @@ export interface TransformOptions {
     pintConfigPath: string,
     classStrings: IClassStringConfiguration,
     formatJsAttributes: boolean,
+    safeWrappingJsAttributes: string[],
     includeJsAttributes: string[],
     excludeJsAttributes: string[],
 }

@@ -177,6 +177,9 @@ export class Transformer {
         classStrings: getDefaultClassStringConfig(),
         formatJsAttributes: true,
         excludeJsAttributes: [],
+        safeWrappingJsAttributes: [
+            '^x-data',
+        ],
         includeJsAttributes: [
             '^x-'
         ]

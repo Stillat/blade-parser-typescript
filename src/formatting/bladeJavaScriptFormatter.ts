@@ -19,7 +19,7 @@ export function formatExtractedScript(attribute: IExtractedAttribute,
     let addedVarPlaceholder = false;
 
     const formatContent = attribute.content.substring(1, attribute.content.length - 1).trim();
-    
+
     let shouldContinue = false;
 
     for (let i = 0; i < safetyChars.length; i++) {
@@ -120,16 +120,43 @@ export function formatExtractedScript(attribute: IExtractedAttribute,
         if (transformedContent.includes("\n") == false) {
             transformedContent = '"' + GeneralSyntaxReflow.instance.safeReflow(transformedContent.trim()) + '"';
         } else {
-            transformedContent = `"\n` + IndentLevel.shiftIndent(
-                GeneralSyntaxReflow.instance.safeReflow(origTransformedContent),
-                targetIndent + transformOptions.tabSize,
-                false,
-                transformOptions,
-                false,
-                false
-            ) + `\n${appendFinal}"`;
+            if (isSafeWrapping(attribute, transformOptions)) {
+                targetIndent += attribute.name.length + 2;
+
+                transformedContent = `"` + IndentLevel.shiftIndent(
+                    GeneralSyntaxReflow.instance.safeReflow(origTransformedContent),
+                    targetIndent,
+                    false,
+                    transformOptions,
+                    false,
+                    false
+                ).trim() + `"`;
+            } else {
+                transformedContent = `"\n` + IndentLevel.shiftIndent(
+                    GeneralSyntaxReflow.instance.safeReflow(origTransformedContent),
+                    targetIndent + transformOptions.tabSize,
+                    false,
+                    transformOptions,
+                    false,
+                    false
+                ) + `\n${appendFinal}"`;
+            }
         }
     }
 
     return transformedContent;
+}
+
+function isSafeWrapping(attribute: IExtractedAttribute, transformOptions: TransformOptions) {
+    if (transformOptions.safeWrappingJsAttributes.length == 0) {
+        return false;
+    }
+
+    for (let i = 0; i < transformOptions.safeWrappingJsAttributes.length; i++) {
+        if (new RegExp(transformOptions.safeWrappingJsAttributes[i]).test(attribute.name)) {
+            return true;
+        }
+    }
+
+    return false;
 }

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.3
+
+- Adds a "safe mode" for attribute newline management to prevent issues with front-end libraries (#62)
+
 ## 1.6.2
 
 - Corrects an issue with condition spacing inside HTML attributes (#61)

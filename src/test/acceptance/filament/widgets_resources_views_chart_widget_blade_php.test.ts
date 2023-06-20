@@ -144,13 +144,11 @@ suite('Pint Transformer Acceptance: widgets_resources_views_chart_widget_blade_p
                 x-ignore
                 ax-load
                 ax-load-src="{{ \\Filament\\Support\\Facades\\FilamentAsset::getAlpineComponentSrc('chart', 'filament/widgets') }}"
-                x-data="
-                    chart({
-                        cachedData: @js($this->getCachedData()),
-                        options: @js($this->getOptions()),
-                        type: @js($this->getType()),
-                    })
-                "
+                x-data="chart({
+                            cachedData: @js($this->getCachedData()),
+                            options: @js($this->getOptions()),
+                            type: @js($this->getType()),
+                        })"
                 wire:ignore
             >
                 <canvas

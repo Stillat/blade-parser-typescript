@@ -42,28 +42,26 @@ suite('Alpine.js attribute formatting', () => {
     x-ignore
     ax-load
     ax-load-src="{{ \\Filament\\Support\\Facades\\FilamentAsset::getAlpineComponentSrc('file-upload', 'filament/forms') }}"
-    x-data="
-        fileUploadFormComponent({
-            acceptedFileTypes: @js($getAcceptedFileTypes()),
-            deleteUploadedFileUsing: async (fileKey) => {
-                return await $wire.deleteUploadedFile(@js($statePath), fileKey)
-            },
-            getUploadedFilesUsing: async () => {
-                return await $wire.getFormUploadedFiles(@js($statePath))
-            },
-            uploadUsing: (fileKey, file, success, error, progress) => {
-                $wire.upload(
-                    \`{{ $statePath }}.\${fileKey}\`,
-                    file,
-                    () => {
-                        success(fileKey)
-                    },
-                    error,
-                    progress,
-                )
-            },
-        })
-    "
+    x-data="fileUploadFormComponent({
+                acceptedFileTypes: @js($getAcceptedFileTypes()),
+                deleteUploadedFileUsing: async (fileKey) => {
+                    return await $wire.deleteUploadedFile(@js($statePath), fileKey)
+                },
+                getUploadedFilesUsing: async () => {
+                    return await $wire.getFormUploadedFiles(@js($statePath))
+                },
+                uploadUsing: (fileKey, file, success, error, progress) => {
+                    $wire.upload(
+                        \`{{ $statePath }}.\${fileKey}\`,
+                        file,
+                        () => {
+                            success(fileKey)
+                        },
+                        error,
+                        progress,
+                    )
+                },
+            })"
     wire:ignore
 ></div>
 `;
@@ -98,28 +96,26 @@ suite('Alpine.js attribute formatting', () => {
     x-ignore
     ax-load
     ax-load-src="{{ \\Filament\\Support\\Facades\\FilamentAsset::getAlpineComponentSrc('file-upload', 'filament/forms') }}"
-    x-data="
-        fileUploadFormComponent({
-            acceptedFileTypes: @js($getAcceptedFileTypes()),
-            deleteUploadedFileUsing: async (fileKey) => {
-                return await $wire.deleteUploadedFile(@js($statePath), fileKey)
-            },
-            getUploadedFilesUsing: async () => {
-                return await $wire.getFormUploadedFiles(@js($statePath))
-            },
-            uploadUsing: (fileKey, file, success, error, progress) => {
-                $wire.upload(
-                    \`{{ $statePath }}.\${fileKey}\`,
-                    file,
-                    () => {
-                        success(fileKey)
-                    },
-                    error,
-                    progress
-                )
-            },
-        })
-    "
+    x-data="fileUploadFormComponent({
+                acceptedFileTypes: @js($getAcceptedFileTypes()),
+                deleteUploadedFileUsing: async (fileKey) => {
+                    return await $wire.deleteUploadedFile(@js($statePath), fileKey)
+                },
+                getUploadedFilesUsing: async () => {
+                    return await $wire.getFormUploadedFiles(@js($statePath))
+                },
+                uploadUsing: (fileKey, file, success, error, progress) => {
+                    $wire.upload(
+                        \`{{ $statePath }}.\${fileKey}\`,
+                        file,
+                        () => {
+                            success(fileKey)
+                        },
+                        error,
+                        progress
+                    )
+                },
+            })"
     wire:ignore
 ></div>
 `;

@@ -430,11 +430,9 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_rich_editor
         x-ignore
         ax-load
         ax-load-src="{{ \\Filament\\Support\\Facades\\FilamentAsset::getAlpineComponentSrc('rich-editor', 'filament/forms') }}"
-        x-data="
-            richEditorFormComponent({
-                state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')") }},
-            })
-        "
+        x-data="richEditorFormComponent({
+                    state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')") }},
+                })"
         x-on:trix-change="state = $event.target.value"
         x-on:trix-attachment-add="
             if (! $event.attachment.file) return

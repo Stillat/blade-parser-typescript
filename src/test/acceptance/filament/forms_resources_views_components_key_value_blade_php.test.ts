@@ -150,11 +150,9 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_key_value_b
         x-ignore
         ax-load
         ax-load-src="{{ \\Filament\\Support\\Facades\\FilamentAsset::getAlpineComponentSrc('key-value', 'filament/forms') }}"
-        x-data="
-            keyValueFormComponent({
-                state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')") }},
-            })
-        "
+        x-data="keyValueFormComponent({
+                    state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')") }},
+                })"
         wire:ignore
         {{
             $attributes

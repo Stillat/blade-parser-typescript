@@ -131,11 +131,9 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tags_input_
         x-ignore
         ax-load
         ax-load-src="{{ \\Filament\\Support\\Facades\\FilamentAsset::getAlpineComponentSrc('tags-input', 'filament/forms') }}"
-        x-data="
-            tagsInputFormComponent({
-                state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')") }},
-            })
-        "
+        x-data="tagsInputFormComponent({
+                    state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')") }},
+                })"
         {{
             $attributes
                 ->merge($getExtraAttributes(), escape: false)

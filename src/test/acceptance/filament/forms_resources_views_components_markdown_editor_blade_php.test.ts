@@ -63,27 +63,25 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_markdown_ed
             x-ignore
             ax-load="visible"
             ax-load-src="{{ \\Filament\\Support\\Facades\\FilamentAsset::getAlpineComponentSrc('markdown-editor', 'filament/forms') }}"
-            x-data="
-                markdownEditorFormComponent({
-                    placeholder: @js($getPlaceholder()),
-                    state: $wire.{{ $applyStateBindingModifiers("entangle({$statePath})") }},
-                    toolbarButtons: @js($getToolbarButtons()),
-                    translations: @js(__('filament-forms::components.markdown_editor')),
-                    uploadFileAttachmentUsing: async (file, onSuccess, onError) => {
-                        $wire.upload(\`componentFileAttachments.{{ $statePath }}\`, file, () => {
-                            $wire
-                                .getFormComponentFileAttachmentUrl('{{ $statePath }}')
-                                .then((url) => {
-                                    if (! url) {
-                                        return onError()
-                                    }
+            x-data="markdownEditorFormComponent({
+                        placeholder: @js($getPlaceholder()),
+                        state: $wire.{{ $applyStateBindingModifiers("entangle({$statePath})") }},
+                        toolbarButtons: @js($getToolbarButtons()),
+                        translations: @js(__('filament-forms::components.markdown_editor')),
+                        uploadFileAttachmentUsing: async (file, onSuccess, onError) => {
+                            $wire.upload(\`componentFileAttachments.{{ $statePath }}\`, file, () => {
+                                $wire
+                                    .getFormComponentFileAttachmentUrl('{{ $statePath }}')
+                                    .then((url) => {
+                                        if (! url) {
+                                            return onError()
+                                        }
 
-                                    onSuccess(url)
-                                })
-                        })
-                    },
-                })
-            "
+                                        onSuccess(url)
+                                    })
+                            })
+                        },
+                    })"
             wire:ignore
             {{
                 $attributes

@@ -39,6 +39,9 @@ const defaultSettings: FormattingOptions = {
     includeJsAttributes: [
         '^x-',
         '^ax-',
+    ],
+    safeWrappingJsAttributes: [
+        '^x-data',
     ]
 };
 
@@ -146,7 +149,8 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         classStrings = getDefaultClassStringConfig(),
         formatJsAttributes = defaultSettings.formatJsAttributes,
         includeJsAttributes = defaultSettings.includeJsAttributes,
-        excludeJsAttributes = defaultSettings.excludeJsAttributes;
+        excludeJsAttributes = defaultSettings.excludeJsAttributes,
+        safeWrappingJsAttributes = defaultSettings.safeWrappingJsAttributes;
 
     if (typeof configObject.ignoreDirectives !== 'undefined' && configObject.ignoreDirectives !== null) {
         ignoreDirectives = configObject.ignoreDirectives as string[];
@@ -232,6 +236,10 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         excludeJsAttributes = configObject.excludeJsAttributes as string[];
     }
 
+    if (typeof configObject.safeWrappingJsAttributes !== 'undefined') {
+        safeWrappingJsAttributes = configObject.safeWrappingJsAttributes as string[];
+    }
+
     if (spacesAfterDirective < 0) {
         spacesAfterDirective = 0;
     }
@@ -274,7 +282,8 @@ export function parseBladeConfigObject(configObject: any): FormattingOptions {
         attributeJsOptions: jsOptions,
         formatJsAttributes: formatJsAttributes,
         includeJsAttributes: includeJsAttributes,
-        excludeJsAttributes: excludeJsAttributes
+        excludeJsAttributes: excludeJsAttributes,
+        safeWrappingJsAttributes: safeWrappingJsAttributes
     };
 }
 

@@ -123,11 +123,9 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tags_input_
     :state-path="$getStatePath()"
 >
     <div
-        x-data="
-            tagsInputFormComponent({
-                state: $wire.{{ $applyStateBindingModifiers('entangle(\\'' . $getStatePath() . '\\')') }},
-            })
-        "
+        x-data="tagsInputFormComponent({
+                    state: $wire.{{ $applyStateBindingModifiers('entangle(\\'' . $getStatePath() . '\\')') }},
+                })"
         id="{{ $getId() }}"
         {{ $attributes->merge($getExtraAttributes())->class(['filament-forms-tags-input-component']) }}
         {{ $getExtraAlpineAttributeBag() }}

@@ -373,6 +373,21 @@ If you'd like to expand the list of attributes to be formatted, you may add a li
 }
 ```
 
+### Prevent Attribute Content from Being Wrapped in Newlines
+
+Some attribute contents are sensitive to newlines, such as Alpine's `x-data`. To help address this in a general way, the Blade formatter allows you to configure a `safeWrappingJsAttributes` configuration property within your `.blade.format.json` file.
+
+This configuration option contains a list of regular expressions. When an attribute matches an item in this list, the internal formatting behavior will change to prevent newlines from being added to the beginning and end of the formatted attribute's content. This configuration contains the following items by default:
+
+```json
+{
+    "formatJsAttributes": true,
+    "safeWrappingJsAttributes": [
+        "^x-data"
+    ]
+}
+```
+
 ### Modifying JavaScript Prettier Options
 
 You can change which prettier options are applied to attribute content by adding a `attributeJsOptions` configuration object to your `.blade.format.json` file. For example, to increase the print width and disable the insertion of semicolons, you could add the following:
