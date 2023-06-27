@@ -295,7 +295,7 @@ suite('Ignore Formatting Sections', () => {
                                                                 ?>
 {{-- format-ignore-end --}}
 
-<x-slot name="name" param="value">
+<x-slot:name param="value">
     <p>Content</p>
 </x-slot>
 

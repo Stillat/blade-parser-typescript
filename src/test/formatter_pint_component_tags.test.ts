@@ -53,7 +53,7 @@ suite('Pint Transformer: Component Tags', () => {
             param="value">
    <p>Content</p>
             </x:slot:name>`).trim(),
-            `<x-slot name="name" param="value">
+            `<x-slot:name param="value">
     <p>Content</p>
 </x-slot>`
         );
@@ -206,7 +206,7 @@ suite('Pint Transformer: Component Tags', () => {
             <strong>Whoops!</strong> Something went wrong!
         </x-alert>`).trim(),
             `<x-alert>
-    <x-slot name="title">Server Error</x-slot>
+    <x-slot:title>Server Error</x-slot>
 
     <strong>Whoops!</strong>
     Something went wrong!

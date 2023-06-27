@@ -4,6 +4,7 @@ import { AbstractNode, ConditionNode, DirectiveNode, ExecutionBranchNode } from 
 import { BladeKeywords } from '../parser/bladeKeywords';
 import { DocumentParser } from '../parser/documentParser';
 import { intersect } from '../utilities/arrayHelpers';
+import { ComponentSlotPairAnalyzer } from './componentSlotPairAnalyzer';
 import { ConditionPairAnalyzer } from './conditionPairAnalyzer';
 import { ForElsePairAnalyzer } from './forElsePairAnalyzer';
 import { PairManager } from './pairManager';
@@ -136,6 +137,7 @@ export class DirectivePairAnalyzer {
 
             // Ask the specialized control structure analyzer to do its job first.
             nodes = ConditionPairAnalyzer.pairConditionals(nodes);
+            nodes = ComponentSlotPairAnalyzer.pairComponents(nodes);
 
             nodes.forEach((node) => {
                 if ((node instanceof DirectiveNode) && PairManager.canClose(node)) {

@@ -53,7 +53,7 @@ suite('Component Tags', () => {
             param="value">
    <p>Content</p>
             </x:slot:name>`).trim(),
-            `<x-slot name="name" param="value">
+            `<x-slot:name param="value">
     <p>Content</p>
 </x-slot>`
         );
@@ -206,7 +206,7 @@ suite('Component Tags', () => {
             <strong>Whoops!</strong> Something went wrong!
         </x-alert>`).trim(),
             `<x-alert>
-    <x-slot name="title">Server Error</x-slot>
+    <x-slot:title>Server Error</x-slot>
 
     <strong>Whoops!</strong>
     Something went wrong!
@@ -257,5 +257,275 @@ suite('Component Tags', () => {
 </x-jet-dropdown-link>
 `;
         assert.strictEqual(formatBladeString(input), out);
-    })
+    });
+
+    test('it can format inline slot names', () => {
+        const input = `
+<x-slot name="title">
+    <p>Howdy, sir.</p>
+</x-slot>
+
+<x-slot:title>
+    {{ __('My Title') }}
+    <x-slot:title>
+    {{ __('My Title') }}
+</x-slot>
+
+<x-slot name="title">
+    <p>Howdy, sir.</p>
+</x-slot>
+
+<x-slot:title-two>
+    {{ __('My Title') }}
+    <x-slot:title-three>
+    {{ __('My Title') }}
+    <x-slot name="title">
+    <p>Howdy, sir.</p>
+</x-slot>
+
+<x-slot:title>
+    {{ __('My Title') }}
+    <x-slot:title>
+    {{ __('My Title') }}
+</x-slot>
+
+<x-slot name="title">
+    <p>Howdy, sir.</p>
+</x-slot>
+
+<x-slot:title-two>
+    {{ __('My Title') }}
+    <x-slot:title-three>
+    {{ __('My Title') }}
+</x-slot>
+<x-slot name="title">
+    <p>Howdy, sir.</p>
+</x-slot>
+
+<x-slot:title>
+    {{ __('My Title') }}
+    <x-slot:title>
+    {{ __('My Title') }}
+</x-slot>
+
+</x-slot>
+
+<x-slot:title>
+    {{ __('My Title') }}
+    <x-slot name="title">
+    <p>Howdy, sir.</p>
+</x-slot>
+
+<x-slot:title>
+    {{ __('My Title') }}
+    <x-slot:title>
+    {{ __('My Title') }}
+</x-slot>
+
+<x-slot name="title">
+    <p>Howdy, sir.</p>
+</x-slot>
+
+<x-slot:title-two>
+    {{ __('My Title') }}
+    <x-slot:title-three>
+    {{ __('My Title') }}
+</x-slot>
+<x-slot name="title">
+    <p>Howdy, sir.</p>
+</x-slot>
+
+<x-slot:title>
+    {{ __('My Title') }}
+    <x-slot:title>
+    {{ __('My Title') }}
+</x-slot>
+
+</x-slot>
+
+<x-slot:title>
+    {{ __('My Title') }}
+</x-slot>
+</x-slot>
+
+<x-slot:title-four>
+    {{ __('My Title') }}
+</x-slot>
+
+</x-slot>
+
+<x-slot:title>
+    {{ __('My Title') }}
+</x-slot>
+</x-slot>
+</x-slot>
+
+<x-slot:title-four>
+    {{ __('My Title') }}
+</x-slot>
+
+</x-slot>
+
+<x-slot:title>
+    {{ __('My Title') }}
+</x-slot>
+</x-slot>
+<x-slot name="title">
+    <p>Howdy, sir.</p>
+</x-slot>
+
+<x-slot:title>
+    {{ __('My Title') }}
+    <x-slot:title>
+    {{ __('My Title') }}
+</x-slot>
+
+</x-slot>
+
+<x-slot:title>
+    {{ __('My Title') }}
+</x-slot>
+</x-slot>
+
+<x-slot:title-four>
+    {{ __('My Title') }}
+</x-slot>
+
+</x-slot>
+
+<x-slot:title>
+    {{ __('My Title') }}
+</x-slot>`;
+        const output = `<x-slot name="title">
+    <p>Howdy, sir.</p>
+</x-slot>
+
+<x-slot:title>
+    {{ __("My Title") }}
+    <x-slot:title>
+        {{ __("My Title") }}
+    </x-slot>
+
+    <x-slot name="title">
+        <p>Howdy, sir.</p>
+    </x-slot>
+
+    <x-slot:title-two>
+        {{ __("My Title") }}
+        <x-slot:title-three>
+            {{ __("My Title") }}
+            <x-slot name="title">
+                <p>Howdy, sir.</p>
+            </x-slot>
+
+            <x-slot:title>
+                {{ __("My Title") }}
+                <x-slot:title>
+                    {{ __("My Title") }}
+                </x-slot>
+
+                <x-slot name="title">
+                    <p>Howdy, sir.</p>
+                </x-slot>
+
+                <x-slot:title-two>
+                    {{ __("My Title") }}
+                    <x-slot:title-three>
+                        {{ __("My Title") }}
+                    </x-slot>
+                    <x-slot name="title">
+                        <p>Howdy, sir.</p>
+                    </x-slot>
+
+                    <x-slot:title>
+                        {{ __("My Title") }}
+                        <x-slot:title>
+                            {{ __("My Title") }}
+                        </x-slot>
+                    </x-slot>
+
+                    <x-slot:title>
+                        {{ __("My Title") }}
+                        <x-slot name="title">
+                            <p>Howdy, sir.</p>
+                        </x-slot>
+
+                        <x-slot:title>
+                            {{ __("My Title") }}
+                            <x-slot:title>
+                                {{ __("My Title") }}
+                            </x-slot>
+
+                            <x-slot name="title">
+                                <p>Howdy, sir.</p>
+                            </x-slot>
+
+                            <x-slot:title-two>
+                                {{ __("My Title") }}
+                                <x-slot:title-three>
+                                    {{ __("My Title") }}
+                                </x-slot>
+                                <x-slot name="title">
+                                    <p>Howdy, sir.</p>
+                                </x-slot>
+
+                                <x-slot:title>
+                                    {{ __("My Title") }}
+                                    <x-slot:title>
+                                        {{ __("My Title") }}
+                                    </x-slot>
+                                </x-slot>
+
+                                <x-slot:title>
+                                    {{ __("My Title") }}
+                                </x-slot>
+                            </x-slot>
+
+                            <x-slot:title-four>
+                                {{ __("My Title") }}
+                            </x-slot>
+                        </x-slot>
+
+                        <x-slot:title>
+                            {{ __("My Title") }}
+                        </x-slot>
+                    </x-slot>
+                </x-slot>
+
+                <x-slot:title-four>
+                    {{ __("My Title") }}
+                </x-slot>
+            </x-slot>
+
+            <x-slot:title>
+                {{ __("My Title") }}
+            </x-slot>
+        </x-slot>
+        <x-slot name="title">
+            <p>Howdy, sir.</p>
+        </x-slot>
+
+        <x-slot:title>
+            {{ __("My Title") }}
+            <x-slot:title>
+                {{ __("My Title") }}
+            </x-slot>
+        </x-slot>
+
+        <x-slot:title>
+            {{ __("My Title") }}
+        </x-slot>
+    </x-slot>
+
+    <x-slot:title-four>
+        {{ __("My Title") }}
+    </x-slot>
+</x-slot>
+
+<x-slot:title>
+    {{ __("My Title") }}
+</x-slot>
+`;
+        assert.strictEqual(formatBladeString(input), output);
+    });
 });

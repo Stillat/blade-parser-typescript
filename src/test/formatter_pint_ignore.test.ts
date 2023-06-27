@@ -291,7 +291,7 @@ $status = $kernel->handle($input = new Symfony\\Component\\Console\\Input\\ArgvI
                                                                 ?>
 {{-- format-ignore-end --}}
 
-<x-slot name="name" param="value">
+<x-slot:name param="value">
     <p>Content</p>
 </x-slot>
 

@@ -153,6 +153,8 @@ export class Transformer {
     private formattingOptions: FormattingOptions | null = null;
     private didPintFail: boolean = false;
     private removedAttributes: Map<string, IExtractedAttribute> = new Map();
+    private shorthandSlotAttributes: Map<string, string> = new Map();
+    private shorthandSlotAttributeReference: Map<string, BladeComponentNode> = new Map();
 
     private phpFormatter: PhpFormatter | null = null;
     private blockPhpFormatter: BlockPhpFormatter | null = null;
@@ -356,6 +358,31 @@ export class Transformer {
         }
     }
 
+    private registerShorthandSlot(component:BladeComponentNode): string {
+        if (this.parentTransformer != null) {
+            return this.parentTransformer.registerShorthandSlot(component);
+        }
+
+        const slug = this.makeSlug(20);
+
+        this.shorthandSlotAttributes.set(component.refId as string, slug);
+        this.shorthandSlotAttributeReference.set(slug, component);
+
+        return slug;
+    }
+
+    private getSlotSlug(refId: string): string {
+        if (this.parentTransformer != null) {
+            return this.parentTransformer.getSlotSlug(refId);
+        }
+
+        if (this.shorthandSlotAttributes.has(refId)) {
+            return this.shorthandSlotAttributes.get(refId) as string;
+        }
+
+        return '';
+    }
+
     private registerEchoParameter(slug: string, param: ParameterNode) {
         if (this.parentTransformer != null) {
             this.parentTransformer.registerEchoParameter(slug, param);
@@ -547,6 +574,21 @@ export class Transformer {
 
     private prepareInlinePhpBlock(php: InlinePhpNode): string {
         return this.registerInlinePhpBlock(php);
+    }
+
+    private transformComponentSlots(content: string): string {
+        let result = content;
+
+        this.shorthandSlotAttributeReference.forEach((component, slug) => {
+            const open = `<x-${slug}`,
+                close = `</x-${slug}`,
+                inlineName = component.name?.inlineName as string,
+                replace = `<x-slot:${inlineName}`;
+            result = StringUtilities.safeReplaceAllInString(result, close, '</x-slot');
+            result = StringUtilities.safeReplaceAllInString(result, open, replace);
+        });
+
+        return result;
     }
 
     private preparePhpBlock(php: InlinePhpNode): string {
@@ -1006,6 +1048,14 @@ export class Transformer {
     private prepareComponent(component: BladeComponentNode): string {
         if (component.isClosingTag) {
             if (component.name?.name == 'slot') {
+                if (component.isOpenedBy != null) {
+                    if (component.isOpenedBy.isShorthandSlot) {
+                        const parentRefId = component.isOpenedBy.refId as string,
+                            parentSlug = this.getSlotSlug(parentRefId);
+                        return `</x-${parentSlug}>`;
+                    }
+                }
+
                 return '</x-slot>';
             }
 
@@ -1022,7 +1072,11 @@ export class Transformer {
                     slotName = slotName.substring(1);
                 }
 
-                value += 'slot name="' + slotName + '"';
+                if (component.isClosedBy != null) {
+                    value += this.registerShorthandSlot(component);
+                } else {
+                    value += 'slot name="' + slotName + '"';
+                }
             } else {
                 value += component.getComponentName();
             }
@@ -2416,6 +2470,7 @@ export class Transformer {
         results = this.transformEmbeddedDirectives(results);
         results = this.transformExtractedDocuments(results);
         results = this.transformPhpBlock(results);
+        results = this.transformComponentSlots(results);
 
         if (this.ignoredLiteralBlocks.size > 0) {
             this.ignoredLiteralBlocks.forEach((nodes, slug) => {

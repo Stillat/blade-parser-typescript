@@ -169,6 +169,11 @@ export class BladeComponentNode extends AbstractNode {
     public hasParameters = false;
     public parameters: ParameterNode[] = [];
 
+    public isOpenedBy: BladeComponentNode | null = null;
+    public isClosedBy: BladeComponentNode | null = null;
+
+    public isShorthandSlot = false;
+
     getComponentName(): string {
         if (this.name == null) {
             return '';

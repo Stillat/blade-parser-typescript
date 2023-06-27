@@ -9,7 +9,7 @@ suite('Component Tag Transform', () => {
 param="value">
 <p>Content</p>
 </x:slot:name>`).trim(),
-            `<x-slot name="name" param="value" >
+            `<x-slot:name param="value" >
 <p>Content</p>
 </x-slot>`
         );
