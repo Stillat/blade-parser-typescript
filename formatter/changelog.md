@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.5
+
+- Preserves shorthand syntax when formatting Blade slot components (#65)
+- Formats custom HTML elements that have the same name as void HTML elements (#64)
+
 ## 1.6.4
 
 - Improves the layout of echos inside HTML element content

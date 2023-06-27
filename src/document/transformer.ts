@@ -3,6 +3,7 @@ import { getDefaultClassStringConfig } from '../formatting/classStringsConfig';
 import { FormattingOptions } from '../formatting/formattingOptions';
 import { GeneralSyntaxReflow } from '../formatting/generalSyntaxReflow';
 import { formatBladeString, formatBladeStringWithPint, getPhpOptions } from '../formatting/prettier/utils';
+import { VoidHtmlTagsManager } from '../formatting/prettier/voidHtmlTagsManager';
 import { SyntaxReflow } from '../formatting/syntaxReflow';
 import { AbstractNode, BladeCommentNode, BladeComponentNode, BladeEchoNode, ConditionNode, DirectiveNode, ExecutionBranchNode, ForElseNode, FragmentPosition, InlinePhpNode, LiteralNode, ParameterNode, ParameterType, SwitchCaseNode, SwitchStatementNode } from '../nodes/nodes';
 import { IExtractedAttribute } from '../parser/extractedAttribute';
@@ -2437,6 +2438,12 @@ export class Transformer {
         results = this.transformDynamicDirectives(results);
 
         results = this.transformRemovedAttibutes(results);
+
+        if (this.parentTransformer == null && VoidHtmlTagsManager.voidTagMapping.size > 0) {
+            VoidHtmlTagsManager.voidTagMapping.forEach((htmlTag, slug) => {
+                results = StringUtilities.safeReplaceAllInString(results, slug, htmlTag);
+            });
+        }
 
         return this.transformStructures(results);
     }

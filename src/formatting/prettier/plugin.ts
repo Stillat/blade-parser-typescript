@@ -14,6 +14,7 @@ import { IExtractedAttribute } from '../../parser/extractedAttribute';
 import { ClassStringRuleEngine } from '../classStringsConfig';
 import { ClassEmulator } from '../../parser/classEmulator';
 import { BladeComponentNode } from '../../nodes/nodes';
+import { VoidHtmlTagsManager } from './voidHtmlTagsManager';
 
 let prettierOptions: prettier.ParserOptions,
     transformOptions: TransformOptions,
@@ -60,8 +61,14 @@ const plugin: prettier.Plugin = {
                 parserOptions = bladeOptions as ParserOptions;
                 transformOptions.tabSize = getHtmlOptions().tabWidth;
 
-                let prettierText = text,
-                    shadowText = text;
+                let parseText = text;
+
+                if (canProcessAttributes) {
+                    parseText = VoidHtmlTagsManager.adjustInput(parseText);
+                }
+
+                let prettierText = parseText,
+                    shadowText = parseText;
 
                 const classConfig = transformOptions.classStrings,
                     phpValidator = new PhpParserPhpValidator();
