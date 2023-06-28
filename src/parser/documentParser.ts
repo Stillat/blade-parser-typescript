@@ -424,9 +424,22 @@ export class DocumentParser implements StringIterator {
 
         let lastBladeOffset = 0,
             lastWasEscaped = false,
+            lastWasEscapedDirective = false,
             lastMatch:RegExpMatchArray | null;
 
         bladeStartCandidates.forEach((bladeRegion) => {
+            if (lastWasEscapedDirective) {
+                if (lastMatch != null) {
+                    const diff = (bladeRegion.index ?? 0) - (lastMatch.index ?? 0);
+
+                    if(diff > 1) {
+                        lastWasEscaped = false;
+                        lastWasEscapedDirective = false;
+                        lastBladeOffset = bladeRegion.index ?? 0;
+                    }
+                }
+            }
+
             const matchText = bladeRegion[0],
                 seekIndex = this.content.indexOf(matchText, lastBladeOffset),
                 seekText = this.content.substr(seekIndex, 10);
@@ -434,6 +447,13 @@ export class DocumentParser implements StringIterator {
             if (seekText.startsWith('@@') || seekText.startsWith('@{{')) {
                 lastBladeOffset = this.content.indexOf(matchText, lastBladeOffset); // + 2;
                 lastWasEscaped = true;
+                
+                if (seekText.startsWith('@@')) {
+                    lastWasEscapedDirective = true;
+                } else {
+                    lastWasEscapedDirective = false;
+                }
+
                 lastMatch = bladeRegion;
                 return;
             }
