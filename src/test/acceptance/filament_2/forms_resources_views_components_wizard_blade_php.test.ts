@@ -355,7 +355,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_wizard_blad
     />
 
     <ol
-        {!! $getLabel() ? 'aria-label="' . $getLabel() . '"' : null !!}
+        {!! $getLabel() ? 'aria-label="'.$getLabel().'"' : null !!}
         role="list"
         @class([
             'filament-forms-wizard-component-header divide-y divide-gray-300 overflow-hidden rounded-xl border border-gray-300 bg-white shadow-sm md:flex md:divide-y-0',

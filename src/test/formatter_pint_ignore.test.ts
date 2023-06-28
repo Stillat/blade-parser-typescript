@@ -390,4 +390,148 @@ $status = $kernel->handle($input = new Symfony\\Component\\Console\\Input\\ArgvI
 `;
         assert.strictEqual(formatBladeStringWithPint(input), out);
     });
+
+    test('including escaped nodes does not trash document', () => {
+        const input = `<div>
+    <h1>@{{ user.name }}</h1>
+
+    <div>
+        @include("project.settings.basic")
+        @include("project.settings.source")
+        @if (Auth::id() === $project->user_id)
+            @include('project.settings.transfer')
+        @endif
+        @if (Auth::id() === $project->user_id)
+            @include('project.settings.delete')
+        @endif
+    </div>
+</div>`;
+        const expected = `<div>
+    <h1>@{{ user.name }}</h1>
+
+    <div>
+        @include('project.settings.basic')
+        @include('project.settings.source')
+        @if (Auth::id() === $project->user_id)
+            @include('project.settings.transfer')
+        @endif
+
+        @if (Auth::id() === $project->user_id)
+            @include('project.settings.delete')
+        @endif
+    </div>
+</div>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), expected);
+    });
+
+    test('including escaped nodes can still indent blade', () => {
+        const input = `<div>
+    <h1>@{{ user.name }}</h1>
+
+<div>
+@include("project.settings.basic")
+@include("project.settings.source")
+@if (Auth::id() === $project->user_id)
+@include('project.settings.transfer')
+@endif
+@if (Auth::id() === $project->user_id)
+@include('project.settings.delete')
+@endif
+</div>
+</div>`;
+        const out = `<div>
+    <h1>@{{ user.name }}</h1>
+
+    <div>
+        @include('project.settings.basic')
+        @include('project.settings.source')
+        @if (Auth::id() === $project->user_id)
+            @include('project.settings.transfer')
+        @endif
+
+        @if (Auth::id() === $project->user_id)
+            @include('project.settings.delete')
+        @endif
+    </div>
+</div>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), out);
+    });
+
+    test('it can unwrap conditions when escaped nodes are present', () => {
+        const input = `<div>
+<h1>@{{ user.name }}</h1>
+
+<div>@if($user->avatar) @include('users.avatar')@endif</div>
+</div>`;
+        const out = `<div>
+    <h1>@{{ user.name }}</h1>
+
+    <div>
+        @if ($user->avatar)
+            @include('users.avatar')
+        @endif
+    </div>
+</div>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), out);
+    });
+
+    test('it can unwrap conditions when escaped nodes are present - trippple echo', () => {
+        const input = `<div>
+<h1>@{{{ user.name }}}</h1>
+
+<div>@if($user->avatar) @include('users.avatar')@endif</div>
+</div>`;
+        const out = `<div>
+    <h1>@{{{ user.name }}}</h1>
+
+    <div>
+        @if ($user->avatar)
+            @include('users.avatar')
+        @endif
+    </div>
+</div>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), out);
+    });
+
+    test('it can unwrap conditions when escaped nodes are present - escaped directive', () => {
+        const input = `<div>
+<h1>@@somethingHere</h1>
+
+<div>@if($user->avatar) @include('users.avatar')@endif</div>
+</div>`;
+        const out = `<div>
+    <h1>@@somethingHere</h1>
+
+    <div>
+        @if ($user->avatar)
+            @include('users.avatar')
+        @endif
+    </div>
+</div>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), out);
+    });
+
+    test('it can unwrap conditions when escaped nodes are present - raw echo', () => {
+        const input = `<div>
+<h1>@{!! user.name !!}</h1>
+
+<div>@if($user->avatar) @include('users.avatar')@endif</div>
+</div>`;
+        const out = `<div>
+    <h1>@{!! user.name !!}</h1>
+
+    <div>
+        @if ($user->avatar)
+            @include('users.avatar')
+        @endif
+    </div>
+</div>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), out);
+    });
 });

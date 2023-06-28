@@ -1317,7 +1317,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                     </x-tables::header>
 
                     <x-tables::hr
-                        :x-show="\\Illuminate\\Support\\Js::from($isReorderable || $isGlobalSearchVisible || $hasFilters || $isColumnToggleFormVisible) . ' || selectedRecords.length'"
+                        :x-show="\\Illuminate\\Support\\Js::from($isReorderable || $isGlobalSearchVisible || $hasFilters || $isColumnToggleFormVisible).' || selectedRecords.length'"
                     />
                 </div>
             @endif
@@ -1340,7 +1340,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                     </div>
 
                     <x-tables::hr
-                        :x-show="\\Illuminate\\Support\\Js::from($isReorderable || $isGlobalSearchVisible || $isColumnToggleFormVisible) . ' || selectedRecords.length'"
+                        :x-show="\\Illuminate\\Support\\Js::from($isReorderable || $isGlobalSearchVisible || $isColumnToggleFormVisible).' || selectedRecords.length'"
                     />
                 </div>
             @endif
@@ -1937,7 +1937,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                             <x-tables::row
                                 :record-action="$recordAction"
                                 :record-url="$recordUrl"
-                                :wire:key="$this->id . '.table.records.' . $recordKey"
+                                :wire:key="$this->id.'.table.records.'.$recordKey"
                                 :wire:sortable.item="$isReordering ? $recordKey : null"
                                 :wire:sortable.handle="$isReordering"
                                 :striped="$isStriped"
@@ -2095,7 +2095,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                     :colspan="$columnsCount"
                                     wire:loading.class.remove.delay="hidden"
                                     class="hidden"
-                                    :wire:key="$this->id . '.table.records.' . $recordKey . '.loading-cell'"
+                                    :wire:key="$this->id.'.table.records.'.$recordKey.'.loading-cell'"
                                     wire:target="{{ implode(',', \\Filament\\Tables\\Table::LOADING_TARGETS) }}"
                                 />
                             </x-tables::row>
@@ -2178,8 +2178,8 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
         @endphp
 
         <x-tables::modal
-            :id="$this->id . '-table-action'"
-            :wire:key="$action ? $this->id . '.table.actions.' . $action->getName() . '.modal' : null"
+            :id="$this->id.'-table-action'"
+            :wire:key="$action ? $this->id.'.table.actions.'.$action->getName().'.modal' : null"
             :visible="filled($action)"
             :width="$action?->getModalWidth()"
             :slide-over="$action?->isModalSlideOver()"
@@ -2254,8 +2254,8 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
         @endphp
 
         <x-tables::modal
-            :id="$this->id . '-table-bulk-action'"
-            :wire:key="$action ? $this->id . '.table.bulk-actions.' . $action->getName() . '.modal' : null"
+            :id="$this->id.'-table-bulk-action'"
+            :wire:key="$action ? $this->id.'.table.bulk-actions.'.$action->getName().'.modal' : null"
             :visible="filled($action)"
             :width="$action?->getModalWidth()"
             :slide-over="$action?->isModalSlideOver()"

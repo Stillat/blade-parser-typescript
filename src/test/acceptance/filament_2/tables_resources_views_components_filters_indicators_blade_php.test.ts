@@ -106,7 +106,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_components_filters_in
                         {{ $indicator }}
 
                         <button
-                            wire:click="removeTableFilter('{{ $filter }}'{{ $field ? ' , \\'' . $field . '\\'' : null }})"
+                            wire:click="removeTableFilter('{{ $filter }}'{{ $field ? ' , \\''.$field.'\\'' : null }})"
                             wire:loading.attr="disabled"
                             wire:loading.class="cursor-wait"
                             wire:target="removeTableFilter"

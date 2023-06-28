@@ -556,7 +556,7 @@ suite('Pint Transformer Acceptance: support_resources_views_components_button_bl
                 <x-filament::loading-indicator
                     wire:loading.delay=""
                     :wire:target="$loadingIndicatorTarget"
-                    :class="$iconClasses . ' ' . $iconSize"
+                    :class="$iconClasses.' '.$iconSize"
                 />
             @endif
 
@@ -564,7 +564,7 @@ suite('Pint Transformer Acceptance: support_resources_views_components_button_bl
                 <x-filament::loading-indicator
                     x-show="isUploadingFile"
                     x-cloak="x-cloak"
-                    :class="$iconClasses . ' ' . $iconSize"
+                    :class="$iconClasses.' '.$iconSize"
                 />
             @endif
         @endif
@@ -600,7 +600,7 @@ suite('Pint Transformer Acceptance: support_resources_views_components_button_bl
                 <x-filament::loading-indicator
                     wire:loading.delay=""
                     :wire:target="$loadingIndicatorTarget"
-                    :class="$iconClasses . ' ' . $iconSize"
+                    :class="$iconClasses.' '.$iconSize"
                 />
             @endif
 
@@ -608,7 +608,7 @@ suite('Pint Transformer Acceptance: support_resources_views_components_button_bl
                 <x-filament::loading-indicator
                     x-show="isUploadingFile"
                     x-cloak="x-cloak"
-                    :class="$iconClasses . ' ' . $iconSize"
+                    :class="$iconClasses.' '.$iconSize"
                 />
             @endif
         @endif

@@ -124,7 +124,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tags_input_
 >
     <div
         x-data="tagsInputFormComponent({
-                    state: $wire.{{ $applyStateBindingModifiers('entangle(\\'' . $getStatePath() . '\\')') }},
+                    state: $wire.{{ $applyStateBindingModifiers('entangle(\\''.$getStatePath().'\\')') }},
                 })"
         id="{{ $getId() }}"
         {{ $attributes->merge($getExtraAttributes())->class(['filament-forms-tags-input-component']) }}
@@ -148,7 +148,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tags_input_
                         {!! $isAutofocused() ? 'autofocus' : null !!}
                         id="{{ $getId() }}"
                         list="{{ $getId() }}-suggestions"
-                        {!! $getPlaceholder() ? 'placeholder="' . $getPlaceholder() . '"' : null !!}
+                        {!! $getPlaceholder() ? 'placeholder="'.$getPlaceholder().'"' : null !!}
                         type="text"
                         dusk="filament.forms.{{ $getStatePath() }}"
                         x-on:keydown.enter.stop.prevent="createTag()"

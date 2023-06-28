@@ -691,7 +691,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_repeater_bl
         @if (! $isItemCreationDisabled)
             <div class="relative flex justify-center">
                 <x-forms::button
-                    :wire:click="'dispatchFormEvent(\\'repeater::createItem\\', \\'' . $getStatePath() . '\\')'"
+                    :wire:click="'dispatchFormEvent(\\'repeater::createItem\\', \\''.$getStatePath().'\\')'"
                     size="sm"
                     outlined
                 >

@@ -1249,7 +1249,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                 ...$carry,
                 ...collect($filter->getIndicators())
                     ->mapWithKeys(fn (string $label, int | string $field) => [
-                        "removeTableFilter('{$filter->getName()}'" . (is_string($field) ? ' , \\'' . $field . '\\'' : null) . ')' => $label,
+                        "removeTableFilter('{$filter->getName()}'".(is_string($field) ? ' , \\''.$field.'\\'' : null).')' => $label,
                     ])
                     ->all(),
             ],
@@ -1473,7 +1473,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                     />
 
                     <x-filament::hr
-                        :x-show="\\Illuminate\\Support\\Js::from($isReorderable || count($groups) || $isGlobalSearchVisible || $hasFilters || $isColumnToggleFormVisible) . ' || (selectedRecords.length && ' . \\Illuminate\\Support\\Js::from(count($bulkActions)) . ')'"
+                        :x-show="\\Illuminate\\Support\\Js::from($isReorderable || count($groups) || $isGlobalSearchVisible || $hasFilters || $isColumnToggleFormVisible).' || (selectedRecords.length && '.\\Illuminate\\Support\\Js::from(count($bulkActions)).')'"
                     />
                 </div>
             @endif
@@ -1501,7 +1501,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                     </div>
 
                     <x-filament::hr
-                        :x-show="\\Illuminate\\Support\\Js::from($isReorderable || count($groups) || $isGlobalSearchVisible || $isColumnToggleFormVisible) . ' || (selectedRecords.length && ' . \\Illuminate\\Support\\Js::from(count($bulkActions)) . ')'"
+                        :x-show="\\Illuminate\\Support\\Js::from($isReorderable || count($groups) || $isGlobalSearchVisible || $isColumnToggleFormVisible).' || (selectedRecords.length && '.\\Illuminate\\Support\\Js::from(count($bulkActions)).')'"
                     />
                 </div>
             @endif
@@ -2277,7 +2277,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                 <x-filament-tables::row
                                     :record-action="$recordAction"
                                     :record-url="$recordUrl"
-                                    :wire:key="$this->id . '.table.records.' . $recordKey"
+                                    :wire:key="$this->id.'.table.records.'.$recordKey"
                                     :x-sortable-item="$isReordering ? $recordKey : null"
                                     :x-sortable-handle="$isReordering"
                                     :striped="$isStriped"
@@ -2418,7 +2418,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_index_blade_php', () 
                                         :colspan="$columnsCount"
                                         wire:loading.class.remove.delay="hidden"
                                         class="hidden"
-                                        :wire:key="$this->id . '.table.records.' . $recordKey . '.loading-cell'"
+                                        :wire:key="$this->id.'.table.records.'.$recordKey.'.loading-cell'"
                                         wire:target="{{ implode(',', \\Filament\\Tables\\Table::LOADING_TARGETS) }}"
                                     />
                                 </x-filament-tables::row>

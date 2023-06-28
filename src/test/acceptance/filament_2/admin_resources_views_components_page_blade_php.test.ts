@@ -190,7 +190,7 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_page_blade_
 
         <x-filament::modal
             id="page-action"
-            :wire:key="$action ? $this->id . '.actions.' . $action->getName() . '.modal' : null"
+            :wire:key="$action ? $this->id.'.actions.'.$action->getName().'.modal' : null"
             :visible="filled($action)"
             :width="$action?->getModalWidth()"
             :slide-over="$action?->isModalSlideOver()"

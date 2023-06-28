@@ -111,7 +111,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tabs_blade_
         $attributes
             ->merge([
                 'id' => $getId(),
-                'wire:key' => "{$this->id}.{$getStatePath()}." . \\Filament\\Forms\\Components\\Tabs::class . '.container',
+                'wire:key' => "{$this->id}.{$getStatePath()}.".\\Filament\\Forms\\Components\\Tabs::class.'.container',
             ], escape: false)
             ->merge($getExtraAttributes(), escape: false)
             ->merge($getExtraAlpineAttributes(), escape: false)
@@ -138,8 +138,8 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tabs_blade_
                 @endphp
 
                 <x-filament::tabs.item
-                    :x-on:click="'tab = \\'' . $tabId . '\\''"
-                    :alpine-active="'tab === \\'' . $tabId . '\\''"
+                    :x-on:click="'tab = \\''.$tabId.'\\''"
+                    :alpine-active="'tab === \\''.$tabId.'\\''"
                     :badge="$tab->getBadge()"
                     :icon="$tab->getIcon()"
                     :icon-color="$tab->getIconColor()"

@@ -441,7 +441,7 @@ suite('Pint Transformer Acceptance: support_resources_views_components_modal_ind
                                 @if ($heading)
                                     <x-dynamic-component
                                         :component="$headingComponent"
-                                        :id="$id . '.heading'"
+                                        :id="$id.'.heading'"
                                     >
                                         {{ $heading }}
                                     </x-dynamic-component>

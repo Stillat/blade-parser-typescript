@@ -109,7 +109,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
 
 <li
     x-data="{
-        label: {{ \\Illuminate\\Support\\Js::from((filled($parentGroup) ? "{$parentGroup}." : null) . $label) }},
+        label: {{ \\Illuminate\\Support\\Js::from((filled($parentGroup) ? "{$parentGroup}." : null).$label) }},
     }"
     class="filament-sidebar-group"
     @if (filled($parentGroup))
@@ -200,7 +200,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
                     :icon="$item->getIcon()"
                     :collapsible="$item->isCollapsible()"
                     :items="$item->getItems()"
-                    :parentGroup="(filled($parentGroup) ? ('$parentGroup' . '.') : null) . $label"
+                    :parentGroup="(filled($parentGroup) ? ('$parentGroup'.'.') : null).$label"
                 />
             @endif
         @endforeach

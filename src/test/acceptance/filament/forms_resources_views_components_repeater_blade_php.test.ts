@@ -229,7 +229,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_repeater_bl
                     :xl="$getGridColumns('xl')"
                     :two-xl="$getGridColumns('2xl')"
                     x-sortable
-                    :wire:end.stop="'mountFormComponentAction(\\'' . $statePath . '\\', \\'reorder\\', { items: $event.target.sortable.toArray() })'"
+                    :wire:end.stop="'mountFormComponentAction(\\''.$statePath.'\\', \\'reorder\\', { items: $event.target.sortable.toArray() })'"
                     class="gap-6"
                 >
                     @foreach ($containers as $uuid => $item)

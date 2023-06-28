@@ -168,7 +168,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_components_pagination
         <div class="w-10">
             @if ($paginator->hasPages() && (! $paginator->onFirstPage()))
                 <x-filament::icon-button
-                    :wire:click="'previousPage(\\'' . $paginator->getPageName() . '\\')'"
+                    :wire:click="'previousPage(\\''.$paginator->getPageName().'\\')'"
                     rel="prev"
                     :icon="$previousArrowIcon"
                     icon-alias="tables::pagination.buttons.previous"
@@ -186,7 +186,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_components_pagination
         <div class="w-10">
             @if ($paginator->hasPages() && $paginator->hasMorePages())
                 <x-filament::icon-button
-                    :wire:click="'nextPage(\\'' . $paginator->getPageName() . '\\')'"
+                    :wire:click="'nextPage(\\''.$paginator->getPageName().'\\')'"
                     rel="next"
                     :icon="$nextArrowIcon"
                     icon-alias="tables::pagination.buttons.next"
@@ -201,7 +201,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_components_pagination
             @if ($isSimple)
                 @if (! $paginator->onFirstPage())
                     <x-filament::button
-                        :wire:click="'previousPage(\\'' . $paginator->getPageName() . '\\')'"
+                        :wire:click="'previousPage(\\''.$paginator->getPageName().'\\')'"
                         :icon="$previousArrowIcon"
                         rel="prev"
                         size="sm"
@@ -239,7 +239,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_components_pagination
             @if ($isSimple)
                 @if ($paginator->hasMorePages())
                     <x-filament::button
-                        :wire:click="'nextPage(\\'' . $paginator->getPageName() . '\\')'"
+                        :wire:click="'nextPage(\\''.$paginator->getPageName().'\\')'"
                         :icon="$nextArrowIcon"
                         icon-position="after"
                         rel="next"
@@ -257,7 +257,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_components_pagination
                         >
                             @if (! $paginator->onFirstPage())
                                 <x-filament-tables::pagination.item
-                                    :wire:click="'previousPage(\\'' . $paginator->getPageName() . '\\')'"
+                                    :wire:click="'previousPage(\\''.$paginator->getPageName().'\\')'"
                                     icon="heroicon-m-chevron-left"
                                     aria-label="{{ __('filament-tables::table.pagination.buttons.previous.label') }}"
                                     rel="prev"
@@ -275,11 +275,11 @@ suite('Pint Transformer Acceptance: tables_resources_views_components_pagination
                                 @if (is_array($element))
                                     @foreach ($element as $page => $url)
                                         <x-filament-tables::pagination.item
-                                            :wire:click="'gotoPage(' . $page . ', \\'' . $paginator->getPageName() . '\\')'"
+                                            :wire:click="'gotoPage('.$page.', \\''.$paginator->getPageName().'\\')'"
                                             :label="$page"
                                             :aria-label="trans_choice('filament-tables::table.pagination.buttons.go_to_page.label', $page, ['page' => $page])"
                                             :active="$page === $paginator->currentPage()"
-                                            :wire:key="$this->id . '.table.pagination.' . $paginator->getPageName() . '.' . $page"
+                                            :wire:key="$this->id.'.table.pagination.'.$paginator->getPageName().'.'.$page"
                                         />
                                     @endforeach
                                 @endif
@@ -287,7 +287,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_components_pagination
 
                             @if ($paginator->hasMorePages())
                                 <x-filament-tables::pagination.item
-                                    :wire:click="'nextPage(\\'' . $paginator->getPageName() . '\\')'"
+                                    :wire:click="'nextPage(\\''.$paginator->getPageName().'\\')'"
                                     icon="heroicon-m-chevron-right"
                                     aria-label="{{ __('filament-tables::table.pagination.buttons.next.label') }}"
                                     rel="next"

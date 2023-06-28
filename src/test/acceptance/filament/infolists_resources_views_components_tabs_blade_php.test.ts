@@ -110,8 +110,8 @@ suite('Pint Transformer Acceptance: infolists_resources_views_components_tabs_bl
                 @endphp
 
                 <x-filament::tabs.item
-                    :x-on:click="'tab = \\'' . $tabId . '\\''"
-                    :alpine-active="'tab === \\'' . $tabId . '\\''"
+                    :x-on:click="'tab = \\''.$tabId.'\\''"
+                    :alpine-active="'tab === \\''.$tabId.'\\''"
                     :badge="$tab->getBadge()"
                     :icon="$tab->getIcon()"
                     :icon-color="$tab->getIconColor()"

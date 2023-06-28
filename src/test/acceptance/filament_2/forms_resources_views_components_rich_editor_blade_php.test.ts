@@ -350,7 +350,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_rich_editor
 >
     <div
         x-data="richEditorFormComponent({
-                    state: $wire.{{ $applyStateBindingModifiers('entangle(\\'' . $getStatePath() . '\\')') }},
+                    state: $wire.{{ $applyStateBindingModifiers('entangle(\\''.$getStatePath().'\\')') }},
                 })"
         x-on:trix-change="state = $event.target.value"
         x-on:trix-attachment-add="

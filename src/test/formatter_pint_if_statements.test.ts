@@ -406,4 +406,26 @@ A
 `;
         assert.strictEqual(formatBladeStringWithPint(input), out);
     });
+
+    test('void elements inside if statements', () => {
+        const input = `<div>
+@if (true)
+    <Link href="{{ route('profile.show') }}" class="text-sm text-gray-600 underline hover:text-gray-900">
+        {{ __('Edit Profile') }}
+    </Link>
+@endif
+</div>`;
+        const output = `<div>
+    @if (true)
+        <Link
+            href="{{ route('profile.show') }}"
+            class="text-sm text-gray-600 underline hover:text-gray-900"
+        >
+            {{ __('Edit Profile') }}
+        </Link>
+    @endif
+</div>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), output);
+    });
 });

@@ -42,7 +42,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_resources_pages_list_
         const output = `<x-filament::page
     @class([
         'filament-resources-list-records-page',
-        'filament-resources-' . str_replace('/', '-', $this->getResource()::getSlug()),
+        'filament-resources-'.str_replace('/', '-', $this->getResource()::getSlug()),
     ])
 >
     @if (count($tabs = $this->getTabs()))
@@ -55,7 +55,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_resources_pages_list_
                     @endphp
 
                     <x-filament::tabs.item
-                        :wire:click="'$set(\\'activeTab\\', ' . (filled($tabKey) ? ('\\'' . $tabKey . '\\'') : 'null') . ')'"
+                        :wire:click="'$set(\\'activeTab\\', '.(filled($tabKey) ? ('\\''.$tabKey.'\\'') : 'null').')'"
                         :active="$activeTab === $tabKey"
                         :badge="$tab->getBadge()"
                         :icon="$tab->getIcon()"

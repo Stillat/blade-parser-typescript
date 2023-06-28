@@ -51,8 +51,8 @@ suite('Pint Transformer Acceptance: panels_resources_views_resources_pages_view_
         const output = `<x-filament::page
     @class([
         'filament-resources-view-record-page',
-        'filament-resources-' . str_replace('/', '-', $this->getResource()::getSlug()),
-        'filament-resources-record-' . $record->getKey(),
+        'filament-resources-'.str_replace('/', '-', $this->getResource()::getSlug()),
+        'filament-resources-record-'.$record->getKey(),
     ])
 >
     @php

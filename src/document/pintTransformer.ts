@@ -41,9 +41,8 @@ export class PintTransformer {
     private defaultConfig: object = {
         "preset": "laravel",
         "rules": {
-            "blank_line_before_statement": false,
             "concat_space": {
-                "spacing": "one"
+                "spacing": "none"
             },
             "no_unused_imports": false,
             "declare_strict_types": false,

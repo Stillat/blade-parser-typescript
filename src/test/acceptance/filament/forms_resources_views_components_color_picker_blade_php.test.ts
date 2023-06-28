@@ -199,7 +199,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_color_picke
                             'rgb' => 'rgb-string',
                             'rgba' => 'rgba-string',
                             default => 'hex',
-                        } . '-color-picker';
+                        }.'-color-picker';
                     @endphp
 
                     <{{ $tag }} color="{{ $getState() }}" />

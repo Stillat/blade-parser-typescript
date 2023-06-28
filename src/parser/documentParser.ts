@@ -420,10 +420,11 @@ export class DocumentParser implements StringIterator {
 
         this.maxLine += 1;
 
-        const bladeStartCandidates = [...this.content.matchAll(/(@?{{|<\?php|<\?=|@?{!!|@|<x-|<\/x-|<x:|<\/x:)/gm)];
+        const bladeStartCandidates = [...this.content.matchAll(/({{|<\?php|<\?=|@?{!!|@|<x-|<\/x-|<x:|<\/x:)/gm)];
 
         let lastBladeOffset = 0,
-            lastWasEscaped = false;
+            lastWasEscaped = false,
+            lastMatch:RegExpMatchArray | null;
 
         bladeStartCandidates.forEach((bladeRegion) => {
             const matchText = bladeRegion[0],
@@ -433,15 +434,30 @@ export class DocumentParser implements StringIterator {
             if (seekText.startsWith('@@') || seekText.startsWith('@{{')) {
                 lastBladeOffset = this.content.indexOf(matchText, lastBladeOffset); // + 2;
                 lastWasEscaped = true;
+                lastMatch = bladeRegion;
                 return;
             }
 
             const offset = this.content.indexOf(matchText, lastBladeOffset);
 
             if (lastWasEscaped) {
-                if (lastBladeOffset == offset) {
+                if (lastMatch != null) {
+                    const diff = (bladeRegion.index ?? 0) - (lastMatch.index ?? 0);
+
+                    if (diff <= 1) {
+                        lastBladeOffset = offset;
+                        lastMatch = bladeRegion;
+                        return;
+                    } else {
+                        lastWasEscaped = false;
+                    }
+                }
+                if (lastBladeOffset == offset || (offset - lastBladeOffset) <= 1) {
                     lastBladeOffset = offset;
+                    lastMatch = bladeRegion;
                     return;
+                } else {
+                    lastWasEscaped = false;
                 }
             }
 
@@ -490,6 +506,7 @@ export class DocumentParser implements StringIterator {
                 const rmResults = StringRemover.fromText(preFetchCheck);
 
                 if (rmResults.includes('.') && this.endsWithTld(rmResults)) {
+                    lastMatch = bladeRegion;
                     return;
                 }
             }
@@ -523,6 +540,7 @@ export class DocumentParser implements StringIterator {
             this.bladeStartPositionIndex.set(offset, 1);
             lastBladeOffset = offset + 2;
             lastWasEscaped = false;
+            lastMatch = bladeRegion;
         });
 
         this.fragmentsParser

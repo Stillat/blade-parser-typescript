@@ -15,7 +15,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_actions_bulk_action_b
 </x-tables::dropdown.list.item>
 `;
         const output = `<x-tables::dropdown.list.item
-    :x-on:click="'mountBulkAction(\\'' . $getName() . '\\')'"
+    :x-on:click="'mountBulkAction(\\''.$getName().'\\')'"
     :icon="$getIcon()"
     :color="$getColor()"
     :attributes="\\Filament\\Support\\prepare_inherited_attributes($getExtraAttributeBag())"

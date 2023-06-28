@@ -256,7 +256,7 @@ $thing ^= 'text-white px-4 sm:px-8 py-2 sm:py-3 bg-sky-700 hover:bg-sky-800';
 $thing <<= 'text-white px-4 sm:px-8 py-2 sm:py-3 bg-sky-700 hover:bg-sky-800';
 $thing >>= 'text-white px-4 sm:px-8 py-2 sm:py-3 bg-sky-700 hover:bg-sky-800';
 
-$thing = 'text-white px-4 sm:px-8 py-2 sm:py-3 bg-sky-700 hover:bg-sky-800' . $someValue;
+$thing = 'text-white px-4 sm:px-8 py-2 sm:py-3 bg-sky-700 hover:bg-sky-800'.$someValue;
 $thing = 'text-white px-4 sm:px-8 py-2 sm:py-3 bg-sky-700 hover:bg-sky-800' > 2;
 $thing = 'text-white px-4 sm:px-8 py-2 sm:py-3 bg-sky-700 hover:bg-sky-800' & 2;
 $thing = 'text-white px-4 sm:px-8 py-2 sm:py-3 bg-sky-700 hover:bg-sky-800' | 2;
@@ -300,7 +300,7 @@ $thing = 'text-white px-4 sm:px-8 py-2 sm:py-3 bg-sky-700 hover:bg-sky-800' xor 
     $thing <<= 'text-white px-4 sm:px-8 py-2 sm:py-3 bg-sky-700 hover:bg-sky-800';
     $thing >>= 'text-white px-4 sm:px-8 py-2 sm:py-3 bg-sky-700 hover:bg-sky-800';
 
-    $thing = 'text-white px-4 sm:px-8 py-2 sm:py-3 bg-sky-700 hover:bg-sky-800' . $someValue;
+    $thing = 'text-white px-4 sm:px-8 py-2 sm:py-3 bg-sky-700 hover:bg-sky-800'.$someValue;
     $thing = 'text-white px-4 sm:px-8 py-2 sm:py-3 bg-sky-700 hover:bg-sky-800' > 2;
     $thing = 'text-white px-4 sm:px-8 py-2 sm:py-3 bg-sky-700 hover:bg-sky-800' & 2;
     $thing = 'text-white px-4 sm:px-8 py-2 sm:py-3 bg-sky-700 hover:bg-sky-800' | 2;

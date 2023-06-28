@@ -80,7 +80,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tabs_tab_bl
                 'id' => $id,
                 'role' => 'tabpanel',
                 'tabindex' => '0',
-                'wire:key' => "{$this->id}.{$getStatePath()}." . \\Filament\\Forms\\Components\\Tab::class . ".tabs.{$id}",
+                'wire:key' => "{$this->id}.{$getStatePath()}.".\\Filament\\Forms\\Components\\Tab::class.".tabs.{$id}",
             ], escape: false)
             ->merge($getExtraAttributes(), escape: false)
             ->class(['filament-forms-tabs-component-tab outline-none'])

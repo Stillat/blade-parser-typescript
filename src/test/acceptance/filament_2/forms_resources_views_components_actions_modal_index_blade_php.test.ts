@@ -76,8 +76,8 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_actions_mod
 
 <form wire:submit.prevent="callMountedFormComponentAction">
     <x-forms::modal
-        :id="$this->id . '-form-component-action'"
-        :wire:key="$action ? $this->id . '.' . $action->getComponent()->getStatePath() . '.actions.' . $action->getName() . '.modal' : null"
+        :id="$this->id.'-form-component-action'"
+        :wire:key="$action ? $this->id.'.'.$action->getComponent()->getStatePath().'.actions.'.$action->getName().'.modal' : null"
         :visible="filled($action)"
         :width="$action?->getModalWidth()"
         :slide-over="$action?->isModalSlideOver()"

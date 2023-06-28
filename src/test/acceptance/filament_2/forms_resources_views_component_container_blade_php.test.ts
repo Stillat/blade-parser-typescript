@@ -84,7 +84,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_component_container_bl
         @endphp
 
         <x-filament-support::grid.column
-            :wire:key="$formComponent instanceof \\Filament\\Forms\\Components\\Field ? $this->id . '.' . $formComponent->getStatePath() . '.' . $formComponent::class : null"
+            :wire:key="$formComponent instanceof \\Filament\\Forms\\Components\\Field ? $this->id.'.'.$formComponent->getStatePath().'.'.$formComponent::class : null"
             :hidden="$isHidden"
             :default="$formComponent->getColumnSpan('default')"
             :sm="$formComponent->getColumnSpan('sm')"

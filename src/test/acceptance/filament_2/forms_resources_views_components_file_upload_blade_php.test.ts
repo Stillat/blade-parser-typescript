@@ -157,7 +157,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_file_upload
                     shouldOrientImageFromExif:
                         {{ $shouldOrientImageFromExif() ? 'true' : 'false' }},
                     shouldTransformImage: {{ $shouldTransformImage ? 'true' : 'false' }},
-                    state: $wire.{{ $applyStateBindingModifiers('entangle(\\'' . $getStatePath() . '\\')') }},
+                    state: $wire.{{ $applyStateBindingModifiers('entangle(\\''.$getStatePath().'\\')') }},
                     uploadButtonPosition: '{{ $getUploadButtonPosition() }}',
                     uploadProgressIndicatorPosition:
                         '{{ $getUploadProgressIndicatorPosition() }}',

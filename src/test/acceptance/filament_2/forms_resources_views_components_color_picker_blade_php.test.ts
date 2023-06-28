@@ -167,7 +167,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_color_picke
             x-data="colorPickerFormComponent({
                         isAutofocused: @js($isAutofocused()),
                         isDisabled: @js($isDisabled()),
-                        state: $wire.{{ $applyStateBindingModifiers('entangle(\\'' . $getStatePath() . '\\')') }},
+                        state: $wire.{{ $applyStateBindingModifiers('entangle(\\''.$getStatePath().'\\')') }},
                     })"
             x-on:keydown.esc="isOpen() && $event.stopPropagation()"
             {{ $getExtraAlpineAttributeBag()->class(['relative flex-1']) }}
@@ -225,7 +225,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_color_picke
                         'rgb' => 'rgb-string',
                         'rgba' => 'rgba-string',
                         default => 'hex',
-                    } . '-color-picker';
+                    }.'-color-picker';
                 @endphp
 
                 <{{ $tag }} color="{{ $getState() }}" />

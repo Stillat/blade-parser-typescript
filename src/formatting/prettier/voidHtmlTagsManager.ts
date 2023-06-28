@@ -1,4 +1,5 @@
 import { BladeDocument } from '../../document/bladeDocument';
+import { FragmentNode } from '../../nodes/nodes';
 import { FragmentsParser } from '../../parser/fragmentsParser';
 import { StringUtilities } from '../../utilities/stringUtilities';
 
@@ -22,7 +23,7 @@ export class VoidHtmlTagsManager {
         'wbr'
     ];
 
-    public static voidTagMapping:Map<string, string> = new Map();
+    public static voidTagMapping: Map<string, string> = new Map();
 
     static adjustInput(content: string): string {
         const tmpDoc = BladeDocument.fromText(content),
@@ -32,75 +33,71 @@ export class VoidHtmlTagsManager {
         let hasAnyCustomVoidElements = false;
 
         const fragments = fragmentsParser.parse(content),
+            voidFragments: FragmentNode[] = [],
             discoveredCustomVoidElements: string[] = [];
 
         fragments.forEach((fragment) => {
-            if (!fragment.isClosingFragment) {
-                return;
-            }
             const checkName = fragment.name.toLowerCase();
 
             if (checkName != fragment.name && VoidHtmlTagsManager.voidElementNames.includes(checkName)) {
                 hasAnyCustomVoidElements = true;
                 discoveredCustomVoidElements.push(checkName);
+                voidFragments.push(fragment);
             }
         });
 
-        if (! hasAnyCustomVoidElements) {
+        if (!hasAnyCustomVoidElements) {
             return content;
         }
 
         let newText = '',
             lastEnd = 0;
 
-        for (let i = 0; i < fragments.length; i++) {
-            const fragment = fragments[i],
-                checkName = fragment.name.toLowerCase();
+        for (let i = 0; i < voidFragments.length; i++) {
+            const fragment = voidFragments[i],
+                checkName = fragment.name.toLowerCase(),
+                safeName = tmpSlug + fragment.name;
 
-            if (checkName != fragment.name && discoveredCustomVoidElements.includes(checkName)) {
-                const safeName = tmpSlug + fragment.name;
+            if (!VoidHtmlTagsManager.voidTagMapping.has(safeName)) {
+                VoidHtmlTagsManager.voidTagMapping.set(safeName, fragment.name);
+            }
 
-                if (!VoidHtmlTagsManager.voidTagMapping.has(safeName)) {
-                    VoidHtmlTagsManager.voidTagMapping.set(safeName, fragment.name);
+            let fragmentOffset = 1;
+
+            if (fragment.isClosingFragment) {
+                fragmentOffset = 2;
+            }
+
+            if (i == 0) {
+                const part = content.substring(0, (fragment.startPosition?.offset ?? 0) + fragmentOffset);
+                newText += part;
+                newText += safeName;
+                lastEnd = (fragment.startPosition?.offset ?? 0) + fragmentOffset + checkName.length;
+
+                if (voidFragments.length == 1) {
+                    newText += content.substring(lastEnd);
                 }
 
-                let fragmentOffset = 1;
-
-                if (fragment.isClosingFragment) {
-                    fragmentOffset = 2;
-                }
-
-                if (i == 0) {
+                continue;
+            } else if (i == voidFragments.length - 1) {
+                if (voidFragments.length == 1) {
                     const part = content.substring(0, (fragment.startPosition?.offset ?? 0) + fragmentOffset);
                     newText += part;
-                    newText += safeName;
-                    lastEnd = (fragment.startPosition?.offset ?? 0) + fragmentOffset + checkName.length;
-
-                    if (fragments.length == 1) {
-                        newText += content.substring(lastEnd);
-                    }
-
-                    continue;
-                } else if (i == fragments.length - 1) {
-                    if (fragments.length == 1) {
-                        const part = content.substring(0, (fragment.startPosition?.offset ?? 0) + fragmentOffset);
-                        newText += part;
-                    } else {
-                        const part = content.substring(lastEnd, (fragment.startPosition?.offset ?? 0) + fragmentOffset);
-                        newText += part;
-                    }
-                    newText += safeName;
-                    lastEnd = (fragment.startPosition?.offset ?? 0) + fragmentOffset + checkName.length;
-
-                    newText += content.substring(lastEnd);
-                    break;
                 } else {
                     const part = content.substring(lastEnd, (fragment.startPosition?.offset ?? 0) + fragmentOffset);
                     newText += part;
-                    newText += safeName;
-                    lastEnd = (fragment.startPosition?.offset ?? 0) + fragmentOffset + checkName.length;
-                    continue;
                 }
+                newText += safeName;
+                lastEnd = (fragment.startPosition?.offset ?? 0) + fragmentOffset + checkName.length;
+
+                newText += content.substring(lastEnd);
+                break;
+            } else {
+                const part = content.substring(lastEnd, (fragment.startPosition?.offset ?? 0) + fragmentOffset);
+                newText += part;
+                newText += safeName;
+                lastEnd = (fragment.startPosition?.offset ?? 0) + fragmentOffset + checkName.length;
+                continue;
             }
         }
 

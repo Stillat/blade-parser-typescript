@@ -139,7 +139,7 @@ suite('Pint Transformer Acceptance: notifications_resources_views_components_dat
                     <div class="flex items-center">
                         @if (! $notifications->onFirstPage())
                             <x-filament::button
-                                :wire:click="'previousPage(\\'' . $notifications->getPageName() . '\\')'"
+                                :wire:click="'previousPage(\\''.$notifications->getPageName().'\\')'"
                                 :icon="$previousArrowIcon"
                                 rel="prev"
                                 size="sm"
@@ -153,7 +153,7 @@ suite('Pint Transformer Acceptance: notifications_resources_views_components_dat
                     <div class="flex items-center">
                         @if ($notifications->hasMorePages())
                             <x-filament::button
-                                :wire:click="'nextPage(\\'' . $notifications->getPageName() . '\\')'"
+                                :wire:click="'nextPage(\\''.$notifications->getPageName().'\\')'"
                                 :icon="$nextArrowIcon"
                                 icon-position="after"
                                 rel="next"

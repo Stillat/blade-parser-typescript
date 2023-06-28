@@ -182,7 +182,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_tabs_blade_
     />
 
     <div
-        {!! $getLabel() ? 'aria-label="' . $getLabel() . '"' : null !!}
+        {!! $getLabel() ? 'aria-label="'.$getLabel().'"' : null !!}
         role="tablist"
         @class([
             'filament-forms-tabs-component-header flex overflow-y-auto rounded-t-xl bg-gray-100',

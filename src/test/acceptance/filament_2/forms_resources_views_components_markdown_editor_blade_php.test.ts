@@ -271,7 +271,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_markdown_ed
 >
     <div
         x-data="markdownEditorFormComponent({
-                    state: $wire.{{ $applyStateBindingModifiers('entangle(\\'' . $getStatePath() . '\\')') }},
+                    state: $wire.{{ $applyStateBindingModifiers('entangle(\\''.$getStatePath().'\\')') }},
                     tab: '{{ $isDisabled() ? 'preview' : 'edit' }}',
                 })"
         wire:ignore
@@ -550,7 +550,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_markdown_ed
                                     x-bind:class="{ 'text-gray-400 @if (config('forms.dark_mode')) dark:text-gray-400 @endif': tab !== 'preview' }"
                                     @class([
                                         'text-sm hover:underline',
-                                        'text-gray-400' . (config('forms.dark_mode') ? 'dark:text-gray-400' : null),
+                                        'text-gray-400'.(config('forms.dark_mode') ? 'dark:text-gray-400' : null),
                                     ])
                                 >
                                     {{ __('forms::components.markdown_editor.toolbar_buttons.preview') }}

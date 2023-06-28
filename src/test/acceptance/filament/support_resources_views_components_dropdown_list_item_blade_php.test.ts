@@ -267,7 +267,7 @@ suite('Pint Transformer Acceptance: support_resources_views_components_dropdown_
             <x-filament::loading-indicator
                 wire:loading.delay=""
                 :wire:target="$loadingIndicatorTarget"
-                :class="$iconClasses . ' ' . $iconSize"
+                :class="$iconClasses.' '.$iconSize"
             />
         @endif
 

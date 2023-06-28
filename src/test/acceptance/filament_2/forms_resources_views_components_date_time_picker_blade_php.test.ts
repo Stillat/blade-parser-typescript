@@ -274,7 +274,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_date_time_p
                     isAutofocused: @js($isAutofocused()),
                     locale: @js(app()->getLocale()),
                     shouldCloseOnDateSelection: @js($shouldCloseOnDateSelection()),
-                    state: $wire.{{ $applyStateBindingModifiers('entangle(\\'' . $getStatePath() . '\\')') }},
+                    state: $wire.{{ $applyStateBindingModifiers('entangle(\\''.$getStatePath().'\\')') }},
                 })"
         x-on:keydown.esc="isOpen() && $event.stopPropagation()"
         {{ $getExtraAlpineAttributeBag() }}

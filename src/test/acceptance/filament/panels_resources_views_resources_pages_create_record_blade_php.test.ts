@@ -21,7 +21,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_resources_pages_creat
         const output = `<x-filament::page
     @class([
         'filament-resources-create-record-page',
-        'filament-resources-' . str_replace('/', '-', $this->getResource()::getSlug()),
+        'filament-resources-'.str_replace('/', '-', $this->getResource()::getSlug()),
     ])
 >
     <x-filament::form wire:submit.prevent="create">

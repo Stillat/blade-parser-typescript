@@ -21,7 +21,7 @@ suite('Pint Transformer Acceptance: admin_resources_views_resources_pages_list_r
     :class="
         \\Illuminate\\Support\\Arr::toCssClasses([
             'filament-resources-list-records-page',
-            'filament-resources-' . str_replace('/', '-', $this->getResource()::getSlug()),
+            'filament-resources-'.str_replace('/', '-', $this->getResource()::getSlug()),
         ])
     "
 >

@@ -46,7 +46,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_builder_blo
     <x-forms::dropdown.list>
         @foreach ($blocks as $block)
             <x-forms::dropdown.list.item
-                :wire:click="'dispatchFormEvent(\\'builder::createItem\\', \\'' . $statePath . '\\', \\'' . $block->getName() . '\\'' . ($createAfterItem ? ', \\'' . $createAfterItem . '\\'' : '') . ')'"
+                :wire:click="'dispatchFormEvent(\\'builder::createItem\\', \\''.$statePath.'\\', \\''.$block->getName().'\\''.($createAfterItem ? ', \\''.$createAfterItem.'\\'' : '').')'"
                 :icon="$block->getIcon()"
                 x-on:click="close"
             >

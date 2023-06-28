@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.6.6
+
+- Corrects issues where some void elements would miss trailing nodes (#64 continued)
+- Corrects the default value for the `concat_space` spacing rule (#66)
+- Corrects issues where escaped Blade content causes strange output (#63)
+
 ## 1.6.5
 
 - Preserves shorthand syntax when formatting Blade slot components (#65)

@@ -255,7 +255,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_select_blad
                                 searchingMessage: @js($getSearchingMessage()),
                                 searchPrompt: @js($getSearchPrompt()),
                                 searchableOptionFields: @js($getSearchableOptionFields()),
-                                state: $wire.{{ $applyStateBindingModifiers('entangle(\\'' . $getStatePath() . '\\')') }},
+                                state: $wire.{{ $applyStateBindingModifiers('entangle(\\''.$getStatePath().'\\')') }},
                             })"
                     x-on:keydown.esc="select.dropdown.isActive && $event.stopPropagation()"
                     wire:ignore

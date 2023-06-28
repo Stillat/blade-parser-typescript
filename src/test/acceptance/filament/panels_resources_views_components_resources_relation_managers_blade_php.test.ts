@@ -116,7 +116,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_resources_
                     @endphp
 
                     <x-filament::tabs.item
-                        :wire:click="'$set(\\'activeRelationManager\\', ' . (filled($tabKey) ? ('\\'' . $tabKey . '\\'') : 'null') . ')'"
+                        :wire:click="'$set(\\'activeRelationManager\\', '.(filled($tabKey) ? ('\\''.$tabKey.'\\'') : 'null').')'"
                         :active="$activeManager === $tabKey"
                         :badge="filled($tabKey) ? ($isGroup ? $manager->getBadge() : $manager::getBadge($ownerRecord, $pageClass)) : null"
                         :icon="filled($tabKey) ? ($isGroup ? $manager->getIcon() : $manager::getIcon($ownerRecord, $pageClass)) : null"
