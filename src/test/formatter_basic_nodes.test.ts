@@ -109,4 +109,28 @@ suite('Basic Node Formatting', () => {
 `;
         assert.strictEqual(formatBladeString(input), out);
     });
+
+    test('simple nodes can be formatted inside html content', () => {
+        const input = `<div
+    class="my-4"
+    @unless(config('filament-media-library.settings.show-upload-box-by-default')) x-foo
+         x-show="showUploadBox"
+         x-collapse
+         x-cloak
+     @endunless
+>
+<p>Hello, world!</p>
+</div>`;
+
+        const out = `<div
+    class="my-4"
+    @unless (config("filament-media-library.settings.show-upload-box-by-default"))
+        x-foo x-show="showUploadBox" x-collapse x-cloak
+    @endunless
+>
+    <p>Hello, world!</p>
+</div>
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    });
 });

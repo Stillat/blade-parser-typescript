@@ -17,6 +17,22 @@ export class IndentLevel {
         return 0;
     }
 
+    static indentLast(value:string, indent:number) {
+        const replace = ' '.repeat(indent),
+            lines:string[] = StringUtilities.breakByNewLine(value),
+            newLines:string[] = [];
+
+        for (let i = 0; i < lines.length; i++) {
+            if (i == lines.length - 1) {
+                newLines.push(replace + lines[i]);
+            } else {
+                newLines.push(lines[i]);
+            }
+        }
+
+        return newLines.join("\n");
+    }
+
     static indentRelative(value: string, targetIndent: number, tabSize: number): string {
         const sourceLines: string[] = StringUtilities.breakByNewLine(value);
         let reflowedLines: string[] = [];

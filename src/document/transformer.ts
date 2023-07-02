@@ -130,6 +130,7 @@ export class Transformer {
     private blockComments: VirtualBlockStructure[] = [];
     private blockPhpNodes: Map<string, InlinePhpNode> = new Map();
     private breakDirectives: Map<string, DirectiveNode> = new Map();
+    private htmlTagDirectives: Map<string, DirectiveNode> = new Map();
     private dynamicElementDirectives: Map<string, string> = new Map();
     private dynamicElementDirectiveNodes: Map<string, DirectiveNode> = new Map();
     private dynamicElementConditions: Map<string, string> = new Map();
@@ -360,7 +361,7 @@ export class Transformer {
         }
     }
 
-    private registerShorthandSlot(component:BladeComponentNode): string {
+    private registerShorthandSlot(component: BladeComponentNode): string {
         if (this.parentTransformer != null) {
             return this.parentTransformer.registerShorthandSlot(component);
         }
@@ -932,6 +933,18 @@ export class Transformer {
         return slug;
     }
 
+    private prepareHtmlTagDirective(directive: DirectiveNode): string {
+        if (this.parentTransformer != null) {
+            return this.prepareHtmlTagDirective(directive);
+        }
+
+        const slug = StringUtilities.makeSlug(32);
+
+        this.htmlTagDirectives.set(slug, directive);
+
+        return slug;
+    }
+
     private registerEmbeddedDocument(slug: string, content: string, isScript: boolean): string {
         if (this.parentTransformer != null) {
             return this.parentTransformer.registerEmbeddedDocument(slug, content, isScript);
@@ -947,6 +960,10 @@ export class Transformer {
     }
 
     private prepareDirective(directive: DirectiveNode): string {
+        if (directive.fragmentPosition == FragmentPosition.InsideFragment) {
+            return this.prepareHtmlTagDirective(directive);
+        }
+
         if (directive.isEmbedded()) {
             return this.registerEmbeddedDirective(directive);
         }
@@ -1165,17 +1182,17 @@ export class Transformer {
             if (echo.nextNode != null) {
                 if (echo.nextNode instanceof LiteralNode) {
                     const trailingLiteral = echo.nextNode;
-    
+
                     if ((trailingLiteral.content.length - trailingLiteral.content.trimLeft().length) > 0) {
                         return this.registerDynamicAttributeFragmentEcho(echo);
                     } else {
                         if (trailingLiteral.content.length == 0) {
-                            
+
                             return this.registerDynamicAttributeFragmentEcho(echo);
                         } else {
                             const firstTrailingChar = trailingLiteral.content[0];
-    
-                            if (! StringUtilities.ctypeSpace(firstTrailingChar)) {
+
+                            if (!StringUtilities.ctypeSpace(firstTrailingChar)) {
                                 return this.registerDynamicFragmentEcho(echo);
                             }
                         }
@@ -2145,8 +2162,24 @@ export class Transformer {
         let value = content;
 
         this.dynamicElementConditionNodes.forEach((condition, slug) => {
-            value = this.removeTrailingWhitespaceAfterSubstring(value, slug);
-            value = StringUtilities.safeReplaceAllInString(value, slug, condition.nodeContent);
+            if (condition.startPosition?.line != condition.endPosition?.line) {
+                let formatContent = condition.nodeContent;
+
+                if (this.transformOptions.useLaravelPint) {
+                    formatContent = formatBladeStringWithPint(formatContent, this.formattingOptions, this.transformOptions).trim();
+                } else {
+                    formatContent = formatBladeString(formatContent, this.formattingOptions).trim();
+                }
+
+                const indentLevel = IndentLevel.relativeIndentLevel(slug, value);
+        
+                formatContent = IndentLevel.indentLast(formatContent, indentLevel);
+                
+                value = StringUtilities.safeReplaceAllInString(value, slug, formatContent);
+            } else {
+                value = this.removeTrailingWhitespaceAfterSubstring(value, slug);
+                value = StringUtilities.safeReplaceAllInString(value, slug, condition.nodeContent);
+            }
         });
 
         return value;
