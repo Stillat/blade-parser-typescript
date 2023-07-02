@@ -65,6 +65,12 @@ export class AbstractNode {
     public isInScriptTag = false;
     public isInStyleTag = false;
 
+    isPartOfHtmlTag() {
+        return this.fragmentPosition == FragmentPosition.InsideFragment ||
+            this.fragmentPosition == FragmentPosition.InsideFragmentParameter ||
+            this.fragmentPosition == FragmentPosition.IsDynamicFragmentName;
+    }
+
     isEmbedded(): boolean {
         return this.isInScriptTag || this.isInStyleTag;
     }

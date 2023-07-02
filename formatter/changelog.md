@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.7 (Unreleased)
+
+- Corrects an issue prevent comments from being formatted inside HTML elements (#68)
+
 ## 1.6.6
 
 - Corrects issues where some void elements would miss trailing nodes (#64 continued)

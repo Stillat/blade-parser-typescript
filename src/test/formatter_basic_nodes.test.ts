@@ -93,4 +93,20 @@ suite('Basic Node Formatting', () => {
 `;
         assert.strictEqual(formatBladeString(input), out);
     });
+
+    test('comments can be formatted inside html elements', () => {
+        const input = `
+
+<div
+    {{-- A comment! --}}
+>
+<p>Hello, world!</p>
+</div>
+`;
+        const out = `<div {{-- A comment! --}}>
+    <p>Hello, world!</p>
+</div>
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    });
 });

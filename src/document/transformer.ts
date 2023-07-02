@@ -126,6 +126,7 @@ export class Transformer {
     private virtualStructureOpens: string[] = [];
     private virtualStructureClose: string[] = [];
     private inlineComments: Map<string, BladeCommentNode> = new Map();
+    private htmlTagComments: Map<string, BladeCommentNode> = new Map();
     private blockComments: VirtualBlockStructure[] = [];
     private blockPhpNodes: Map<string, InlinePhpNode> = new Map();
     private breakDirectives: Map<string, DirectiveNode> = new Map();
@@ -978,7 +979,22 @@ export class Transformer {
         }
     }
 
+    private registerHtmlTagComment(comment: BladeCommentNode): string {
+        if (this.parentTransformer != null) {
+            return this.parentTransformer.registerHtmlTagComment(comment);
+        }
+
+        const slug = StringUtilities.makeSlug(64);
+
+        this.htmlTagComments.set(slug, comment);
+
+        return slug;
+    }
+
     private prepareComment(comment: BladeCommentNode): string {
+        if (comment.isPartOfHtmlTag()) {
+            return this.registerHtmlTagComment(comment);
+        }
         if (comment.isMultiline()) {
             const slug = this.makeSlug(10),
                 virtualSlug = this.makeSlug(10);
@@ -2062,6 +2078,10 @@ export class Transformer {
             const open = this.selfClosing(slug);
 
             value = StringUtilities.safeReplace(value, open, CommentPrinter.printComment(comment, this.transformOptions.tabSize, 0));
+        });
+
+        this.htmlTagComments.forEach((comment, slug) => {
+            value = StringUtilities.safeReplace(value, slug, CommentPrinter.printComment(comment, this.transformOptions.tabSize, 0));
         });
 
         return value;
