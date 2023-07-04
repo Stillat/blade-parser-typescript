@@ -165,6 +165,7 @@ export class Transformer {
     private jsonFormatter: JsonFormatter | null = null;
 
     public static sharedPintTransformer: PintTransformer | null = null;
+    public static rootTransformer: Transformer | null = null;
 
     private transformOptions: TransformOptions = {
         spacesAfterDirective: 0,
@@ -937,9 +938,9 @@ export class Transformer {
         return slug;
     }
 
-    private prepareHtmlTagDirective(directive: DirectiveNode): string {
-        if (this.parentTransformer != null) {
-            return this.prepareHtmlTagDirective(directive);
+    public prepareHtmlTagDirective(directive: DirectiveNode): string {
+        if (Transformer.rootTransformer != null && Transformer.rootTransformer != this) {
+            return Transformer.rootTransformer.prepareHtmlTagDirective(directive);
         }
 
         const slug = StringUtilities.makeSlug(64);
@@ -1550,6 +1551,10 @@ export class Transformer {
     toStructure(): string {
         let result = '';
 
+        if (canProcessAttributes && this.parentTransformer == null && Transformer.rootTransformer == null) {
+            Transformer.rootTransformer = this;
+        }
+
         if (canProcessAttributes && this.useLaravelPint) {
             if (this.parentTransformer == null) {
                 this.pintTransformer = new PintTransformer(
@@ -1674,6 +1679,32 @@ export class Transformer {
         return value;
     }
 
+    private transformHtmlTagDirectives(content: string): string {
+        let value = content;
+
+        this.htmlTagDirectives.forEach((directive: DirectiveNode, slug: string) => {
+            let formatContent = `${directive.sourceContent}
+    ${directive.documentContent}
+${directive.isClosedBy?.sourceContent}
+`;
+
+            disableAttributeProcessing();
+            if (this.transformOptions.useLaravelPint) {
+                formatContent = formatBladeStringWithPint(formatContent, this.formattingOptions, this.transformOptions).trim();
+            } else {
+                formatContent = formatBladeString(formatContent, this.formattingOptions).trim();
+            }
+            enableAttributeProcessing();
+            const indentLevel = IndentLevel.relativeIndentLevel(slug, value);
+
+            formatContent = IndentLevel.indentLast(formatContent, indentLevel);
+
+            value = StringUtilities.safeReplace(value, slug, formatContent);
+        });
+
+        return value;
+    }
+
     private transformContentDirectives(content: string): string {
         let value = content;
 
@@ -1694,27 +1725,6 @@ export class Transformer {
             }
 
             value = StringUtilities.safeReplace(value, slug, directiveResult);
-        });
-
-        this.htmlTagDirectives.forEach((directive: DirectiveNode, slug: string) => {
-            let formatContent = `${directive.sourceContent}
-    ${directive.documentContent}
-${directive.isClosedBy?.sourceContent}
-`;
-
-            disableAttributeProcessing();
-            if (this.transformOptions.useLaravelPint) {
-                formatContent = formatBladeStringWithPint(formatContent, this.formattingOptions, this.transformOptions).trim();
-            } else {
-                formatContent = formatBladeString(formatContent, this.formattingOptions).trim();
-            }
-            enableAttributeProcessing();
-            const indentLevel = IndentLevel.relativeIndentLevel(slug, value);
-
-            formatContent = IndentLevel.indentLast(formatContent, indentLevel);
-            formatContent = this.transformRemovedAttibutes(formatContent);
-
-            value = StringUtilities.safeReplace(value, slug, formatContent);
         });
 
         return value;
@@ -1812,8 +1822,6 @@ ${directive.isClosedBy?.sourceContent}
                 attachedDoc = formatBladeString(attachedDoc, this.formattingOptions).trim();
             }
             enableAttributeProcessing();
-
-            attachedDoc = this.transformRemovedAttibutes(attachedDoc);
 
             const dirResult = this.printDirective(directive.directive, this.indentLevel(slug)).trim(),
                 relIndent = this.findNewLeadingStart(value, slug),
@@ -2209,7 +2217,6 @@ ${directive.isClosedBy?.sourceContent}
                 const indentLevel = IndentLevel.relativeIndentLevel(slug, value);
 
                 formatContent = IndentLevel.indentLast(formatContent, indentLevel);
-                formatContent = this.transformRemovedAttibutes(formatContent);
 
                 value = StringUtilities.safeReplaceAllInString(value, slug, formatContent);
             } else {
@@ -2529,6 +2536,7 @@ ${directive.isClosedBy?.sourceContent}
         results = this.transformDynamicElementForElse(results);
         results = this.transformDynamicElementSwitch(results);
         results = this.transformDynamicDirectives(results);
+        results = this.transformHtmlTagDirectives(results);
 
         results = this.transformRemovedAttibutes(results);
 
@@ -2590,6 +2598,7 @@ ${directive.isClosedBy?.sourceContent}
 
         if (this.parentTransformer === null && canProcessAttributes) {
             Transformer.sharedPintTransformer = null;
+            Transformer.rootTransformer = null;
         }
 
         return results;
