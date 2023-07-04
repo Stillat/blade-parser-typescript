@@ -1697,7 +1697,7 @@ ${directive.isClosedBy?.sourceContent}
             enableAttributeProcessing();
             const indentLevel = IndentLevel.relativeIndentLevel(slug, value);
 
-            formatContent = IndentLevel.indentLast(formatContent, indentLevel);
+            formatContent = IndentLevel.indentLast(formatContent, indentLevel, this.transformOptions.tabSize);
 
             value = StringUtilities.safeReplace(value, slug, formatContent);
         });
@@ -2216,7 +2216,7 @@ ${directive.isClosedBy?.sourceContent}
 
                 const indentLevel = IndentLevel.relativeIndentLevel(slug, value);
 
-                formatContent = IndentLevel.indentLast(formatContent, indentLevel);
+                formatContent = IndentLevel.indentLast(formatContent, indentLevel, this.transformOptions.tabSize);
 
                 value = StringUtilities.safeReplaceAllInString(value, slug, formatContent);
             } else {
@@ -2547,6 +2547,24 @@ ${directive.isClosedBy?.sourceContent}
         }
 
         return this.transformStructures(results);
+    }
+
+    public containsRemovedAttributes(content: string): boolean {
+        if (this.removedAttributes.size == 0) {
+            return false;
+        }
+
+        const attributeRegions = Array.from(this.removedAttributes.keys());
+
+        for (let i = 0; i < attributeRegions.length; i++) {
+            const region = attributeRegions[i];
+
+            if (content.includes(region)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     transformStructures(content: string) {

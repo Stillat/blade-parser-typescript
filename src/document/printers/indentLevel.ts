@@ -1,5 +1,6 @@
 import { StringUtilities } from '../../utilities/stringUtilities';
 import { TransformOptions } from '../transformOptions';
+import { Transformer } from '../transformer';
 
 export class IndentLevel {
     static relativeIndentLevel(value: string, content: string): number {
@@ -17,10 +18,16 @@ export class IndentLevel {
         return 0;
     }
 
-    static indentLast(value: string, indent: number) {
+    static indentLast(value: string, indent: number, tabSize: number) {
         const replace = ' '.repeat(indent),
             lines: string[] = StringUtilities.breakByNewLine(value),
             newLines: string[] = [];
+
+        let overrideLen = false;
+
+        if (Transformer.rootTransformer != null) {
+            overrideLen = Transformer.rootTransformer.containsRemovedAttributes(value);
+        }
 
         for (let i = 0; i < lines.length; i++) {
             if (i == lines.length - 1) {
@@ -29,8 +36,17 @@ export class IndentLevel {
                 if (i == 0) {
                     newLines.push(lines[i]);
                 } else {
-                    if (lines.length > 3) {
-                        newLines.push(replace + lines[i]);
+                    if (lines.length > 3 || overrideLen) {
+                        if (lines.length <= 3 && overrideLen) {
+                            let newTarget = indent - tabSize;
+                            if (newTarget < 0) {
+                                newTarget = 0;
+                            }
+
+                            newLines.push(' '.repeat(newTarget) + lines[i]);
+                        } else {
+                            newLines.push(replace + lines[i]);
+                        }
                     } else {
                         newLines.push(lines[i]);
                     }

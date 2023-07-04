@@ -215,4 +215,100 @@ suite('Basic Node Formatting', () => {
 `;
         assert.strictEqual(formatBladeStringWithPint(input), output);
     });
+
+    test('it formats subdocs with attributes', () => {
+        const input = `
+
+<span
+    @class([
+        $baseAffixClasses,
+        'rounded-s-lg -me-px',
+    ])
+    @something (filled($statePath))
+        x-bind:class="{
+            'text-gray-400': ! (@js($statePath) in $wire.__instance.serverMemo.errors),
+            'text-danger-400': (@js($statePath) in $wire.__instance.serverMemo.errors),
+        }"
+    @endsomething
+>
+    <x-filament::icon
+        alias="forms::components.affixes.prefix"
+        :name="$prefixIcon"
+        size="h-5 w-5"
+        class="filament-input-affix-icon"
+    />
+</span>
+`;
+        const output = `<span
+    @class([
+        $baseAffixClasses,
+        '-me-px rounded-s-lg',
+    ])
+    @something(filled($statePath))
+        x-bind:class="{
+            'text-gray-400': ! (@js($statePath) in $wire.__instance.serverMemo.errors),
+            'text-danger-400': @js($statePath) in $wire.__instance.serverMemo.errors,
+        }"
+    @endsomething
+>
+    <x-filament::icon
+        alias="forms::components.affixes.prefix"
+        :name="$prefixIcon"
+        size="h-5 w-5"
+        class="filament-input-affix-icon"
+    />
+</span>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), output);
+
+    });
+
+    test('it can format nested ifs and subdocs without an infinite loop', () => {
+        const input = `
+
+@if ($prefixIcon)
+<span
+    @class([
+        $baseAffixClasses,
+        'rounded-s-lg -me-px',
+    ])
+    @something (filled($statePath))
+        x-bind:class="{
+            'text-gray-400': ! (@js($statePath) in $wire.__instance.serverMemo.errors),
+            'text-danger-400': (@js($statePath) in $wire.__instance.serverMemo.errors),
+        }"
+    @endsomething
+>
+    <x-filament::icon
+        alias="forms::components.affixes.prefix"
+        :name="$prefixIcon"
+        size="h-5 w-5"
+        class="filament-input-affix-icon"
+    />
+</span>
+@endif
+`;
+        const output = `@if ($prefixIcon)
+    <span
+        @class([
+            $baseAffixClasses,
+            '-me-px rounded-s-lg',
+        ])
+        @something(filled($statePath))
+            x-bind:class="{
+                'text-gray-400': ! (@js($statePath) in $wire.__instance.serverMemo.errors),
+                'text-danger-400': @js($statePath) in $wire.__instance.serverMemo.errors,
+            }"
+        @endsomething
+    >
+        <x-filament::icon
+            alias="forms::components.affixes.prefix"
+            :name="$prefixIcon"
+            size="h-5 w-5"
+            class="filament-input-affix-icon"
+        />
+    </span>
+@endif
+`;
+    });
 });
