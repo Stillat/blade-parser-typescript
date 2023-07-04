@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { formatBladeString } from '../formatting/prettier/utils';
+import { formatBladeString, formatBladeStringWithPint } from '../formatting/prettier/utils';
 
 suite('Basic Node Formatting', () => {
     test('it formats echos', () => {
@@ -132,5 +132,87 @@ suite('Basic Node Formatting', () => {
 </div>
 `;
         assert.strictEqual(formatBladeString(input), out);
+    });
+
+    test('it can format pairs inside html content', () => {
+        const input = `
+<div
+    class="my-4"
+    @something(!true)
+    x-show="showUploadBox"
+    x-collapse
+    x-cloak
+    @thingconfig(!"filament-media-library.settings.show-upload-box-by-default")
+    @endsomething
+
+    @if(config(!"filament-media-library.settings.show-upload-box-by-default")) x-foo
+         x-show="showUploadBox"
+         x-collapse
+         x-cloak
+         @thingconfig(!"filament-media-library.settings.show-upload-box-by-default")
+     @else
+        x-thing
+     @endif
+>
+<p>Hello, world!</p>
+</div>
+<div>
+<div
+    class="my-4"
+    @something(!true)
+    x-show="showUploadBox"
+    x-collapse
+    x-cloak
+    @thingconfig(!"filament-media-library.settings.show-upload-box-by-default")
+    @endsomething
+
+    @if(config(!"filament-media-library.settings.show-upload-box-by-default")) x-foo
+         x-show="showUploadBox"
+         x-collapse
+         x-cloak
+         @thingconfig(!"filament-media-library.settings.show-upload-box-by-default")
+     @else
+        x-thing
+     @endif
+>
+<p>Hello, world!</p>
+</div>
+</div>
+
+`;
+        const output = `<div
+    class="my-4"
+    @something(! true)
+        x-show="showUploadBox" x-collapse x-cloak
+        @thingconfig(! 'filament-media-library.settings.show-upload-box-by-default')
+    @endsomething
+    @if (config(! 'filament-media-library.settings.show-upload-box-by-default'))
+        x-foo x-show="showUploadBox" x-collapse x-cloak
+        @thingconfig(! 'filament-media-library.settings.show-upload-box-by-default')
+    @else
+        x-thing
+    @endif
+>
+    <p>Hello, world!</p>
+</div>
+<div>
+    <div
+        class="my-4"
+        @something(! true)
+            x-show="showUploadBox" x-collapse x-cloak
+            @thingconfig(! 'filament-media-library.settings.show-upload-box-by-default')
+        @endsomething
+        @if (config(! 'filament-media-library.settings.show-upload-box-by-default'))
+            x-foo x-show="showUploadBox" x-collapse x-cloak
+            @thingconfig(! 'filament-media-library.settings.show-upload-box-by-default')
+        @else
+            x-thing
+        @endif
+    >
+        <p>Hello, world!</p>
+    </div>
+</div>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), output);
     });
 });

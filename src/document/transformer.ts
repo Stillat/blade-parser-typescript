@@ -1711,7 +1711,7 @@ ${directive.isClosedBy?.sourceContent}
             enableAttributeProcessing();
             const indentLevel = IndentLevel.relativeIndentLevel(slug, value);
 
-            formatContent = IndentLevel.indentLast(formatContent, indentLevel, this.transformOptions.tabSize);
+            formatContent = IndentLevel.indentLast(formatContent, indentLevel);
             formatContent = this.transformRemovedAttibutes(formatContent);
 
             value = StringUtilities.safeReplace(value, slug, formatContent);
@@ -2208,7 +2208,7 @@ ${directive.isClosedBy?.sourceContent}
 
                 const indentLevel = IndentLevel.relativeIndentLevel(slug, value);
 
-                formatContent = IndentLevel.indentLast(formatContent, indentLevel, this.transformOptions.tabSize);
+                formatContent = IndentLevel.indentLast(formatContent, indentLevel);
                 formatContent = this.transformRemovedAttibutes(formatContent);
 
                 value = StringUtilities.safeReplaceAllInString(value, slug, formatContent);

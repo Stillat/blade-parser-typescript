@@ -17,13 +17,7 @@ export class IndentLevel {
         return 0;
     }
 
-    static indentLast(value: string, indent: number, tabSize: number) {
-        let innerContentPadValue = indent - tabSize;
-
-        if (innerContentPadValue < 0) {
-            innerContentPadValue = 0;
-        }
-
+    static indentLast(value: string, indent: number) {
         const replace = ' '.repeat(indent),
             lines: string[] = StringUtilities.breakByNewLine(value),
             newLines: string[] = [];
@@ -35,12 +29,10 @@ export class IndentLevel {
                 if (i == 0) {
                     newLines.push(lines[i]);
                 } else {
-                    const tempLine = lines[i];
-                    
-                    if (tempLine.length - tempLine.trim().length == 0) {
-                        newLines.push(replace + tempLine);
+                    if (lines.length > 3) {
+                        newLines.push(replace + lines[i]);
                     } else {
-                        newLines.push(' '.repeat(innerContentPadValue) + tempLine);
+                        newLines.push(lines[i]);
                     }
                 }
             }
