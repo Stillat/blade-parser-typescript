@@ -16,7 +16,6 @@ export class DocumentFormatter {
     private preFormatter: PreFormatter | null = null;
     private removedAttributes: Map<string, IExtractedAttribute> = new Map();
 
-
     withRemovedAttributes(attributes: Map<string, IExtractedAttribute>) {
         this.removedAttributes = attributes;
 

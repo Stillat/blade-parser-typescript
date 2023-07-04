@@ -164,6 +164,8 @@ export class Transformer {
     private phpTagFormatter: BlockPhpFormatter | null = null;
     private jsonFormatter: JsonFormatter | null = null;
 
+    public static sharedPintTransformer: PintTransformer | null = null;
+
     private transformOptions: TransformOptions = {
         spacesAfterDirective: 0,
         spacesAfterControlDirective: 1,
@@ -337,7 +339,7 @@ export class Transformer {
             this.phpFormatter,
             this.jsonFormatter,
             indentLevel,
-            this.pintTransformer
+            this.pintTransformer ?? Transformer.sharedPintTransformer
         );
     }
 
@@ -626,6 +628,8 @@ export class Transformer {
                 if (this.useLaravelPint) {
                     if (this.pintTransformer != null) {
                         result = this.pintTransformer.getPhpBlockContent(php);
+                    } else if (Transformer.sharedPintTransformer != null) {
+                        result = Transformer.sharedPintTransformer.getPhpBlockContent(php);
                     }
                 } else {
                     if (this.phpTagFormatter != null) {
@@ -938,7 +942,7 @@ export class Transformer {
             return this.prepareHtmlTagDirective(directive);
         }
 
-        const slug = StringUtilities.makeSlug(32);
+        const slug = StringUtilities.makeSlug(64);
 
         this.htmlTagDirectives.set(slug, directive);
 
@@ -961,7 +965,7 @@ export class Transformer {
 
     private prepareDirective(directive: DirectiveNode): string {
         if (directive.fragmentPosition == FragmentPosition.InsideFragment && directive.isClosedBy != null) {
-            return this.prepareHtmlTagDirective(directive);
+            return "\n" + this.prepareHtmlTagDirective(directive);
         }
 
         if (directive.isEmbedded()) {
@@ -1486,12 +1490,12 @@ export class Transformer {
             return result;
         }
 
-
         if (this.dynamicElementConditions.has(condition.nodeContent)) {
             const existingSlug = this.dynamicElementConditions.get(condition.nodeContent) as string;
 
             return existingSlug + ' ';
         }
+
         const slug = this.makeSlug(condition.nodeContent.length);
 
         this.registerDynamicElementCondition(slug, condition);
@@ -1546,7 +1550,7 @@ export class Transformer {
     toStructure(): string {
         let result = '';
 
-        if (this.useLaravelPint && canProcessAttributes) {
+        if (canProcessAttributes && this.useLaravelPint) {
             if (this.parentTransformer == null) {
                 this.pintTransformer = new PintTransformer(
                     this.transformOptions.pintTempDirectory,
@@ -1554,6 +1558,7 @@ export class Transformer {
                     this.transformOptions.pintCommand,
                     this.transformOptions.pintConfigPath
                 );
+                Transformer.sharedPintTransformer = this.pintTransformer;
                 this.pintTransformer.setTemplateFilePath(this.filePath);
 
                 // If the shadow document is available we will
@@ -1692,21 +1697,23 @@ export class Transformer {
         });
 
         this.htmlTagDirectives.forEach((directive: DirectiveNode, slug: string) => {
-            let attachedDoc = `${directive.sourceContent}
+            let formatContent = `${directive.sourceContent}
     ${directive.documentContent}
 ${directive.isClosedBy?.sourceContent}
 `;
 
             disableAttributeProcessing();
             if (this.transformOptions.useLaravelPint) {
-                attachedDoc = formatBladeStringWithPint(attachedDoc, this.formattingOptions, this.transformOptions).trim();
+                formatContent = formatBladeStringWithPint(formatContent, this.formattingOptions, this.transformOptions).trim();
             } else {
-                attachedDoc = formatBladeString(attachedDoc, this.formattingOptions).trim();
+                formatContent = formatBladeString(formatContent, this.formattingOptions).trim();
             }
             enableAttributeProcessing();
             const indentLevel = IndentLevel.relativeIndentLevel(slug, value);
 
-            value = StringUtilities.safeReplace(value, slug, attachedDoc);
+            formatContent = IndentLevel.indentLast(formatContent, indentLevel, this.transformOptions.tabSize);
+
+            value = StringUtilities.safeReplace(value, slug, formatContent);
         });
 
         return value;
@@ -1715,7 +1722,7 @@ ${directive.isClosedBy?.sourceContent}
     private transformDynamicEcho(content: string): string {
         let value = content;
         this.dynamicEchoBlocks.forEach((echo: BladeEchoNode, slug: string) => {
-            const echoContent = EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug), this.pintTransformer);
+            const echoContent = EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug), this.pintTransformer ?? Transformer.sharedPintTransformer);
 
             value = StringUtilities.safeReplaceAllInString(value, slug, echoContent);
         });
@@ -1848,8 +1855,13 @@ ${directive.isClosedBy?.sourceContent}
                         value = StringUtilities.safeReplace(value, open, replacePhp);
                         value = StringUtilities.safeReplace(value, virtualOpen, formattedPhp);
                     } else {
-                        if (this.pintTransformer != null) {
-                            formattedPhp = this.pintTransformer.getDirectivePhpContent(originalDirective).trim();
+                        if (this.pintTransformer != null || Transformer.sharedPintTransformer != null) {
+                            if (this.pintTransformer != null) {
+                                formattedPhp = this.pintTransformer.getDirectivePhpContent(originalDirective).trim();
+                            } else if (Transformer.sharedPintTransformer != null) {
+                                formattedPhp = Transformer.sharedPintTransformer.getDirectivePhpContent(originalDirective).trim();
+                            }
+
                             const lines = StringUtilities.breakByNewLine(formattedPhp),
                                 reflow: string[] = [];
 
@@ -1941,11 +1953,11 @@ ${directive.isClosedBy?.sourceContent}
         this.inlineEchos.forEach((echo: BladeEchoNode, slug: string) => {
             const inline = this.selfClosing(slug);
 
-            value = StringUtilities.safeReplace(value, inline, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug), this.pintTransformer));
+            value = StringUtilities.safeReplace(value, inline, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug), this.pintTransformer ?? Transformer.sharedPintTransformer));
         });
 
         this.spanEchos.forEach((echo: BladeEchoNode, slug: string) => {
-            value = StringUtilities.safeReplace(value, slug, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug), this.pintTransformer));
+            value = StringUtilities.safeReplace(value, slug, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug), this.pintTransformer ?? Transformer.sharedPintTransformer));
         });
 
         return value;
@@ -2183,16 +2195,18 @@ ${directive.isClosedBy?.sourceContent}
             if (condition.startPosition?.line != condition.endPosition?.line) {
                 let formatContent = condition.nodeContent;
 
+                disableAttributeProcessing();
                 if (this.transformOptions.useLaravelPint) {
                     formatContent = formatBladeStringWithPint(formatContent, this.formattingOptions, this.transformOptions).trim();
                 } else {
                     formatContent = formatBladeString(formatContent, this.formattingOptions).trim();
                 }
+                enableAttributeProcessing();
 
                 const indentLevel = IndentLevel.relativeIndentLevel(slug, value);
-        
+
                 formatContent = IndentLevel.indentLast(formatContent, indentLevel, this.transformOptions.tabSize);
-                
+
                 value = StringUtilities.safeReplaceAllInString(value, slug, formatContent);
             } else {
                 value = this.removeTrailingWhitespaceAfterSubstring(value, slug);
@@ -2231,8 +2245,12 @@ ${directive.isClosedBy?.sourceContent}
         this.expressionParameters.forEach((param, slug) => {
             let content = param.content;
 
-            if (this.transformOptions.useLaravelPint && this.pintTransformer != null) {
-                content = this.pintTransformer.getComponentParameterContent(param);
+            if (this.transformOptions.useLaravelPint && (this.pintTransformer != null || Transformer.sharedPintTransformer != null)) {
+                if (this.pintTransformer != null) {
+                    content = this.pintTransformer.getComponentParameterContent(param);
+                } else if (Transformer.sharedPintTransformer != null) {
+                    content = Transformer.sharedPintTransformer.getComponentParameterContent(param);
+                }
             }
 
             if (content.includes("\n")) {
@@ -2264,7 +2282,7 @@ ${directive.isClosedBy?.sourceContent}
                 value = StringUtilities.safeReplace(value, slug, '{{-- ' + commentContent.trim() + ' --}}');
             }
             if (param.inlineEcho != null) {
-                value = StringUtilities.safeReplace(value, slug, EchoPrinter.printEcho(param.inlineEcho, this.transformOptions, this.phpFormatter, 0, this.pintTransformer));
+                value = StringUtilities.safeReplace(value, slug, EchoPrinter.printEcho(param.inlineEcho, this.transformOptions, this.phpFormatter, 0, this.pintTransformer ?? Transformer.sharedPintTransformer));
             } else {
                 value = StringUtilities.safeReplace(value, slug, '');
             }
@@ -2282,7 +2300,7 @@ ${directive.isClosedBy?.sourceContent}
             if (indentLevel == 0) {
                 indentLevel = this.transformOptions.tabSize;
             }
-            value = StringUtilities.safeReplace(value, slug, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, indentLevel, this.pintTransformer));
+            value = StringUtilities.safeReplace(value, slug, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, indentLevel, this.pintTransformer ?? Transformer.sharedPintTransformer));
         });
 
         this.dynamicAttributeEchoBlocks.forEach((echo, slug) => {
@@ -2292,7 +2310,7 @@ ${directive.isClosedBy?.sourceContent}
             if (indentLevel == 0) {
                 indentLevel = this.transformOptions.tabSize;
             }
-            value = StringUtilities.safeReplace(value, targetReplace, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, indentLevel, this.pintTransformer));
+            value = StringUtilities.safeReplace(value, targetReplace, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, indentLevel, this.pintTransformer ?? Transformer.sharedPintTransformer));
         });
 
         return value;
@@ -2564,6 +2582,10 @@ ${directive.isClosedBy?.sourceContent}
                     results = StringUtilities.safeReplace(results, slug, contentToInsert);
                 });
             }
+        }
+
+        if (this.parentTransformer === null) {
+            Transformer.sharedPintTransformer = null;
         }
 
         return results;

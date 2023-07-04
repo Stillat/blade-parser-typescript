@@ -35,7 +35,13 @@ export class IndentLevel {
                 if (i == 0) {
                     newLines.push(lines[i]);
                 } else {
-                    newLines.push(' '.repeat(innerContentPadValue) + lines[i]);
+                    const tempLine = lines[i];
+                    
+                    if (tempLine.length - tempLine.trim().length == 0) {
+                        newLines.push(replace + tempLine);
+                    } else {
+                        newLines.push(' '.repeat(innerContentPadValue) + tempLine);
+                    }
                 }
             }
         }
