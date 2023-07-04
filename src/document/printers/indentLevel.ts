@@ -17,16 +17,26 @@ export class IndentLevel {
         return 0;
     }
 
-    static indentLast(value:string, indent:number) {
+    static indentLast(value: string, indent: number, tabSize: number) {
+        let innerContentPadValue = indent - tabSize;
+
+        if (innerContentPadValue < 0) {
+            innerContentPadValue = 0;
+        }
+
         const replace = ' '.repeat(indent),
-            lines:string[] = StringUtilities.breakByNewLine(value),
-            newLines:string[] = [];
+            lines: string[] = StringUtilities.breakByNewLine(value),
+            newLines: string[] = [];
 
         for (let i = 0; i < lines.length; i++) {
             if (i == lines.length - 1) {
                 newLines.push(replace + lines[i]);
             } else {
-                newLines.push(lines[i]);
+                if (i == 0) {
+                    newLines.push(lines[i]);
+                } else {
+                    newLines.push(' '.repeat(innerContentPadValue) + lines[i]);
+                }
             }
         }
 
@@ -216,6 +226,11 @@ export class IndentLevel {
         })
 
         return reflowedLines.join("\n");
+    }
+
+    static indentAll(content: string, tabSize: number, indentLevel: number) {
+        const spaces = indentLevel * tabSize,
+            lines: string[] = StringUtilities.breakByNewLine(content);
     }
 
     static inferIndentLevel(structureLines: string[], value: string, defaultIndent: number): InferredIndentLevel {

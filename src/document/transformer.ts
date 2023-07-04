@@ -9,7 +9,7 @@ import { AbstractNode, BladeCommentNode, BladeComponentNode, BladeEchoNode, Cond
 import { IExtractedAttribute } from '../parser/extractedAttribute';
 import { SimpleArrayParser } from '../parser/simpleArrayParser';
 import { StringUtilities } from '../utilities/stringUtilities';
-import { disableAttributeProcessing, enableAttributeProcessing } from './attributeRangeRemover';
+import { canProcessAttributes, disableAttributeProcessing, enableAttributeProcessing } from './attributeRangeRemover';
 import { BladeDocument } from './bladeDocument';
 import { BlockPhpFormatter, JsonFormatter, PhpFormatter, PhpTagFormatter } from './formatters';
 import { PintTransformer } from './pintTransformer';
@@ -960,7 +960,7 @@ export class Transformer {
     }
 
     private prepareDirective(directive: DirectiveNode): string {
-        if (directive.fragmentPosition == FragmentPosition.InsideFragment) {
+        if (directive.fragmentPosition == FragmentPosition.InsideFragment && directive.isClosedBy != null) {
             return this.prepareHtmlTagDirective(directive);
         }
 
@@ -1546,7 +1546,7 @@ export class Transformer {
     toStructure(): string {
         let result = '';
 
-        if (this.useLaravelPint) {
+        if (this.useLaravelPint && canProcessAttributes) {
             if (this.parentTransformer == null) {
                 this.pintTransformer = new PintTransformer(
                     this.transformOptions.pintTempDirectory,
@@ -1689,6 +1689,24 @@ export class Transformer {
             }
 
             value = StringUtilities.safeReplace(value, slug, directiveResult);
+        });
+
+        this.htmlTagDirectives.forEach((directive: DirectiveNode, slug: string) => {
+            let attachedDoc = `${directive.sourceContent}
+    ${directive.documentContent}
+${directive.isClosedBy?.sourceContent}
+`;
+
+            disableAttributeProcessing();
+            if (this.transformOptions.useLaravelPint) {
+                attachedDoc = formatBladeStringWithPint(attachedDoc, this.formattingOptions, this.transformOptions).trim();
+            } else {
+                attachedDoc = formatBladeString(attachedDoc, this.formattingOptions).trim();
+            }
+            enableAttributeProcessing();
+            const indentLevel = IndentLevel.relativeIndentLevel(slug, value);
+
+            value = StringUtilities.safeReplace(value, slug, attachedDoc);
         });
 
         return value;
@@ -2173,7 +2191,7 @@ export class Transformer {
 
                 const indentLevel = IndentLevel.relativeIndentLevel(slug, value);
         
-                formatContent = IndentLevel.indentLast(formatContent, indentLevel);
+                formatContent = IndentLevel.indentLast(formatContent, indentLevel, this.transformOptions.tabSize);
                 
                 value = StringUtilities.safeReplaceAllInString(value, slug, formatContent);
             } else {
