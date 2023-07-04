@@ -1712,6 +1712,7 @@ ${directive.isClosedBy?.sourceContent}
             const indentLevel = IndentLevel.relativeIndentLevel(slug, value);
 
             formatContent = IndentLevel.indentLast(formatContent, indentLevel, this.transformOptions.tabSize);
+            formatContent = this.transformRemovedAttibutes(formatContent);
 
             value = StringUtilities.safeReplace(value, slug, formatContent);
         });
@@ -1811,6 +1812,8 @@ ${directive.isClosedBy?.sourceContent}
                 attachedDoc = formatBladeString(attachedDoc, this.formattingOptions).trim();
             }
             enableAttributeProcessing();
+
+            attachedDoc = this.transformRemovedAttibutes(attachedDoc);
 
             const dirResult = this.printDirective(directive.directive, this.indentLevel(slug)).trim(),
                 relIndent = this.findNewLeadingStart(value, slug),
@@ -2206,6 +2209,7 @@ ${directive.isClosedBy?.sourceContent}
                 const indentLevel = IndentLevel.relativeIndentLevel(slug, value);
 
                 formatContent = IndentLevel.indentLast(formatContent, indentLevel, this.transformOptions.tabSize);
+                formatContent = this.transformRemovedAttibutes(formatContent);
 
                 value = StringUtilities.safeReplaceAllInString(value, slug, formatContent);
             } else {
@@ -2584,7 +2588,7 @@ ${directive.isClosedBy?.sourceContent}
             }
         }
 
-        if (this.parentTransformer === null) {
+        if (this.parentTransformer === null && canProcessAttributes) {
             Transformer.sharedPintTransformer = null;
         }
 
