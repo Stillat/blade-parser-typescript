@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.6.7 (Unreleased)
+## 1.6.7
 
 - Corrects an issue prevent comments from being formatted inside HTML elements (#68)
 
