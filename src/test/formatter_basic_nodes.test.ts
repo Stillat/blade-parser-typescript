@@ -354,4 +354,120 @@ disabled
 `;
         assert.strictEqual(formatBladeStringWithPint(input), out);
     });
+
+    test('it can indent a lot of attributes inside a condition', () => {
+        const input = `
+
+
+        <div
+        @if (filament()->isSidebarCollapsibleOnDesktop())
+            x-show="$store.sidebar.isOpen"
+            x-transition:enter="delay-100 lg:transition"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+        @endif
+        ></div>
+        `;
+        const out = `<div
+    @if (filament()->isSidebarCollapsibleOnDesktop())
+        x-show="$store.sidebar.isOpen"
+        x-transition:enter="delay-100 lg:transition"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+    @endif
+></div>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), out);
+    });
+
+    test('it can indent attributes without content inside conditional attributes', () => {
+        const input = `
+
+<table>
+<tbody
+@if ($reorderable)
+        x-sortable
+    x-on:end.stop="$wire.reorderTable($event.target.sortable.toArray())"
+@endif
+class="divide-y whitespace-nowrap dark:divide-gray-700"
+>
+{{ $slot }}
+</tbody>
+</table>
+`;
+        const out = `<table>
+    <tbody
+        @if ($reorderable)
+            x-sortable
+            x-on:end.stop="$wire.reorderTable($event.target.sortable.toArray())"
+        @endif
+        class="divide-y whitespace-nowrap dark:divide-gray-700"
+    >
+        {{ $slot }}
+    </tbody>
+</table>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), out);
+    });
+
+    test('complex conditional html attributes', () => {
+        const input = `
+        <table>
+            <tbody
+                @if ($reorderable)
+                    x-sortable
+                    x-on:end.stop="$wire.reorderTable($event.target.sortable.toArray())"
+                @endif
+                class="divide-y whitespace-nowrap dark:divide-gray-700"
+            >
+                {{ $slot }}
+            </tbody>
+        </table>
+        
+        <div
+        @if ($state)
+            style="background-color: {{ $state }}"
+            @if ($isCopyable)
+            x-on:click="
+                window.navigator.clipboard.writeText(@js($state))
+                $tooltip(@js($copyMessage), { timeout: @js($copyMessageDuration) })
+            "
+            @endif
+        @endif
+        @class([
+            'relative flex h-6 w-6 rounded-md',
+            'cursor-pointer' => $isCopyable,
+        ])
+        ></div>
+        `;
+        const out = `<table>
+    <tbody
+        @if ($reorderable)
+            x-sortable
+            x-on:end.stop="$wire.reorderTable($event.target.sortable.toArray())"
+        @endif
+        class="divide-y whitespace-nowrap dark:divide-gray-700"
+    >
+        {{ $slot }}
+    </tbody>
+</table>
+
+<div
+    @if ($state)
+        style="background-color: {{ $state }}"
+        @if ($isCopyable)
+            x-on:click="
+                window.navigator.clipboard.writeText(@js($state))
+                $tooltip(@js($copyMessage), { timeout: @js($copyMessageDuration) })
+            "
+        @endif
+    @endif
+    @class([
+        'relative flex h-6 w-6 rounded-md',
+        'cursor-pointer' => $isCopyable,
+    ])
+></div>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), out);
+    });
 });

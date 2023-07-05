@@ -1701,7 +1701,17 @@ ${directive.isClosedBy?.sourceContent}
             enableAttributeProcessing();
             const indentLevel = IndentLevel.relativeIndentLevel(slug, value);
 
-            formatContent = IndentLevel.indentLast(formatContent, indentLevel, this.transformOptions.tabSize);
+            if (formatContent.includes('@') || formatContent.includes('{{')) {
+                formatContent = IndentLevel.shiftIndent(
+                    IndentLevel.reflowRelative(formatContent, this.transformOptions.tabSize),
+                    indentLevel,
+                    true,
+                    this.transformOptions,
+                    false,false
+                );;
+            } else {
+                formatContent = IndentLevel.indentLast(formatContent, indentLevel, this.transformOptions.tabSize);
+            }
 
             value = StringUtilities.safeReplace(value, slug, formatContent);
         });
@@ -2220,7 +2230,17 @@ ${directive.isClosedBy?.sourceContent}
 
                 const indentLevel = IndentLevel.relativeIndentLevel(slug, value);
 
-                formatContent = IndentLevel.indentLast(formatContent, indentLevel, this.transformOptions.tabSize);
+                if (formatContent.includes('@') || formatContent.includes('{{')) {
+                    formatContent = IndentLevel.shiftIndent(
+                        IndentLevel.reflowRelative(formatContent, this.transformOptions.tabSize),
+                        indentLevel,
+                        true,
+                        this.transformOptions,
+                        false,false
+                    );;
+                } else {
+                    formatContent = IndentLevel.indentLast(formatContent, indentLevel, this.transformOptions.tabSize);
+                }
 
                 value = StringUtilities.safeReplaceAllInString(value, slug, formatContent);
             } else {

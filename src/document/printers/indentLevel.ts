@@ -18,6 +18,33 @@ export class IndentLevel {
         return 0;
     }
 
+    static reflowRelative(value:string, tabSize:number): string {
+        const lines = StringUtilities.breakByNewLine(value),
+            newLines:string[] = [];
+
+        let lastIndent = -1;
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i],
+                leadDiff = line.length - line.trimLeft().length;
+            if (leadDiff == 0) {
+                lastIndent = leadDiff;
+                newLines.push(line);
+                continue;
+            }
+
+            if (leadDiff > lastIndent + tabSize) {
+                newLines.push(' '.repeat(lastIndent + tabSize) + line.trimLeft());
+                continue;
+            } else {
+                newLines.push(line);
+            }
+            lastIndent = leadDiff;
+        }
+
+        return newLines.join("\n");
+    }
+
     static indentLast(value: string, indent: number, tabSize: number) {
         const replace = ' '.repeat(indent),
             lines: string[] = StringUtilities.breakByNewLine(value),
@@ -37,7 +64,15 @@ export class IndentLevel {
             if (i == 0) {
                 newLines.push(line);
             } else {
-                newLines.push(replace + line);
+                if (i == lines.length - 1) {
+                    newLines.push(replace + line);
+                } else {
+                    if (line.includes('=') || (line.trim().includes(' ') == false && !line.trimLeft().startsWith('@'))) {
+                        newLines.push(replace + ' '.repeat(tabSize) + line.trimLeft());
+                    } else {
+                        newLines.push(replace + line);
+                    }
+                }
             }
         }
 
