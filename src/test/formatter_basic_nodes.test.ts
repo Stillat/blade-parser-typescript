@@ -470,4 +470,68 @@ class="divide-y whitespace-nowrap dark:divide-gray-700"
 `;
         assert.strictEqual(formatBladeStringWithPint(input), out);
     });
+
+    test('it doe not break semicolon placement', () => {
+        const input = `
+<textarea
+@if ($shouldAutosize())
+    x-ignore ax-load
+    ax-load-src="{{ \\Filament\\Support\\Facades\\FilamentAsset::getAlpineComponentSrc('textarea', 'filament/forms') }}"
+    x-data="textareaFormComponent()"
+    x-on:input="render()"
+    style="height: 150px"
+    {{ $getExtraAlpineAttributeBag() }}
+@endif
+>
+</textarea>
+`;
+        const out = `<textarea
+    @if ($shouldAutosize())
+        x-ignore ax-load
+        ax-load-src="{{ \\Filament\\Support\\Facades\\FilamentAsset::getAlpineComponentSrc('textarea', 'filament/forms') }}"
+        x-data="textareaFormComponent()" x-on:input="render()" style="height: 150px"
+        {{ $getExtraAlpineAttributeBag() }}
+    @endif
+></textarea>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), out);
+    });
+
+    test('nicely indent code is not indented more', () => {
+        const input = `
+<div
+    x-transition:enter="ease duration-300"
+    x-transition:leave="ease duration-300"
+    @if ($slideOver)
+        x-transition:enter-start="translate-x-full rtl:-translate-x-full"
+        x-transition:enter-end="translate-x-0"
+        x-transition:leave-start="translate-x-0"
+        x-transition:leave-end="translate-x-full rtl:-translate-x-full"
+    @elseif ($width !== 'screen')
+        x-transition:enter-start="translate-y-8"
+        x-transition:enter-end="translate-y-0"
+        x-transition:leave-start="translate-y-0"
+        x-transition:leave-end="translate-y-8"
+    @endif
+></div>
+
+`;
+        const out = `<div
+    x-transition:enter="ease duration-300"
+    x-transition:leave="ease duration-300"
+    @if ($slideOver)
+        x-transition:enter-start="translate-x-full rtl:-translate-x-full"
+        x-transition:enter-end="translate-x-0"
+        x-transition:leave-start="translate-x-0"
+        x-transition:leave-end="translate-x-full rtl:-translate-x-full"
+    @elseif ($width !== 'screen')
+        x-transition:enter-start="translate-y-8"
+        x-transition:enter-end="translate-y-0"
+        x-transition:leave-start="translate-y-0"
+        x-transition:leave-end="translate-y-8"
+    @endif
+></div>
+`;
+assert.strictEqual(formatBladeStringWithPint(input), out);
+    });
 });

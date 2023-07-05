@@ -1701,17 +1701,15 @@ ${directive.isClosedBy?.sourceContent}
             enableAttributeProcessing();
             const indentLevel = IndentLevel.relativeIndentLevel(slug, value);
 
-            if (formatContent.includes('@') || formatContent.includes('{{')) {
-                formatContent = IndentLevel.shiftIndent(
-                    IndentLevel.reflowRelative(formatContent, this.transformOptions.tabSize),
-                    indentLevel,
-                    true,
-                    this.transformOptions,
-                    false,false
-                );;
-            } else {
-                formatContent = IndentLevel.indentLast(formatContent, indentLevel, this.transformOptions.tabSize);
-            }
+            formatContent = this.fixDanglingColon(formatContent);
+
+            formatContent = IndentLevel.shiftIndent(
+                IndentLevel.reflowRelative(formatContent, this.transformOptions.tabSize),
+                indentLevel,
+                true,
+                this.transformOptions,
+                false, false
+            );
 
             value = StringUtilities.safeReplace(value, slug, formatContent);
         });
@@ -2186,6 +2184,25 @@ ${directive.isClosedBy?.sourceContent}
         return value;
     }
 
+    private fixDanglingColon(content: string): string {
+        const lines = StringUtilities.breakByNewLine(content),
+            newLines: string[] = [];
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+
+            if (line.trimRight().endsWith(':') && i + 1 < lines.length - 1) {
+                newLines.push(line.trimRight() + ' ' + lines[i + 1].trimLeft());
+                i += 1;
+                continue;
+            } else {
+                newLines.push(line);
+            }
+        }
+
+        return newLines.join("\n");
+    }
+
     private transformDynamicElementForElse(content: string): string {
         let value = content;
 
@@ -2230,17 +2247,15 @@ ${directive.isClosedBy?.sourceContent}
 
                 const indentLevel = IndentLevel.relativeIndentLevel(slug, value);
 
-                if (formatContent.includes('@') || formatContent.includes('{{')) {
-                    formatContent = IndentLevel.shiftIndent(
-                        IndentLevel.reflowRelative(formatContent, this.transformOptions.tabSize),
-                        indentLevel,
-                        true,
-                        this.transformOptions,
-                        false,false
-                    );;
-                } else {
-                    formatContent = IndentLevel.indentLast(formatContent, indentLevel, this.transformOptions.tabSize);
-                }
+                formatContent = this.fixDanglingColon(formatContent);
+
+                formatContent = IndentLevel.shiftIndent(
+                    IndentLevel.reflowRelative(formatContent, this.transformOptions.tabSize),
+                    indentLevel,
+                    true,
+                    this.transformOptions,
+                    false, false
+                );
 
                 value = StringUtilities.safeReplaceAllInString(value, slug, formatContent);
             } else {

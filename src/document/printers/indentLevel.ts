@@ -1,6 +1,5 @@
 import { StringUtilities } from '../../utilities/stringUtilities';
 import { TransformOptions } from '../transformOptions';
-import { Transformer } from '../transformer';
 
 export class IndentLevel {
     static relativeIndentLevel(value: string, content: string): number {
@@ -18,9 +17,9 @@ export class IndentLevel {
         return 0;
     }
 
-    static reflowRelative(value:string, tabSize:number): string {
+    static reflowRelative(value: string, tabSize: number): string {
         const lines = StringUtilities.breakByNewLine(value),
-            newLines:string[] = [];
+            newLines: string[] = [];
 
         let lastIndent = -1;
 
@@ -33,8 +32,13 @@ export class IndentLevel {
                 continue;
             }
 
-            if (leadDiff > lastIndent + tabSize) {
-                newLines.push(' '.repeat(lastIndent + tabSize) + line.trimLeft());
+            if (leadDiff >= lastIndent + tabSize) {
+                if (lastIndent + tabSize == leadDiff) {
+                    newLines.push(' '.repeat(tabSize) + line.trimLeft());
+                    lastIndent = tabSize;
+                } else {
+                    newLines.push(' '.repeat(lastIndent + tabSize) + line.trimLeft());
+                }
                 continue;
             } else {
                 newLines.push(line);
