@@ -8,6 +8,9 @@ import { formatJsonata } from "@stedi/prettier-plugin-jsonata/dist/lib";
 import { FormattingOptions } from '../formattingOptions';
 import { defaultSettings, setEnvSettings } from '../optionDiscovery';
 import { TransformOptions } from '../../document/transformOptions';
+import { isAttributeFormatter } from '../../document/attributeRangeRemover';
+import { StringRemover } from '../../parser/stringRemover';
+import { StringUtilities } from '../../utilities/stringUtilities';
 
 let phpOptions: ParserOptions,
     htmlOptions: ParserOptions,
@@ -172,6 +175,36 @@ export function formatAsJavaScript(text: string, transformOptions: TransformOpti
 }
 
 export function formatAsHtml(text: string) {
+    if (isAttributeFormatter) {
+        const strRemover = new StringRemover(),
+            replace = StringUtilities.makeSlug(64),
+            repMap: Map<string, string> = new Map();
+        
+            strRemover.remove(text);
+
+        const removedStringMap = strRemover.getStrings();
+        let formatText = text;
+
+        removedStringMap.forEach((string, index) => {
+            const rep = replace + index;
+
+            repMap.set(rep, string);
+            formatText = formatText.replace(string, rep);
+        });
+
+        let fResult = prettier.format(formatText, {
+            ...htmlOptions,
+            printWidth: 20,
+            singleAttributePerLine: true,
+            parser: 'html'
+        });
+
+        repMap.forEach((string, rep) => {
+            fResult = fResult.replace(rep, string);
+        });
+
+        return fResult;
+    }
     return prettier.format(text, {
         ...htmlOptions,
         parser: 'html'

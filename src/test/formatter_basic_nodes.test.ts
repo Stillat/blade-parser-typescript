@@ -125,7 +125,10 @@ suite('Basic Node Formatting', () => {
         const out = `<div
     class="my-4"
     @unless (config("filament-media-library.settings.show-upload-box-by-default"))
-        x-foo x-show="showUploadBox" x-collapse x-cloak
+        x-foo
+        x-show="showUploadBox"
+        x-collapse
+        x-cloak
     @endunless
 >
     <p>Hello, world!</p>
@@ -183,11 +186,16 @@ suite('Basic Node Formatting', () => {
         const output = `<div
     class="my-4"
     @something(! true)
-        x-show="showUploadBox" x-collapse x-cloak
+        x-show="showUploadBox"
+        x-collapse
+        x-cloak
         @thingconfig(! 'filament-media-library.settings.show-upload-box-by-default')
     @endsomething
     @if (config(! 'filament-media-library.settings.show-upload-box-by-default'))
-        x-foo x-show="showUploadBox" x-collapse x-cloak
+        x-foo
+        x-show="showUploadBox"
+        x-collapse
+        x-cloak
         @thingconfig(! 'filament-media-library.settings.show-upload-box-by-default')
     @else
         x-thing
@@ -199,11 +207,16 @@ suite('Basic Node Formatting', () => {
     <div
         class="my-4"
         @something(! true)
-            x-show="showUploadBox" x-collapse x-cloak
+            x-show="showUploadBox"
+            x-collapse
+            x-cloak
             @thingconfig(! 'filament-media-library.settings.show-upload-box-by-default')
         @endsomething
         @if (config(! 'filament-media-library.settings.show-upload-box-by-default'))
-            x-foo x-show="showUploadBox" x-collapse x-cloak
+            x-foo
+            x-show="showUploadBox"
+            x-collapse
+            x-cloak
             @thingconfig(! 'filament-media-library.settings.show-upload-box-by-default')
         @else
             x-thing
@@ -310,6 +323,7 @@ suite('Basic Node Formatting', () => {
     </span>
 @endif
 `;
+        assert.strictEqual(formatBladeStringWithPint(input), output);
     });
 
     test('it indents simple content inside pairs used as html attributes', () => {
@@ -489,7 +503,9 @@ class="divide-y whitespace-nowrap dark:divide-gray-700"
     @if ($shouldAutosize())
         x-ignore ax-load
         ax-load-src="{{ \\Filament\\Support\\Facades\\FilamentAsset::getAlpineComponentSrc('textarea', 'filament/forms') }}"
-        x-data="textareaFormComponent()" x-on:input="render()" style="height: 150px"
+        x-data="textareaFormComponent()"
+        x-on:input="render()"
+        style="height: 150px"
         {{ $getExtraAlpineAttributeBag() }}
     @endif
 ></textarea>
@@ -532,6 +548,54 @@ class="divide-y whitespace-nowrap dark:divide-gray-700"
     @endif
 ></div>
 `;
-assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(formatBladeStringWithPint(input), out);
+    });
+
+    test('it can indent nested conditions', () => {
+        const input = `
+<{!! $tag !!}
+    @if ($url)
+        href="{{ $url }}"
+        @if ($shouldOpenUrlInNewTab()) target="_blank" @endif
+    @endif
+>
+</{!! $tag !!}>
+`;
+        const out = `<{!! $tag !!}
+    @if ($url)
+        href="{{ $url }}"
+        @if ($shouldOpenUrlInNewTab())
+            target="_blank"
+        @endif
+    @endif
+></{!! $tag !!}>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), out);
+    });
+
+    test('simple conditions do not get weird wrapping', () => {
+        const input = `
+<div
+@if ($closeByClickingAway)
+    @if (filled($id))
+        x-on:click="$dispatch('{{ $closeEventName }}', { id: '{{ $id }}' })"
+    @else
+        x-on:click="close()"
+    @endif
+@endif
+>
+</div>
+`;
+        const out = `<div
+    @if ($closeByClickingAway)
+        @if (filled($id))
+            x-on:click="$dispatch('{{ $closeEventName }}', { id: '{{ $id }}' })"
+        @else
+            x-on:click="close()"
+        @endif
+    @endif
+></div>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), out);
     });
 });

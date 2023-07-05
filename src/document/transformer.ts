@@ -9,7 +9,7 @@ import { AbstractNode, BladeCommentNode, BladeComponentNode, BladeEchoNode, Cond
 import { IExtractedAttribute } from '../parser/extractedAttribute';
 import { SimpleArrayParser } from '../parser/simpleArrayParser';
 import { StringUtilities } from '../utilities/stringUtilities';
-import { canProcessAttributes, disableAttributeProcessing, enableAttributeProcessing } from './attributeRangeRemover';
+import { canProcessAttributes, disableAttributeProcessing, enableAttributeProcessing, isAttributeFormatter, setIsFormattingAttributeContent } from './attributeRangeRemover';
 import { BladeDocument } from './bladeDocument';
 import { BlockPhpFormatter, JsonFormatter, PhpFormatter, PhpTagFormatter } from './formatters';
 import { PintTransformer } from './pintTransformer';
@@ -768,14 +768,18 @@ export class Transformer {
             } else {
                 const contentContainsAllInline = this.isAllInlineNodes(directive.children ?? []),
                     containsBladeStructures = this.containsBladeStructures(directive.children ?? []);
-                if ((this.shouldCreateVirutal(directive) && directive.containsChildStructures == false &&
-                    directive.containsAnyFragments == false &&
-                    !contentContainsAllInline &&
-                    !containsBladeStructures) || (!directive.containsAnyFragments && contentContainsAllInline && containsBladeStructures)) {
-                    virtualSlug = this.makeSlug(15);
-                    result += this.pair(virtualSlug, innerDoc);
+                if (isAttributeFormatter) {
+                    result += innerDoc.trim();
                 } else {
-                    result += innerDoc;
+                    if ((this.shouldCreateVirutal(directive) && directive.containsChildStructures == false &&
+                        directive.containsAnyFragments == false &&
+                        !contentContainsAllInline &&
+                        !containsBladeStructures) || (!directive.containsAnyFragments && contentContainsAllInline && containsBladeStructures)) {
+                        virtualSlug = this.makeSlug(15);
+                        result += this.pair(virtualSlug, innerDoc);
+                    } else {
+                        result += innerDoc;
+                    }
                 }
             }
 
@@ -1413,62 +1417,78 @@ export class Transformer {
                     const virtualBreakSlug = this.makeSlug(25),
                         containsBladeStructures = this.containsBladeStructures(branch.head.children ?? []);
 
-                    if (branch.head.containsChildStructures == false && branch.head.containsAnyFragments == false &&
-                        ((branch.head?.children.length <= 2 || branch.head?.children.length > 4) &&
-                            !this.isAllInlineNodes(branch.head.children) &&
-                            !containsBladeStructures)) {
+                    if (isAttributeFormatter) {
 
-
-                        tBranch.virtualBreakOpen = this.open(virtualBreakSlug);
-                        tBranch.virtualBreakClose = this.close(virtualBreakSlug);
-                        result += "\n" + tBranch.virtualBreakOpen + "\n";
-                        result += innerDoc;
-                        result += "\n" + tBranch.virtualBreakClose + "\n" + tBranch.pairClose;
-                    } else {
                         tBranch.virtualBreakOpen = this.selfClosing(virtualBreakSlug);
                         result += tBranch.virtualBreakOpen + "\n";
                         result += innerDoc;
                         result += "\n" + tBranch.pairClose;
-                    }
-                } else {
-                    const branchContainsAllInline = this.isAllInlineNodes(branch.head?.children ?? []),
-                        containsBladeStructures = this.containsBladeStructures(branch.head?.children ?? []);
-                    if (branch.head?.containsAnyFragments == false &&
-                        branch.head?.containsChildStructures == false &&
-                        (branch.head?.children.length <= 2 || branch.head?.children.length > 4) &&
-                        !branchContainsAllInline && !containsBladeStructures) {
-                        const ifBreakSlug = this.makeSlug(25);
-
-                        tBranch.virtualBreakOpen = this.open(ifBreakSlug);
-                        tBranch.virtualBreakClose = this.close(ifBreakSlug);
-
-                        if (branch.head?.children.length <= 2 && branch.head.children[0] instanceof LiteralNode) {
-                            result += tBranch.pairOpen;
-                            result += "\n" + tBranch.virtualBreakOpen;
-                            result += "\n" + tBranch.virtualBreakClose;
-                            result += tBranch.pairClose;
-                            tBranch.isLiteralContent = true;
-                        } else {
-                            result += tBranch.pairOpen;
-                            result += "\n" + tBranch.virtualBreakOpen;
-                            result += innerDoc;
-                            result += "\n" + tBranch.virtualBreakClose;
-                            result += tBranch.pairClose;
-                        }
                     } else {
-                        if (branchContainsAllInline) {
-                            result += "\n" + tBranch.pairOpen;
-                            const virtualBreakSlug = this.makeSlug(25);
+                        if (branch.head.containsChildStructures == false && branch.head.containsAnyFragments == false &&
+                            ((branch.head?.children.length <= 2 || branch.head?.children.length > 4) &&
+                                !this.isAllInlineNodes(branch.head.children) &&
+                                !containsBladeStructures)) {
+                            tBranch.virtualBreakOpen = this.open(virtualBreakSlug);
+                            tBranch.virtualBreakClose = this.close(virtualBreakSlug);
+                            result += "\n" + tBranch.virtualBreakOpen + "\n";
+                            result += innerDoc;
+                            result += "\n" + tBranch.virtualBreakClose + "\n" + tBranch.pairClose;
+                        } else {
                             tBranch.virtualBreakOpen = this.selfClosing(virtualBreakSlug);
                             result += tBranch.virtualBreakOpen + "\n";
                             result += innerDoc;
                             result += "\n" + tBranch.pairClose;
+                        }
+                    }
+                } else {
+                    const branchContainsAllInline = this.isAllInlineNodes(branch.head?.children ?? []),
+                        containsBladeStructures = this.containsBladeStructures(branch.head?.children ?? []);
+                    if (isAttributeFormatter) {
+
+                        result += "\n" + tBranch.pairOpen;
+                        const virtualBreakSlug = this.makeSlug(25);
+                        tBranch.virtualBreakOpen = this.selfClosing(virtualBreakSlug);
+                        result += tBranch.virtualBreakOpen + "\n";
+                        result += innerDoc;
+                        result += "\n" + tBranch.pairClose;
+                    } else {
+                        if (branch.head?.containsAnyFragments == false &&
+                            branch.head?.containsChildStructures == false &&
+                            (branch.head?.children.length <= 2 || branch.head?.children.length > 4) &&
+                            !branchContainsAllInline && !containsBladeStructures) {
+                            const ifBreakSlug = this.makeSlug(25);
+    
+                            tBranch.virtualBreakOpen = this.open(ifBreakSlug);
+                            tBranch.virtualBreakClose = this.close(ifBreakSlug);
+    
+                            if (branch.head?.children.length <= 2 && branch.head.children[0] instanceof LiteralNode) {
+                                result += tBranch.pairOpen;
+                                result += "\n" + tBranch.virtualBreakOpen;
+                                result += "\n" + tBranch.virtualBreakClose;
+                                result += tBranch.pairClose;
+                                tBranch.isLiteralContent = true;
+                            } else {
+                                result += tBranch.pairOpen;
+                                result += "\n" + tBranch.virtualBreakOpen;
+                                result += innerDoc;
+                                result += "\n" + tBranch.virtualBreakClose;
+                                result += tBranch.pairClose;
+                            }
                         } else {
-                            result += tBranch.pairOpen;
-                            result += "\n";
-                            result += innerDoc;
-                            result += "\n";
-                            result += tBranch.pairClose;
+                            if (branchContainsAllInline) {
+                                result += "\n" + tBranch.pairOpen;
+                                const virtualBreakSlug = this.makeSlug(25);
+                                tBranch.virtualBreakOpen = this.selfClosing(virtualBreakSlug);
+                                result += tBranch.virtualBreakOpen + "\n";
+                                result += innerDoc;
+                                result += "\n" + tBranch.pairClose;
+                            } else {
+                                result += tBranch.pairOpen;
+                                result += "\n";
+                                result += innerDoc;
+                                result += "\n";
+                                result += tBranch.pairClose;
+                            }
                         }
                     }
                 }
@@ -1692,6 +1712,7 @@ export class Transformer {
 ${directive.isClosedBy?.sourceContent}
 `;
 
+            setIsFormattingAttributeContent(true);
             disableAttributeProcessing();
             if (this.transformOptions.useLaravelPint) {
                 formatContent = formatBladeStringWithPint(formatContent, this.formattingOptions, this.transformOptions).trim();
@@ -1699,12 +1720,13 @@ ${directive.isClosedBy?.sourceContent}
                 formatContent = formatBladeString(formatContent, this.formattingOptions).trim();
             }
             enableAttributeProcessing();
+            setIsFormattingAttributeContent(false);
             const indentLevel = IndentLevel.relativeIndentLevel(slug, value);
 
             formatContent = this.fixDanglingColon(formatContent);
 
             formatContent = IndentLevel.shiftIndent(
-                IndentLevel.reflowRelative(formatContent, this.transformOptions.tabSize),
+                formatContent,
                 indentLevel,
                 true,
                 this.transformOptions,
@@ -2238,19 +2260,21 @@ ${directive.isClosedBy?.sourceContent}
                 let formatContent = condition.nodeContent;
 
                 disableAttributeProcessing();
+                setIsFormattingAttributeContent(true);
                 if (this.transformOptions.useLaravelPint) {
                     formatContent = formatBladeStringWithPint(formatContent, this.formattingOptions, this.transformOptions).trim();
                 } else {
                     formatContent = formatBladeString(formatContent, this.formattingOptions).trim();
                 }
                 enableAttributeProcessing();
+                setIsFormattingAttributeContent(false);
 
                 const indentLevel = IndentLevel.relativeIndentLevel(slug, value);
 
                 formatContent = this.fixDanglingColon(formatContent);
 
                 formatContent = IndentLevel.shiftIndent(
-                    IndentLevel.reflowRelative(formatContent, this.transformOptions.tabSize),
+                    formatContent,
                     indentLevel,
                     true,
                     this.transformOptions,

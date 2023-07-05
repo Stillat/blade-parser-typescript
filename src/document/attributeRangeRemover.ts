@@ -2,6 +2,11 @@ import { IExtractedAttribute } from '../parser/extractedAttribute';
 import { StringUtilities } from '../utilities/stringUtilities';
 
 let canProcessAttributes: boolean = true;
+let isAttributeFormatter: boolean = false;
+
+export function setIsFormattingAttributeContent(isAttribute:boolean) {
+    isAttributeFormatter = isAttribute;
+}
 
 export function disableAttributeProcessing() {
     canProcessAttributes = false;
@@ -11,7 +16,7 @@ export function enableAttributeProcessing() {
     canProcessAttributes = true;
 }
 
-export { canProcessAttributes };
+export { canProcessAttributes, isAttributeFormatter };
 
 export class AttributeRangeRemover {
 

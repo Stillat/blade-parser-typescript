@@ -17,38 +17,6 @@ export class IndentLevel {
         return 0;
     }
 
-    static reflowRelative(value: string, tabSize: number): string {
-        const lines = StringUtilities.breakByNewLine(value),
-            newLines: string[] = [];
-
-        let lastIndent = -1;
-
-        for (let i = 0; i < lines.length; i++) {
-            const line = lines[i],
-                leadDiff = line.length - line.trimLeft().length;
-            if (leadDiff == 0) {
-                lastIndent = leadDiff;
-                newLines.push(line);
-                continue;
-            }
-
-            if (leadDiff >= lastIndent + tabSize) {
-                if (lastIndent + tabSize == leadDiff) {
-                    newLines.push(' '.repeat(tabSize) + line.trimLeft());
-                    lastIndent = tabSize;
-                } else {
-                    newLines.push(' '.repeat(lastIndent + tabSize) + line.trimLeft());
-                }
-                continue;
-            } else {
-                newLines.push(line);
-            }
-            lastIndent = leadDiff;
-        }
-
-        return newLines.join("\n");
-    }
-
     static indentLast(value: string, indent: number, tabSize: number) {
         const replace = ' '.repeat(indent),
             lines: string[] = StringUtilities.breakByNewLine(value),
