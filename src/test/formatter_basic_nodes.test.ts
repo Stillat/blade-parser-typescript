@@ -311,4 +311,47 @@ suite('Basic Node Formatting', () => {
 @endif
 `;
     });
+
+    test('it indents simple content inside pairs used as html attributes', () => {
+        const input = `<div>
+<div>
+<input type="text"
+    @if ((! $canEditKeys()) || $isDisabled)
+    disabled
+    @endif
+    />
+</div>
+</div>`;
+        const out = `<div>
+    <div>
+        <input
+            type="text"
+            @if ((! $canEditKeys()) || $isDisabled)
+                disabled
+            @endif
+        />
+    </div>
+</div>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), out);
+    });
+
+    test('it indents simple content at the root', () => {
+        const input = `
+
+
+<div
+@if ((! $canEditKeys()) || $isDisabled)
+disabled
+@endif
+></div>
+`;
+        const out = `<div
+    @if ((! $canEditKeys()) || $isDisabled)
+        disabled
+    @endif
+></div>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), out);
+    });
 });

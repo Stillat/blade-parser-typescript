@@ -23,34 +23,21 @@ export class IndentLevel {
             lines: string[] = StringUtilities.breakByNewLine(value),
             newLines: string[] = [];
 
-        let overrideLen = false;
+        if (lines.length == 3) {
+            newLines.push(lines[0]);
+            newLines.push(replace + ' '.repeat(tabSize) + lines[1].trim());
+            newLines.push(replace + lines[2]);
 
-        if (Transformer.rootTransformer != null) {
-            overrideLen = Transformer.rootTransformer.containsRemovedAttributes(value);
+            return newLines.join("\n");
         }
 
         for (let i = 0; i < lines.length; i++) {
-            if (i == lines.length - 1) {
-                newLines.push(replace + lines[i]);
-            } else {
-                if (i == 0) {
-                    newLines.push(lines[i]);
-                } else {
-                    if (lines.length > 3 || overrideLen) {
-                        if (lines.length <= 3 && overrideLen) {
-                            let newTarget = indent - tabSize;
-                            if (newTarget < 0) {
-                                newTarget = 0;
-                            }
+            const line = lines[i];
 
-                            newLines.push(' '.repeat(newTarget) + lines[i]);
-                        } else {
-                            newLines.push(replace + lines[i]);
-                        }
-                    } else {
-                        newLines.push(lines[i]);
-                    }
-                }
+            if (i == 0) {
+                newLines.push(line);
+            } else {
+                newLines.push(replace + line);
             }
         }
 

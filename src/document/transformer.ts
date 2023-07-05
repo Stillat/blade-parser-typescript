@@ -1497,7 +1497,11 @@ export class Transformer {
             return existingSlug + ' ';
         }
 
-        const slug = this.makeSlug(condition.nodeContent.length);
+        let slug = this.makeSlug(condition.nodeContent.length);
+
+        if (condition.startPosition?.line != condition.endPosition?.line) {
+            slug = this.makeSlug(128);
+        }
 
         this.registerDynamicElementCondition(slug, condition);
 
