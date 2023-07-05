@@ -769,7 +769,7 @@ export class Transformer {
                 const contentContainsAllInline = this.isAllInlineNodes(directive.children ?? []),
                     containsBladeStructures = this.containsBladeStructures(directive.children ?? []);
                 if (isAttributeFormatter) {
-                    result += innerDoc.trim();
+                    result += ' ' + innerDoc.trim() + ' ';
                 } else {
                     if ((this.shouldCreateVirutal(directive) && directive.containsChildStructures == false &&
                         directive.containsAnyFragments == false &&
@@ -1418,7 +1418,6 @@ export class Transformer {
                         containsBladeStructures = this.containsBladeStructures(branch.head.children ?? []);
 
                     if (isAttributeFormatter) {
-
                         tBranch.virtualBreakOpen = this.selfClosing(virtualBreakSlug);
                         result += tBranch.virtualBreakOpen + "\n";
                         result += innerDoc;
@@ -1444,8 +1443,8 @@ export class Transformer {
                     const branchContainsAllInline = this.isAllInlineNodes(branch.head?.children ?? []),
                         containsBladeStructures = this.containsBladeStructures(branch.head?.children ?? []);
                     if (isAttributeFormatter) {
-
                         result += "\n" + tBranch.pairOpen;
+
                         const virtualBreakSlug = this.makeSlug(25);
                         tBranch.virtualBreakOpen = this.selfClosing(virtualBreakSlug);
                         result += tBranch.virtualBreakOpen + "\n";
