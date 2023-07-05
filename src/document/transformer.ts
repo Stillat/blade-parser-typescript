@@ -1456,10 +1456,10 @@ export class Transformer {
                             (branch.head?.children.length <= 2 || branch.head?.children.length > 4) &&
                             !branchContainsAllInline && !containsBladeStructures) {
                             const ifBreakSlug = this.makeSlug(25);
-    
+
                             tBranch.virtualBreakOpen = this.open(ifBreakSlug);
                             tBranch.virtualBreakClose = this.close(ifBreakSlug);
-    
+
                             if (branch.head?.children.length <= 2 && branch.head.children[0] instanceof LiteralNode) {
                                 result += tBranch.pairOpen;
                                 result += "\n" + tBranch.virtualBreakOpen;
@@ -1712,11 +1712,17 @@ ${directive.isClosedBy?.sourceContent}
 `;
 
             setIsFormattingAttributeContent(true);
-            disableAttributeProcessing();
-            if (this.transformOptions.useLaravelPint) {
-                formatContent = formatBladeStringWithPint(formatContent, this.formattingOptions, this.transformOptions).trim();
-            } else {
-                formatContent = formatBladeString(formatContent, this.formattingOptions).trim();
+            try {
+                disableAttributeProcessing();
+                if (this.transformOptions.useLaravelPint) {
+                    formatContent = formatBladeStringWithPint(formatContent, this.formattingOptions, this.transformOptions).trim();
+                } else {
+                    formatContent = formatBladeString(formatContent, this.formattingOptions).trim();
+                }
+            } catch (err) {
+                enableAttributeProcessing();
+                setIsFormattingAttributeContent(false);
+                throw err;
             }
             enableAttributeProcessing();
             setIsFormattingAttributeContent(false);
@@ -2260,10 +2266,16 @@ ${directive.isClosedBy?.sourceContent}
 
                 disableAttributeProcessing();
                 setIsFormattingAttributeContent(true);
-                if (this.transformOptions.useLaravelPint) {
-                    formatContent = formatBladeStringWithPint(formatContent, this.formattingOptions, this.transformOptions).trim();
-                } else {
-                    formatContent = formatBladeString(formatContent, this.formattingOptions).trim();
+                try {
+                    if (this.transformOptions.useLaravelPint) {
+                        formatContent = formatBladeStringWithPint(formatContent, this.formattingOptions, this.transformOptions).trim();
+                    } else {
+                        formatContent = formatBladeString(formatContent, this.formattingOptions).trim();
+                    }
+                } catch (err) {
+                    enableAttributeProcessing();
+                    setIsFormattingAttributeContent(false);
+                    throw err;    
                 }
                 enableAttributeProcessing();
                 setIsFormattingAttributeContent(false);

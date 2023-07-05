@@ -176,19 +176,22 @@ export function formatAsJavaScript(text: string, transformOptions: TransformOpti
 
 export function formatAsHtml(text: string) {
     if (isAttributeFormatter) {
+        let formatText = text,
+            removedStringMap:string[] = [];
+
         try {
             const strRemover = new StringRemover(),
                 repMap: Map<string, string> = new Map();
 
             strRemover.remove(text);
 
-            const removedStringMap = strRemover.getStrings().reverse();
-            let formatText = text;
+            removedStringMap = strRemover.getStrings().reverse();
 
             removedStringMap.forEach((string, index) => {
                 const rep = StringUtilities.makeSlug(128);
                 repMap.set(rep, string);
-                formatText = formatText.replace(string, rep);
+
+                formatText = formatText.replace(`"${string}"`, `"${rep}"`);
             });
 
             let fResult = prettier.format(formatText, {
