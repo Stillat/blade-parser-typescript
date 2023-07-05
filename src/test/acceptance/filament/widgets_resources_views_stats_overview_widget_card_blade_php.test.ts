@@ -144,7 +144,9 @@ suite('Pint Transformer Acceptance: widgets_resources_views_stats_overview_widge
 <{!! $tag !!}
     @if ($url)
         href="{{ $url }}"
-        @if ($shouldOpenUrlInNewTab()) target="_blank" @endif
+        @if ($shouldOpenUrlInNewTab())
+            target="_blank"
+        @endif
     @endif
     {{ $getExtraAttributeBag()->class(['filament-stats-overview-widget-card relative rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-800 dark:ring-white/20']) }}
 >

@@ -178,17 +178,15 @@ export function formatAsHtml(text: string) {
     if (isAttributeFormatter) {
         try {
             const strRemover = new StringRemover(),
-                replace = StringUtilities.makeSlug(64),
                 repMap: Map<string, string> = new Map();
 
             strRemover.remove(text);
 
-            const removedStringMap = strRemover.getStrings();
+            const removedStringMap = strRemover.getStrings().reverse();
             let formatText = text;
 
             removedStringMap.forEach((string, index) => {
-                const rep = replace + index;
-
+                const rep = StringUtilities.makeSlug(128);
                 repMap.set(rep, string);
                 formatText = formatText.replace(string, rep);
             });

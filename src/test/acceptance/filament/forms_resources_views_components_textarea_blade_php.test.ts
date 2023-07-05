@@ -59,8 +59,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_textarea_bl
 <x-dynamic-component :component="$getFieldWrapperView()" :field="$field">
     <textarea
         @if ($shouldAutosize())
-            x-ignore
-            ax-load
+            x-ignore ax-load
             ax-load-src="{{ \\Filament\\Support\\Facades\\FilamentAsset::getAlpineComponentSrc('textarea', 'filament/forms') }}"
             x-data="textareaFormComponent()"
             x-on:input="render()"

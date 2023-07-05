@@ -65,7 +65,9 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
     <a
         @if ($url)
             href="{{ $url }}"
-            @if ($shouldOpenUrlInNewTab) target="_blank" @endif
+            @if ($shouldOpenUrlInNewTab)
+                target="_blank"
+            @endif
         @endif
         @class([
             'flex items-center justify-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition',

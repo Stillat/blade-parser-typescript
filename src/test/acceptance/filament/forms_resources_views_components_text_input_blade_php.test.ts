@@ -117,16 +117,20 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_text_input_
     >
         <input
             @if ($hasMask)
-                x-ignore
-                ax-load
+                x-ignore ax-load
                 ax-load-src="{{ \\Filament\\Support\\Facades\\FilamentAsset::getAlpineComponentSrc('text-input', 'filament/forms') }}"
                 x-data="textInputFormComponent({
                             getMaskOptionsUsing: (IMask) => {{ $getJsonMaskConfiguration() }},
                             state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')", lazilyEntangledModifiers: ['defer']) }},
                         })"
                 wire:ignore
-                @if ($isDebounced()) x-on:input.debounce.{{ $getDebounce() }}="$wire.$refresh" @endif
-                @if ($isLazy()) x-on:blur="$wire.$refresh" @endif
+                @if ($isDebounced())
+                    x-on:input.debounce.{{ $getDebounce() }}="$wire.$refresh"
+                @endif
+
+                @if ($isLazy())
+                    x-on:blur="$wire.$refresh"
+                @endif
             @else
                 x-data="{}"
             @endif

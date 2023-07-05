@@ -291,7 +291,9 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_section_bla
         @if ($isCollapsible)
             x-bind:class="{ 'invisible h-0 !m-0 overflow-y-hidden': isCollapsed }"
             x-bind:aria-expanded="(! isCollapsed).toString()"
-        @if ($isCollapsed) x-cloak @endif
+            @if ($isCollapsed)
+                x-cloak
+            @endif
         @endif
         @class([
             'filament-forms-section-content-wrapper',

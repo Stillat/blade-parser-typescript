@@ -166,7 +166,7 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_text_input_
                     })"
                     type="text"
                     wire:ignore
-                    {!! $isLazy() ? "x-on:blur=\\"\\$wire.\\$refresh\\"" : null !!}
+                    {!! $isLazy() ? 'x-on:blur="$wire.$refresh"' : null !!}
                     {!! $isDebounced() ? "x-on:input.debounce.{$getDebounce()}=\\"\\$wire.\\$refresh\\"" : null !!}
                 @endunless
                 dusk="filament.forms.{{ $getStatePath() }}"
