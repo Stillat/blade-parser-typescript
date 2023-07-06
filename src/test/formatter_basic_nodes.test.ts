@@ -501,7 +501,8 @@ class="divide-y whitespace-nowrap dark:divide-gray-700"
 `;
         const out = `<textarea
     @if ($shouldAutosize())
-        x-ignore ax-load
+        x-ignore
+        ax-load
         ax-load-src="{{ \\Filament\\Support\\Facades\\FilamentAsset::getAlpineComponentSrc('textarea', 'filament/forms') }}"
         x-data="textareaFormComponent()"
         x-on:input="render()"

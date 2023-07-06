@@ -117,7 +117,8 @@ suite('Pint Transformer Acceptance: forms_resources_views_components_text_input_
     >
         <input
             @if ($hasMask)
-                x-ignore ax-load
+                x-ignore
+                ax-load
                 ax-load-src="{{ \\Filament\\Support\\Facades\\FilamentAsset::getAlpineComponentSrc('text-input', 'filament/forms') }}"
                 x-data="textInputFormComponent({
                             getMaskOptionsUsing: (IMask) => {{ $getJsonMaskConfiguration() }},

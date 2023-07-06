@@ -201,6 +201,33 @@ export function formatAsHtml(text: string) {
                 parser: 'html'
             });
 
+            // Make value-less attributes nicer.
+            const formattedLines:string[] = StringUtilities.breakByNewLine(fResult),
+                newLines:string[] = [];
+
+            for (let i = 0; i < formattedLines.length; i++) {
+                const line = formattedLines[i];
+
+                if (line.includes('<')) {
+                    newLines.push(line);
+                } else if (line.trim().includes(' ')) {
+                    const parts = line.split(' '),
+                        leadingWs = line.length - line.trimLeft().length;
+
+                    parts.forEach((part) => {
+                        if (part.trim().length == 0) {
+                            return;
+                        }
+
+                        newLines.push(' '.repeat(leadingWs) + part);
+                    });
+                } else {
+                    newLines.push(line);
+                }
+            }
+
+            fResult = newLines.join("\n");
+
             repMap.forEach((string, rep) => {
                 fResult = fResult.replace(rep, string);
             });
