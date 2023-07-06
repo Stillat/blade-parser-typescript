@@ -11,6 +11,7 @@ import { TransformOptions } from '../../document/transformOptions';
 import { isAttributeFormatter } from '../../document/attributeRangeRemover';
 import { StringRemover } from '../../parser/stringRemover';
 import { StringUtilities } from '../../utilities/stringUtilities';
+import { Transformer } from '../../document/transformer';
 
 let phpOptions: ParserOptions,
     htmlOptions: ParserOptions,
@@ -207,6 +208,15 @@ export function formatAsHtml(text: string) {
 
             for (let i = 0; i < formattedLines.length; i++) {
                 const line = formattedLines[i];
+
+                if (Transformer.inlineComments.includes(line.trim())) {
+                    if (newLines.length > 0) {
+                        newLines[newLines.length - 1] = newLines[newLines.length - 1] + ' ' + line.trim();
+                        continue;
+                    } else {
+                        newLines.push(line);
+                    }
+                }
 
                 if (line.includes('<')) {
                     newLines.push(line);

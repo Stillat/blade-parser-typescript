@@ -166,6 +166,7 @@ export class Transformer {
 
     public static sharedPintTransformer: PintTransformer | null = null;
     public static rootTransformer: Transformer | null = null;
+    public static inlineComments:string[] = [];
 
     private transformOptions: TransformOptions = {
         spacesAfterDirective: 0,
@@ -1018,9 +1019,10 @@ export class Transformer {
     }
 
     private prepareComment(comment: BladeCommentNode): string {
-        if (comment.isPartOfHtmlTag()) {
+        if (!isAttributeFormatter && comment.isPartOfHtmlTag()) {
             return this.registerHtmlTagComment(comment);
         }
+
         if (comment.isMultiline()) {
             const slug = this.makeSlug(10),
                 virtualSlug = this.makeSlug(10);
@@ -1037,6 +1039,11 @@ export class Transformer {
         }
 
         const slug = this.makeSlug(comment.sourceContent.length);
+
+        if (isAttributeFormatter) {
+            // TODO: Check if its the only thing on its line.
+            Transformer.inlineComments.push(this.selfClosing(slug));
+        }
 
         this.registerComment(slug, comment);
 
