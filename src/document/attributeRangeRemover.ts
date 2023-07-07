@@ -3,9 +3,16 @@ import { StringUtilities } from '../utilities/stringUtilities';
 
 let canProcessAttributes: boolean = true;
 let isAttributeFormatter: boolean = false;
+let isAttributeFormattingEnabled: boolean = true;
 
-export function setIsFormattingAttributeContent(isAttribute:boolean) {
+export function setIsAttributeFormattingEnabled(isEnabled: boolean) {
+    isAttributeFormattingEnabled = isEnabled;
+}
+
+export function setIsFormattingAttributeContent(isAttribute: boolean) {
     isAttributeFormatter = isAttribute;
+
+    setIsAttributeFormattingEnabled(! isAttribute);
 }
 
 export function disableAttributeProcessing() {
@@ -16,7 +23,7 @@ export function enableAttributeProcessing() {
     canProcessAttributes = true;
 }
 
-export { canProcessAttributes, isAttributeFormatter };
+export { canProcessAttributes, isAttributeFormatter, isAttributeFormattingEnabled };
 
 export class AttributeRangeRemover {
 
@@ -37,7 +44,7 @@ export class AttributeRangeRemover {
 
     remove(content: string, ranges: IExtractedAttribute[]) {
         ranges = ranges.sort((a, b) => a.startedOn - b.startedOn);
-        
+
         let newContent = '',
             lastEnd = 0;
 
@@ -73,7 +80,7 @@ export class AttributeRangeRemover {
                 newContent += '"' + rangeSlug + '"';
             }
         }
-        
+
         return newContent;
     }
 

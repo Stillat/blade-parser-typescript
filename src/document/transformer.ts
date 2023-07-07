@@ -9,7 +9,7 @@ import { AbstractNode, BladeCommentNode, BladeComponentNode, BladeEchoNode, Cond
 import { IExtractedAttribute } from '../parser/extractedAttribute';
 import { SimpleArrayParser } from '../parser/simpleArrayParser';
 import { StringUtilities } from '../utilities/stringUtilities';
-import { canProcessAttributes, disableAttributeProcessing, enableAttributeProcessing, isAttributeFormatter, setIsFormattingAttributeContent } from './attributeRangeRemover';
+import { canProcessAttributes, disableAttributeProcessing, enableAttributeProcessing, isAttributeFormatter, isAttributeFormattingEnabled, setIsFormattingAttributeContent } from './attributeRangeRemover';
 import { BladeDocument } from './bladeDocument';
 import { BlockPhpFormatter, JsonFormatter, PhpFormatter, PhpTagFormatter } from './formatters';
 import { PintTransformer } from './pintTransformer';
@@ -166,7 +166,7 @@ export class Transformer {
 
     public static sharedPintTransformer: PintTransformer | null = null;
     public static rootTransformer: Transformer | null = null;
-    public static inlineComments:string[] = [];
+    public static inlineComments: string[] = [];
 
     private transformOptions: TransformOptions = {
         spacesAfterDirective: 0,
@@ -1717,18 +1717,20 @@ export class Transformer {
 ${directive.isClosedBy?.sourceContent}
 `;
 
-            setIsFormattingAttributeContent(true);
-            try {
-                disableAttributeProcessing();
-                if (this.transformOptions.useLaravelPint) {
-                    formatContent = formatBladeStringWithPint(formatContent, this.formattingOptions, this.transformOptions).trim();
-                } else {
-                    formatContent = formatBladeString(formatContent, this.formattingOptions).trim();
+            if (this.transformOptions.formatJsAttributes && isAttributeFormattingEnabled) {
+                setIsFormattingAttributeContent(true);
+                try {
+                    disableAttributeProcessing();
+                    if (this.transformOptions.useLaravelPint) {
+                        formatContent = formatBladeStringWithPint(formatContent, this.formattingOptions, this.transformOptions).trim();
+                    } else {
+                        formatContent = formatBladeString(formatContent, this.formattingOptions).trim();
+                    }
+                } catch (err) {
+                    enableAttributeProcessing();
+                    setIsFormattingAttributeContent(false);
+                    throw err;
                 }
-            } catch (err) {
-                enableAttributeProcessing();
-                setIsFormattingAttributeContent(false);
-                throw err;
             }
 
             enableAttributeProcessing();
@@ -2271,21 +2273,23 @@ ${directive.isClosedBy?.sourceContent}
             if (condition.startPosition?.line != condition.endPosition?.line) {
                 let formatContent = condition.nodeContent;
 
-                disableAttributeProcessing();
-                setIsFormattingAttributeContent(true);
-                try {
-                    if (this.transformOptions.useLaravelPint) {
-                        formatContent = formatBladeStringWithPint(formatContent, this.formattingOptions, this.transformOptions).trim();
-                    } else {
-                        formatContent = formatBladeString(formatContent, this.formattingOptions).trim();
+                if (this.transformOptions.formatJsAttributes && isAttributeFormattingEnabled) {
+                    disableAttributeProcessing();
+                    setIsFormattingAttributeContent(true);
+                    try {
+                        if (this.transformOptions.useLaravelPint) {
+                            formatContent = formatBladeStringWithPint(formatContent, this.formattingOptions, this.transformOptions).trim();
+                        } else {
+                            formatContent = formatBladeString(formatContent, this.formattingOptions).trim();
+                        }
+                    } catch (err) {
+                        enableAttributeProcessing();
+                        setIsFormattingAttributeContent(false);
+                        throw err;
                     }
-                } catch (err) {
                     enableAttributeProcessing();
                     setIsFormattingAttributeContent(false);
-                    throw err;    
                 }
-                enableAttributeProcessing();
-                setIsFormattingAttributeContent(false);
 
                 const indentLevel = IndentLevel.relativeIndentLevel(slug, value);
 
