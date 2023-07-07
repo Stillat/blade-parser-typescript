@@ -9,7 +9,7 @@
         "Blade",
         "Prettier",
         "Laravel"
-    ],  
+    ],
     "peerDependencies": {
         "prettier": ">=2.2.0"
     },
