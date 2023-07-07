@@ -101,8 +101,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
                     'lg:ps-[--collapsed-sidebar-width]': ! $store.sidebar.isOpen,
                     'filament-main-sidebar-open lg:ps-[--sidebar-width]': $store.sidebar.isOpen,
                 }"
-                x-bind:style="'display: flex'"
-                {{-- Mimics \`x-cloak\`, as using \`x-cloak\` causes visual issues with chart widgets --}}
+                x-bind:style="'display: flex'" {{-- Mimics \`x-cloak\`, as using \`x-cloak\` causes visual issues with chart widgets --}}
             @elseif (filament()->isSidebarFullyCollapsibleOnDesktop())
                 x-data="{}"
                 x-bind:class="{

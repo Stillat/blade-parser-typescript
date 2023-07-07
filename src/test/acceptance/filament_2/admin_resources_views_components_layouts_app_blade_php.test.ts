@@ -92,8 +92,7 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_layouts_app
                     'filament-main-sidebar-open lg:pl-[var(--sidebar-width)] rtl:lg:pr-[var(--sidebar-width)]':
                         $store.sidebar.isOpen,
                 }"
-                x-bind:style="'display: flex'"
-                {{-- Mimics \`x-cloak\`, as using \`x-cloak\` causes visual issues with chart widgets --}}
+                x-bind:style="'display: flex'" {{-- Mimics \`x-cloak\`, as using \`x-cloak\` causes visual issues with chart widgets --}}
             @endif
             @class([
                 'filament-main w-screen flex-1 flex-col gap-y-6 rtl:lg:pl-0',

@@ -1040,8 +1040,7 @@ export class Transformer {
 
         const slug = this.makeSlug(comment.sourceContent.length);
 
-        if (isAttributeFormatter) {
-            // TODO: Check if its the only thing on its line.
+        if (isAttributeFormatter && comment.hasNeighborsOnLine()) {
             Transformer.inlineComments.push(this.selfClosing(slug));
         }
 
@@ -1731,11 +1730,12 @@ ${directive.isClosedBy?.sourceContent}
                 setIsFormattingAttributeContent(false);
                 throw err;
             }
+
             enableAttributeProcessing();
             setIsFormattingAttributeContent(false);
             const indentLevel = IndentLevel.relativeIndentLevel(slug, value);
 
-            formatContent = this.fixDanglingColon(formatContent);
+            formatContent = this.adjustAttributeFormattingResults(formatContent);
 
             formatContent = IndentLevel.shiftIndent(
                 formatContent,
@@ -2218,7 +2218,7 @@ ${directive.isClosedBy?.sourceContent}
         return value;
     }
 
-    private fixDanglingColon(content: string): string {
+    private adjustAttributeFormattingResults(content: string): string {
         const lines = StringUtilities.breakByNewLine(content),
             newLines: string[] = [];
 
@@ -2289,7 +2289,7 @@ ${directive.isClosedBy?.sourceContent}
 
                 const indentLevel = IndentLevel.relativeIndentLevel(slug, value);
 
-                formatContent = this.fixDanglingColon(formatContent);
+                formatContent = this.adjustAttributeFormattingResults(formatContent);
 
                 formatContent = IndentLevel.shiftIndent(
                     formatContent,
@@ -2698,6 +2698,7 @@ ${directive.isClosedBy?.sourceContent}
         if (this.parentTransformer === null && canProcessAttributes) {
             Transformer.sharedPintTransformer = null;
             Transformer.rootTransformer = null;
+            Transformer.inlineComments = [];
         }
 
         return results;

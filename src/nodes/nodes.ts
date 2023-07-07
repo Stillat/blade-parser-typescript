@@ -82,6 +82,39 @@ export class AbstractNode {
         this.refId = newRefId();
     }
 
+    hasNeighborsOnLine() {
+        if (this.prevNode == null && this.nextNode == null) {
+            return false;
+        }
+
+        if (this.prevNode == null || this.nextNode == null) {
+            return true;
+        }
+
+        if (!(this.prevNode instanceof LiteralNode)) {
+            return true;
+        }
+
+        if (!(this.nextNode instanceof LiteralNode)) {
+            return true;
+        }
+
+        const prevContent = this.prevNode.content,
+            nextContent = this.nextNode.content,
+            prevLines = StringUtilities.breakByNewLine(prevContent),
+            nextLines = StringUtilities.breakByNewLine(nextContent);
+
+        if (prevLines.length > 0 && prevLines[prevLines.length - 1].trim().length > 0) {
+            return true;
+        }
+
+        if (nextLines.length > 0 && nextLines[0].trim().length > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
     getErrors(): BladeError[] {
         return this.errors;
     }
