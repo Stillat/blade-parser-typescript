@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.8
+
+- Adds support for formatting nested structures inside HTML content (#67)
+
 ## 1.6.7
 
 - Corrects an issue prevent comments from being formatted inside HTML elements (#68)
