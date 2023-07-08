@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { formatBladeString } from '../formatting/prettier/utils';
+import { formatBladeString, formatBladeStringWithPint } from '../formatting/prettier/utils';
 
 suite('Component Tags', () => {
     test('it formats simple component tags', () => {
@@ -921,5 +921,24 @@ Hello, there!
 </Command>
 `;
         assert.strictEqual(formatBladeString(input), expected);
+    });
+
+    test('formatting comments inside attributs', () => {
+        const input = `
+
+@if ($true)
+<x-filament::button
+    {{-- Test --}}
+>
+    Text
+</x-filament::button>
+@endif
+
+`;
+        const out = `@if ($true)
+    <x-filament::button {{-- Test --}}>Text</x-filament::button>
+@endif
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), out);
     });
 });

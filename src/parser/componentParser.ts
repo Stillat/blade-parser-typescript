@@ -1,4 +1,4 @@
-import { BladeComponentNode, BladeEchoNode, ComponentNameNode, DirectiveNode, ParameterNode, ParameterType } from '../nodes/nodes';
+import { BladeCommentNode, BladeComponentNode, BladeEchoNode, ComponentNameNode, DirectiveNode, ParameterNode, ParameterType } from '../nodes/nodes';
 import { StringUtilities } from '../utilities/stringUtilities';
 import { DocumentParser } from './documentParser';
 import { isStartOfString } from './scanners/isStartOfString';
@@ -213,6 +213,71 @@ export class ComponentParser implements StringIterator {
         return this;
     }
 
+    private peek(count: number) {
+        return this.chars[count];
+    }
+
+    private peekRelative(count: number) {
+        return this.peek(this.currentIndex + count);
+    }
+
+
+    private scanToEndOfComment(startedOn: number): BladeCommentNode | null {
+        const componentOffset = this.getComponentOffset();
+
+        let hasObservedNewLine = false,
+            hasObservedSpace = false,
+            newlineRecoveryIndex = -1,
+            spaceRecoveryIndex = -1;
+
+        for (this.currentIndex; this.currentIndex < this.inputLen; this.currentIndex += 1) {
+            this.checkCurrentOffsets();
+
+            if (this.cur == DocumentParser.NewLine && !hasObservedNewLine) {
+                hasObservedNewLine = true;
+                newlineRecoveryIndex = this.currentIndex;
+            }
+
+            if (StringUtilities.ctypeSpace(this.cur) && !hasObservedSpace) {
+                hasObservedSpace = true;
+                spaceRecoveryIndex = this.currentIndex;
+            }
+
+            if ((this.cur == DocumentParser.Punctuation_Minus && this.next == DocumentParser.Punctuation_Minus) || this.next == null) {
+                const peekOne = this.peekRelative(2),
+                    peekTwo = this.peekRelative(3);
+
+                if ((peekOne == DocumentParser.RightBrace && peekTwo == DocumentParser.RightBrace) || this.next == null) {
+                    const comment = new BladeCommentNode();
+                    comment.startPosition = this.document.positionFromOffset((startedOn - 2) + componentOffset, (startedOn - 2) + componentOffset);
+                    comment.endPosition = this.document.positionFromOffset(this.currentIndex + 4 + componentOffset, this.currentIndex + 4 + componentOffset);
+                   
+                    comment.innerContent = this.chars.slice(
+                        startedOn + 2,
+                        this.currentIndex
+                    ).join('');
+
+                    comment.sourceContent = this.chars.slice(
+                        startedOn - 2,
+                        this.currentIndex + 4
+                    ).join('');
+
+                    return comment;
+                } else {
+                    if (this.cur != null) {
+                        this.currentContent.push(this.cur);
+                    }
+                    continue;
+                }
+            }
+
+            if (this.cur == null) { break; }
+            this.currentContent.push(this.cur);
+        }
+
+        return null;
+    }
+
     private scanToEndOfDirective() {
         const directiveNameStartsOn = this.currentIndex,
             directiveBrokeForNewline = false;
@@ -367,21 +432,44 @@ export class ComponentParser implements StringIterator {
 
             if (this.hasFoundName && this.cur == DocumentParser.LeftBrace && this.next == DocumentParser.LeftBrace) {
                 this.currentIndex += 2;
-                const echoNode = this.scanToEndOfBladeEcho(this.currentIndex);
+                const peek = this.peekRelative(0),
+                    peekTwo = this.peekRelative(1);
+                if (peek == DocumentParser.Punctuation_Minus && peekTwo == DocumentParser.Punctuation_Minus) {
+                    const comment = this.scanToEndOfComment(this.currentIndex);
 
-                if (echoNode != null) {
-                    const param = new ParameterNode();
+                    if (comment != null) {
+                        const param = new ParameterNode();
 
-                    param.type = ParameterType.Directive;
-                    param.startPosition = echoNode.startPosition;
-                    param.endPosition = echoNode.endPosition;
-                    param.inlineEcho = echoNode;
-                    param.type = ParameterType.InlineEcho;
-                    node.hasParameters = true;
-                    node.parameters.push(param);
-                    this.currentContent = [];
-                    this.currentIndex += 1;
-                    continue;
+                        param.type = ParameterType.Directive;
+                        param.startPosition = comment.startPosition;
+                        param.endPosition = comment.endPosition;
+                        param.inlineComment = comment;
+                        param.type = ParameterType.Comment;
+                        node.hasParameters = true;
+                        node.parameters.push(param);
+                        this.currentContent = [];
+                        this.currentIndex += 3;
+                        continue;
+                    }
+
+                    debugger;
+                } else {
+                    const echoNode = this.scanToEndOfBladeEcho(this.currentIndex);
+
+                    if (echoNode != null) {
+                        const param = new ParameterNode();
+
+                        param.type = ParameterType.Directive;
+                        param.startPosition = echoNode.startPosition;
+                        param.endPosition = echoNode.endPosition;
+                        param.inlineEcho = echoNode;
+                        param.type = ParameterType.InlineEcho;
+                        node.hasParameters = true;
+                        node.parameters.push(param);
+                        this.currentContent = [];
+                        this.currentIndex += 1;
+                        continue;
+                    }
                 }
             }
 
@@ -424,7 +512,7 @@ export class ComponentParser implements StringIterator {
                             componentOffset = this.getComponentOffset();
                         param.type = ParameterType.Attribute;
 
-                        if (this.next == null && ! StringUtilities.ctypeSpace(this.cur)) {
+                        if (this.next == null && !StringUtilities.ctypeSpace(this.cur)) {
                             this.currentContent.push(this.cur as string);
                         }
 

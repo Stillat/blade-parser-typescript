@@ -2,6 +2,7 @@ import { BladeDocument } from '../document/bladeDocument';
 import { IndentLevel } from '../document/printers/indentLevel';
 import { TransformOptions } from '../document/transformOptions';
 import { Transformer } from '../document/transformer';
+import { LiteralNode } from '../nodes/nodes';
 import { IExtractedAttribute } from '../parser/extractedAttribute';
 import { GeneralSyntaxReflow } from './generalSyntaxReflow';
 import { formatAsJavaScript } from './prettier/utils';
@@ -26,6 +27,22 @@ export function formatExtractedScript(attribute: IExtractedAttribute,
         if (formatContent.includes(safetyChars[i] as string)) {
             shouldContinue = true;
             break;
+        }
+    }
+
+    if (shouldContinue && attribute.content.includes('-')) {
+        const checkDoc = BladeDocument.fromText(formatContent),
+            checkNodes = checkDoc.getAllNodes();
+
+        for (let i = 0; i < checkNodes.length; i++) {
+            const node = checkNodes[i];
+
+            if (node instanceof LiteralNode) {
+                if (node.content.startsWith('-') || node.content.endsWith('-')) {
+                    shouldContinue = false;
+                    break;
+                }
+            }
         }
     }
 

@@ -456,4 +456,24 @@ suite('Alpine.js attribute formatting', () => {
 `;
         assert.strictEqual(formatBladeStringWithPint(input), out);
     });
+
+    test('it automatically ignores things that might be formatted as subtraction', () => {
+        const input = `<div
+class="relative group"
+@if($isMultiple && $isReorderable)
+    x-sortable-handle
+ x-sortable-item="image-{{ $image->id }}"
+ @endif
+>
+</div>`;
+        const out = `<div
+    class="group relative"
+    @if ($isMultiple && $isReorderable)
+        x-sortable-handle
+        x-sortable-item="image-{{ $image->id }}"
+    @endif
+></div>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), out);
+    });
 });

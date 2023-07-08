@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.9
+
+- Improves formatting of comments inside Blade component attribute content (#71)
+- Prevents formatting JavaScript inside attribute content if literals begin or end with `-` (#70)
+
 ## 1.6.8
 
 - Adds support for formatting nested structures inside HTML content (#67)

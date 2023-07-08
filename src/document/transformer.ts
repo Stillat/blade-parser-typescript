@@ -147,6 +147,7 @@ export class Transformer {
     private directiveParameters: Map<string, ParameterNode> = new Map();
     private expressionParameters: Map<string, ParameterNode> = new Map();
     private echoParameters: Map<string, ParameterNode> = new Map();
+    private commentParameters: Map<string, ParameterNode> = new Map();
     private slugs: string[] = [];
     private extractedEmbeddedDocuments: Map<string, EmbeddedDocument> = new Map();
     private propDirectives: Map<string, DirectiveNode> = new Map();
@@ -388,6 +389,14 @@ export class Transformer {
         }
 
         return '';
+    }
+
+    private registerCommentParameter(slug: string, param: ParameterNode) {
+        if (this.parentTransformer != null) {
+            this.parentTransformer.registerCommentParameter(slug, param);
+        } else {
+            this.commentParameters.set(slug, param);
+        }
     }
 
     private registerEchoParameter(slug: string, param: ParameterNode) {
@@ -1155,6 +1164,10 @@ export class Transformer {
                     const echoSlug = this.makeSlug(param.inlineEcho.content.length);
                     this.registerEchoParameter(echoSlug, param);
                     value += echoSlug + ' ';
+                } else if (param.type == ParameterType.Comment && param.inlineComment != null) {
+                    const commentSlug = this.makeSlug(param.inlineComment.innerContent.length);
+                    this.registerCommentParameter(commentSlug, param);
+                    value += commentSlug + ' ';
                 }
             });
         }
@@ -2371,13 +2384,32 @@ ${directive.isClosedBy?.sourceContent}
     private transformEchoParameters(content: string): string {
         let value = content;
 
-        this.echoParameters.forEach((param, slug) => {
-            // Handle case of comments.
-            if (param.inlineEcho?.sourceContent.startsWith('{{--') && param.inlineEcho.sourceContent.endsWith('--}}')) {
-                let commentContent = param.inlineEcho.content.substring(2, param.inlineEcho.content.length - 2);
-                value = StringUtilities.safeReplace(value, slug, '{{-- ' + commentContent.trim() + ' --}}');
+        this.commentParameters.forEach((param, slug) => {
+            if (param.inlineComment != null) {
+                value = StringUtilities.safeReplace(value, slug, CommentPrinter.printComment(param.inlineComment, this.transformOptions.tabSize, 0));
+            } else {
+                value = StringUtilities.safeReplace(value, slug, '');
             }
+        });
+
+        this.echoParameters.forEach((param, slug) => {
             if (param.inlineEcho != null) {
+                const checkContent = param.inlineEcho.content.trim();
+                // Handle case of comments (this shouldn't happen anymore, but will leave it for now.)
+                if (checkContent.startsWith('{{--') && checkContent.endsWith('--}}')) {
+                    let commentContent = checkContent.substring(2, checkContent.length - 2);
+                    value = StringUtilities.safeReplace(value, slug, '{{' + commentContent.trim() + '}}');
+                    return;
+                } else if (checkContent.startsWith('{--') && checkContent.endsWith('--}')) {
+                    let commentContent = checkContent.substring(3, checkContent.length - 3);
+                    value = StringUtilities.safeReplace(value, slug, '{{-- ' + commentContent.trim() + ' --}}');
+                    return;
+                } else if (checkContent.startsWith('--') && checkContent.endsWith('--')) {
+                    let commentContent = checkContent.substring(2, checkContent.length - 2);
+                    value = StringUtilities.safeReplace(value, slug, '{{-- ' + commentContent.trim() + ' --}}');
+                    return;
+                }
+
                 value = StringUtilities.safeReplace(value, slug, EchoPrinter.printEcho(param.inlineEcho, this.transformOptions, this.phpFormatter, 0, this.pintTransformer ?? Transformer.sharedPintTransformer));
             } else {
                 value = StringUtilities.safeReplace(value, slug, '');

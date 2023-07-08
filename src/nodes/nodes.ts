@@ -150,7 +150,8 @@ export enum ParameterType {
     Parameter,
     Directive,
     Attribute,
-    InlineEcho
+    InlineEcho,
+    Comment
 }
 
 export class ParameterNode extends AbstractNode {
@@ -167,6 +168,7 @@ export class ParameterNode extends AbstractNode {
     public type: ParameterType = ParameterType.Parameter;
     public directive: DirectiveNode | null = null;
     public inlineEcho: BladeEchoNode | null = null;
+    public inlineComment: BladeCommentNode | null = null;
 
     public namePosition: Range | null = null;
     public valuePosition: Range | null = null;
