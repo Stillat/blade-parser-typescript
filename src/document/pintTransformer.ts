@@ -448,7 +448,7 @@ export class PintTransformer {
                             results += '$tVar = ';
 
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
-                                results += cLine.trimLeft() + "\n";
+                                results += cLine + "\n";
                             });
 
                             results += ';';
@@ -470,7 +470,7 @@ export class PintTransformer {
                             results += 'echo ';
 
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
-                                results += cLine.trimLeft() + "\n";
+                                results += cLine + "\n";
                             });
 
                             results = results.trimRight();
@@ -493,7 +493,7 @@ export class PintTransformer {
                             results += 'echo ';
 
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
-                                results += cLine.trimLeft() + "\n";
+                                results += cLine + "\n";
                             });
 
                             results = results.trimRight();

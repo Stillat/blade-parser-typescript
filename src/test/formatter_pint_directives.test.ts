@@ -609,4 +609,57 @@ asdf
 `;
         assert.strictEqual(formatBladeStringWithPint(input), expected);
     });
+
+    test('it preserves relative indentation when formatting with pint', () => {
+        const template = `
+
+
+<div>
+<x-filament-notifications::notification
+:x-transition:enter-start="
+    \\Illuminate\\Support\\Arr::toCssClasses([
+        'opacity-0',
+        ($this instanceof \\Filament\\Notifications\\Http\\Livewire\\Notifications)
+            ? match (static::$horizontalAlignment) {
+                'left'          => '-translate-x-12',
+                'right' => 'translate-x-12',
+                'center' => match (static::$verticalAlignment) {
+                    'top' => '-translate-y-12',
+                    'bottom' => 'translate-y-12',
+                    'center' => null,
+                },
+            }
+            : null,
+    ])
+">
+
+</x-filament-notifications::notification>
+</div>
+`;
+        const out = `<div>
+    <x-filament-notifications::notification
+        :x-transition:enter-start="
+            \\Illuminate\\Support\\Arr::toCssClasses([
+                'opacity-0',
+                ($this instanceof \\Filament\\Notifications\\Http\\Livewire\\Notifications)
+                    ? match (static::$horizontalAlignment) {
+                        'left' => '-translate-x-12',
+                        'right' => 'translate-x-12',
+                        'center' => match (static::$verticalAlignment) {
+                            'top' => '-translate-y-12',
+                            'bottom' => 'translate-y-12',
+                            'center' => null,
+                        },
+                    }
+                    : null,
+            ])
+        "
+    ></x-filament-notifications::notification>
+</div>
+`;
+        const result = formatBladeStringWithPint(template);
+        assert.strictEqual(result, out);
+        assert.strictEqual(formatBladeStringWithPint(result), out);
+        assert.strictEqual(formatBladeStringWithPint(formatBladeStringWithPint(result)), out);
+    });
 });

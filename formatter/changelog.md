@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.10
+
+- Improvements to relative indentation when formatting PHP inside Blade component dynamic expressions (#73)
+
 ## 1.6.9
 
 - Improves formatting of comments inside Blade component attribute content (#71)

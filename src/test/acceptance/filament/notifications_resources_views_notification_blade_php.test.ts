@@ -114,16 +114,16 @@ suite('Pint Transformer Acceptance: notifications_resources_views_notification_b
         \\Illuminate\\Support\\Arr::toCssClasses([
             'opacity-0',
             ($this instanceof \\Filament\\Notifications\\Http\\Livewire\\Notifications)
-            ? match (static::$horizontalAlignment) {
-                'left' => '-translate-x-12',
-                'right' => 'translate-x-12',
-                'center' => match (static::$verticalAlignment) {
-                    'top' => '-translate-y-12',
-                    'bottom' => 'translate-y-12',
-                    'center' => null,
-                },
-            }
-            : null,
+                ? match (static::$horizontalAlignment) {
+                    'left' => '-translate-x-12',
+                    'right' => 'translate-x-12',
+                    'center' => match (static::$verticalAlignment) {
+                        'top' => '-translate-y-12',
+                        'bottom' => 'translate-y-12',
+                        'center' => null,
+                    },
+                }
+                : null,
         ])
     "
     x-transition:leave-end="scale-95 opacity-0"
