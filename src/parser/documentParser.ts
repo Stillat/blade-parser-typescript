@@ -425,18 +425,24 @@ export class DocumentParser implements StringIterator {
         let lastBladeOffset = 0,
             lastWasEscaped = false,
             lastWasEscapedDirective = false,
-            lastMatch:RegExpMatchArray | null;
+            lastMatch:RegExpMatchArray | null,
+            lastAbandonedFromEmail = false;
 
         bladeStartCandidates.forEach((bladeRegion) => {
             if (lastWasEscapedDirective) {
                 if (lastMatch != null) {
                     const diff = (bladeRegion.index ?? 0) - (lastMatch.index ?? 0);
 
-                    if(diff > 1) {
+                    if (diff > 1) {
                         lastWasEscaped = false;
                         lastWasEscapedDirective = false;
                         lastBladeOffset = bladeRegion.index ?? 0;
                     }
+                }
+            } else {
+                if (lastAbandonedFromEmail && bladeRegion.index) {
+                    lastBladeOffset = bladeRegion.index ?? 0;
+                    lastAbandonedFromEmail = false;
                 }
             }
 
@@ -527,6 +533,7 @@ export class DocumentParser implements StringIterator {
 
                 if (rmResults.includes('.') && this.endsWithTld(rmResults)) {
                     lastMatch = bladeRegion;
+                    lastAbandonedFromEmail = true;
                     return;
                 }
             }

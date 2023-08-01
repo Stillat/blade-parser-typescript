@@ -377,7 +377,7 @@ suite('Pint Transformer: General Templates', () => {
         
         const out = `<a href="mailto:someone@example.com">
     @someone('.com')
-    <p>Test</p>
+        <p>Test</p>
     @endsomeone
 </a>
 `;

@@ -376,8 +376,8 @@ suite('General Template Formatting', () => {
         @endsomeone</a>`;
         
         const out = `<a href="mailto:someone@example.com">
-    @someone('.com')
-    <p>Test</p>
+    @someone(".com")
+        <p>Test</p>
     @endsomeone
 </a>
 `;
@@ -423,5 +423,19 @@ suite('General Template Formatting', () => {
 </div>
 `;
         assert.strictEqual(formatBladeString(template), output);
+    });
+
+    test('it formats email addresses inside simple if statements', () => {
+        const template = `
+@if (true)
+test@example.com
+@endif
+
+`;
+        const expected = `@if (true)
+    test@example.com
+@endif
+`;
+        assert.strictEqual(formatBladeString(template), expected);
     });
 });
