@@ -21,6 +21,10 @@ export function formatExtractedScript(attribute: IExtractedAttribute,
 
     const formatContent = attribute.content.substring(1, attribute.content.length - 1).trim();
 
+    if (formatContent.includes("\n") == false && formatContent.startsWith('if ') && ! formatContent.includes('{')) {
+        return attribute.content;
+    }
+
     let shouldContinue = false;
 
     for (let i = 0; i < safetyChars.length; i++) {

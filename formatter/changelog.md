@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.12
+
+- Improves class string emulation to prevent removing of leading/trailing whitespace (#77)
+- Improves formatting of JavaScript attributes (#76)
+
 ## 1.6.10
 
 - Improvements to relative indentation when formatting PHP inside Blade component dynamic expressions (#73)

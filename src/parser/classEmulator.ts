@@ -43,6 +43,10 @@ export class ClassEmulator {
             return false;
         }
 
+        if (value.trim().length != value.length) {
+            return false;
+        }
+
         // Probably shouldn't continue with this, either.
         if (value.includes(', ')) {
             return false;
@@ -63,13 +67,17 @@ export class ClassEmulator {
 
     emulateString(content: string): string {
         const uniqueSlug = StringUtilities.makeSlug(32),
-            prefix = `Emulate:${uniqueSlug}=`;
+            prefix = `Emulate:${uniqueSlug}=`,
+            structures = this.phpStructuresAnalyzer.getStructures()
+            .concat(this.mergeRanges)
+            .concat(this.jsStructuresAnalyzer.getStructures());
 
-        this.stringParser.setIgnoreRanges(
-            this.phpStructuresAnalyzer.getStructures()
-                .concat(this.mergeRanges)
-                .concat(this.jsStructuresAnalyzer.getStructures())
-        );
+        this.stringParser.setIgnoreRanges(structures);
+
+        if (! content.includes("\n") && structures.length > 0) {
+
+        }
+
         this.stringParser.parse(content);
 
         if (!this.stringParser.hasStringNodes()) {

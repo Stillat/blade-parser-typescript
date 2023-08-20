@@ -476,4 +476,15 @@ class="relative group"
 `;
         assert.strictEqual(formatBladeStringWithPint(input), out);
     });
+
+    test('it doesnt break up single line if statements', () => {
+        const input = `<div 
+x-on:collapse-resources.window="if ($event.detail.foo === 'test' && $event.detail.foo2 === 'test' && $event.detail.foo3 === 'test') isCollapsed = true"
+>`;
+        const expected = `<div
+    x-on:collapse-resources.window="if ($event.detail.foo === 'test' && $event.detail.foo2 === 'test' && $event.detail.foo3 === 'test') isCollapsed = true"
+></div>
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), expected);
+    });
 });

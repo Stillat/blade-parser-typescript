@@ -448,4 +448,17 @@ x-thing="text-white px-4 sm:px-8 py-2 sm:py-3 bg-sky-700 hover:bg-sky-800">
 `;
         assert.strictEqual(formatBladeStringWithPint(input), out);
     });
+
+    test('it ignores strings with leading or trailing whitespace', () => {
+        const input = `@props([
+    'product',
+    'title' => $product->name . ' - ' . $product->category,
+ ])`;
+        const expected = `@props([
+    'product',
+    'title' => $product->name.' - '.$product->category,
+])
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), expected);
+    });
 });
