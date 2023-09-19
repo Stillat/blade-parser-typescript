@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.13
+
+- Adds a note about supported Prettier version to readme.
+
 ## 1.6.12
 
 - Improves class string emulation to prevent removing of leading/trailing whitespace (#77)

@@ -6,6 +6,8 @@ If you'd like to view the source, report issues, etc. you can do so on the forma
 
 [https://github.com/stillat/blade-parser-typescript](https://github.com/stillat/blade-parser-typescript)
 
+> **Important**: This plugin currently only supports Prettier v2.
+
 ## Installation
 
 The Blade Prettier Plugin can be installed with `npm` using the following command:
