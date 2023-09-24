@@ -5,6 +5,7 @@ A list of what's changed, and more.
 ## 1.2.1
 
 - Improves parsing of Blade echo blocks that contain PHP comments (#79)
+- Removes `out` and `src/test` directory from npm bundle
 
 ## 1.1.12
 
