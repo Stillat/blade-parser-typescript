@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.14
+
+- Improves parsing of Blade echo blocks that contain PHP comments (#79)
+
 ## 1.6.13
 
 - Adds a note about supported Prettier version to readme.

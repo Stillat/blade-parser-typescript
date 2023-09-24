@@ -339,4 +339,72 @@ x-on:input.debounce.{{ $debounce ?? '500ms' }}="updateState"
 `;
         assert.strictEqual(formatBladeStringWithPint(input), out);
     });
+
+    test('it can format echos that contain php line comments', () => {
+        const input = `{{
+    $attributes
+// @something here
+->class(['something']);
+}}`;
+        const out = `{{
+    $attributes
+        // @something here
+        ->class(["something"]);
+}}
+`;
+
+        assert.strictEqual(formatBladeString(input), out);
+    });
+
+    test('it can format echos that contain php block comments', () => {
+        const input = `{{
+    $attributes
+/* @something here */
+->class(['something']);
+}}`;
+        const out = `{{
+    $attributes
+        /* @something here */
+        ->class(["something"]);
+}}
+`;
+
+        assert.strictEqual(formatBladeString(input), out);
+    });
+
+    test('it can format triple echos that contain php comments', () => {
+        const input = `{{{
+    $attributes
+// @something
+/* @something here */
+->class(['something']);
+}}}`;
+        const out = `{{{
+    $attributes
+        // @something
+        /* @something here */
+        ->class(["something"]);
+}}}
+`;
+
+        assert.strictEqual(formatBladeString(input), out);
+    });
+
+    test('it can format escape echos that contain php comments', () => {
+        const input = `{!!
+    $attributes
+// @something
+/* @something here */
+->class(['something']);
+!!}`;
+        const out = `{!!
+    $attributes
+        // @something
+        /* @something here */
+        ->class(["something"]);
+!!}
+`;
+
+        assert.strictEqual(formatBladeString(input), out);
+    });
 });

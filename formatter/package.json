@@ -1,6 +1,6 @@
 {
     "name": "prettier-plugin-blade",
-    "version": "1.6.13",
+    "version": "1.6.14",
     "description": "A Prettier plugin to format Laravel Blade templates",
 	"repository": "stillat/blade-parser-typescript",
     "main": "plugin.js",

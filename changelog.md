@@ -2,6 +2,10 @@
 
 A list of what's changed, and more.
 
+## 1.2.1
+
+- Improves parsing of Blade echo blocks that contain PHP comments (#79)
+
 ## 1.1.12
 
 - Improves formatting and indentation of certain condition-like directives (such as `@guest`) (#36)

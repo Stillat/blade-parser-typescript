@@ -1697,6 +1697,21 @@ export class DocumentParser implements StringIterator {
                 spaceRecoveryIndex = this.currentIndex;
             }
 
+            // Ignore PHP comments.
+            if (this.cur == DocumentParser.Punctuation_ForwardSlash && this.next == DocumentParser.Punctuation_ForwardSlash) {
+                this.shouldIgnoreStructures = true;
+                skipToEndOfLine(this, true);
+                this.shouldIgnoreStructures = false;
+                continue;
+            }
+
+            if (this.cur == DocumentParser.Punctuation_ForwardSlash && this.next == DocumentParser.Punctuation_Asterisk) {
+                this.shouldIgnoreStructures = true;
+                skipToEndOfMultilineComment(this, true);
+                this.shouldIgnoreStructures = false;
+                continue;
+            }
+
             if (this.hasEncounteredAnotherStructure() || this.next == null) {
                 createErrorNode = true;
                 if (newlineRecoveryIndex != -1) {
@@ -1875,6 +1890,21 @@ export class DocumentParser implements StringIterator {
                 continue;
             }
 
+            // Ignore PHP comments.
+            if (this.cur == DocumentParser.Punctuation_ForwardSlash && this.next == DocumentParser.Punctuation_ForwardSlash) {
+                this.shouldIgnoreStructures = true;
+                skipToEndOfLine(this, true);
+                this.shouldIgnoreStructures = false;
+                continue;
+            }
+
+            if (this.cur == DocumentParser.Punctuation_ForwardSlash && this.next == DocumentParser.Punctuation_Asterisk) {
+                this.shouldIgnoreStructures = true;
+                skipToEndOfMultilineComment(this, true);
+                this.shouldIgnoreStructures = false;
+                continue;
+            }
+
             if (this.hasEncounteredAnotherStructure() || this.next == null) {
                 createErrorNode = true;
                 if (newlineRecoveryIndex != -1) {
@@ -1959,6 +1989,22 @@ export class DocumentParser implements StringIterator {
                 this.currentContent = this.currentContent.concat(results.value.split(''));
                 this.currentContent.push(stringStart);
                 this.currentIndex = results.endedOn;
+                continue;
+            }
+
+
+            // Ignore PHP comments.
+            if (this.cur == DocumentParser.Punctuation_ForwardSlash && this.next == DocumentParser.Punctuation_ForwardSlash) {
+                this.shouldIgnoreStructures = true;
+                skipToEndOfLine(this, true);
+                this.shouldIgnoreStructures = false;
+                continue;
+            }
+
+            if (this.cur == DocumentParser.Punctuation_ForwardSlash && this.next == DocumentParser.Punctuation_Asterisk) {
+                this.shouldIgnoreStructures = true;
+                skipToEndOfMultilineComment(this, true);
+                this.shouldIgnoreStructures = false;
                 continue;
             }
 
