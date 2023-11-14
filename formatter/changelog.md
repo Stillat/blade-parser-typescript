@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.6.15
+
+- Improves formatting of escaped single quotes inside Alpine.js attribute (#81)
+- Improves relative indentation of Blade component attributes (#82)
+- Improves formatting of `@forelse` `@empty` directives that contain no structures (#83)
+- Improves formatting of escaped Blade tag inside Alpine.js attributes (#84)
+- Adds support for using `@switch` directives as HTML attributes (#85)
+
 ## 1.6.14
 
 - Improves parsing of Blade echo blocks that contain PHP comments (#79)

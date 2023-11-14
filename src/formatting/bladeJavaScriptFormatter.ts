@@ -21,7 +21,7 @@ export function formatExtractedScript(attribute: IExtractedAttribute,
 
     const formatContent = attribute.content.substring(1, attribute.content.length - 1).trim();
 
-    if (formatContent.includes("\n") == false && formatContent.startsWith('if ') && ! formatContent.includes('{')) {
+    if (formatContent.includes("\n") == false && formatContent.startsWith('if ') && !formatContent.includes('{')) {
         return attribute.content;
     }
 
@@ -54,8 +54,12 @@ export function formatExtractedScript(attribute: IExtractedAttribute,
         shouldContinue = false;
     }
 
-    if (attribute.content.includes('\\')) {
-        shouldContinue = false;
+    if (attribute.content.includes('\\\'')) {
+        const checkDoc = BladeDocument.fromText(attribute.content).transform().removeBlade();
+
+        if (checkDoc.includes('\\\'')) {
+            shouldContinue = false;
+        }
     }
 
     if (!shouldContinue) {
