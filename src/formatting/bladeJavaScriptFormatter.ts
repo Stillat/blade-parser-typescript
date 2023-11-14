@@ -50,7 +50,11 @@ export function formatExtractedScript(attribute: IExtractedAttribute,
         }
     }
 
-    if (attribute.content.includes('{!!')) {
+    if (attribute.content.includes('{!!') || attribute.content.includes('!!}')) {
+        shouldContinue = false;
+    }
+
+    if (attribute.content.includes('\\')) {
         shouldContinue = false;
     }
 
