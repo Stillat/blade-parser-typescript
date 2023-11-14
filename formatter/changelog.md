@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.16
+
+- Continues to improve formatting of `@switch` directives when used as HTML attributes
+
 ## 1.6.15
 
 - Improves formatting of escaped single quotes inside Alpine.js attribute (#81)

@@ -1775,9 +1775,9 @@ export class Transformer {
                     disableAttributeProcessing();
 
                     if (this.transformOptions.useLaravelPint) {
-                        formatContent = formatBladeStringWithPint(formatContent, this.formattingOptions, this.transformOptions).trim();
+                        subDoc = formatBladeStringWithPint(formatContent, this.formattingOptions, this.transformOptions).trim();
                     } else {
-                        formatContent = formatBladeString(formatContent, this.formattingOptions).trim();
+                        subDoc = formatBladeString(formatContent, this.formattingOptions).trim();
                     }
                 } catch (err) {
                     enableAttributeProcessing();
@@ -1795,6 +1795,7 @@ export class Transformer {
             if (indentLevel == 0) {
                 forceLeadNewline = true;
                 indentLevel = this.transformOptions.tabSize;
+            } else {
             }
 
             formatContent = IndentLevel.shiftHtmlAttributeContent(

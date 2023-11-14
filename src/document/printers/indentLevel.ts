@@ -171,7 +171,11 @@ export class IndentLevel {
             const line = lines[i];
 
             if (i == 0) {
-                reflowed.push(' '.repeat(targetIndent) + line);
+                if (targetIndent == tabSize) {
+                    reflowed.push(' '.repeat(targetIndent) + line.trimLeft());
+                    continue;
+                }
+                reflowed.push(' '.repeat(targetIndent - 2 * tabSize) + line.trimLeft());
                 continue;
             }
 
@@ -180,7 +184,7 @@ export class IndentLevel {
                 continue;
             }
 
-            reflowed.push(line);
+            reflowed.push(' '.repeat(targetIndent) + line);
         }
 
         return reflowed.join("\n");
