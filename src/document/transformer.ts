@@ -1767,7 +1767,6 @@ export class Transformer {
         this.htmlTagSwitchStatements.forEach((switchNode: SwitchStatementNode, slug: string) => {
             let formatContent = switchNode.nodeContent,
                 subDoc = formatContent;
-                //subDoc = formatBladeString(formatContent);
 
             if (isAttributeFormattingEnabled) {
                 setIsFormattingAttributeContent(true);
@@ -2457,11 +2456,13 @@ ${directive.isClosedBy?.sourceContent}
         let value = content;
 
         this.expressionParameters.forEach((param, slug) => {
-            let content = param.content;
+            let content = param.content,
+                pintUsed = false;
 
             if (this.transformOptions.useLaravelPint && (this.pintTransformer != null || Transformer.sharedPintTransformer != null)) {
                 if (this.pintTransformer != null) {
                     content = this.pintTransformer.getComponentParameterContent(param);
+                    pintUsed = true;
                 } else if (Transformer.sharedPintTransformer != null) {
                     content = Transformer.sharedPintTransformer.getComponentParameterContent(param);
                 }
@@ -2470,11 +2471,21 @@ ${directive.isClosedBy?.sourceContent}
             if (content.includes("\n")) {
                 const relativeIndent = this.indentLevel(slug);
 
-                content = IndentLevel.shiftParameterContent(
-                    content,
-                    relativeIndent,
-                    this.transformOptions.tabSize
-                );
+                if (pintUsed) {
+                    content = IndentLevel.shiftIndent(
+                        content,
+                        relativeIndent + this.transformOptions.tabSize,
+                        true,
+                        this.transformOptions,
+                        false,
+                        true);
+                } else {
+                    content = IndentLevel.shiftParameterContent(
+                        content,
+                        relativeIndent,
+                        this.transformOptions.tabSize
+                    );
+                }
             }
 
             value = StringUtilities.safeReplace(value, slug, content);
