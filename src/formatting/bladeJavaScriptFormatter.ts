@@ -50,6 +50,10 @@ export function formatExtractedScript(attribute: IExtractedAttribute,
         }
     }
 
+    if (attribute.content.includes('{!!')) {
+        shouldContinue = false;
+    }
+
     if (!shouldContinue) {
         return attribute.content;
     }

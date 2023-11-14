@@ -174,4 +174,10 @@ x-bind:class="
 `;
         assert.strictEqual(formatBladeStringWithPint(input), out);
     });
+
+    test('formatting js is disabled when it contains escaped data', function () {
+        const input = `<div x-data="{ data: {!! $data !!} }"></div>`;
+
+        assert.strictEqual(formatBladeStringWithPint(input).trim(), input);
+    });
 });
