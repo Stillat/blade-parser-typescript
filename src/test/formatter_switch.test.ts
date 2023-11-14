@@ -215,4 +215,28 @@ Default case...
 @endswitch`
         );
     });
+
+    test('formatting switch as an html attribute', function () {
+        const input = `
+<div
+    @switch(true)
+        @case($condition)
+            title="thing"
+            @break
+    @endswitch
+></div>
+`;
+        const out = `<div 
+    @switch(true)
+        @case($condition)
+            title="thing"
+            @break
+    @endswitch
+></div>
+`;
+        const format1 = formatBladeString(input),
+            format2 = formatBladeString(format1);
+        assert.strictEqual(format1, out);
+        assert.strictEqual(format2, out);
+    });
 });

@@ -135,6 +135,7 @@ export class Transformer {
     private blockPhpNodes: Map<string, InlinePhpNode> = new Map();
     private breakDirectives: Map<string, DirectiveNode> = new Map();
     private htmlTagDirectives: Map<string, DirectiveNode> = new Map();
+    private htmlTagSwitchStatements: Map<string, SwitchStatementNode> = new Map();
     private dynamicElementDirectives: Map<string, string> = new Map();
     private dynamicElementDirectiveNodes: Map<string, DirectiveNode> = new Map();
     private dynamicElementConditions: Map<string, string> = new Map();
@@ -877,7 +878,7 @@ export class Transformer {
                 result += repForElse.truthClose;
 
                 result += "\n" + repForElse.emptyOpen + "\n"; // This replacement will be the @empty
-                
+
                 if (falseTransform.includes('<') == false) {
                     const slug = this.makeSlug(32);
                     this.registerInlineLiteral(slug, falseTransform.trim());
@@ -971,6 +972,18 @@ export class Transformer {
         const slug = this.makeSlug(directive.nodeContent.length);
 
         this.embeddedDirectives.set(slug, directive);
+
+        return slug;
+    }
+
+    public prepareHtmlSwitchStatement(switchNode: SwitchStatementNode): string {
+        if (Transformer.rootTransformer != null && Transformer.rootTransformer != this) {
+            return Transformer.rootTransformer.prepareHtmlSwitchStatement(switchNode);
+        }
+
+        const slug = StringUtilities.makeSlug(64);
+
+        this.htmlTagSwitchStatements.set(slug, switchNode);
 
         return slug;
     }
@@ -1261,6 +1274,10 @@ export class Transformer {
 
     private prepareSwitch(switchNode: SwitchStatementNode): string {
         if (switchNode.fragmentPosition == FragmentPosition.Unresolved || switchNode.fragmentPosition == FragmentPosition.InsideFragment) {
+            if (switchNode.fragmentPosition == FragmentPosition.InsideFragment) {
+                return this.prepareHtmlSwitchStatement(switchNode);
+            }
+
             const tCases: TransformedCase[] = [];
             let result = '';
 
@@ -1744,6 +1761,59 @@ export class Transformer {
         return value;
     }
 
+    private transformHtmlSwitchStatements(content: string): string {
+        let value = content;
+
+        this.htmlTagSwitchStatements.forEach((switchNode: SwitchStatementNode, slug: string) => {
+            let formatContent = switchNode.nodeContent,
+                subDoc = formatContent;
+                //subDoc = formatBladeString(formatContent);
+
+            if (isAttributeFormattingEnabled) {
+                setIsFormattingAttributeContent(true);
+
+                try {
+                    disableAttributeProcessing();
+
+                    if (this.transformOptions.useLaravelPint) {
+                        formatContent = formatBladeStringWithPint(formatContent, this.formattingOptions, this.transformOptions).trim();
+                    } else {
+                        formatContent = formatBladeString(formatContent, this.formattingOptions).trim();
+                    }
+                } catch (err) {
+                    enableAttributeProcessing();
+                    setIsFormattingAttributeContent(false);
+                    throw err;
+                }
+            }
+
+            enableAttributeProcessing();
+            setIsFormattingAttributeContent(false);
+
+            let indentLevel = IndentLevel.relativeIndentLevel(slug, value),
+                forceLeadNewline = false;
+
+            if (indentLevel == 0) {
+                forceLeadNewline = true;
+                indentLevel = this.transformOptions.tabSize;
+            }
+
+            formatContent = IndentLevel.shiftHtmlAttributeContent(
+                subDoc,
+                indentLevel,
+                this.transformOptions.tabSize
+            ) + "\n";
+
+            if (forceLeadNewline) {
+                formatContent = "\n" + formatContent;
+            }
+
+            value = StringUtilities.safeReplace(value, slug, formatContent);
+        });
+
+        return value;
+    }
+
     private transformHtmlTagDirectives(content: string): string {
         let value = content;
 
@@ -2012,7 +2082,7 @@ ${directive.isClosedBy?.sourceContent}
     private transformInlineLiterals(content: string): string {
         let value = content;
 
-        this.inlineLiterals.forEach((literal:InlineLiteral, slug:string) => {
+        this.inlineLiterals.forEach((literal: InlineLiteral, slug: string) => {
             const construction = this.selfClosing(slug);
 
             value = StringUtilities.safeReplace(value, construction, literal.content);
@@ -2686,6 +2756,7 @@ ${directive.isClosedBy?.sourceContent}
         results = this.transformDynamicElementSwitch(results);
         results = this.transformDynamicDirectives(results);
         results = this.transformHtmlTagDirectives(results);
+        results = this.transformHtmlSwitchStatements(results);
 
         results = this.transformRemovedAttibutes(results);
 
