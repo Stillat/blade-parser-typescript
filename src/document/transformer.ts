@@ -99,6 +99,10 @@ interface VirtualBlockStructure {
     virtualElement: string
 }
 
+interface InlineLiteral {
+    content: string
+}
+
 export class Transformer {
     private isInsideIgnoreFormatter: boolean = false;
     private ignoredLiteralBlocks: Map<string, AbstractNode[]> = new Map();
@@ -142,6 +146,7 @@ export class Transformer {
     private dynamicElementPhpNodes: Map<string, InlinePhpNode> = new Map();
     private dynamicElementPhp: Map<string, string> = new Map();
     private embeddedEchos: Map<string, BladeEchoNode> = new Map();
+    private inlineLiterals: Map<string, InlineLiteral> = new Map();
     private embeddedDirectives: Map<string, DirectiveNode> = new Map();
     private structureLines: string[] = [];
     private directiveParameters: Map<string, ParameterNode> = new Map();
@@ -420,6 +425,16 @@ export class Transformer {
             this.parentTransformer.registerCondition(transformedCondition);
         } else {
             this.conditions.push(transformedCondition);
+        }
+    }
+
+    private registerInlineLiteral(slug: string, content: string) {
+        if (this.parentTransformer != null) {
+            this.parentTransformer.registerInlineLiteral(slug, content);
+        } else {
+            this.inlineLiterals.set(slug, {
+                content: content
+            });
         }
     }
 
@@ -862,7 +877,15 @@ export class Transformer {
                 result += repForElse.truthClose;
 
                 result += "\n" + repForElse.emptyOpen + "\n"; // This replacement will be the @empty
-                result += falseTransform + "";
+                
+                if (falseTransform.includes('<') == false) {
+                    const slug = this.makeSlug(32);
+                    this.registerInlineLiteral(slug, falseTransform.trim());
+                    result += this.selfClosing(slug);
+                } else {
+                    result += falseTransform;
+                }
+
                 result += repForElse.pairClose;
 
                 this.registerForElseWithEmpty(repForElse);
@@ -1986,6 +2009,18 @@ ${directive.isClosedBy?.sourceContent}
         return value;
     }
 
+    private transformInlineLiterals(content: string): string {
+        let value = content;
+
+        this.inlineLiterals.forEach((literal:InlineLiteral, slug:string) => {
+            const construction = this.selfClosing(slug);
+
+            value = StringUtilities.safeReplace(value, construction, literal.content);
+        });
+
+        return value;
+    }
+
     private transformForElseWithNoEmpty(content: string): string {
         let value = content;
 
@@ -2693,6 +2728,7 @@ ${directive.isClosedBy?.sourceContent}
         results = this.transformPairedDirectives(results);
         results = this.transformForElseWithEmpty(results);
         results = this.transformForElseWithNoEmpty(results);
+        results = this.transformInlineLiterals(results);
         results = this.transformDynamicElementForElse(results);
         results = this.transformInlineEcho(results);
         results = this.transformConditions(results);

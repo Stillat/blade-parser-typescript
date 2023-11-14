@@ -97,4 +97,18 @@ suite('Forelse Formatting', () => {
 </div>`
         );
     });
+
+    test('formatting forlese empty with just literal content', function () {
+        const input = `@forelse ($items as $item)
+        {{ $item }}
+        @empty
+        No items
+        @endforelse`;
+        const out = `@forelse ($items as $item)
+    {{ $item }}
+@empty
+    No items
+@endforelse`;
+        assert.strictEqual(formatBladeString(input).trim(), out);
+    });
 });
