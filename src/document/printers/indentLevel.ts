@@ -163,6 +163,35 @@ export class IndentLevel {
         return reflowedLines.join("\n");
     }
 
+    static shiftParameterContent(value: string, targetIndent: number, tabSize: number): string {
+        const lines = StringUtilities.breakByNewLine(value.trim()),
+            reflowed: string[] = [];
+
+        for (let i = 0 ; i < lines.length; i++) {
+            const line = lines[i];
+
+            if (i == 0) {
+                reflowed.push(line);
+                continue;
+            }
+
+            if (i == lines.length - 1 && line.trim() == '"') {
+                reflowed.push(' '.repeat(targetIndent) + line.trimLeft());
+                continue;
+            }
+
+            const lDiff = line.length - line.trimLeft().length;
+
+            if (lDiff == tabSize) {
+                reflowed.push(' '.repeat(targetIndent + tabSize * 2) + line.trimLeft());
+            } else {
+                reflowed.push(' '.repeat(tabSize + targetIndent) + line.trimLeft());
+            }
+        }
+
+        return reflowed.join("\n");
+    }
+
     static shiftIndent(value: string, targetIndent: number, skipFirst: boolean = false, options: TransformOptions, reflowRelative: boolean = false, dedentLast: boolean = false): string {
         const lines = StringUtilities.breakByNewLine(value.trim()),
             reflowedLines: string[] = [];

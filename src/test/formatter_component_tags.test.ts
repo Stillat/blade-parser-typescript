@@ -941,4 +941,70 @@ Hello, there!
 `;
         assert.strictEqual(formatBladeStringWithPint(input), out);
     });
+
+    test('it produces sane indentation on component tag expression parameters', function () {
+        const input = `<x-checkbox
+    :checked="
+        $firstCondition
+        || $secondCondition
+        || $thirdCondition
+        || $fourthCondition
+        || $fifthCondition
+        || $sixthCondition
+        || $seventhCondition
+    "
+/>`;
+        const out = `<x-checkbox
+    :checked="
+        $firstCondition
+        || $secondCondition
+        || $thirdCondition
+        || $fourthCondition
+        || $fifthCondition
+        || $sixthCondition
+        || $seventhCondition
+    "
+/>
+`;
+        const format1 = formatBladeString(input),
+            format2 = formatBladeString(format1);
+        assert.strictEqual(format1, out)
+        assert.strictEqual(format2, out)
+    });
+
+    test('it produces sane indentation on component tag expression parameters inside html elements', function () {
+        const input = `
+<div>
+<x-checkbox
+    :checked="
+        $firstCondition
+        || $secondCondition
+        || $thirdCondition
+        || $fourthCondition
+        || $fifthCondition
+        || $sixthCondition
+        || $seventhCondition
+    "
+/>
+</div>
+`;
+        const out = `<div>
+    <x-checkbox
+        :checked="
+            $firstCondition
+            || $secondCondition
+            || $thirdCondition
+            || $fourthCondition
+            || $fifthCondition
+            || $sixthCondition
+            || $seventhCondition
+        "
+    />
+</div>
+`;
+        const format1 = formatBladeString(input),
+            format2 = formatBladeString(format1);
+        assert.strictEqual(format1, out)
+        assert.strictEqual(format2, out)
+    });
 });

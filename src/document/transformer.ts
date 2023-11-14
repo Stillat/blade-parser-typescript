@@ -2400,13 +2400,10 @@ ${directive.isClosedBy?.sourceContent}
             if (content.includes("\n")) {
                 const relativeIndent = this.indentLevel(slug);
 
-                content = IndentLevel.shiftIndent(
+                content = IndentLevel.shiftParameterContent(
                     content,
-                    relativeIndent + this.transformOptions.tabSize,
-                    true,
-                    this.transformOptions,
-                    false,
-                    true
+                    relativeIndent,
+                    this.transformOptions.tabSize
                 );
             }
 
