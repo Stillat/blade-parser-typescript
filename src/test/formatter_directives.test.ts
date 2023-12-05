@@ -542,4 +542,45 @@ asdf
 `;
         assert.strictEqual(formatBladeString(input), out);
     });
+
+    test('directives with literal content do not get indented too much when deeply nested', () => {
+        let input = `
+@props([
+    'navigation',
+])
+
+<x-something><x-something><x-something><x-something><x-something><x-something><x-something>
+                            @if ($loop->index)
+                            &ensp;&ensp;
+                    @endif
+</x-something></x-something></x-something></x-something></x-something></x-something></x-something>
+                            
+`;
+        let expected = `@props([
+    "navigation",
+])
+
+<x-something>
+    <x-something>
+        <x-something>
+            <x-something>
+                <x-something>
+                    <x-something>
+                        <x-something>
+                            @if ($loop->index)
+                                &ensp;&ensp;
+                            @endif
+                        </x-something>
+                    </x-something>
+                </x-something>
+            </x-something>
+        </x-something>
+    </x-something>
+</x-something>
+`;
+        const out = formatBladeString(input),
+            out2 = formatBladeString(out);
+        assert.strictEqual(out, expected);
+        assert.strictEqual(out2, expected);
+    });
 });

@@ -801,8 +801,21 @@ export class Transformer {
                         directive.containsAnyFragments == false &&
                         !contentContainsAllInline &&
                         !containsBladeStructures) || (!directive.containsAnyFragments && contentContainsAllInline && containsBladeStructures)) {
-                        virtualSlug = this.makeSlug(15);
-                        result += this.pair(virtualSlug, innerDoc);
+                        if (!directive.containsAnyFragments && !containsBladeStructures && directive.documentContent.trim().length > 0 && directive.documentContent.trim().split("\n").length == 1) {
+                            if (directive.endPosition?.line != directive.isClosedBy?.startPosition?.line) {
+                                const inlineSlug = this.makeSlug(32);
+                                this.registerInlineLiteral(inlineSlug, directive.documentContent.trim());
+                                result += this.selfClosing(inlineSlug);
+                            } else {
+                                // Revert to virtual structures to avoid creating an invalid output document.
+                                virtualSlug = this.makeSlug(15);
+                                result += this.pair(virtualSlug, innerDoc);
+                            }
+                        } else {
+                            virtualSlug = this.makeSlug(15);
+                            result += this.pair(virtualSlug, innerDoc);
+                        }
+
                     } else {
                         result += innerDoc;
                     }
