@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.17
+
+- Improves formatting directives whose name contains underscores
+- Improves relative indentation of deeply nested paired directives containing literal content (#86)
+
 ## 1.6.16
 
 - Continues to improve formatting of `@switch` directives when used as HTML attributes
