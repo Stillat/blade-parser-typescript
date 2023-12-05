@@ -2226,7 +2226,7 @@ export class DocumentParser implements StringIterator {
             const nextNonWs = nextNonWhitespace(this);
 
             if (this.cur != DocumentParser.LeftParen && nextNonWs.didFind && StringUtilities.ctypePunct(nextNonWs.char)) {
-                if (nextNonWs.char != DocumentParser.LeftParen && nextNonWs.char != DocumentParser.Punctuation_Minus && nextNonWs.char != '.') {
+                if (nextNonWs.char != DocumentParser.LeftParen && nextNonWs.char != DocumentParser.Punctuation_Minus && nextNonWs.char != '.' && nextNonWs.char != '_') {
                     let endOffset = 0,
                         brokeOnWhiteSpace = false;
 

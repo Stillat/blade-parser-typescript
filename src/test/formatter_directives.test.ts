@@ -527,4 +527,19 @@ asdf
 `;
         assert.strictEqual(formatBladeStringWithPint(template), out);
     });
+
+    test('directives with underscores', () => {
+        const input = `
+
+<div>
+@some_directive
+</div>
+
+`;
+        const out = `<div>
+    @some_directive
+</div>
+`;
+        assert.strictEqual(formatBladeString(input), out);
+    });
 });
