@@ -219,6 +219,67 @@ export class IndentLevel {
         return reflowed.join("\n");
     }
 
+    static removeLeadingWhitespace(value: string, tabSize: number): string {
+        const lines = StringUtilities.breakByNewLine(value.trim()),
+            trimmedLines: string[] = [];
+        let minWhitespace = -1;
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+
+            if (i == 0) {
+                continue;
+            }
+
+            if (line.trim().length == 0) {
+                continue;
+            }
+
+            const wsDiff = line.length - line.trimLeft().length;
+                
+            if (minWhitespace < 0 && wsDiff > 0) {
+                minWhitespace = wsDiff;
+                continue;
+            }
+
+            if (wsDiff > 0 && wsDiff < minWhitespace) {
+                minWhitespace = wsDiff;
+            }
+        }
+
+        if (minWhitespace <= 0) {
+            return value;
+        }
+
+        if (minWhitespace == tabSize) {
+            return value;
+        }
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+
+            if (i == 0) {
+                trimmedLines.push(line);
+                continue;
+            }
+
+            const wsDiff = line.length - line.trimLeft().length;
+
+            if (wsDiff == tabSize) {
+                trimmedLines.push(line);
+                continue;
+            }
+
+            if (wsDiff >= minWhitespace) {
+                trimmedLines.push(line.substring(minWhitespace));
+            } else {
+                trimmedLines.push(line);
+            }
+        }
+
+        return trimmedLines.join("\n");
+    }
+
     static shiftIndent(value: string, targetIndent: number, skipFirst: boolean = false, options: TransformOptions, reflowRelative: boolean = false, dedentLast: boolean = false): string {
         const lines = StringUtilities.breakByNewLine(value.trim()),
             reflowedLines: string[] = [];

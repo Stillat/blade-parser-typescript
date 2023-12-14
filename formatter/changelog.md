@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.18
+
+- Improves handling of attribute content to help prevent excessive indentation (#87)
+
 ## 1.6.17
 
 - Improves formatting directives whose name contains underscores

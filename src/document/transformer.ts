@@ -2487,12 +2487,13 @@ ${directive.isClosedBy?.sourceContent}
 
                 if (pintUsed) {
                     content = IndentLevel.shiftIndent(
-                        content,
+                        IndentLevel.removeLeadingWhitespace(content, this.transformOptions.tabSize),
                         relativeIndent + this.transformOptions.tabSize,
                         true,
                         this.transformOptions,
                         false,
-                        true);
+                        true,
+                    );
                 } else {
                     content = IndentLevel.shiftParameterContent(
                         content,

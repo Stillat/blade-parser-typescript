@@ -424,4 +424,89 @@ suite('Pint Transformer: General Templates', () => {
 `;
         assert.strictEqual(formatBladeStringWithPint(template), output);
     });
+
+    test('it does not continuously indent inside component attributes', () => {
+const input = `
+<x-filament::grid
+    :x-on:form-validation-error.window="
+        $isRoot ? ('if ($event.detail.livewireId !== ' . Js::from($this->getId()) . ') {
+            return
+        }
+
+        $nextTick(() => {
+            error = $el.querySelector(\\'[data-validation-error]\\')
+
+            if (! error) {
+                return
+            }
+
+            elementToExpand = error
+
+            while (elementToExpand) {
+                elementToExpand.dispatchEvent(new CustomEvent(\\'expand\\'))
+
+                elementToExpand = elementToExpand.parentNode
+            }
+
+            setTimeout(
+                () =>
+                    error.closest(\\'[data-field-wrapper]\\').scrollIntoView({
+                        behavior: \\'smooth\\',
+                        block: \\'start\\',
+                        inline: \\'start\\',
+                    }),
+                200,
+            )
+        })') : null
+    "
+>
+    {{-- --}}
+</x-filament::grid>
+
+`;
+        const out = `<x-filament::grid
+    :x-on:form-validation-error.window="
+        $isRoot ? ('if ($event.detail.livewireId !== '.Js::from($this->getId()).') {
+            return
+        }
+
+        $nextTick(() => {
+            error = $el.querySelector(\\'[data-validation-error]\\')
+
+            if (! error) {
+                return
+            }
+
+            elementToExpand = error
+
+            while (elementToExpand) {
+                elementToExpand.dispatchEvent(new CustomEvent(\\'expand\\'))
+
+                elementToExpand = elementToExpand.parentNode
+            }
+
+            setTimeout(
+                () =>
+                    error.closest(\\'[data-field-wrapper]\\').scrollIntoView({
+                        behavior: \\'smooth\\',
+                        block: \\'start\\',
+                        inline: \\'start\\',
+                    }),
+                200,
+            )
+        })') : null
+    "
+>
+    {{--  --}}
+</x-filament::grid>
+`;
+        const f1 = formatBladeStringWithPint(input),
+            f2 = formatBladeStringWithPint(f1),
+            f3 = formatBladeStringWithPint(f2),
+            f4 = formatBladeStringWithPint(f3);
+        assert.strictEqual(f1, out);
+        assert.strictEqual(f2, out);
+        assert.strictEqual(f3, out);
+        assert.strictEqual(f4, out);
+    });
 });
