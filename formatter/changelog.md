@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.19
+
+- Corrects an issue when `{{-- format-ignore-start --}}{{-- format-ingore-end --}}` that would cause some nodes to be internally eaten
+
 ## 1.6.18
 
 - Improves handling of attribute content to help prevent excessive indentation (#87)

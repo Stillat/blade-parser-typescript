@@ -2847,7 +2847,18 @@ ${directive.isClosedBy?.sourceContent}
 
         if (this.ignoredLiteralBlocks.size > 0) {
             this.ignoredLiteralBlocks.forEach((nodes, slug) => {
-                const replace = this.selfClosing(slug);
+                const replace = this.selfClosing(slug),
+                    first = nodes[0],
+                    last = nodes[nodes.length - 1];
+
+                if (first.getParser()) {
+                    const content = first.getParser()?.getText(
+                        (first.startPosition?.index ?? 0),
+                        (last.endPosition?.index ?? 0)
+                    );
+
+                    var hmmm = 'asdf';
+                }
 
                 results = StringUtilities.safeReplace(results, replace, this.dumpPreservedNodes(nodes));
             });
@@ -2881,7 +2892,11 @@ ${directive.isClosedBy?.sourceContent}
             } else if (node instanceof ConditionNode) {
                 stringResults += node.nodeContent;
             } else if (node instanceof DirectiveNode) {
-                stringResults += node.sourceContent;
+                if (node.isClosedBy != null) {
+                    stringResults += node.nodeContent;
+                } else {
+                    stringResults += node.sourceContent;
+                }
             } else if (node instanceof BladeEchoNode) {
                 stringResults += node.sourceContent;
             } else if (node instanceof ForElseNode) {

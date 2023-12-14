@@ -534,4 +534,89 @@ $status = $kernel->handle($input = new Symfony\\Component\\Console\\Input\\ArgvI
 `;
         assert.strictEqual(formatBladeStringWithPint(input), out);
     });
+
+    test('ignore doesnt eat nested nodes', () => {
+const input = `
+@php
+$isHidden = $formComponent->isHidden();
+$isHidden = $formComponent->isHidden();
+@endphp
+
+{{-- format-ignore-start --}}
+<x-filament::grid
+    :x-data="$isRoot ? '{}' : null"
+>
+    @foreach ($getComponents(withHidden: true) as $formComponent)
+    Test
+        @php
+            $isHidden = $formComponent->isHidden();
+            $isHidden = $formComponent->isHidden();
+        @endphp
+
+        <x-filament::grid.column
+        >
+            @if (! $isHidden)
+                {{ $formComponent }}
+            @endif
+        </x-filament::grid.column>
+
+{{ verbatim }}
+@php
+$isHidden = $formComponent->isHidden();
+$isHidden = $formComponent->isHidden();
+@endphp
+
+<x-filament::grid.column
+>
+@if (! $isHidden)
+    {{ $formComponent }}
+@endif
+</x-filament::grid.column>
+{{ endverbatim }}
+    @endforeach
+</x-filament::grid>
+{{-- format-ignore-end --}}
+`;
+        const out = `@php
+    $isHidden = $formComponent->isHidden();
+    $isHidden = $formComponent->isHidden();
+@endphp
+
+{{-- format-ignore-start --}}
+<x-filament::grid
+    :x-data="$isRoot ? '{}' : null"
+>
+    @foreach ($getComponents(withHidden: true) as $formComponent)
+    Test
+        @php
+            $isHidden = $formComponent->isHidden();
+            $isHidden = $formComponent->isHidden();
+        @endphp
+
+        <x-filament::grid.column
+        >
+            @if (! $isHidden)
+                {{ $formComponent }}
+            @endif
+        </x-filament::grid.column>
+
+{{ verbatim }}
+@php
+$isHidden = $formComponent->isHidden();
+$isHidden = $formComponent->isHidden();
+@endphp
+
+<x-filament::grid.column
+>
+@if (! $isHidden)
+    {{ $formComponent }}
+@endif
+</x-filament::grid.column>
+{{ endverbatim }}
+    @endforeach
+</x-filament::grid>
+{{-- format-ignore-end --}}
+`;
+        assert.strictEqual(formatBladeStringWithPint(input), out);
+    });
 });

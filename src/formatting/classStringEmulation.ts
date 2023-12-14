@@ -73,6 +73,10 @@ export class ClassStringEmulation {
             } else if (node instanceof DirectiveNode) {
                 if (this.isIgnoring ||this.classStringConfig.excludedDirectives.includes(node.directiveName.toLowerCase())) {
                     stringResults += node.sourceContent;
+
+                    if (node.directiveName == 'php') {
+                        stringResults += node.documentContent;
+                    }
                 } else {
                     if (node.directiveName == 'php') {
                         if (node.isClosedBy != null) {
