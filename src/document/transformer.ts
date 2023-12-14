@@ -2851,15 +2851,6 @@ ${directive.isClosedBy?.sourceContent}
                     first = nodes[0],
                     last = nodes[nodes.length - 1];
 
-                if (first.getParser()) {
-                    const content = first.getParser()?.getText(
-                        (first.startPosition?.index ?? 0),
-                        (last.endPosition?.index ?? 0)
-                    );
-
-                    var hmmm = 'asdf';
-                }
-
                 results = StringUtilities.safeReplace(results, replace, this.dumpPreservedNodes(nodes));
             });
 
