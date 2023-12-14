@@ -2847,9 +2847,7 @@ ${directive.isClosedBy?.sourceContent}
 
         if (this.ignoredLiteralBlocks.size > 0) {
             this.ignoredLiteralBlocks.forEach((nodes, slug) => {
-                const replace = this.selfClosing(slug),
-                    first = nodes[0],
-                    last = nodes[nodes.length - 1];
+                const replace = this.selfClosing(slug);
 
                 results = StringUtilities.safeReplace(results, replace, this.dumpPreservedNodes(nodes));
             });
