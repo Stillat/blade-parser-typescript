@@ -1,7 +1,7 @@
 import assert from 'assert';
-import { LiteralNode, OperatorNode } from '../nodes/nodes';
-import { assertCount, assertInstanceOf } from './testUtils/assertions';
-import { GeneralSyntaxReflow } from '../formatting/generalSyntaxReflow';
+import { LiteralNode, OperatorNode } from '../nodes/nodes.js';
+import { assertCount, assertInstanceOf } from './testUtils/assertions.js';
+import { GeneralSyntaxReflow } from '../formatting/generalSyntaxReflow.js';
 
 suite('PHP Operator Reflow Parser', () => {
     test('it breaks strings apart', () => {

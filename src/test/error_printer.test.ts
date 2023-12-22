@@ -1,6 +1,6 @@
 import assert from 'assert';
-import { BladeDocument } from '../document/bladeDocument';
-import { ErrorPrinter } from '../document/printers/errorPrinter';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { ErrorPrinter } from '../document/printers/errorPrinter.js';
 
 suite('Error Printer Test', () => {
     test('it can pretty print error messages', () => {

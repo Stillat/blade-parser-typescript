@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { formatBladeString } from '../formatting/prettier/utils';
+import { formatBladeString } from '../formatting/prettier/utils.js';
 
 suite('Directive JSON Parameters', () => {
-    test('it can detect and format JSON parameters in directives', () => {
+    test('it can detect and format JSON parameters in directives', async () => {
         assert.strictEqual(
-            formatBladeString(`@varSet({
+            (await formatBladeString(`@varSet({
                 "logo": 
                 
                 "logo",
@@ -17,7 +17,7 @@ suite('Directive JSON Parameters', () => {
             @varSet( $test +        $thing + $another - (
             
                     $that + $something
-            ))`).trim(),
+            ))`)).trim(),
             `@varSet({
   "logo": "logo",
   "width": 78,
@@ -28,9 +28,9 @@ suite('Directive JSON Parameters', () => {
         );
     });
 
-    test('it ignores invalid JSON when formatting', () => {
+    test('it ignores invalid JSON when formatting', async () => {
         assert.strictEqual(
-            formatBladeString(`@varSet({
+            (await formatBladeString(`@varSet({
 "logo": 
 
 "logo",
@@ -43,7 +43,7 @@ suite('Directive JSON Parameters', () => {
 @varSet( $test +        $thing + $another - (
 
         $that + $something
-))`).trim(),
+))`)).trim(),
             `@varSet({
 "logo": 
 

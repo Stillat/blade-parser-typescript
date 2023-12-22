@@ -1,8 +1,8 @@
-import { TransformOptions } from '../document/transformOptions';
-import { PhpFormatter, BlockPhpFormatter, PhpTagFormatter, JsonFormatter, HtmlFormatter, PreFormatter } from '../document/formatters';
-import { BladeDocument } from '../document/bladeDocument';
-import { FormattingOptions } from './formattingOptions';
-import { IExtractedAttribute } from '../parser/extractedAttribute';
+import { TransformOptions } from '../document/transformOptions.js';
+import { PhpFormatter, BlockPhpFormatter, PhpTagFormatter, JsonFormatter, HtmlFormatter, PreFormatter } from '../document/formatters.js';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { FormattingOptions } from './formattingOptions.js';
+import { IExtractedAttribute } from '../parser/extractedAttribute.js';
 
 export class DocumentFormatter {
     private filePath: string = '';
@@ -76,13 +76,13 @@ export class DocumentFormatter {
         return this;
     }
 
-    formatText(text: string): string {
-        return this.formatDocument(BladeDocument.fromText(text));
+    async formatText(text: string): Promise<string> {
+        return await this.formatDocument(BladeDocument.fromText(text));
     }
 
-    formatDocument(document: BladeDocument, shadowDocument: BladeDocument | null = null): string {
+    async formatDocument(document: BladeDocument, shadowDocument: BladeDocument | null = null): Promise<string> {
         if (this.preFormatter != null) {
-            const preformatResult = this.preFormatter(document);
+            const preformatResult = await this.preFormatter(document);
 
             if (preformatResult != null) {
                 return preformatResult;
@@ -107,8 +107,8 @@ export class DocumentFormatter {
             document.transform().withOptions(this.transformOptions);
         }
 
-        const structure = document.transform().toStructure(),
-            formatted = this.htmlFormatter(structure);
+        const structure = document.transform().toStructure();
+        const formatted = await this.htmlFormatter(structure);
 
         return document.transform().fromStructure(formatted);
     }

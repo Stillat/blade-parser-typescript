@@ -1,5 +1,5 @@
-import { AbstractNode, BladeEchoNode, DirectiveNode, InlinePhpNode, LiteralNode } from '../nodes/nodes';
-import { StringUtilities } from '../utilities/stringUtilities';
+import { AbstractNode, BladeEchoNode, DirectiveNode, InlinePhpNode } from '../nodes/nodes.js';
+import { StringUtilities } from '../utilities/stringUtilities.js';
 
 export class FragmentsTransformer {
     static transform(nodes: AbstractNode[], content: string) {

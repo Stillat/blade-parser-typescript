@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { formatBladeString } from '../formatting/prettier/utils';
+import { formatBladeString } from '../formatting/prettier/utils.js';
 
 suite('Unless Statements', () => {
-    test('it can format unless statements', () => {
+    test('it can format unless statements', async () => {
         assert.strictEqual(
-            formatBladeString(`@unless($true)
+            (await formatBladeString(`@unless($true)
 
             @endunless
             
@@ -23,7 +23,7 @@ suite('Unless Statements', () => {
             
                                     
             @endunless
-            `).trim(),
+            `)).trim(),
             `@unless ($true)
     
 @endunless
@@ -38,9 +38,9 @@ suite('Unless Statements', () => {
         );
     });
 
-    test('it can format nested unless', () => {
+    test('it can format nested unless', async () => {
         assert.strictEqual(
-            formatBladeString(`
+            (await formatBladeString(`
             @unless($something)
             @unless($somethingTwo)
             @unless($somethingThree)
@@ -51,7 +51,7 @@ suite('Unless Statements', () => {
             @endunless
             @endunless
             @endunless
-            @endunless`).trim(),
+            @endunless`)).trim(),
             `@unless ($something)
     @unless ($somethingTwo)
         @unless ($somethingThree)

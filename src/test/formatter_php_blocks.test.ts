@@ -1,11 +1,11 @@
 import assert from 'assert';
-import { formatBladeString, formatBladeStringWithPint } from '../formatting/prettier/utils';
-import { defaultSettings } from '../formatting/optionDiscovery';
+import { formatBladeString, formatBladeStringWithPint } from '../formatting/prettier/utils.js';
+import { defaultSettings } from '../formatting/optionDiscovery.js';
 
 suite('@php @endphp Formatting', () => {
-    test('it indents php blocks', () => {
+    test('it indents php blocks', async () => {
         assert.strictEqual(
-            formatBladeString(`<main class="index">
+            (await formatBladeString(`<main class="index">
 <div>
         {{--
  Block Comment.
@@ -30,7 +30,7 @@ $data = [
 ],
 ];
     @endphp
-</main>`).trim(),
+</main>`)).trim(),
             `<main class="index">
     <div>
         {{--
@@ -61,7 +61,7 @@ $data = [
         );
     });
 
-    test('it does not indent empty lines', () => {
+    test('it does not indent empty lines', async () => {
         const input =  `@php
     $foo = 'foo';
 
@@ -75,10 +75,10 @@ $data = [
 @endphp
 `;
 
-        assert.strictEqual(formatBladeString(input), out);
+        assert.strictEqual(await formatBladeString(input), out);
     });
 
-    test('it does not indent already indented code', () => {
+    test('it does not indent already indented code', async () => {
         const template = `@php
     /**
     * @deprecated Override \`logo.blade.php\` instead.
@@ -90,10 +90,10 @@ $data = [
     */
 @endphp
 `;
-        assert.strictEqual(formatBladeString(template), out);
+        assert.strictEqual(await formatBladeString(template), out);
     });
 
-    test('php block content is not lost', () => {
+    test('php block content is not lost', async () => {
         const template = `@if (true)
     @if (false)
     @if ('something')
@@ -115,10 +115,10 @@ $data = [
     @endif
 @endif
 `;
-        assert.strictEqual(formatBladeString(template), out);
+        assert.strictEqual(await formatBladeString(template), out);
     });
 
-    test('it reflows arrows inside php blocks', () => {
+    test('it reflows arrows inside php blocks', async () => {
         const template = `@php
     fn () => true;
 @endphp`;
@@ -126,10 +126,10 @@ $data = [
     fn () => true;
 @endphp
 `;
-        assert.strictEqual(formatBladeString(template), out);
+        assert.strictEqual(await formatBladeString(template), out);
     });
 
-    test('it reflows arrows inside php blocks2', () => {
+    test('it reflows arrows inside php blocks2', async () => {
         const template = `<?php
     fn () => true;
 ?>`;
@@ -137,10 +137,10 @@ $data = [
 fn () => true;
 ?>
 `;
-        assert.strictEqual(formatBladeString(template), out);
+        assert.strictEqual(await formatBladeString(template), out);
     });
 
-    test('it is smart about print width', () => {
+    test('it is smart about print width', async () => {
         const input = `
 @php
     $buttonClasses = \\Illuminate\\Support\\Arr::toCssClasses([
@@ -161,11 +161,11 @@ fn () => true;
 @endphp
 `;
 
-        assert.strictEqual(formatBladeString(input), out);
-        assert.strictEqual(formatBladeString(out), out);
+        assert.strictEqual(await formatBladeString(input), out);
+        assert.strictEqual(await formatBladeString(out), out);
     });
 
-    test('it preserves php blocks when format directive php parameters is disabled', () => {
+    test('it preserves php blocks when format directive php parameters is disabled', async () => {
         const input =  `
         @php $size = match ($size) { 'xs' => 'h-5 w-5 md:h-4 md:w-4', 'sm' => 'h-6 w-6 md:h-5 md:w-5', 'md' => 'h-7 w-7 md:h-6 md:w-6', 'lg' => 'h-8 w-8 md:h-7 md:w-7', 'xl' => 'h-9 w-9 md:h-8 md:w-8', default => $size, }; @endphp
         
@@ -174,16 +174,16 @@ fn () => true;
  $size = match ($size) { 'xs' => 'h-5 w-5 md:h-4 md:w-4', 'sm' => 'h-6 w-6 md:h-5 md:w-5', 'md' => 'h-7 w-7 md:h-6 md:w-6', 'lg' => 'h-8 w-8 md:h-7 md:w-7', 'xl' => 'h-9 w-9 md:h-8 md:w-8', default => $size, }; 
 @endphp
 `;
-        assert.strictEqual(formatBladeString(input, {
+        assert.strictEqual(await formatBladeString(input, {
             ...defaultSettings,
             formatDirectivePhpParameters: false,
         }), out);
     });
 
-    test('formatting unclosed php inside attributes aborts formatting', () => {
+    test('formatting unclosed php inside attributes aborts formatting', async () => {
         const input = `
 <button x-data="<?php $someoneWillDoThis ?> <?= $moreStuff ?"></button>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), input);
+        assert.strictEqual(await formatBladeStringWithPint(input), input);
     });
 });

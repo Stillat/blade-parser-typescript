@@ -1,11 +1,11 @@
-import { AbstractNode, LiteralNode, OperatorNode } from '../nodes/nodes';
-import { DocumentParser } from '../parser/documentParser';
-import { isStartOfString } from '../parser/scanners/isStartOfString';
-import { skipToEndOfLine } from '../parser/scanners/skipToEndOfLine';
-import { skipToEndOfMultilineComment } from '../parser/scanners/skipToEndOfMultilineComment';
-import { skipToEndOfStringTraced } from '../parser/scanners/skipToEndOfString';
-import { StringIterator } from '../parser/stringIterator';
-import { StringUtilities } from '../utilities/stringUtilities';
+import { AbstractNode, LiteralNode } from '../nodes/nodes.js';
+import { DocumentParser } from '../parser/documentParser.js';
+import { isStartOfString } from '../parser/scanners/isStartOfString.js';
+import { skipToEndOfLine } from '../parser/scanners/skipToEndOfLine.js';
+import { skipToEndOfMultilineComment } from '../parser/scanners/skipToEndOfMultilineComment.js';
+import { skipToEndOfStringTraced } from '../parser/scanners/skipToEndOfString.js';
+import { StringIterator } from '../parser/stringIterator.js';
+import { StringUtilities } from '../utilities/stringUtilities.js';
 
 export class SyntaxReflow implements StringIterator {
     private content = '';
@@ -79,7 +79,7 @@ export class SyntaxReflow implements StringIterator {
         return this.tokens;
     }
 
-    static couldReflow(input:string):boolean {
+    static couldReflow(input: string): boolean {
         return input.includes('fn(') && input.includes('=>');
     }
 
@@ -106,7 +106,7 @@ export class SyntaxReflow implements StringIterator {
                 this.currentContent = this.currentContent.concat(results.value.split(''));
                 this.pushChar(terminator);
                 this.currentIndex = results.endedOn;
-            continue;
+                continue;
             }
 
             if (this.cur == DocumentParser.Punctuation_ForwardSlash && this.next == DocumentParser.Punctuation_ForwardSlash) {
@@ -116,7 +116,7 @@ export class SyntaxReflow implements StringIterator {
 
             if (this.cur == DocumentParser.Punctuation_ForwardSlash && this.next == DocumentParser.Punctuation_Asterisk) {
                 skipToEndOfMultilineComment(this, true);
-                
+
                 continue;
             }
 
@@ -130,7 +130,7 @@ export class SyntaxReflow implements StringIterator {
                         continue;
                     } else {
                         this.currentContent.push(this.cur);
-                    }                    
+                    }
                 } else {
                     this.currentContent.push(this.cur);
                 }
@@ -145,7 +145,7 @@ export class SyntaxReflow implements StringIterator {
         }
     }
 
-    reflow(input:string): string {
+    reflow(input: string): string {
         try {
             this.parse(input);
         } catch (err) {

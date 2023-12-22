@@ -1,8 +1,8 @@
 import * as prettier from 'prettier';
-import { ErrorPrinter } from '../../document/printers/errorPrinter';
-import { TransformOptions } from '../../document/transformOptions';
-import { DocumentFormatter } from '../documentFormatter';
-import { formatAsHtml, formatJson, formatPhp, formatTagPhp, inlineFormatPhp, setOptions } from './utils';
+import { ErrorPrinter } from '../../document/printers/errorPrinter.js';
+import { TransformOptions } from '../../document/transformOptions.js';
+import { DocumentFormatter } from '../documentFormatter.js';
+import { formatAsHtml, formatJson, formatPhp, formatTagPhp, inlineFormatPhp, setOptions } from './utils.js';
 
 export class PrettierDocumentFormatter extends DocumentFormatter {
     constructor(options: prettier.ParserOptions, transformOptions: TransformOptions) {

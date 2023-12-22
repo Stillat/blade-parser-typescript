@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { BladeDocument } from '../document/bladeDocument';
+import { BladeDocument } from '../document/bladeDocument.js';
 
 
 suite('Transformer Remove Blade', () => {

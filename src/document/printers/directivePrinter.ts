@@ -1,16 +1,16 @@
-import { getPhpOptions } from '../../formatting/prettier/utils';
-import { SyntaxReflow } from '../../formatting/syntaxReflow';
-import { DirectiveNode } from '../../nodes/nodes';
-import { SimpleArrayParser } from '../../parser/simpleArrayParser';
-import { StringUtilities } from '../../utilities/stringUtilities';
-import { JsonFormatter, PhpFormatter } from '../formatters';
-import { TransformOptions } from '../transformOptions';
-import { ArrayPrinter } from './arrayPrinter';
-import { IndentLevel } from './indentLevel';
+import { getPhpOptions } from '../../formatting/prettier/utils.js';
+import { SyntaxReflow } from '../../formatting/syntaxReflow.js';
+import { DirectiveNode } from '../../nodes/nodes.js';
+import { SimpleArrayParser } from '../../parser/simpleArrayParser.js';
+import { StringUtilities } from '../../utilities/stringUtilities.js';
+import { JsonFormatter, PhpFormatter } from '../formatters.js';
+import { TransformOptions } from '../transformOptions.js';
+import { ArrayPrinter } from './arrayPrinter.js';
+import { IndentLevel } from './indentLevel.js';
 import { ParserOptions } from "prettier";
-import { getPrintWidth, preparePrettierWorkaround, undoPrettierWorkaround } from './printWidthUtils';
-import { PintTransformer } from '../pintTransformer';
-import { GeneralSyntaxReflow } from '../../formatting/generalSyntaxReflow';
+import { getPrintWidth, preparePrettierWorkaround, undoPrettierWorkaround } from './printWidthUtils.js';
+import { PintTransformer } from '../pintTransformer.js';
+import { GeneralSyntaxReflow } from '../../formatting/generalSyntaxReflow.js';
 
 export class DirectivePrinter {
     private static defaultControlDirectiveNames: string[] = [
@@ -32,14 +32,14 @@ export class DirectivePrinter {
         return phpOptions;
     }
 
-    static printDirective(
+    static async printDirective(
         directive: DirectiveNode,
         options: TransformOptions,
         phpFormatter: PhpFormatter | null,
         jsonFormatter: JsonFormatter | null,
         indentLevel: number,
         pintTransformer: PintTransformer | null
-    ): string {
+    ): Promise<string> {
         let directiveName = directive.directiveName.trim(),
             result = '@' + directiveName;
 
@@ -103,7 +103,7 @@ export class DirectivePrinter {
                             phpInput = lineWrapWorkaround.content;
                         }
 
-                        tResult = phpFormatter(phpInput, options, DirectivePrinter.getReasonableDirectivePhpOptions(directive, {
+                        tResult = await phpFormatter(phpInput, options, DirectivePrinter.getReasonableDirectivePhpOptions(directive, {
                             ...phpOptions,
                             printWidth: getPrintWidth(params, phpOptions.printWidth)
                         }));
@@ -168,7 +168,7 @@ export class DirectivePrinter {
                                 removeLines = true;
                             }
 
-                            tResult = phpFormatter('<?php ' + params, options, DirectivePrinter.getReasonableDirectivePhpOptions(directive, formatOptions))
+                            tResult = await phpFormatter('<?php ' + params, options, DirectivePrinter.getReasonableDirectivePhpOptions(directive, formatOptions))
                         } catch (err) {
                             // Prevent PHP errors from crashing formatter.
                         }
@@ -209,7 +209,7 @@ export class DirectivePrinter {
                         params = params.substring(0, params.length - 1);
                     }
 
-                    let tResult = jsonFormatter(params);
+                    let tResult = await jsonFormatter(params);
 
                     if (tResult.includes("\n")) {
                         tResult = IndentLevel.shiftIndent(

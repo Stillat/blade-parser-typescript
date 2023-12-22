@@ -1,7 +1,7 @@
-import assert = require('assert');
-import { BladeDocument } from '../document/bladeDocument';
-import { BladeCommentNode, BladeEchoNode, LiteralNode } from '../nodes/nodes';
-import { assertCommentContent, assertCount, assertEchoContent, assertInstanceOf, assertLiteralContent } from './testUtils/assertions';
+import assert from 'assert';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { BladeCommentNode, BladeEchoNode, LiteralNode } from '../nodes/nodes.js';
+import { assertCommentContent, assertCount, assertEchoContent, assertInstanceOf, assertLiteralContent } from './testUtils/assertions.js';
 
 suite('Blade Comments', () => {
     test('comments with braces does not confuse the parser', () => {

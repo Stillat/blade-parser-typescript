@@ -1,9 +1,11 @@
 import assert from 'assert';
-import { formatBladeStringWithPint } from '../../../formatting/prettier/utils';
-import { StringUtilities } from '../../../utilities/stringUtilities';
+import { formatBladeStringWithPint } from '../../../formatting/prettier/utils.js';
+import { StringUtilities } from '../../../utilities/stringUtilities.js';
+import { setupTestHooks } from '../../../test/testUtils/formatting.js';
 
 suite('Pint Transformer Acceptance: admin_resources_views_components_layouts_base_blade_php', () => {
-    test('pint: it can format admin_resources_views_components_layouts_base_blade_php', () => {
+    setupTestHooks();
+    test('pint: it can format admin_resources_views_components_layouts_base_blade_php', async () => {
         const input = `@props([
     'title' => null,
 ])
@@ -182,18 +184,18 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_layouts_bas
         {{ \\Filament\\Facades\\Filament::renderHook('styles.start') }}
 
         <style>
-            [x-cloak=""],
-            [x-cloak="x-cloak"],
-            [x-cloak="1"] {
+            [x-cloak=''],
+            [x-cloak='x-cloak'],
+            [x-cloak='1'] {
                 display: none !important;
             }
             @media (max-width: 1023px) {
-                [x-cloak="-lg"] {
+                [x-cloak='-lg'] {
                     display: none !important;
                 }
             }
             @media (min-width: 1024px) {
-                [x-cloak="lg"] {
+                [x-cloak='lg'] {
                     display: none !important;
                 }
             }
@@ -238,15 +240,15 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_layouts_bas
 
         @if (config('filament.dark_mode'))
             <script>
-                const theme = localStorage.getItem("theme");
+                const theme = localStorage.getItem('theme');
 
                 if (
-                    theme === "dark" ||
+                    theme === 'dark' ||
                     (!theme &&
-                        window.matchMedia("(prefers-color-scheme: dark)")
+                        window.matchMedia('(prefers-color-scheme: dark)')
                             .matches)
                 ) {
-                    document.documentElement.classList.add("dark");
+                    document.documentElement.classList.add('dark');
                 }
             </script>
         @endif
@@ -313,10 +315,10 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_layouts_bas
             ></script>
 
             <script>
-                window.addEventListener("DOMContentLoaded", () => {
+                window.addEventListener('DOMContentLoaded', () => {
                     window.Echo = new window.EchoFactory(@js(config('filament.broadcasting.echo')));
 
-                    window.dispatchEvent(new CustomEvent("EchoLoaded"));
+                    window.dispatchEvent(new CustomEvent('EchoLoaded'));
                 });
             </script>
         @endif
@@ -347,7 +349,7 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_layouts_bas
 </html>
 `;
 
-        assert.strictEqual(StringUtilities.normalizeLineEndings(formatBladeStringWithPint(input).trim()), StringUtilities.normalizeLineEndings(output.trim()));
-        assert.strictEqual(StringUtilities.normalizeLineEndings(formatBladeStringWithPint(output).trim()), StringUtilities.normalizeLineEndings(output.trim()));
+        assert.strictEqual(StringUtilities.normalizeLineEndings((await formatBladeStringWithPint(input)).trim()), StringUtilities.normalizeLineEndings(output.trim()));
+        assert.strictEqual(StringUtilities.normalizeLineEndings((await formatBladeStringWithPint(output)).trim()), StringUtilities.normalizeLineEndings(output.trim()));
     }).timeout(30000);
 });

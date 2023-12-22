@@ -1,6 +1,6 @@
 import { parseScript } from 'esprima';
-import { ILabeledRange } from '../nodes/labeledRange';
-import { GenericLanguageStructures } from './genericLanguageStructures';
+import { ILabeledRange } from '../nodes/labeledRange.js';
+import { GenericLanguageStructures } from './genericLanguageStructures.js';
 
 export class JavaScriptStructuresAnalyzer {
     private structures: ILabeledRange[] = [];

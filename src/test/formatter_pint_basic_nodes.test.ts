@@ -1,48 +1,48 @@
 import assert from 'assert';
-import { formatBladeStringWithPint } from '../formatting/prettier/utils';
+import { formatBladeStringWithPint } from '../formatting/prettier/utils.js';
 
 suite('Pint Transformer: Basic Nodes', () => {
-    test('pint: it formats echos', () => {
+    test('pint: it formats echos', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint('{{ $title }}').trim(),
+            (await formatBladeStringWithPint('{{ $title }}')).trim(),
             "{{ $title }}"
         );
     });
 
-    test('pint: it formats echo variant', () => {
+    test('pint: it formats echo variant', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint('{{{ $title }}}').trim(),
+            (await formatBladeStringWithPint('{{{ $title }}}')).trim(),
             "{{{ $title }}}"
         );
     });
 
-    test('pint: it formats escaped echos', () => {
+    test('pint: it formats escaped echos', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint('{!! $title !!}').trim(),
+            (await formatBladeStringWithPint('{!! $title !!}')).trim(),
             "{!! $title !!}"
         );
     });
 
-    test('pint: it formats simple comments', () => {
+    test('pint: it formats simple comments', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint('{{-- Comment. --}}').trim(),
+            (await formatBladeStringWithPint('{{-- Comment. --}}')).trim(),
             "{{-- Comment. --}}"
         );
     });
 
-    test('pint: it formats block comments', () => {
+    test('pint: it formats block comments', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`{{--
-                Block Comment. --}}`).trim(),
+            (await formatBladeStringWithPint(`{{--
+                Block Comment. --}}`)).trim(),
             `{{--
     Block Comment.
 --}}`
         );
     });
 
-    test('pint: it formats block comments with', () => {
+    test('pint: it formats block comments with', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`{{--
+            await formatBladeStringWithPint(`{{--
  Block Comment.
  with many lines and with <stuff></stuff> --}}`),
             `{{--
@@ -53,13 +53,13 @@ suite('Pint Transformer: Basic Nodes', () => {
         );
     });
 
-    test('pint: block comments inside a div', () => {
+    test('pint: block comments inside a div', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<div>
+            (await formatBladeStringWithPint(`<div>
         {{--
  Block Comment.
  with many lines and with <stuff></stuff> --}}
-        </div>`).trim(),
+        </div>`)).trim(),
             `<div>
     {{--
         Block Comment.

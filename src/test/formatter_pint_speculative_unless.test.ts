@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { formatBladeStringWithPint } from '../formatting/prettier/utils';
+import { formatBladeStringWithPint } from '../formatting/prettier/utils.js';
 
 suite('Pint Transformer: Speculative Unless', () => {
-    test('pint:it can format detected custom unless', () => {
+    test('pint:it can format detected custom unless', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`@unlessdisk ('local1')
+            (await formatBladeStringWithPint(`@unlessdisk ('local1')
             <!-- The application is not using the local disk1... -->
             @unlessdisk ('local2')
                 <!-- The application is not using the local disk2... -->
@@ -17,7 +17,7 @@ suite('Pint Transformer: Speculative Unless', () => {
             @enddisk
             @enddisk
             @enddisk
-            @enddisk`).trim(),
+            @enddisk`)).trim(),
             `@unlessdisk('local1')
     <!-- The application is not using the local disk1... -->
     @unlessdisk('local2')

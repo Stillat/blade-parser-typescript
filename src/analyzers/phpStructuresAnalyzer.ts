@@ -1,6 +1,6 @@
 import { Engine, If, Call, Node, Variable, PropertyLookup, Identifier, RetIf, Bin, Assign } from 'php-parser';
-import { ILabeledRange } from '../nodes/labeledRange';
-import { GenericLanguageStructures } from './genericLanguageStructures';
+import { ILabeledRange } from '../nodes/labeledRange.js';
+import { GenericLanguageStructures } from './genericLanguageStructures.js';
 
 /**
  * This class helps find structures within PHP code

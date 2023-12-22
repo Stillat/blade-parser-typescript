@@ -1,4 +1,4 @@
-import { IClassStringConfiguration } from '../formatting/classStringsConfig';
+import { IClassStringConfiguration } from '../formatting/classStringsConfig.js';
 
 export interface TransformOptions {
     spacesAfterDirective: number,

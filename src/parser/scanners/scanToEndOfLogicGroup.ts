@@ -1,10 +1,10 @@
-import { DocumentParser } from '../documentParser';
-import { LogicGroupScanResults } from '../scanResults';
-import { StringIterator } from '../stringIterator';
-import { isStartOfString } from './isStartOfString';
-import { skipToEndOfLine } from './skipToEndOfLine';
-import { skipToEndOfMultilineComment } from './skipToEndOfMultilineComment';
-import { skipToEndOfString } from './skipToEndOfString';
+import { DocumentParser } from '../documentParser.js';
+import { LogicGroupScanResults } from '../scanResults.js';
+import { StringIterator } from '../stringIterator.js';
+import { isStartOfString } from './isStartOfString.js';
+import { skipToEndOfLine } from './skipToEndOfLine.js';
+import { skipToEndOfMultilineComment } from './skipToEndOfMultilineComment.js';
+import { skipToEndOfString } from './skipToEndOfString.js';
 
 export function scanToEndOfLogicGroup(iterator: StringIterator): LogicGroupScanResults {
     const groupStartedOn = iterator.getCurrentIndex() + iterator.getSeedOffset(),

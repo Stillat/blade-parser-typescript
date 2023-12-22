@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { formatBladeStringWithPint } from '../formatting/prettier/utils';
+import { formatBladeStringWithPint } from '../formatting/prettier/utils.js';
 
 suite('Pint Transformer: Props Directive', () => {
-    test('pint: it can format props on many lines', () => {
+    test('pint: it can format props on many lines', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<x-icon
+            (await formatBladeStringWithPint(`<x-icon
 
 
             :class="Arr::toCssClasses(['...'])" 
@@ -32,7 +32,7 @@ suite('Pint Transformer: Props Directive', () => {
 
 
            
-       </div>`).trim(),
+       </div>`)).trim(),
             `<x-icon :class="Arr::toCssClasses(['...'])" />
 
 @props([
@@ -47,9 +47,9 @@ suite('Pint Transformer: Props Directive', () => {
         );
     });
 
-    test('pint: it formats document with props', () => {
+    test('pint: it formats document with props', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<x-icon
+            (await formatBladeStringWithPint(`<x-icon
 
 
             :class="Arr::toCssClasses(['...'])" 
@@ -78,7 +78,7 @@ suite('Pint Transformer: Props Directive', () => {
             
             
             
-            </div>`).trim(),
+            </div>`)).trim(),
             `<x-icon :class="Arr::toCssClasses(['...'])" />
 
 @props(['icon',
@@ -92,7 +92,7 @@ suite('Pint Transformer: Props Directive', () => {
         );
     });
 
-    test('pint: it leaves associative arrays alone', () => {
+    test('pint: it leaves associative arrays alone', async () => {
         const template = `@props([
     'foo' => true,
             'bar'       => false,
@@ -104,10 +104,10 @@ suite('Pint Transformer: Props Directive', () => {
     'bar2' => false,
 ])
 `;
-        assert.strictEqual(formatBladeStringWithPint(template), out);
+        assert.strictEqual(await formatBladeStringWithPint(template), out);
     });
 
-    test('pint: it can wrap prop lists', () => {
+    test('pint: it can wrap prop lists', async () => {
         const template = `@props([
     'heading','footer',
 ])`;
@@ -115,10 +115,10 @@ suite('Pint Transformer: Props Directive', () => {
     'heading', 'footer',
 ])
 `;
-        assert.strictEqual(formatBladeStringWithPint(template), out);
+        assert.strictEqual(await formatBladeStringWithPint(template), out);
     });
 
-    test('pint: it detects associative arrays', () => {
+    test('pint: it detects associative arrays', async () => {
         const template = `@props([
     "foo" => [],
 ])`;
@@ -126,10 +126,10 @@ suite('Pint Transformer: Props Directive', () => {
     'foo' => [],
 ])
 `;
-        assert.strictEqual(formatBladeStringWithPint(template), out);
+        assert.strictEqual(await formatBladeStringWithPint(template), out);
     });
 
-    test('pint: it detects assoc arrays 2', () => {
+    test('pint: it detects assoc arrays 2', async () => {
         const template = `@props([
     'foo' => [],
     'foobarbaz' => false,
@@ -139,10 +139,10 @@ suite('Pint Transformer: Props Directive', () => {
     'foobarbaz' => false,
 ])
 `;
-        assert.strictEqual(formatBladeStringWithPint(template), out);
+        assert.strictEqual(await formatBladeStringWithPint(template), out);
     });
 
-    test('pint: it does not force align mixed arrays', () => {
+    test('pint: it does not force align mixed arrays', async () => {
         const input = `@props([
     'foobarbaz' => true,
     'bar',
@@ -154,11 +154,11 @@ suite('Pint Transformer: Props Directive', () => {
     'baz' => true,
 ])
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
-        assert.strictEqual(formatBladeStringWithPint(out), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(out), out);
     });
 
-    test('pint: it doesnt wrap empty arrays', () => {
+    test('pint: it doesnt wrap empty arrays', async () => {
         const input = `@props([
             'actions' => [],
             'url',
@@ -168,7 +168,7 @@ suite('Pint Transformer: Props Directive', () => {
     'url',
 ])
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
-        assert.strictEqual(formatBladeStringWithPint(out), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(out), out);
     })
 });

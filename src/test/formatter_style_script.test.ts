@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { formatBladeString } from '../formatting/prettier/utils';
+import { formatBladeString } from '../formatting/prettier/utils.js';
 
 suite('Basic <style> and <script> Formatting', () => {
-    test('it can format echo and directives inside style and script tags', () => {
+    test('it can format echo and directives inside style and script tags', async () => {
         assert.strictEqual(
-            formatBladeString(`
+            (await formatBladeString(`
             <html>
             <style>
                 .thing {
@@ -34,7 +34,7 @@ suite('Basic <style> and <script> Formatting', () => {
                                             </script>
                                             </body>
             
-                                            </html>`).trim(),
+                                            </html>`)).trim(),
             `<html>
     <style>
         .thing {
@@ -60,7 +60,7 @@ suite('Basic <style> and <script> Formatting', () => {
         );
     });
 
-    test('it does not continue to indent', () => {
+    test('it does not continue to indent', async () => {
         const input = `
 <style>
     :root {
@@ -83,17 +83,17 @@ suite('Basic <style> and <script> Formatting', () => {
 </style>
 `;
 
-        let out = formatBladeString(input);
+        let out = await formatBladeString(input);
         assert.strictEqual(out, expected);
 
         for (let i = 0; i < 5; i++) {
-            out = formatBladeString(out);
+            out = await formatBladeString(out);
             
             assert.strictEqual(out, expected);
         }
     });
 
-    test('it does not do really dumb things if already indented nicely', () => {
+    test('it does not do really dumb things if already indented nicely', async () => {
         const input = `
 <style>
     :root {
@@ -139,7 +139,7 @@ suite('Basic <style> and <script> Formatting', () => {
     </style>
 </div>
 `;
-        assert.strictEqual(formatBladeString(input), out);
-        assert.strictEqual(formatBladeString(out), out);
+        assert.strictEqual(await formatBladeString(input), out);
+        assert.strictEqual(await formatBladeString(out), out);
     });
 });

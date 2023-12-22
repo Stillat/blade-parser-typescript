@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { transformString } from './testUtils/transform';
+import { transformString } from './testUtils/transform.js';
 
 suite('Props Transformer', () => {
-    test('it can transform documents with props', () => {
+    test('it can transform documents with props', async () => {
         assert.strictEqual(
-            transformString(`<x-icon
+            (await transformString(`<x-icon
 
 
 :class="Arr::toCssClasses(['...'])" 
@@ -33,7 +33,7 @@ suite('Props Transformer', () => {
 
 
 
-</div>`).trim(),
+</div>`)).trim(),
             `<x-icon :class="Arr::toCssClasses(['...'])"  />
 
 

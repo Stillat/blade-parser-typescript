@@ -1,6 +1,6 @@
-import { GenericLanguageStructures } from '../analyzers/genericLanguageStructures';
-import { BladeDocument } from '../document/bladeDocument';
-import { BladeEchoNode, DirectiveNode, InlinePhpNode } from '../nodes/nodes';
+import { GenericLanguageStructures } from '../analyzers/genericLanguageStructures.js';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { BladeEchoNode, DirectiveNode, InlinePhpNode } from '../nodes/nodes.js';
 
 export interface IClassRuleset {
     includeWhen: string[],

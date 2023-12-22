@@ -1,6 +1,6 @@
 import assert from 'assert';
-import { BladeDocument } from '../document/bladeDocument';
-import { FragmentNode } from '../nodes/nodes';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { FragmentNode } from '../nodes/nodes.js';
 
 suite('Fragment Structures', () => {
     test('it can detect when <style> and <script> contain structures', () => {

@@ -1,47 +1,47 @@
 import assert from 'assert';
-import { formatBladeString } from '../formatting/prettier/utils';
-import { defaultSettings } from '../formatting/optionDiscovery';
+import { formatBladeString } from '../formatting/prettier/utils.js';
+import { defaultSettings } from '../formatting/optionDiscovery.js';
 
 suite('Formatting Options', () => {
-    test('formatting inside echos can be disabled', () => {
+    test('formatting inside echos can be disabled', async () => {
         const template = `{{ ! $foo }}`;
 
-        assert.strictEqual(formatBladeString(template, {
-            ...defaultSettings,
-            formatInsideEcho: false
-        }).trim(), template);
+        assert.strictEqual((await formatBladeString(template, {
+                ...defaultSettings,
+                formatInsideEcho: false
+            })).trim(), template);
     });
 
-    test('formatting of directive args can be disabled', () => {
+    test('formatting of directive args can be disabled', async () => {
         const template = `@class([
     'foo' => true
 ])`;
-        assert.strictEqual(formatBladeString(template, {
-            ...defaultSettings,
-            formatDirectivePhpParameters: false,
-        }).trim(), template);
+        assert.strictEqual((await formatBladeString(template, {
+                ...defaultSettings,
+                formatDirectivePhpParameters: false,
+            })).trim(), template);
     });
 
-    test('formatting props args can be disabled', () => {
+    test('formatting props args can be disabled', async () => {
         let template = `@props([
     'foo' => [],
 ])`;
-        assert.strictEqual(formatBladeString(template, {
-            ...defaultSettings,
-            formatDirectivePhpParameters: false,
-        }).trim(), template);
+        assert.strictEqual((await formatBladeString(template, {
+                ...defaultSettings,
+                formatDirectivePhpParameters: false,
+            })).trim(), template);
 
         template = `@props([
     'some' => null,
     'property' => null,
 ])`;
-        assert.strictEqual(formatBladeString(template, {
-            ...defaultSettings,
-            formatDirectivePhpParameters: false,
-        }).trim(), template);
+        assert.strictEqual((await formatBladeString(template, {
+                ...defaultSettings,
+                formatDirectivePhpParameters: false,
+            })).trim(), template);
     });
 
-    test('it continues to format the document even with certain things disabled', () => {
+    test('it continues to format the document even with certain things disabled', async () => {
         // Note: the spacing on 'foo4' is intentional.
         const template = `@extends('layouts.master')
 
@@ -140,14 +140,14 @@ suite('Formatting Options', () => {
     @endif
 @endsection
 `;
-        assert.strictEqual(formatBladeString(template, {
+        assert.strictEqual(await formatBladeString(template, {
             ...defaultSettings,
             formatInsideEcho: false,
             formatDirectivePhpParameters: false,
         }), out);
     });
 
-    test('custom prettier options can be set', () => {
+    test('custom prettier options can be set', async () => {
         const input = `{{
     someFunction(
         "foobarbaz",
@@ -164,7 +164,7 @@ suite('Formatting Options', () => {
     )
 }}
 `
-        assert.strictEqual(formatBladeString(input, {
+        assert.strictEqual(await formatBladeString(input, {
     ...defaultSettings,
     phpOptions: {
         singleQuote: true,
@@ -181,6 +181,6 @@ const output2 = `{{
 }}
 `
         // PHP 8 should now be the default.
-        assert.strictEqual(formatBladeString(input), output2);
+        assert.strictEqual(await formatBladeString(input), output2);
     });
 });

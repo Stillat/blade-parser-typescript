@@ -1,9 +1,9 @@
-import { ILabeledRange } from '../nodes/labeledRange';
-import { isStartOfString } from './scanners/isStartOfString';
-import { skipToEndOfLine } from './scanners/skipToEndOfLine';
-import { skipToEndOfMultilineComment } from './scanners/skipToEndOfMultilineComment';
-import { skipToEndOfStringTraced } from './scanners/skipToEndOfString';
-import { StringIterator } from './stringIterator';
+import { ILabeledRange } from '../nodes/labeledRange.js';
+import { isStartOfString } from './scanners/isStartOfString.js';
+import { skipToEndOfLine } from './scanners/skipToEndOfLine.js';
+import { skipToEndOfMultilineComment } from './scanners/skipToEndOfMultilineComment.js';
+import { skipToEndOfStringTraced } from './scanners/skipToEndOfString.js';
+import { StringIterator } from './stringIterator.js';
 
 export interface IStringParserNode {
     content: string;

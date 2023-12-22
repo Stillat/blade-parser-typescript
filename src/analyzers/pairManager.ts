@@ -1,4 +1,4 @@
-import { AbstractNode, DirectiveNode } from '../nodes/nodes';
+import { AbstractNode, DirectiveNode } from '../nodes/nodes.js';
 
 export class PairManager {
     private static possibleClosingNode: Map<string, number> = new Map();

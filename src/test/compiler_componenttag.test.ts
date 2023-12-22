@@ -1,8 +1,8 @@
 import assert from 'assert';
-import { AppClassNameResolver } from '../compiler/componentClassNameResolver';
-import { ComponentDetailsResolver } from '../compiler/componentDetailsResolver';
-import { PhpCompiler } from '../compiler/phpCompiler';
-import { BladeDocument } from '../document/bladeDocument';
+import { AppClassNameResolver } from '../compiler/componentClassNameResolver.js';
+import { ComponentDetailsResolver } from '../compiler/componentDetailsResolver.js';
+import { PhpCompiler } from '../compiler/phpCompiler.js';
+import { BladeDocument } from '../document/bladeDocument.js';
 
 suite('Blade Component Tag Compiler', () => {
     test('slots can be compiled', () => {

@@ -1,8 +1,8 @@
 import assert from 'assert';
-import { PushOnceCompiler } from '../compiler/compilers';
-import { PhpCompiler } from '../compiler/phpCompiler';
-import { BladeDocument } from '../document/bladeDocument';
-import { DirectiveNode } from '../nodes/nodes';
+import { PushOnceCompiler } from '../compiler/compilers/index.js';
+import { PhpCompiler } from '../compiler/phpCompiler.js';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { DirectiveNode } from '../nodes/nodes.js';
 
 suite('Blade Push', () => {
     test('push is compiled', () => {

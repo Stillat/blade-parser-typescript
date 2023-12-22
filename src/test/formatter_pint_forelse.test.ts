@@ -1,16 +1,16 @@
 import assert from 'assert';
-import { formatBladeStringWithPint } from '../formatting/prettier/utils';
+import { formatBladeStringWithPint } from '../formatting/prettier/utils.js';
 
 suite('Pint Transformer: forelese Nodes', () => {
-    test('pint: it indents forelse', () => {
+    test('pint: it indents forelse', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<div>
+            (await formatBladeStringWithPint(`<div>
         @forelse ($users as $user)
 <li>{{ $user->name }}</li>
 @empty
 <p>No users</p>
 @endforelse
-            </div>`).trim(),
+            </div>`)).trim(),
             `<div>
     @forelse ($users as $user)
         <li>{{ $user->name }}</li>
@@ -21,9 +21,9 @@ suite('Pint Transformer: forelese Nodes', () => {
         );
     });
 
-    test('pint: it can unwrap forelse from a single line', () => {
+    test('pint: it can unwrap forelse from a single line', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<div> @forelse ($users as $user) <li>{{ $user->name }}</li> @empty <p>No users</p> @endforelse</div> `).trim(),
+            (await formatBladeStringWithPint(`<div> @forelse ($users as $user) <li>{{ $user->name }}</li> @empty <p>No users</p> @endforelse</div> `)).trim(),
             `<div>
     @forelse ($users as $user)
         <li>{{ $user->name }}</li>
@@ -34,9 +34,9 @@ suite('Pint Transformer: forelese Nodes', () => {
         );
     });
 
-    test('pint: it can format forelse without an empty directive', () => {
+    test('pint: it can format forelse without an empty directive', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<div>
+            (await formatBladeStringWithPint(`<div>
         @forelse ($users as $user)
 <li>{{ $user->name }}</li>
 @endforelse
@@ -47,7 +47,7 @@ suite('Pint Transformer: forelese Nodes', () => {
         @forelse ($users as $user)
     <li>{{ $user->name }}
     </li>
-@endforelse`).trim(),
+@endforelse`)).trim(),
             `<div>
     @forelse ($users as $user)
         <li>{{ $user->name }}</li>
@@ -60,15 +60,15 @@ suite('Pint Transformer: forelese Nodes', () => {
         );
     });
 
-    test('pint: it formats valid PHP inside forelse', () => {
+    test('pint: it formats valid PHP inside forelse', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<div>
+            (await formatBladeStringWithPint(`<div>
         @forelse ($users as                  $user)
 <li>{{ $user->name }}</li>
 @empty
 <p>No users</p>
 @endforelse
-            </div>`).trim(),
+            </div>`)).trim(),
             `<div>
     @forelse ($users as $user)
         <li>{{ $user->name }}</li>
@@ -79,15 +79,15 @@ suite('Pint Transformer: forelese Nodes', () => {
         );
     });
 
-    test('pint: it ignores invalid PHP inside forelse', () => {
+    test('pint: it ignores invalid PHP inside forelse', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<div>
+            (await formatBladeStringWithPint(`<div>
         @forelse ($users as       ++++$           $user)
 <li>{{ $user->name }}</li>
 @empty
 <p>No users</p>
 @endforelse
-            </div>`).trim(),
+            </div>`)).trim(),
             `<div>
     @forelse ($users as       ++++$           $user)
         <li>{{ $user->name }}</li>

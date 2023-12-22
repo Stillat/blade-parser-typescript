@@ -1,9 +1,12 @@
 import assert from 'assert';
-import { formatBladeStringWithPint } from '../formatting/prettier/utils';
-import { defaultSettings } from '../formatting/optionDiscovery';
+import { formatBladeStringWithPint } from '../formatting/prettier/utils.js';
+import { defaultSettings } from '../formatting/optionDiscovery.js';
+import { setupTestHooks } from './testUtils/formatting.js';
 
 suite('Alpine.js attribute formatting', () => {
-    test('it does not trash formatting of embedded php', () => {
+    setupTestHooks();
+
+    test('it does not trash formatting of embedded php', async () => {
         const input = `
 <button x-data="var thing = '<?php !$someoneWillDoThis ?> <?= $moreStuff ?>'"></button>
 `;
@@ -11,10 +14,10 @@ suite('Alpine.js attribute formatting', () => {
     x-data="var thing = '<?php !$someoneWillDoThis ?> <?= $moreStuff ?>'"
 ></button>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('it does reasonable things with javascript inside attributes', () => {
+    test('it does reasonable things with javascript inside attributes', async () => {
         const input = `
 <div
         x-ignore
@@ -65,10 +68,10 @@ suite('Alpine.js attribute formatting', () => {
     wire:ignore
 ></div>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('js prettier options can be changed', () => {
+    test('js prettier options can be changed', async () => {
         const input = `
 <div
         x-ignore
@@ -119,7 +122,7 @@ suite('Alpine.js attribute formatting', () => {
     wire:ignore
 ></div>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input, {
+        assert.strictEqual(await formatBladeStringWithPint(input, {
             ...defaultSettings,
             attributeJsOptions: {
                 printWidth: 210,
@@ -128,7 +131,7 @@ suite('Alpine.js attribute formatting', () => {
         }), out);
     });
 
-    test('attribute formatting can be disabled', () => {
+    test('attribute formatting can be disabled', async () => {
         const input = `
 <div
         x-ignore
@@ -173,13 +176,13 @@ suite('Alpine.js attribute formatting', () => {
     wire:ignore
 ></div>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input, {
+        assert.strictEqual(await formatBladeStringWithPint(input, {
             ...defaultSettings,
             formatJsAttributes: false,
         }), expected);
     });
 
-    test('attribute patterns can be excluded', () => {
+    test('attribute patterns can be excluded', async () => {
         const input = `
 <div
         x-ignore
@@ -224,7 +227,7 @@ suite('Alpine.js attribute formatting', () => {
     wire:ignore
 ></div>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input, {
+        assert.strictEqual(await formatBladeStringWithPint(input, {
             ...defaultSettings,
             formatJsAttributes: true,
             excludeJsAttributes: [
@@ -234,7 +237,7 @@ suite('Alpine.js attribute formatting', () => {
         }), expected);
     });
 
-    test('it can format alpine directives generally', () => {
+    test('it can format alpine directives generally', async () => {
         const input = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -357,10 +360,10 @@ suite('Alpine.js attribute formatting', () => {
     </body>
 </html>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('it formats alpinejs directives generally #2', () => {
+    test('it formats alpinejs directives generally #2', async () => {
         const input = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -454,10 +457,10 @@ suite('Alpine.js attribute formatting', () => {
     </body>
 </html>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('it automatically ignores things that might be formatted as subtraction', () => {
+    test('it automatically ignores things that might be formatted as subtraction', async () => {
         const input = `<div
 class="relative group"
 @if($isMultiple && $isReorderable)
@@ -474,10 +477,10 @@ class="relative group"
     @endif
 ></div>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('it doesnt break up single line if statements', () => {
+    test('it doesnt break up single line if statements', async () => {
         const input = `<div 
 x-on:collapse-resources.window="if ($event.detail.foo === 'test' && $event.detail.foo2 === 'test' && $event.detail.foo3 === 'test') isCollapsed = true"
 >`;
@@ -485,6 +488,6 @@ x-on:collapse-resources.window="if ($event.detail.foo === 'test' && $event.detai
     x-on:collapse-resources.window="if ($event.detail.foo === 'test' && $event.detail.foo2 === 'test' && $event.detail.foo3 === 'test') isCollapsed = true"
 ></div>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), expected);
+        assert.strictEqual(await formatBladeStringWithPint(input), expected);
     });
 });

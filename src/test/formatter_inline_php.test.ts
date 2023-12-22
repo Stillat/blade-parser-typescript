@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { formatBladeString } from '../formatting/prettier/utils';
+import { formatBladeString } from '../formatting/prettier/utils.js';
 
 suite('Inline PHP Formatting', () => {
-    test('it can format basic inline PHP', () => {
+    test('it can format basic inline PHP', async () => {
         assert.strictEqual(
-            formatBladeString(`
+            (await formatBladeString(`
 <html>
         <?php
 
@@ -18,7 +18,7 @@ $status =           $kernel->
 );
 
 ?>
-</html>`).trim(),
+</html>`)).trim(),
             `<html>
     <?php
 
@@ -34,9 +34,9 @@ $status =           $kernel->
         );
     });
 
-    test('it can indent dynamic elements and spans', () => {
+    test('it can indent dynamic elements and spans', async () => {
         assert.strictEqual(
-            formatBladeString(`<<?= $element; ?>>
+            (await formatBladeString(`<<?= $element; ?>>
             <?= $inline; ?>
         <p>Text <?= $inline             ; ?> here.</p>
     </<?= $element; ?>>
@@ -47,7 +47,7 @@ $status =           $kernel->
 </<?php echo $element; ?>>
 
 
-<h1><?php echo ($that +    $another    - $something) +    $thing   ?></h1>`).trim(),
+<h1><?php echo ($that +    $another    - $something) +    $thing   ?></h1>`)).trim(),
             `<<?= $element ?>>
     <?= $inline ?>
 
@@ -64,9 +64,9 @@ $status =           $kernel->
         );
     });
 
-    test('it preserves invalid PHP', () => {
+    test('it preserves invalid PHP', async () => {
         assert.strictEqual(
-            formatBladeString(`<<?php echo $element; ?>>
+            (await formatBladeString(`<<?php echo $element; ?>>
             <?php echo $inline----  $$$$$; ?>
             <p>Text <?php echo $inline             ; ?> here.</p>
             </<?php echo $element; ?>>
@@ -74,7 +74,7 @@ $status =           $kernel->
                             <<?= echo $element; ?>>
                                     <?= echo $inline  ; ?>
                     <p>Text <?= echo $inline             ; ?> here.</p>
-                </<?= echo $element; ?>>`).trim(),
+                </<?= echo $element; ?>>`)).trim(),
             `<<?php echo $element; ?>>
     <?php echo $inline----  $$$$$; ?>
 

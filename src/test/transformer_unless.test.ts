@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { transformString } from './testUtils/transform';
+import { transformString } from './testUtils/transform.js';
 
 suite('Unless Transformer', () => {
-    test('it can transform unless statements', () => {
+    test('it can transform unless statements', async () => {
         assert.strictEqual(
-            transformString(`@unless($something)
+            (await transformString(`@unless($something)
 @unless($somethingTwo)
 @unless($somethingThree)
 @unless($somethingFour)
@@ -14,7 +14,7 @@ suite('Unless Transformer', () => {
 @endunless
 @endunless
 @endunless
-@endunless`).trim(),
+@endunless`)).trim(),
             `@unless ($something)
 
 @unless ($somethingTwo)

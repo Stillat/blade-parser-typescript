@@ -1,8 +1,8 @@
 import assert from 'assert';
-import { formatBladeString, formatBladeStringWithPint } from '../formatting/prettier/utils';
+import { formatBladeString, formatBladeStringWithPint } from '../formatting/prettier/utils.js';
 
 suite('Format JavaScript Attributes', () => {
-    test('it does not attempt to format in unsafe situations', () => {
+    test('it does not attempt to format in unsafe situations', async () => {
          const input = `
 <div>
 <button
@@ -172,18 +172,18 @@ x-bind:class="
     </button>
 </div>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('formatting js is disabled when it contains escaped data', function () {
+    test('formatting js is disabled when it contains escaped data', async function () {
         const input = `<div x-data="{ data: {!! $data !!} }"></div>`;
 
-        assert.strictEqual(formatBladeStringWithPint(input).trim(), input);
+        assert.strictEqual((await formatBladeStringWithPint(input)).trim(), input);
     });
 
-    test('it ignores the js formatter if it contains escaped single quotes', function () {
+    test('it ignores the js formatter if it contains escaped single quotes', async function () {
         const input = `<button x-on:click="console.log('I\\'m an escaped quote')">Text</button>`;
 
-        assert.strictEqual(formatBladeString(input).trim(), input);
+        assert.strictEqual((await formatBladeString(input)).trim(), input);
     });
 });

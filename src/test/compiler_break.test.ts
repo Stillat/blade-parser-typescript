@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { PhpCompiler } from '../compiler/phpCompiler';
+import { PhpCompiler } from '../compiler/phpCompiler.js';
 
 suite('Break Statements', () => {
     test('break statements are compiled', () => {

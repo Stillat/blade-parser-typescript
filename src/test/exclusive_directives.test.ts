@@ -1,8 +1,8 @@
 import assert from 'assert';
-import { BladeDocument } from '../document/bladeDocument';
-import { BladeEchoNode, DirectiveNode, LiteralNode } from '../nodes/nodes';
-import { ParserOptions } from '../parser/parserOptions';
-import { assertCount, assertInstanceOf, assertLiteralContent } from './testUtils/assertions';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { BladeEchoNode, DirectiveNode, LiteralNode } from '../nodes/nodes.js';
+import { ParserOptions } from '../parser/parserOptions.js';
+import { assertCount, assertInstanceOf, assertLiteralContent } from './testUtils/assertions.js';
 
 suite('Exclusive Directives Parsing', () => {
     test('a list can be provided to specify what is a valid directive', () => {

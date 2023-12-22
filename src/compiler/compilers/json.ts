@@ -1,6 +1,6 @@
-import { AbstractNode, DirectiveNode } from '../../nodes/nodes';
-import { StringSplitter } from '../../parser/stringSplitter';
-import { NodeCompiler } from '../nodeCompiler';
+import { AbstractNode, DirectiveNode } from '../../nodes/nodes.js';
+import { StringSplitter } from '../../parser/stringSplitter.js';
+import { NodeCompiler } from '../nodeCompiler.js';
 
 export class JsonCompiler implements NodeCompiler {
     compile(node: AbstractNode): string {

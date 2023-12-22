@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { transformString } from './testUtils/transform';
+import { transformString } from './testUtils/transform.js';
 
 suite('Verbatim Transformer', () => {
-    test('it can transform verbatim', () => {
+    test('it can transform verbatim', async () => {
         assert.strictEqual(
-            transformString(`<div>
+            (await transformString(`<div>
 @verbatim
 
 
@@ -15,7 +15,7 @@ name        }}.
 
 
 @endverbatim
-</div>`).trim(),
+</div>`)).trim(),
             `<div>
 @verbatim
     <div class="container">

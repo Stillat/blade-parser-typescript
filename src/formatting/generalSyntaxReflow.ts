@@ -1,11 +1,11 @@
-import { AbstractNode, LiteralNode, OperatorNode } from '../nodes/nodes';
-import { DocumentParser } from '../parser/documentParser';
-import { isStartOfString } from '../parser/scanners/isStartOfString';
-import { skipToEndOfLine } from '../parser/scanners/skipToEndOfLine';
-import { skipToEndOfMultilineComment } from '../parser/scanners/skipToEndOfMultilineComment';
-import { skipToEndOfStringTraced } from '../parser/scanners/skipToEndOfString';
-import { StringIterator } from '../parser/stringIterator';
-import { StringUtilities } from '../utilities/stringUtilities';
+import { AbstractNode, LiteralNode, OperatorNode } from '../nodes/nodes.js';
+import { DocumentParser } from '../parser/documentParser.js';
+import { isStartOfString } from '../parser/scanners/isStartOfString.js';
+import { skipToEndOfLine } from '../parser/scanners/skipToEndOfLine.js';
+import { skipToEndOfMultilineComment } from '../parser/scanners/skipToEndOfMultilineComment.js';
+import { skipToEndOfStringTraced } from '../parser/scanners/skipToEndOfString.js';
+import { StringIterator } from '../parser/stringIterator.js';
+import { StringUtilities } from '../utilities/stringUtilities.js';
 
 export class GeneralSyntaxReflow implements StringIterator {
     private content = '';

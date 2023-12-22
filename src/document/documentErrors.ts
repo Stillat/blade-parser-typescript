@@ -1,5 +1,5 @@
-import { BladeError } from '../errors/bladeError';
-import { BladeDocument } from './bladeDocument';
+import { BladeError } from '../errors/bladeError.js';
+import { BladeDocument } from './bladeDocument.js';
 
 export class DocumentErrors {
     private doc: BladeDocument;

@@ -1,6 +1,6 @@
-import assert = require('assert');
-import { BladeDocument } from '../document/bladeDocument';
-import { assertCount, assertPosition } from './testUtils/assertions';
+import assert from 'assert';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { assertCount, assertPosition } from './testUtils/assertions.js';
 
 suite('Fragments Parsing', () => {
     test('it parses basic fragments', () => {

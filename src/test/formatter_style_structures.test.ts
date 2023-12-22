@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { formatBladeString } from '../formatting/prettier/utils';
+import { formatBladeString } from '../formatting/prettier/utils.js';
 
 suite('<style> Containing Structures', () => {
-    test('it preserves relative indents when formatting style tags', () => {
+    test('it preserves relative indents when formatting style tags', async () => {
         assert.strictEqual(
-            formatBladeString(`<html><head>
+            (await formatBladeString(`<html><head>
             @directive($test)
             
                     @enddirective
@@ -18,7 +18,7 @@ suite('<style> Containing Structures', () => {
                                 }
                 
                                 </style>
-                    </head>        </html>`).trim(),
+                    </head>        </html>`)).trim(),
             `<html>
     <head>
         @directive($test)
@@ -37,9 +37,9 @@ suite('<style> Containing Structures', () => {
         );
     });
 
-    test('it can apply relative indent to styles inside structures', () => {
+    test('it can apply relative indent to styles inside structures', async () => {
         assert.strictEqual(
-            formatBladeString(`<html>
+            (await formatBladeString(`<html>
 
             <body>
         
@@ -61,7 +61,7 @@ suite('<style> Containing Structures', () => {
         
                 <script></script>
             </body>
-        </html>`).trim(),
+        </html>`)).trim(),
             `<html>
     <body>
         @if ($true)

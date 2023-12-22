@@ -1,9 +1,11 @@
 import assert from 'assert';
-import { formatBladeStringWithPint } from '../../../formatting/prettier/utils';
-import { StringUtilities } from '../../../utilities/stringUtilities';
+import { formatBladeStringWithPint } from '../../../formatting/prettier/utils.js';
+import { StringUtilities } from '../../../utilities/stringUtilities.js';
+import { setupTestHooks } from '../../../test/testUtils/formatting.js';
 
 suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_app_sidebar_index_blade_php', () => {
-    test('pint: it can format panels_resources_views_components_layouts_app_sidebar_index_blade_php', () => {
+    setupTestHooks();
+    test('pint: it can format panels_resources_views_components_layouts_app_sidebar_index_blade_php', async () => {
         const input = `@props([
     'navigation',
 ])
@@ -292,12 +294,12 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
 
         <script>
             if (
-                JSON.parse(localStorage.getItem("collapsedGroups")) === null ||
-                JSON.parse(localStorage.getItem("collapsedGroups")) === "null"
+                JSON.parse(localStorage.getItem('collapsedGroups')) === null ||
+                JSON.parse(localStorage.getItem('collapsedGroups')) === 'null'
             ) {
                 localStorage.setItem(
-                    "collapsedGroups",
-                    JSON.stringify(@js($collapsedNavigationGroupLabels))
+                    'collapsedGroups',
+                    JSON.stringify(@js($collapsedNavigationGroupLabels)),
                 );
             }
         </script>
@@ -322,7 +324,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_components_layouts_ap
 </aside>
 `;
 
-        assert.strictEqual(StringUtilities.normalizeLineEndings(formatBladeStringWithPint(input).trim()), StringUtilities.normalizeLineEndings(output.trim()));
-        assert.strictEqual(StringUtilities.normalizeLineEndings(formatBladeStringWithPint(output).trim()), StringUtilities.normalizeLineEndings(output.trim()));
+        assert.strictEqual(StringUtilities.normalizeLineEndings((await formatBladeStringWithPint(input)).trim()), StringUtilities.normalizeLineEndings(output.trim()));
+        assert.strictEqual(StringUtilities.normalizeLineEndings((await formatBladeStringWithPint(output)).trim()), StringUtilities.normalizeLineEndings(output.trim()));
     }).timeout(30000);
 });

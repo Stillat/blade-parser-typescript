@@ -1,15 +1,15 @@
-import { BladeDocument } from '../document/bladeDocument';
-import { getStartPosition } from '../nodes/helpers';
-import { AbstractNode, ConditionNode, DirectiveNode, ExecutionBranchNode } from '../nodes/nodes';
-import { BladeKeywords } from '../parser/bladeKeywords';
-import { DocumentParser } from '../parser/documentParser';
-import { intersect } from '../utilities/arrayHelpers';
-import { ComponentSlotPairAnalyzer } from './componentSlotPairAnalyzer';
-import { ConditionPairAnalyzer } from './conditionPairAnalyzer';
-import { ForElsePairAnalyzer } from './forElsePairAnalyzer';
-import { PairManager } from './pairManager';
-import { SpeculativeConditionAnalyzer } from './speculativeConditionAnalyzer';
-import { SwitchPairAnalyzer } from './switchPairAnalyzer';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { getStartPosition } from '../nodes/helpers.js';
+import { AbstractNode, ConditionNode, DirectiveNode, ExecutionBranchNode } from '../nodes/nodes.js';
+import { BladeKeywords } from '../parser/bladeKeywords.js';
+import { DocumentParser } from '../parser/documentParser.js';
+import { intersect } from '../utilities/arrayHelpers.js';
+import { ComponentSlotPairAnalyzer } from './componentSlotPairAnalyzer.js';
+import { ConditionPairAnalyzer } from './conditionPairAnalyzer.js';
+import { ForElsePairAnalyzer } from './forElsePairAnalyzer.js';
+import { PairManager } from './pairManager.js';
+import { SpeculativeConditionAnalyzer } from './speculativeConditionAnalyzer.js';
+import { SwitchPairAnalyzer } from './switchPairAnalyzer.js';
 
 export class DirectivePairAnalyzer {
     static readonly ForceBreakLimit = 100000;

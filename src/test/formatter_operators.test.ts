@@ -1,35 +1,35 @@
 import assert from 'assert';
-import { formatBladeString } from '../formatting/prettier/utils';
+import { formatBladeString } from '../formatting/prettier/utils.js';
 
 suite('Operator Formatting Tests', () => {
-    test('it reflows not operator inside echos', () => {
+    test('it reflows not operator inside echos', async () => {
         assert.strictEqual(
-            formatBladeString('{{ ! $foo }}').trim(),
+            (await formatBladeString('{{ ! $foo }}')).trim(),
             '{{ ! $foo }}'
         );
 
         assert.strictEqual(
-            formatBladeString('{{ !                 $foo }}').trim(),
+            (await formatBladeString('{{ !                 $foo }}')).trim(),
             '{{ ! $foo }}'
         );
 
         assert.strictEqual(
-            formatBladeString('{{ !$foo }}').trim(),
+            (await formatBladeString('{{ !$foo }}')).trim(),
             '{{ ! $foo }}'
         );
 
         assert.strictEqual(
-            formatBladeString('{{{ !$foo }}}').trim(),
+            (await formatBladeString('{{{ !$foo }}}')).trim(),
             '{{{ ! $foo }}}'
         );
 
         assert.strictEqual(
-            formatBladeString('{!! !$foo !!}').trim(),
+            (await formatBladeString('{!! !$foo !!}')).trim(),
             '{!! ! $foo !!}'
         );
     });
 
-    test('it reflows not operator inside conditions', () => {
+    test('it reflows not operator inside conditions', async () => {
         const template = `
         @if(!$something)
             Do the thing.
@@ -39,15 +39,15 @@ suite('Operator Formatting Tests', () => {
     Do the thing.
 @endif
 `;
-        assert.strictEqual(formatBladeString(template), out);
+        assert.strictEqual(await formatBladeString(template), out);
     });
 
-    test('it does not break up inequality', () => {
+    test('it does not break up inequality', async () => {
         const template = `@if ($foo !== 'bar')
 @endif`;
         const out = `@if ($foo !== "bar")
 @endif
 `;
-        assert.strictEqual(formatBladeString(template), out);
+        assert.strictEqual(await formatBladeString(template), out);
     });
 });

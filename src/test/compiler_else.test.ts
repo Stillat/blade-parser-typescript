@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { PhpCompiler } from '../compiler/phpCompiler';
+import { PhpCompiler } from '../compiler/phpCompiler.js';
 
 suite('Blade Else Statements', () => {
     test('else statements are compiled', () => {

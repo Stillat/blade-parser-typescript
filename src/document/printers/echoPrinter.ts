@@ -1,22 +1,22 @@
-import { GeneralSyntaxReflow } from '../../formatting/generalSyntaxReflow';
-import { getEchoPhpOptions } from '../../formatting/prettier/utils';
-import { SyntaxReflow } from '../../formatting/syntaxReflow';
-import { BladeEchoNode, BladeEntitiesEchoNode, BladeEscapedEchoNode } from '../../nodes/nodes';
-import { StringUtilities } from '../../utilities/stringUtilities';
-import { PhpFormatter } from '../formatters';
-import { PintTransformer } from '../pintTransformer';
-import { TransformOptions } from '../transformOptions';
-import { IndentLevel } from './indentLevel';
-import { getPrintWidth, preparePrettierWorkaround, undoPrettierWorkaround } from './printWidthUtils';
+import { GeneralSyntaxReflow } from '../../formatting/generalSyntaxReflow.js';
+import { getEchoPhpOptions } from '../../formatting/prettier/utils.js';
+import { SyntaxReflow } from '../../formatting/syntaxReflow.js';
+import { BladeEchoNode, BladeEntitiesEchoNode, BladeEscapedEchoNode } from '../../nodes/nodes.js';
+import { StringUtilities } from '../../utilities/stringUtilities.js';
+import { PhpFormatter } from '../formatters.js';
+import { PintTransformer } from '../pintTransformer.js';
+import { TransformOptions } from '../transformOptions.js';
+import { IndentLevel } from './indentLevel.js';
+import { getPrintWidth, preparePrettierWorkaround, undoPrettierWorkaround } from './printWidthUtils.js';
 
 export class EchoPrinter {
-    static printEcho(
+    static async printEcho(
         echo: BladeEchoNode,
         formattingOptions: TransformOptions,
         phpFormatter: PhpFormatter | null,
         indentLevel: number,
         pintTransformer: PintTransformer | null
-    ): string {
+    ): Promise<string> {
         let start = '{{ ',
             end = ' }}';
 
@@ -54,7 +54,7 @@ export class EchoPrinter {
                             innerContent = lineWrapWorkaround.content;
                         }
 
-                        tResult = phpFormatter('<?php ' + innerContent, formattingOptions, echoOptions);
+                        tResult = await phpFormatter('<?php ' + innerContent, formattingOptions, echoOptions);
 
                         if (lineWrapWorkaround.addedHack) {
                             tResult = undoPrettierWorkaround(tResult);
@@ -98,7 +98,7 @@ export class EchoPrinter {
                             tResult = pintTransformer.getEchoContent(echo);
                         }
                     } else {
-                        tResult = phpFormatter('<?php ' + innerContent + ';', formattingOptions, { ...echoOptions, printWidth: Infinity });
+                        tResult = await phpFormatter('<?php ' + innerContent + ';', formattingOptions, { ...echoOptions, printWidth: Infinity });
                         tResult = tResult.trimRight().substring(0, tResult.trimRight().length - 1);
                         if (GeneralSyntaxReflow.couldReflow(tResult)) {
                             tResult = GeneralSyntaxReflow.instance.reflow(tResult);

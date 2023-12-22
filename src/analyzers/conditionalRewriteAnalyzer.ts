@@ -1,6 +1,6 @@
-import { AbstractNode, DirectiveNode } from '../nodes/nodes';
-import { BladeKeywords } from '../parser/bladeKeywords';
-import { PairManager } from './pairManager';
+import { AbstractNode, DirectiveNode } from '../nodes/nodes.js';
+import { BladeKeywords } from '../parser/bladeKeywords.js';
+import { PairManager } from './pairManager.js';
 
 export class ConditionalRewriteAnalyzer {
 

@@ -1,9 +1,13 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { CommonEventShortcuts } from '../parser/excludeDirectives/commonEventShortcuts';
-import { CssAtRules } from '../parser/excludeDirectives/cssAtRules';
-import { FormattingOptions } from './formattingOptions';
-import { classConfigFromObject, getDefaultClassStringConfig } from './classStringsConfig';
+import { CommonEventShortcuts } from '../parser/excludeDirectives/commonEventShortcuts.js';
+import { CssAtRules } from '../parser/excludeDirectives/cssAtRules.js';
+import { FormattingOptions } from './formattingOptions.js';
+import { classConfigFromObject, getDefaultClassStringConfig } from './classStringsConfig.js';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const BLADE_CONFIG_FILE = '.blade.format.json';
 

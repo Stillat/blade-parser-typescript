@@ -1,7 +1,7 @@
-import { AbstractNode, BladeCommentNode, DirectiveNode, LiteralNode } from '../../nodes/nodes';
-import { Position } from '../../nodes/position';
-import { BladeDocument } from '../bladeDocument';
-import { NodeQueries } from './nodeQueries';
+import { AbstractNode, BladeCommentNode, DirectiveNode, LiteralNode } from '../../nodes/nodes.js';
+import { Position } from '../../nodes/position.js';
+import { BladeDocument } from '../bladeDocument.js';
+import { NodeQueries } from './nodeQueries.js';
 
 export class NodeScanner {
     private doc: BladeDocument;

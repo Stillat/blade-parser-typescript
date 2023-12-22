@@ -1,5 +1,5 @@
-import { AbstractNode, InlinePhpNode, LiteralNode } from '../nodes/nodes';
-import { StringUtilities } from '../utilities/stringUtilities';
+import { AbstractNode, InlinePhpNode, LiteralNode } from '../nodes/nodes.js';
+import { StringUtilities } from '../utilities/stringUtilities.js';
 
 export class InlinePhpAnalyzer {
     static analyze(nodes: AbstractNode[]) {

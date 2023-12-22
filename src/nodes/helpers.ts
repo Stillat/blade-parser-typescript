@@ -1,5 +1,5 @@
-import { AbstractNode } from './nodes';
-import { Position } from './position';
+import { AbstractNode } from './nodes.js';
+import { Position } from './position.js';
 
 export function getStartPosition(nodes: AbstractNode[]): Position | null {
     if (nodes.length == 0) { return null; }

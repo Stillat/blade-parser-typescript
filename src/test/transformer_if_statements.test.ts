@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { transformString } from './testUtils/transform';
+import { transformString } from './testUtils/transform.js';
 
 suite('If Statements Transformer', () => {
-    test('it can transform if statements', () => {
+    test('it can transform if statements', async () => {
         assert.strictEqual(
-            transformString(`@if($true)
+            (await transformString(`@if($true)
 Thing
 @elseif($anotherValue)
 More Things
@@ -16,7 +16,7 @@ More Things
 @else
 Another Thing
 @endif
-@endif`).trim(),
+@endif`)).trim(),
 `@if ($true)
 Thing
 @elseif ($anotherValue)

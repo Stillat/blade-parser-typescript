@@ -1,8 +1,8 @@
 import assert from 'assert';
-import { formatBladeStringWithPint } from '../formatting/prettier/utils';
+import { formatBladeStringWithPint } from '../formatting/prettier/utils.js';
 
 suite('Pint Transformer: Ignoring Templates', () => {
-    test('pint: it can ignore things', () => {
+    test('pint: it can ignore things', async () => {
         const template = `
 {{-- format-ignore-start --}}
 
@@ -370,11 +370,11 @@ $status = $kernel->handle($input = new Symfony\\Component\\Console\\Input\\ArgvI
 
 ?>
 `;
-        assert.strictEqual(formatBladeStringWithPint(template), output);
-        assert.strictEqual(formatBladeStringWithPint(output), output);
+        assert.strictEqual(await formatBladeStringWithPint(template), output);
+        assert.strictEqual(await formatBladeStringWithPint(output), output);
     }).timeout(5000);
 
-    test('pint: it restores ignored parts inside child documents', () => {
+    test('pint: it restores ignored parts inside child documents', async () => {
         const input = `
 @if (true)
     {{-- format-ignore-start --}}
@@ -388,10 +388,10 @@ $status = $kernel->handle($input = new Symfony\\Component\\Console\\Input\\ArgvI
     {{-- format-ignore-end --}}
 @endif
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('including escaped nodes does not trash document', () => {
+    test('including escaped nodes does not trash document', async () => {
         const input = `<div>
     <h1>@{{ user.name }}</h1>
 
@@ -422,10 +422,10 @@ $status = $kernel->handle($input = new Symfony\\Component\\Console\\Input\\ArgvI
     </div>
 </div>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), expected);
+        assert.strictEqual(await formatBladeStringWithPint(input), expected);
     });
 
-    test('including escaped nodes can still indent blade', () => {
+    test('including escaped nodes can still indent blade', async () => {
         const input = `<div>
     <h1>@{{ user.name }}</h1>
 
@@ -456,10 +456,10 @@ $status = $kernel->handle($input = new Symfony\\Component\\Console\\Input\\ArgvI
     </div>
 </div>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('it can unwrap conditions when escaped nodes are present', () => {
+    test('it can unwrap conditions when escaped nodes are present', async () => {
         const input = `<div>
 <h1>@{{ user.name }}</h1>
 
@@ -475,10 +475,10 @@ $status = $kernel->handle($input = new Symfony\\Component\\Console\\Input\\ArgvI
     </div>
 </div>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('it can unwrap conditions when escaped nodes are present - trippple echo', () => {
+    test('it can unwrap conditions when escaped nodes are present - trippple echo', async () => {
         const input = `<div>
 <h1>@{{{ user.name }}}</h1>
 
@@ -494,10 +494,10 @@ $status = $kernel->handle($input = new Symfony\\Component\\Console\\Input\\ArgvI
     </div>
 </div>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('it can unwrap conditions when escaped nodes are present - escaped directive', () => {
+    test('it can unwrap conditions when escaped nodes are present - escaped directive', async () => {
         const input = `<div>
 <h1>@@somethingHere</h1>
 
@@ -513,10 +513,10 @@ $status = $kernel->handle($input = new Symfony\\Component\\Console\\Input\\ArgvI
     </div>
 </div>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('it can unwrap conditions when escaped nodes are present - raw echo', () => {
+    test('it can unwrap conditions when escaped nodes are present - raw echo', async () => {
         const input = `<div>
 <h1>@{!! user.name !!}</h1>
 
@@ -532,10 +532,10 @@ $status = $kernel->handle($input = new Symfony\\Component\\Console\\Input\\ArgvI
     </div>
 </div>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('ignore doesnt eat nested nodes', () => {
+    test('ignore doesnt eat nested nodes', async () => {
 const input = `
 @php
 $isHidden = $formComponent->isHidden();
@@ -617,6 +617,6 @@ $isHidden = $formComponent->isHidden();
 </x-filament::grid>
 {{-- format-ignore-end --}}
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 });

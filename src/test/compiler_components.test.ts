@@ -1,7 +1,7 @@
 import assert from 'assert';
-import { ComponentCompiler } from '../compiler/compilers';
-import { PhpCompiler } from '../compiler/phpCompiler';
-import { BladeDocument } from '../document/bladeDocument';
+import { ComponentCompiler } from '../compiler/compilers/index.js';
+import { PhpCompiler } from '../compiler/phpCompiler.js';
+import { BladeDocument } from '../document/bladeDocument.js';
 
 suite('Blade Components', () => {
     test('components are compiled', () => {

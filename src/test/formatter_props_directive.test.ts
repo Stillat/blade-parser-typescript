@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { formatBladeString } from '../formatting/prettier/utils';
+import { formatBladeString } from '../formatting/prettier/utils.js';
 
 suite('Props Directive', () => {
-    test('it can format props on many lines', () => {
+    test('it can format props on many lines', async () => {
         assert.strictEqual(
-            formatBladeString(`
+            (await formatBladeString(`
             @props(['hello', 'world'])
             
             <div>
@@ -15,7 +15,7 @@ suite('Props Directive', () => {
             
             <div>
             <p>Hello {{ $world }}!  </p>
-                </div>`).trim(),
+                </div>`)).trim(),
             `@props([
     "hello",
     "world",
@@ -54,9 +54,9 @@ suite('Props Directive', () => {
         );
     });
 
-    test('it formats document with props', () => {
+    test('it formats document with props', async () => {
         assert.strictEqual(
-            formatBladeString(`<x-icon
+            (await formatBladeString(`<x-icon
 
 
             :class="Arr::toCssClasses(['...'])" 
@@ -85,7 +85,7 @@ suite('Props Directive', () => {
 
 
            
-       </div>`).trim(),
+       </div>`)).trim(),
             `<x-icon :class="Arr::toCssClasses(['...'])" />
 
 @props([
@@ -99,7 +99,7 @@ suite('Props Directive', () => {
         );
     });
 
-    test('it leaves associative arrays alone', () => {
+    test('it leaves associative arrays alone', async () => {
         const template = `@props([
     'foo' => true,
             'bar'       => false,
@@ -111,10 +111,10 @@ suite('Props Directive', () => {
     "bar2" => false,
 ])
 `;
-        assert.strictEqual(formatBladeString(template), out);
+        assert.strictEqual(await formatBladeString(template), out);
     });
 
-    test('it can wrap prop lists', () => {
+    test('it can wrap prop lists', async () => {
         const template = `@props([
     'heading','footer',
 ])`;
@@ -123,10 +123,10 @@ suite('Props Directive', () => {
     "footer",
 ])
 `;
-        assert.strictEqual(formatBladeString(template), out);
+        assert.strictEqual(await formatBladeString(template), out);
     });
 
-    test('it detects associative arrays', () => {
+    test('it detects associative arrays', async () => {
         const template = `@props([
     "foo" => [],
 ])`;
@@ -134,10 +134,10 @@ suite('Props Directive', () => {
     "foo" => [],
 ])
 `;
-        assert.strictEqual(formatBladeString(template), out);
+        assert.strictEqual(await formatBladeString(template), out);
     });
 
-    test('it detects assoc arrays 2', () => {
+    test('it detects assoc arrays 2', async () => {
         const template = `@props([
     'foo' => [],
     'foobarbaz' => false,
@@ -147,10 +147,10 @@ suite('Props Directive', () => {
     "foobarbaz" => false,
 ])
 `;
-        assert.strictEqual(formatBladeString(template), out);
+        assert.strictEqual(await formatBladeString(template), out);
     });
 
-    test('it does not force align mixed arrays', () => {
+    test('it does not force align mixed arrays', async () => {
         const input = `@props([
     'foobarbaz' => true,
     'bar',
@@ -162,11 +162,11 @@ suite('Props Directive', () => {
     "baz" => true,
 ])
 `;
-        assert.strictEqual(formatBladeString(input), out);
-        assert.strictEqual(formatBladeString(out), out);
+        assert.strictEqual(await formatBladeString(input), out);
+        assert.strictEqual(await formatBladeString(out), out);
     });
 
-    test('it doesnt wrap empty arrays', () => {
+    test('it doesnt wrap empty arrays', async () => {
         const input = `@props([
             'actions' => [],
             'url',
@@ -176,7 +176,7 @@ suite('Props Directive', () => {
     "url",
 ])
 `;
-        assert.strictEqual(formatBladeString(input), out);
-        assert.strictEqual(formatBladeString(out), out);
+        assert.strictEqual(await formatBladeString(input), out);
+        assert.strictEqual(await formatBladeString(out), out);
     });
 });

@@ -1,16 +1,16 @@
 import assert from 'assert';
-import { formatBladeString } from '../formatting/prettier/utils';
+import { formatBladeString } from '../formatting/prettier/utils.js';
 
 suite('Forelse Formatting', () => {
-    test('it indents forelse', () => {
+    test('it indents forelse', async () => {
         assert.strictEqual(
-            formatBladeString(`<div>
+            (await formatBladeString(`<div>
         @forelse ($users as $user)
 <li>{{ $user->name }}</li>
 @empty
 <p>No users</p>
 @endforelse
-            </div>`).trim(),
+            </div>`)).trim(),
             `<div>
     @forelse ($users as $user)
         <li>{{ $user->name }}</li>
@@ -21,9 +21,9 @@ suite('Forelse Formatting', () => {
         );
     });
 
-    test('it can unwrap forelse from a single line', () => {
+    test('it can unwrap forelse from a single line', async () => {
         assert.strictEqual(
-            formatBladeString(`<div> @forelse ($users as $user) <li>{{ $user->name }}</li> @empty <p>No users</p> @endforelse</div> `).trim(),
+            (await formatBladeString(`<div> @forelse ($users as $user) <li>{{ $user->name }}</li> @empty <p>No users</p> @endforelse</div> `)).trim(),
             `<div>
     @forelse ($users as $user)
         <li>{{ $user->name }}</li>
@@ -34,9 +34,9 @@ suite('Forelse Formatting', () => {
         );
     });
 
-    test('it can format forelse without an empty directive', () => {
+    test('it can format forelse without an empty directive', async () => {
         assert.strictEqual(
-            formatBladeString(`<div>
+            (await formatBladeString(`<div>
         @forelse ($users as $user)
 <li>{{ $user->name }}</li>
 @endforelse
@@ -47,7 +47,7 @@ suite('Forelse Formatting', () => {
         @forelse ($users as $user)
     <li>{{ $user->name }}
     </li>
-@endforelse`).trim(),
+@endforelse`)).trim(),
             `<div>
     @forelse ($users as $user)
         <li>{{ $user->name }}</li>
@@ -60,15 +60,15 @@ suite('Forelse Formatting', () => {
         );
     });
 
-    test('it formats valid PHP inside forelse', () => {
+    test('it formats valid PHP inside forelse', async () => {
         assert.strictEqual(
-            formatBladeString(`<div>
+            (await formatBladeString(`<div>
         @forelse ($users as                  $user)
 <li>{{ $user->name }}</li>
 @empty
 <p>No users</p>
 @endforelse
-            </div>`).trim(),
+            </div>`)).trim(),
             `<div>
     @forelse ($users as $user)
         <li>{{ $user->name }}</li>
@@ -79,15 +79,15 @@ suite('Forelse Formatting', () => {
         );
     });
 
-    test('it ignores invalid PHP inside forelse', () => {
+    test('it ignores invalid PHP inside forelse', async () => {
         assert.strictEqual(
-            formatBladeString(`<div>
+            (await formatBladeString(`<div>
         @forelse ($users as       ++++$           $user)
 <li>{{ $user->name }}</li>
 @empty
 <p>No users</p>
 @endforelse
-            </div>`).trim(),
+            </div>`)).trim(),
             `<div>
     @forelse ($users as       ++++$           $user)
         <li>{{ $user->name }}</li>
@@ -98,7 +98,7 @@ suite('Forelse Formatting', () => {
         );
     });
 
-    test('formatting forlese empty with just literal content', function () {
+    test('formatting forlese empty with just literal content', async function () {
         const input = `@forelse ($items as $item)
         {{ $item }}
         @empty
@@ -109,6 +109,6 @@ suite('Forelse Formatting', () => {
 @empty
     No items
 @endforelse`;
-        assert.strictEqual(formatBladeString(input).trim(), out);
+        assert.strictEqual((await formatBladeString(input)).trim(), out);
     });
 });

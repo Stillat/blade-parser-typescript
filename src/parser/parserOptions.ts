@@ -1,5 +1,5 @@
-import { CssAtRules } from './excludeDirectives/cssAtRules';
-import { CommonEventShortcuts } from './excludeDirectives/commonEventShortcuts';
+import { CssAtRules } from './excludeDirectives/cssAtRules.js';
+import { CommonEventShortcuts } from './excludeDirectives/commonEventShortcuts.js';
 
 export interface ParserOptions {
     ignoreDirectives: string[],

@@ -1,7 +1,7 @@
-import assert = require('assert');
-import { BladeDocument } from '../document/bladeDocument';
-import { DirectiveNode, LiteralNode } from '../nodes/nodes';
-import { assertCount, assertInstanceOf, assertLiteralContent } from './testUtils/assertions';
+import assert from 'assert';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { DirectiveNode, LiteralNode } from '../nodes/nodes.js';
+import { assertCount, assertInstanceOf, assertLiteralContent } from './testUtils/assertions.js';
 
 suite('PHP Comments', () => {
     test('it can handle line comments', () => {

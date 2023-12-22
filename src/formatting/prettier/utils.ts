@@ -1,22 +1,28 @@
 import prettier, { ParserOptions } from "prettier";
-import * as plugin from './plugin';
+import plugin from './plugin.js';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import php from "@prettier/plugin-php/standalone";
-import { formatJsonata } from "@stedi/prettier-plugin-jsonata/dist/lib";
-import { FormattingOptions } from '../formattingOptions';
-import { defaultSettings, setEnvSettings } from '../optionDiscovery';
-import { TransformOptions } from '../../document/transformOptions';
-import { isAttributeFormatter } from '../../document/attributeRangeRemover';
-import { StringRemover } from '../../parser/stringRemover';
-import { StringUtilities } from '../../utilities/stringUtilities';
-import { Transformer } from '../../document/transformer';
+import * as jsonata from "@stedi/prettier-plugin-jsonata";
+import { FormattingOptions } from '../formattingOptions.js';
+import { defaultSettings, setEnvSettings } from '../optionDiscovery.js';
+import { TransformOptions } from '../../document/transformOptions.js';
+import { isAttributeFormatter } from '../../document/attributeRangeRemover.js';
+import { StringRemover } from '../../parser/stringRemover.js';
+import { StringUtilities } from '../../utilities/stringUtilities.js';
+import { Transformer } from '../../document/transformer.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 let phpOptions: ParserOptions,
     htmlOptions: ParserOptions,
     echoPhpOptions: ParserOptions,
-    originalOptions: ParserOptions;
+    originalOptions: ParserOptions,
+    additionalHtmlPlugins: any[] = [];
 
 export function getEchoPhpOptions() {
     return echoPhpOptions;
@@ -28,6 +34,14 @@ export function getPhpOptions() {
 
 export function getOriginalOptions() {
     return originalOptions;
+}
+
+export function addHtmlPlugin(plugin: any) {
+    additionalHtmlPlugins.push(plugin);
+}
+
+export function clearAdditionalHtmlPlugins() {
+    additionalHtmlPlugins = [];
 }
 
 export function cleanOptions(options: ParserOptions): ParserOptions {
@@ -53,31 +67,33 @@ export function getHtmlOptions(): ParserOptions {
     return htmlOptions as ParserOptions;
 }
 
-export function formatJson(text: string) {
-    return formatJsonata(text, {
-        printWidth: 20
+export async function formatJson(text: string) {
+    return await prettier.format(text, {
+        parser: 'JSONata',
+        plugins: [jsonata as any],
+        printWidth: 20,
     });
 }
 
-export function formatBladeString(text: string, options: FormattingOptions | null = null, prettierOptions: ParserOptions | null = null) {
+export async function formatBladeString(text: string, options: FormattingOptions | null = null, prettierOptions: ParserOptions | null = null): Promise<string> {
     // Override settings and disable automatic option discovery. Useful for testing.
     setEnvSettings(options);
 
     if (prettierOptions == null) {
-        return prettier.format(text, {
+        return await prettier.format(text, {
             parser: 'blade',
             plugins: [plugin as any as string],
         });
     }
 
-    return prettier.format(text, {
+    return await prettier.format(text, {
         ...prettierOptions,
         parser: 'blade',
         plugins: [plugin as any as string],
     });
 }
 
-export function formatBladeStringWithPint(text: string, options: FormattingOptions | null = null, transformOptions: TransformOptions | null = null, prettierOptions: ParserOptions | null = null) {
+export async function formatBladeStringWithPint(text: string, options: FormattingOptions | null = null, transformOptions: TransformOptions | null = null, prettierOptions: ParserOptions | null = null): Promise<string> {
     let pintLocation = __dirname + '/../../../pint/pint',
         pintConfig = __dirname + '/../../../pint/pint.json',
         pintCacheDirectory = __dirname + '/../../../_test/_cache/',
@@ -112,7 +128,7 @@ export function formatBladeStringWithPint(text: string, options: FormattingOptio
         };
     }
 
-    return formatBladeString(text, curOptions, prettierOptions);
+    return await formatBladeString(text, curOptions, prettierOptions);
 }
 
 type PrettierOptionsAdjuster = (options: ParserOptions) => ParserOptions;
@@ -126,7 +142,6 @@ export function setOptionsAdjuster(adjuster: PrettierOptionsAdjuster | null) {
 export function getOptionsAdjuster(): PrettierOptionsAdjuster | null {
     return optionsAdjuster;
 }
-
 
 export function setOptions(options: ParserOptions) {
     originalOptions = options;
@@ -153,18 +168,19 @@ export function setOptions(options: ParserOptions) {
     );
 }
 
-export function formatAsJavaScript(text: string, transformOptions: TransformOptions) {
+export async function formatAsJavaScript(text: string, transformOptions: TransformOptions): Promise<string> {
     if (transformOptions.attributeJsOptions != null) {
-        return prettier.format(text, {
+        return await prettier.format(text, {
             ...htmlOptions,
             ...transformOptions.attributeJsOptions,
             parser: 'babel',
             singleQuote: true,
+            trailingComma: 'es5',
             quoteProps: 'preserve'
         });
     }
 
-    return prettier.format(text, {
+    return await prettier.format(text, {
         ...htmlOptions,
         parser: 'babel',
         printWidth: 80,
@@ -175,10 +191,26 @@ export function formatAsJavaScript(text: string, transformOptions: TransformOpti
     });
 }
 
-export function formatAsHtml(text: string) {
+function getPrettierPlugins() {
+    let plugins: any[] = [];
+
+    if (htmlOptions.plugins) {
+        plugins = htmlOptions.plugins;
+    }
+
+    if (additionalHtmlPlugins) {
+        additionalHtmlPlugins.forEach((plugin) => {
+            plugins.push(plugin);
+        });
+    }
+
+    return plugins;
+}
+
+export async function formatAsHtml(text: string): Promise<string> {
     if (isAttributeFormatter) {
         let formatText = text,
-            removedStringMap:string[] = [];
+            removedStringMap: string[] = [];
 
         try {
             const strRemover = new StringRemover(),
@@ -195,16 +227,18 @@ export function formatAsHtml(text: string) {
                 formatText = formatText.replace(`"${string}"`, `"${rep}"`);
             });
 
-            let fResult = prettier.format(formatText, {
+            let fResult = await prettier.format(formatText, {
                 ...htmlOptions,
+                plugins: getPrettierPlugins(),
                 printWidth: 20,
+                singleQuote: true,
                 singleAttributePerLine: true,
                 parser: 'html'
             });
 
             // Make value-less attributes nicer.
-            const formattedLines:string[] = StringUtilities.breakByNewLine(fResult),
-                newLines:string[] = [];
+            const formattedLines: string[] = StringUtilities.breakByNewLine(fResult),
+                newLines: string[] = [];
 
             for (let i = 0; i < formattedLines.length; i++) {
                 const line = formattedLines[i];
@@ -247,16 +281,23 @@ export function formatAsHtml(text: string) {
             return text;
         }
     }
-    return prettier.format(text, {
+
+
+
+    return await prettier.format(text, {
         ...htmlOptions,
+        plugins: getPrettierPlugins(),
+        singleQuote: true,
         parser: 'html'
     });
 }
 
-export function formatAsHtmlStrings(text: string) {
-    return prettier.format(text, {
+export async function formatAsHtmlStrings(text: string): Promise<string> {
+    return await prettier.format(text, {
         ...htmlOptions,
+        plugins: getPrettierPlugins(),
         proseWrap: 'never',
+        singleQuote: true,
         parser: 'html'
     });
 }
@@ -285,10 +326,10 @@ function resolvePhpOptions(defaultOptions: ParserOptions, transformOptions: Tran
     return opts;
 }
 
-export function inlineFormatPhp(text: string, transformOptions: TransformOptions, options: ParserOptions | null = null) {
+export async function inlineFormatPhp(text: string, transformOptions: TransformOptions, options: ParserOptions | null = null) {
     const opts = resolvePhpOptions(echoPhpOptions, transformOptions, options);
 
-    let result = prettier.format(text, opts).trim();
+    let result = (await prettier.format(text, opts)).trim();
 
     result = result.substring(5);
 
@@ -299,9 +340,9 @@ export function inlineFormatPhp(text: string, transformOptions: TransformOptions
     return result.trim();
 }
 
-export function formatPhp(text: string, transformOptions: TransformOptions, options: ParserOptions | null = null) {
+export async function formatPhp(text: string, transformOptions: TransformOptions, options: ParserOptions | null = null) {
     const opts = resolvePhpOptions(phpOptions, transformOptions, options);
-    let result = prettier.format(text, opts).trim();
+    let result = (await prettier.format(text, opts)).trim();
 
     result = result.substring(5);
 
@@ -312,9 +353,9 @@ export function formatPhp(text: string, transformOptions: TransformOptions, opti
     return result.trim();
 }
 
-export function formatTagPhp(text: string, transformOptions: TransformOptions, options: ParserOptions | null = null) {
+export async function formatTagPhp(text: string, transformOptions: TransformOptions, options: ParserOptions | null = null) {
     const opts = resolvePhpOptions(phpOptions, transformOptions, options);
-    const result = prettier.format(text, opts).trim();
+    const result = (await prettier.format(text, opts)).trim();
 
     return result.trim();
 }

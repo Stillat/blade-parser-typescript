@@ -1,5 +1,5 @@
-import { ArrayNode } from '../../nodes/nodes';
-import { StringBuffer } from './stringBuffer';
+import { ArrayNode } from '../../nodes/nodes.js';
+import { StringBuffer } from './stringBuffer.js';
 
 export class ArrayPrinter {
     static print(array: ArrayNode, tabSize: number, level: number) {

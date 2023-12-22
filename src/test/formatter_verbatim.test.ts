@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { formatBladeString } from '../formatting/prettier/utils';
+import { formatBladeString } from '../formatting/prettier/utils.js';
 
 suite('Verbatim Formatting', () => {
-    test('it indents verbatim', () => {
+    test('it indents verbatim', async () => {
         assert.strictEqual(
-            formatBladeString(`<div>
+            (await formatBladeString(`<div>
 @verbatim
 
 
@@ -14,7 +14,7 @@ suite('Verbatim Formatting', () => {
 
     
 @endverbatim
-</div>`).trim(),
+</div>`)).trim(),
             `<div>
     @verbatim
         <div class="container">
@@ -25,9 +25,9 @@ suite('Verbatim Formatting', () => {
         );
     });
 
-    test('it ignores blade-like things inside verbatim', () => {
+    test('it ignores blade-like things inside verbatim', async () => {
         assert.strictEqual(
-            formatBladeString(`<div>
+            (await formatBladeString(`<div>
 @verbatim
 
 
@@ -38,7 +38,7 @@ suite('Verbatim Formatting', () => {
 
 
 @endverbatim
-</div>`).trim(),
+</div>`)).trim(),
             `<div>
     @verbatim
         <div class="container">
@@ -50,7 +50,7 @@ suite('Verbatim Formatting', () => {
         );
     });
 
-    test('verbatim content is not lost', () => {
+    test('verbatim content is not lost', async () => {
         const template = `@if (true)
         @if (false)
         @if ('something')
@@ -72,6 +72,6 @@ suite('Verbatim Formatting', () => {
     @endif
 @endif
 `;
-        assert.strictEqual(formatBladeString(template), out);
+        assert.strictEqual(await formatBladeString(template), out);
     });
 });

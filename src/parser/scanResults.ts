@@ -1,4 +1,3 @@
-
 export interface SeekResults {
     didFind: boolean,
     index: number | null,

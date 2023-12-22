@@ -1,7 +1,7 @@
-import assert = require('assert');
-import { BladeDocument } from '../document/bladeDocument';
-import { ConditionNode, DirectiveNode, LiteralNode } from '../nodes/nodes';
-import { assertCount, assertInstanceOf, assertLiteralContent } from './testUtils/assertions';
+import assert from 'assert';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { ConditionNode, DirectiveNode, LiteralNode } from '../nodes/nodes.js';
+import { assertCount, assertInstanceOf, assertLiteralContent } from './testUtils/assertions.js';
 
 suite('Child Nodes', () => {
     test('test it associates child nodes', () => {

@@ -1,7 +1,7 @@
-import { BladeError } from '../errors/bladeError';
-import { BladeErrorCodes } from '../errors/bladeErrorCodes';
-import { AbstractNode, DirectiveNode } from '../nodes/nodes';
-import { BladeKeywords } from '../parser/bladeKeywords';
+import { BladeError } from '../errors/bladeError.js';
+import { BladeErrorCodes } from '../errors/bladeErrorCodes.js';
+import { AbstractNode, DirectiveNode } from '../nodes/nodes.js';
+import { BladeKeywords } from '../parser/bladeKeywords.js';
 
 export class ConditionPairAnalyzer {
     static isConditionalStructure(node: AbstractNode): boolean {

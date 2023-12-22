@@ -1,22 +1,22 @@
-import { BladeDocument } from '../document/bladeDocument';
-import { IndentLevel } from '../document/printers/indentLevel';
-import { TransformOptions } from '../document/transformOptions';
-import { Transformer } from '../document/transformer';
-import { LiteralNode } from '../nodes/nodes';
-import { IExtractedAttribute } from '../parser/extractedAttribute';
-import { GeneralSyntaxReflow } from './generalSyntaxReflow';
-import { formatAsJavaScript } from './prettier/utils';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { IndentLevel } from '../document/printers/indentLevel.js';
+import { TransformOptions } from '../document/transformOptions.js';
+import { Transformer } from '../document/transformer.js';
+import { LiteralNode } from '../nodes/nodes.js';
+import { IExtractedAttribute } from '../parser/extractedAttribute.js';
+import { GeneralSyntaxReflow } from './generalSyntaxReflow.js';
+import { formatAsJavaScript } from './prettier/utils.js';
 
 const safetyChars = [
     '(', ')', '{', '}', , ':', '->', '<', '>'
 ];
 
-export function formatExtractedScript(attribute: IExtractedAttribute,
+export async function formatExtractedScript(attribute: IExtractedAttribute,
     transformOptions: TransformOptions,
     slug: string,
     tmpContent: string,
     parentTransformer: Transformer,
-    originalDoc: BladeDocument): string {
+    originalDoc: BladeDocument): Promise<string> {
     let addedVarPlaceholder = false;
 
     const formatContent = attribute.content.substring(1, attribute.content.length - 1).trim();
@@ -107,9 +107,9 @@ export function formatExtractedScript(attribute: IExtractedAttribute,
         toFormat = toFormat.trim();
         toFormat = toFormat.substring(0, toFormat.length - 9);
 
-        result = formatAsJavaScript(toFormat, transformOptions);
+        result = await formatAsJavaScript(toFormat, transformOptions);
 
-        result = tmpTransformer.fromStructure(result);
+        result = await tmpTransformer.fromStructure(result);
         if (addedVarPlaceholder) {
             result = result.trimLeft();
             result = result.substring(3);
@@ -130,7 +130,7 @@ export function formatExtractedScript(attribute: IExtractedAttribute,
             result = result.substring(1);
         }
 
-        result = parentTransformer.transformStructures(result);
+        result = await parentTransformer.transformStructures(result);
     } catch (err) {
         return attribute.content;
     }

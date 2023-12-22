@@ -1,7 +1,7 @@
-import assert = require('assert');
-import { BladeDocument } from '../document/bladeDocument';
-import { AbstractNode, ConditionNode, DirectiveNode, ExecutionBranchNode, LiteralNode } from '../nodes/nodes';
-import { assertCount, assertInstanceOf, assertLiteralContent, assertNotNull } from './testUtils/assertions';
+import assert from 'assert';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { AbstractNode, ConditionNode, DirectiveNode, ExecutionBranchNode, LiteralNode } from '../nodes/nodes.js';
+import { assertCount, assertInstanceOf, assertLiteralContent, assertNotNull } from './testUtils/assertions.js';
 
 suite('Conditions Test', () => {
     test('it can parse basic conditions', () => {

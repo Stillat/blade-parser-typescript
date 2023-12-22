@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { formatBladeStringWithPint } from '../formatting/prettier/utils';
+import { formatBladeStringWithPint } from '../formatting/prettier/utils.js';
 
 suite('Pint Transformer: Inline PHP', () => {
-    test('pint: it can format basic inline PHP', () => {
+    test('pint: it can format basic inline PHP', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`
+            (await formatBladeStringWithPint(`
 <html>
         <?php
 
@@ -16,7 +16,7 @@ $status =           $kernel->handle(
 );
 
 ?>
-</html>`).trim(),
+</html>`)).trim(),
             `<html>
     <?php
 
@@ -32,9 +32,9 @@ $status =           $kernel->handle(
         );
     });
 
-    test('pint: it can indent dynamic elements and spans', () => {
+    test('pint: it can indent dynamic elements and spans', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<<?= $element; ?>>
+            (await formatBladeStringWithPint(`<<?= $element; ?>>
             <?= $inline; ?>
         <p>Text <?= $inline             ; ?> here.</p>
     </<?= $element; ?>>
@@ -45,7 +45,7 @@ $status =           $kernel->handle(
 </<?php echo $element; ?>>
 
 
-<h1><?php echo ($that +    $another    - $something) +    $thing   ?></h1>`).trim(),
+<h1><?php echo ($that +    $another    - $something) +    $thing   ?></h1>`)).trim(),
             `<<?= $element ?>>
     <?= $inline; ?>
 
@@ -62,9 +62,9 @@ $status =           $kernel->handle(
         );
     });
 
-    test('pint: it preserves invalid PHP', () => {
+    test('pint: it preserves invalid PHP', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<<?php echo $element; ?>>
+            (await formatBladeStringWithPint(`<<?php echo $element; ?>>
             <?php echo $inline----  $$$$$; ?>
             <p>Text <?php echo $inline             ; ?> here.</p>
             </<?php echo $element; ?>>
@@ -72,7 +72,7 @@ $status =           $kernel->handle(
                             <<?= echo $element; ?>>
                                     <?= echo $inline  ; ?>
                     <p>Text <?= echo $inline             ; ?> here.</p>
-                </<?= echo $element; ?>>`).trim(),
+                </<?= echo $element; ?>>`)).trim(),
             `<<?php echo $element; ?>>
     <?php echo $inline----  $$$$$; ?>
 

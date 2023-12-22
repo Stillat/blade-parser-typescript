@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { formatBladeStringWithPint } from '../formatting/prettier/utils';
+import { formatBladeStringWithPint } from '../formatting/prettier/utils.js';
 
 suite('Pint Transformer: Verbatim Nodes', () => {
-    test('pint: it indents verbatim', () => {
+    test('pint: it indents verbatim', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<div>
+            (await formatBladeStringWithPint(`<div>
 @verbatim
 
 
@@ -14,7 +14,7 @@ suite('Pint Transformer: Verbatim Nodes', () => {
 
     
 @endverbatim
-</div>`).trim(),
+</div>`)).trim(),
             `<div>
     @verbatim
         <div class="container">
@@ -25,9 +25,9 @@ suite('Pint Transformer: Verbatim Nodes', () => {
         );
     });
 
-    test('pint: it ignores blade-like things inside verbatim', () => {
+    test('pint: it ignores blade-like things inside verbatim', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<div>
+            (await formatBladeStringWithPint(`<div>
 @verbatim
 
 
@@ -38,7 +38,7 @@ suite('Pint Transformer: Verbatim Nodes', () => {
 
 
 @endverbatim
-</div>`).trim(),
+</div>`)).trim(),
             `<div>
     @verbatim
         <div class="container">
@@ -50,7 +50,7 @@ suite('Pint Transformer: Verbatim Nodes', () => {
         );
     });
 
-    test('pint: verbatim content is not lost', () => {
+    test('pint: verbatim content is not lost', async () => {
         const template = `@if (true)
         @if (false)
         @if ('something')
@@ -72,6 +72,6 @@ suite('Pint Transformer: Verbatim Nodes', () => {
     @endif
 @endif
 `;
-        assert.strictEqual(formatBladeStringWithPint(template), out);
+        assert.strictEqual(await formatBladeStringWithPint(template), out);
     });
 });

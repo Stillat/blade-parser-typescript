@@ -1,25 +1,25 @@
 import assert from 'assert';
-import { formatBladeStringWithPint } from '../formatting/prettier/utils';
+import { formatBladeStringWithPint } from '../formatting/prettier/utils.js';
 
 suite('Pint Transformer: Component Tags', () => {
-    test('pint: it formats simple component tags', () => {
+    test('pint: it formats simple component tags', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`        <x-icon 
+            (await formatBladeStringWithPint(`        <x-icon 
             @class([$icon, 'pe-2'])
-                        />`).trim(),
+                        />`)).trim(),
             `<x-icon @class([$icon, 'pe-2']) />`
         );
     });
 
-    test('pint: it can format component tag pairs', () => {
+    test('pint: it can format component tag pairs', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`    <x-icon 
+            (await formatBladeStringWithPint(`    <x-icon 
             @class([$icon, 'pe-2'])
                         >
 <div>
 <p>test</p>
 </div>
-                    </x-icon>`).trim(),
+                    </x-icon>`)).trim(),
             `<x-icon @class([$icon, 'pe-2'])>
     <div>
         <p>test</p>
@@ -28,89 +28,89 @@ suite('Pint Transformer: Component Tags', () => {
         );
     });
 
-    test('pint: it can format slots with names', () => {
+    test('pint: it can format slots with names', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<x-slot:name
+            (await formatBladeStringWithPint(`<x-slot:name
 
-            param="value" />`).trim(),
+            param="value" />`)).trim(),
             `<x-slot:name param="value" />`
         );
     });
 
-    test('pint: it normalizes inline names', () => {
+    test('pint: it normalizes inline names', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<x:slot:name
+            (await formatBladeStringWithPint(`<x:slot:name
 
-            param="value" />`).trim(),
+            param="value" />`)).trim(),
             `<x-slot:name param="value" />`
         );
     });
 
-    test('pint: it normalizes inline name pairs', () => {
+    test('pint: it normalizes inline name pairs', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<x:slot:name
+            (await formatBladeStringWithPint(`<x:slot:name
 
             param="value">
    <p>Content</p>
-            </x:slot:name>`).trim(),
+            </x:slot:name>`)).trim(),
             `<x-slot:name param="value">
     <p>Content</p>
 </x-slot>`
         );
     });
 
-    test('pint: it normalizes names', () => {
+    test('pint: it normalizes names', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<x:slot:name />`).trim(),
+            (await formatBladeStringWithPint(`<x:slot:name />`)).trim(),
             `<x-slot:name />`
         );
     });
 
-    test('pint: it formats dot names', () => {
+    test('pint: it formats dot names', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<x-inputs.button 
-            class="something" />`).trim(),
+            (await formatBladeStringWithPint(`<x-inputs.button 
+            class="something" />`)).trim(),
             `<x-inputs.button class="something" />`
         );
     });
 
-    test('pint: it formats params and bindings', () => {
+    test('pint: it formats params and bindings', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<x-alert            type="error"
+            (await formatBladeStringWithPint(`<x-alert            type="error"
 
 
- :message="$message" />`).trim(),
+ :message="$message" />`)).trim(),
             `<x-alert type="error" :message="$message" />`
         );
     });
 
-    test('pint: it formats escaped parameter bindings', () => {
+    test('pint: it formats escaped parameter bindings', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<x-button                   
+            (await formatBladeStringWithPint(`<x-button                   
 
             
             ::class="{ danger: isDeleting }">
                            Submit
-                       </x-button>`).trim(),
+                       </x-button>`)).trim(),
             `<x-button ::class="{ danger: isDeleting }">Submit</x-button>`
         );
     });
 
-    test('pint: it formats json bindings', () => {
+    test('pint: it formats json bindings', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<button :class="{ danger: isDeleting }">
+            (await formatBladeStringWithPint(`<button :class="{ danger: isDeleting }">
             Submit
-        </button>`).trim(),
+        </button>`)).trim(),
             `<button :class="{ danger: isDeleting }">Submit</button>`
         );
     });
 
-    test('pint: it formats inline echos', () => {
+    test('pint: it formats inline echos', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<option 
+            (await formatBladeStringWithPint(`<option 
                         {{ $isSelected($value) ? 'selected="selected"' : '' }} value="{{ $value }}">
                   {{ $label }}
-        </option>`).trim(),
+        </option>`)).trim(),
             `<option
     {{ $isSelected($value) ? 'selected="selected"' : '' }}
     value="{{ $value }}"
@@ -120,23 +120,23 @@ suite('Pint Transformer: Component Tags', () => {
         );
     });
 
-    test('pint: it formats attributes', () => {
+    test('pint: it formats attributes', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<div {{ $attributes }}>
+            (await formatBladeStringWithPint(`<div {{ $attributes }}>
         <!-- Component content -->
-    </div>`).trim(),
+    </div>`)).trim(),
         `<div {{ $attributes }}>
     <!-- Component content -->
 </div>`
         );
     });
 
-    test('pint: it formats merged attributes', () => {
+    test('pint: it formats merged attributes', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<div {{ $attributes->merge(['class' => 'alert alert-'.$type]) }}
+            (await formatBladeStringWithPint(`<div {{ $attributes->merge(['class' => 'alert alert-'.$type]) }}
         >
                     {{ $message }}
-            </div>`).trim(),
+            </div>`)).trim(),
         `<div
     {{ $attributes->merge(['class' => 'alert alert-'.$type]) }}
 >
@@ -145,31 +145,31 @@ suite('Pint Transformer: Component Tags', () => {
         );
     });
 
-    test('pint: it formats conditionally merged attributes', () => {
+    test('pint: it formats conditionally merged attributes', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<div {{ $attributes->class(['p-4', 'bg-red' => $hasError]) }}>
+            (await formatBladeStringWithPint(`<div {{ $attributes->class(['p-4', 'bg-red' => $hasError]) }}>
             {{ $message }}
-        </div>`).trim(),
+        </div>`)).trim(),
             `<div {{ $attributes->class(['p-4', 'bg-red' => $hasError]) }}>
     {{ $message }}
 </div>`
         );
     });
 
-    test('pint: it formats chained merged attributes', () => {
+    test('pint: it formats chained merged attributes', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<button {{ $attributes->class(['p-4'])->merge(['type' => 'button']) }}>
+            (await formatBladeStringWithPint(`<button {{ $attributes->class(['p-4'])->merge(['type' => 'button']) }}>
             {{ $slot }}
-        </button>`).trim(),
+        </button>`)).trim(),
             `<button {{ $attributes->class(['p-4'])->merge(['type' => 'button']) }}>
     {{ $slot }}
 </button>`
         );
     });
 
-    test('pint: it preserves inline attributes params echos and directives', () => {
+    test('pint: it preserves inline attributes params echos and directives', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<x-alert attribute param="{{ $title }}" {{ $title }} @directiveName @directiveWithParams('test') />`).trim(),
+            (await formatBladeStringWithPint(`<x-alert attribute param="{{ $title }}" {{ $title }} @directiveName @directiveWithParams('test') />`)).trim(),
             `<x-alert
     attribute
     param="{{ $title }}"
@@ -180,31 +180,31 @@ suite('Pint Transformer: Component Tags', () => {
         );
     });
 
-    test('pint: it can format PHP inside directive parameters', () => {
+    test('pint: it can format PHP inside directive parameters', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`
-            <x-alert @param($value    + $anotherValue) />`).trim(),
+            (await formatBladeStringWithPint(`
+            <x-alert @param($value    + $anotherValue) />`)).trim(),
             `<x-alert @param($value + $anotherValue) />`
         );
     });
 
-    test('pint: it preservies invalid PHP inside directive parameters', () => {
+    test('pint: it preservies invalid PHP inside directive parameters', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`
-            <x-alert @param($value   $= + $anotherValue) />`).trim(),
+            (await formatBladeStringWithPint(`
+            <x-alert @param($value   $= + $anotherValue) />`)).trim(),
             `<x-alert @param($value   $= + $anotherValue) />`
         );
     });
 
-    test('pint: it can rewrite slots to not break HTML tag pairs', () => {
+    test('pint: it can rewrite slots to not break HTML tag pairs', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<x-alert>
+            (await formatBladeStringWithPint(`<x-alert>
             <x-slot:title>
                 Server Error
             </x-slot>
          
             <strong>Whoops!</strong> Something went wrong!
-        </x-alert>`).trim(),
+        </x-alert>`)).trim(),
             `<x-alert>
     <x-slot:title>Server Error</x-slot>
 
@@ -214,14 +214,14 @@ suite('Pint Transformer: Component Tags', () => {
         );     
     });
 
-    test('pint: it can format attribute short syntax', () => {
+    test('pint: it can format attribute short syntax', async () => {
         const template = `<x-profile :$userId :$size></x-profile>`;
-        const result = formatBladeStringWithPint(template);
+        const result = await formatBladeStringWithPint(template);
 
         assert.strictEqual(result.trim(), template);
     });
 
-    test('pint: it preserves inline echo', () => {
+    test('pint: it preserves inline echo', async () => {
         const input = `<x-filament::avatar
         :src="filament()->getTenantAvatarUrl($tenant)"
         {{ $attributes }}
@@ -231,7 +231,7 @@ suite('Pint Transformer: Component Tags', () => {
     {{ $attributes }}
 />
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
-        assert.strictEqual(formatBladeStringWithPint(out), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(out), out);
     });
 });

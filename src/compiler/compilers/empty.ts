@@ -1,6 +1,6 @@
-import { AbstractNode, DirectiveNode } from '../../nodes/nodes';
-import { NodeCompiler } from '../nodeCompiler';
-import { ForElseCompiler } from './forElse';
+import { AbstractNode, DirectiveNode } from '../../nodes/nodes.js';
+import { NodeCompiler } from '../nodeCompiler.js';
+import { ForElseCompiler } from './forElse.js';
 
 export class EmptyCompiler implements NodeCompiler {
     private forElseCompiler: ForElseCompiler;

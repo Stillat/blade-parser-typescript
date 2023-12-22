@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { formatBladeString } from '../formatting/prettier/utils';
+import { formatBladeString } from '../formatting/prettier/utils.js';
 
 suite('Formatting Blade For', () => {
-    test('it correctly pairs and formats for nodes', () => {
+    test('it correctly pairs and formats for nodes', async () => {
         assert.strictEqual(
-            formatBladeString(`<p>
+            (await formatBladeString(`<p>
 <strong>Message</strong>
 @if($one)
 One
@@ -18,7 +18,7 @@ One
 @else
     Nope!
 @endif
-</p>`).trim(),
+</p>`)).trim(),
             `<p>
     <strong>Message</strong>
     @if ($one)

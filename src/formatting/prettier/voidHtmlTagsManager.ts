@@ -1,7 +1,7 @@
-import { BladeDocument } from '../../document/bladeDocument';
-import { FragmentNode } from '../../nodes/nodes';
-import { FragmentsParser } from '../../parser/fragmentsParser';
-import { StringUtilities } from '../../utilities/stringUtilities';
+import { BladeDocument } from '../../document/bladeDocument.js';
+import { FragmentNode } from '../../nodes/nodes.js';
+import { FragmentsParser } from '../../parser/fragmentsParser.js';
+import { StringUtilities } from '../../utilities/stringUtilities.js';
 
 export class VoidHtmlTagsManager {
     private static voidElementNames: string[] = [

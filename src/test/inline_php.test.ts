@@ -1,7 +1,7 @@
 import assert from 'assert';
-import { BladeDocument } from '../document/bladeDocument';
-import { FragmentPosition, InlinePhpNode, LiteralNode, ShorthandInlinePhpNode } from '../nodes/nodes';
-import { assertCount, assertInstanceOf, assertLiteralContent } from './testUtils/assertions';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { FragmentPosition, InlinePhpNode, LiteralNode, ShorthandInlinePhpNode } from '../nodes/nodes.js';
+import { assertCount, assertInstanceOf, assertLiteralContent } from './testUtils/assertions.js';
 
 suite('Inline PHP Parsing', () => {
     test('it parses inline PHP regions', () => {

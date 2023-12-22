@@ -1,5 +1,5 @@
-import { IExtractedAttribute } from '../parser/extractedAttribute';
-import { StringUtilities } from '../utilities/stringUtilities';
+import { IExtractedAttribute } from '../parser/extractedAttribute.js';
+import { StringUtilities } from '../utilities/stringUtilities.js';
 
 let canProcessAttributes: boolean = true;
 let isAttributeFormatter: boolean = false;

@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { formatBladeString, formatBladeStringWithPint } from '../formatting/prettier/utils';
+import { formatBladeString, formatBladeStringWithPint } from '../formatting/prettier/utils.js';
 
 suite('If Statements', () => {
-    test('it can format if statements without any HTML hints', () => {
+    test('it can format if statements without any HTML hints', async () => {
         assert.strictEqual(
-            formatBladeString(`@if($true)
+            (await formatBladeString(`@if($true)
 
 @elseif($anotherValue)
 @else
@@ -18,7 +18,7 @@ Thing
 More Things
 @else
 Another Thing
-@endif`).trim(),
+@endif`)).trim(),
             `@if ($true)
 @elseif ($anotherValue)
 @else
@@ -34,9 +34,9 @@ Another Thing
         );
     });
 
-    test('it can format if statements with embedded HTML', () => {
+    test('it can format if statements with embedded HTML', async () => {
         assert.strictEqual(
-            formatBladeString(`@if($true)
+            (await formatBladeString(`@if($true)
 <span>Hello</span>
 @elseif($anotherValue)
 <div>
@@ -54,7 +54,7 @@ Another Thing
         </p>
 
 @endif
-`).trim(),
+`)).trim(),
             `@if ($true)
     <span>Hello</span>
 @elseif ($anotherValue)
@@ -72,9 +72,9 @@ Another Thing
         );
     });
 
-    test('it can parse and format conditions with lots of whitespace', () => {
+    test('it can parse and format conditions with lots of whitespace', async () => {
         assert.strictEqual(
-            formatBladeString(`@if         ($true)
+            (await formatBladeString(`@if         ($true)
             <span>Hello</span>
             @elseif                     ($anotherValue)
             <div>
@@ -91,7 +91,7 @@ Another Thing
             <p>Test {{ $title}}     test
                     </p>
             
-            @endif`).trim(),
+            @endif`)).trim(),
             `@if ($true)
     <span>Hello</span>
 @elseif ($anotherValue)
@@ -109,21 +109,21 @@ Another Thing
         );
     });
 
-    test('simple if statement does not add extra indentation', () => {
+    test('simple if statement does not add extra indentation', async () => {
         assert.strictEqual(
-            formatBladeString(`@if($true)
+            (await formatBladeString(`@if($true)
             <p>Hello
             </p>
-            @endif`).trim(),
+            @endif`)).trim(),
             `@if ($true)
     <p>Hello</p>
 @endif`
         );
     });
 
-    test('it can format nested if statements', () => {
+    test('it can format nested if statements', async () => {
         assert.strictEqual(
-            formatBladeString(`@if($true)
+            (await formatBladeString(`@if($true)
             Thing
         @elseif($anotherValue)
             More Things
@@ -135,7 +135,7 @@ Another Thing
         @else
             Another Thing
         @endif
-        @endif`).trim(),
+        @endif`)).trim(),
             `@if ($true)
     Thing
 @elseif ($anotherValue)
@@ -152,11 +152,11 @@ Another Thing
         );
     });
 
-    test('it can format without an else', () => {
+    test('it can format without an else', async () => {
         assert.strictEqual(
-            formatBladeString(`@if($true)
+            (await formatBladeString(`@if($true)
             Thing
-                        @elseif($anotherValue) More Things @endif`).trim(),
+                        @elseif($anotherValue) More Things @endif`)).trim(),
             `@if ($true)
     Thing
 @elseif ($anotherValue)
@@ -165,7 +165,7 @@ Another Thing
         );
     });
 
-    test('it indents child documents nicely if its just an echo', () => {
+    test('it indents child documents nicely if its just an echo', async () => {
         const template = `@if ('foo')
         {{ $actions }}
         @elseif ('bar')
@@ -176,10 +176,10 @@ Another Thing
 @elseif ("bar")
 @endif
 `;
-        assert.strictEqual(formatBladeString(template), out);
+        assert.strictEqual(await formatBladeString(template), out);
     });
 
-    test('it preserves line placement inside conditions', () => {
+    test('it preserves line placement inside conditions', async () => {
         const template=  `<div>
     @if (count($tenants = filament()->getUserTenants(filament()->auth()->user())))
     @endif
@@ -190,11 +190,11 @@ Another Thing
 </div>
 `;
 
-        assert.strictEqual(formatBladeString(template), out);
-        assert.strictEqual(formatBladeString(out), out);
+        assert.strictEqual(await formatBladeString(template), out);
+        assert.strictEqual(await formatBladeString(out), out);
     });
 
-    test('it indents conditions in a sane way', () => {
+    test('it indents conditions in a sane way', async () => {
         const template = `<div>
         @if (count($tenants = filament()->getUserTenants(filament()->auth()->user()))
         )
@@ -211,11 +211,11 @@ Another Thing
     @endif
 </div>
 `;
-        assert.strictEqual(formatBladeString(template), out);
-        assert.strictEqual(formatBladeString(out), out);
+        assert.strictEqual(await formatBladeString(template), out);
+        assert.strictEqual(await formatBladeString(out), out);
     });
 
-    test('it treats echos as text inside else blocks', () => {
+    test('it treats echos as text inside else blocks', async () => {
         const input = `@something('test') {{ $one }}
     @elsesomething('something else?') 
     {{ $two }} 
@@ -230,11 +230,11 @@ Another Thing
     {{ $three }}
 @endsomething
 `;
-        assert.strictEqual(formatBladeString(input), out);
-        assert.strictEqual(formatBladeString(out), out);
+        assert.strictEqual(await formatBladeString(input), out);
+        assert.strictEqual(await formatBladeString(out), out);
     });
 
-    test('it indents ifs containing only echos nicely', () => {
+    test('it indents ifs containing only echos nicely', async () => {
         const input = `@if (true)
 {{ 'foo' }}
 {{ 'bar' }}
@@ -250,10 +250,10 @@ Another Thing
     {{ "baz" }}
 @endif
 `;
-        assert.strictEqual(formatBladeString(input), output);
+        assert.strictEqual(await formatBladeString(input), output);
     });
 
-    test('it formats nicely if contains just components', () => {
+    test('it formats nicely if contains just components', async () => {
         const input = `
         @guest
             <x-foo></x-foo>
@@ -267,10 +267,10 @@ Another Thing
     <x-foo></x-foo>
 @endguest
 `;
-        assert.strictEqual(formatBladeString(input), output);
+        assert.strictEqual(await formatBladeString(input), output);
     });
 
-    test('it formats nicely without any else block if just contains components', () => {
+    test('it formats nicely without any else block if just contains components', async () => {
         const input = `@if (filament()->hasRegistration())
 <x-slot name="subheading">
     {{ __('filament::pages/auth/login.buttons.register.before') }}
@@ -284,10 +284,10 @@ Another Thing
     </x-slot>
 @endif
 `;
-        assert.strictEqual(formatBladeString(input), output);
+        assert.strictEqual(await formatBladeString(input), output);
     });
 
-    test('layout engine detects different types of situations and formats nicely', () => {
+    test('layout engine detects different types of situations and formats nicely', async () => {
         const input = `
 
 @if (true)
@@ -347,11 +347,11 @@ A
     A
 @endif
 `;
-        assert.strictEqual(formatBladeString(input), output);
-        assert.strictEqual(formatBladeString(output), output);
+        assert.strictEqual(await formatBladeString(input), output);
+        assert.strictEqual(await formatBladeString(output), output);
     });
 
-    test('it positions literal content nicely', () => {
+    test('it positions literal content nicely', async () => {
         const input = `<div>
 @if ($data['nextInspection'])
     <div
@@ -389,14 +389,14 @@ A
     @endif
 </div>
 `;
-        assert.strictEqual(formatBladeString(input), out);
+        assert.strictEqual(await formatBladeString(input), out);
     });
 
-    test('it places a space after conditions that appear before classes', () => {
+    test('it places a space after conditions that appear before classes', async () => {
         const template = `<div class="@if($step === 1 || $step === 2 || $step === 3 ) bg-white @endif h-3 rounded-full border border-white"></div>`;
         const out = `<div
     class="@if($step === 1 || $step === 2 || $step === 3 ) bg-white @endif h-3 rounded-full border border-white"
 ></div>`;
-        assert.strictEqual(formatBladeStringWithPint(template).trim(), out);
+        assert.strictEqual((await formatBladeStringWithPint(template)).trim(), out);
     });
 });

@@ -1,48 +1,51 @@
 import assert from 'assert';
-import { formatBladeString, formatBladeStringWithPint } from '../formatting/prettier/utils';
+import { formatBladeString, formatBladeStringWithPint } from '../formatting/prettier/utils.js';
+import { setupTestHooks } from './testUtils/formatting.js';
 
 suite('Basic Node Formatting', () => {
-    test('it formats echos', () => {
+    setupTestHooks();
+
+    test('it formats echos', async () => {
         assert.strictEqual(
-            formatBladeString('{{ $title }}').trim(),
+            (await formatBladeString('{{ $title }}')).trim(),
             "{{ $title }}"
         );
     });
 
-    test('it formats echo variant', () => {
+    test('it formats echo variant', async () => {
         assert.strictEqual(
-            formatBladeString('{{{ $title }}}').trim(),
+            (await formatBladeString('{{{ $title }}}')).trim(),
             "{{{ $title }}}"
         );
     });
 
-    test('it formats escaped echos', () => {
+    test('it formats escaped echos', async () => {
         assert.strictEqual(
-            formatBladeString('{!! $title !!}').trim(),
+            (await formatBladeString('{!! $title !!}')).trim(),
             "{!! $title !!}"
         );
     });
 
-    test('it formats simple comments', () => {
+    test('it formats simple comments', async () => {
         assert.strictEqual(
-            formatBladeString('{{-- Comment. --}}').trim(),
+            (await formatBladeString('{{-- Comment. --}}')).trim(),
             "{{-- Comment. --}}"
         );
     });
 
-    test('it formats block comments', () => {
+    test('it formats block comments', async () => {
         assert.strictEqual(
-            formatBladeString(`{{--
-                Block Comment. --}}`).trim(),
+            (await formatBladeString(`{{--
+                Block Comment. --}}`)).trim(),
             `{{--
     Block Comment.
 --}}`
         );
     });
 
-    test('it formats block comments with', () => {
+    test('it formats block comments with', async () => {
         assert.strictEqual(
-            formatBladeString(`{{--
+            await formatBladeString(`{{--
  Block Comment.
  with many lines and with <stuff></stuff> --}}`),
             `{{--
@@ -53,13 +56,13 @@ suite('Basic Node Formatting', () => {
         );
     });
 
-    test('block comments inside a div', () => {
+    test('block comments inside a div', async () => {
         assert.strictEqual(
-            formatBladeString(`<div>
+            (await formatBladeString(`<div>
         {{--
  Block Comment.
  with many lines and with <stuff></stuff> --}}
-        </div>`).trim(),
+        </div>`)).trim(),
             `<div>
     {{--
         Block Comment.
@@ -69,7 +72,7 @@ suite('Basic Node Formatting', () => {
         );
     });
 
-    test('ignored fragmented elements are actually ignored', () => {
+    test('ignored fragmented elements are actually ignored', async () => {
         const input = `
 @if ($someCondition)
     {{-- format-ignore-start --}}<x-slot:the_slot>{{-- format-ignore-end --}}
@@ -91,10 +94,10 @@ suite('Basic Node Formatting', () => {
     {{-- format-ignore-start --}}</x-slot>{{-- format-ignore-end --}}
 @endif
 `;
-        assert.strictEqual(formatBladeString(input), out);
+        assert.strictEqual(await formatBladeString(input), out);
     });
 
-    test('comments can be formatted inside html elements', () => {
+    test('comments can be formatted inside html elements', async () => {
         const input = `
 
 <div
@@ -107,10 +110,10 @@ suite('Basic Node Formatting', () => {
     <p>Hello, world!</p>
 </div>
 `;
-        assert.strictEqual(formatBladeString(input), out);
+        assert.strictEqual(await formatBladeString(input), out);
     });
 
-    test('simple nodes can be formatted inside html content', () => {
+    test('simple nodes can be formatted inside html content', async () => {
         const input = `<div
     class="my-4"
     @unless(config('filament-media-library.settings.show-upload-box-by-default')) x-foo
@@ -134,10 +137,10 @@ suite('Basic Node Formatting', () => {
     <p>Hello, world!</p>
 </div>
 `;
-        assert.strictEqual(formatBladeString(input), out);
+        assert.strictEqual(await formatBladeString(input), out);
     });
 
-    test('it can format pairs inside html content', () => {
+    test('it can format pairs inside html content', async () => {
         const input = `
 <div
     class="my-4"
@@ -226,10 +229,10 @@ suite('Basic Node Formatting', () => {
     </div>
 </div>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), output);
+        assert.strictEqual(await formatBladeStringWithPint(input), output);
     });
 
-    test('it formats subdocs with attributes', () => {
+    test('it formats subdocs with attributes', async () => {
         const input = `
 
 <span
@@ -272,11 +275,11 @@ suite('Basic Node Formatting', () => {
     />
 </span>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), output);
+        assert.strictEqual(await formatBladeStringWithPint(input), output);
 
     });
 
-    test('it can format nested ifs and subdocs without an infinite loop', () => {
+    test('it can format nested ifs and subdocs without an infinite loop', async () => {
         const input = `
 
 @if ($prefixIcon)
@@ -323,10 +326,10 @@ suite('Basic Node Formatting', () => {
     </span>
 @endif
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), output);
+        assert.strictEqual(await formatBladeStringWithPint(input), output);
     });
 
-    test('it indents simple content inside pairs used as html attributes', () => {
+    test('it indents simple content inside pairs used as html attributes', async () => {
         const input = `<div>
 <div>
 <input type="text"
@@ -347,10 +350,10 @@ suite('Basic Node Formatting', () => {
     </div>
 </div>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('it indents simple content at the root', () => {
+    test('it indents simple content at the root', async () => {
         const input = `
 
 
@@ -366,10 +369,10 @@ disabled
     @endif
 ></div>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('it can indent a lot of attributes inside a condition', () => {
+    test('it can indent a lot of attributes inside a condition', async () => {
         const input = `
 
 
@@ -391,10 +394,10 @@ disabled
     @endif
 ></div>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('it can indent attributes without content inside conditional attributes', () => {
+    test('it can indent attributes without content inside conditional attributes', async () => {
         const input = `
 
 <table>
@@ -421,10 +424,10 @@ class="divide-y whitespace-nowrap dark:divide-gray-700"
     </tbody>
 </table>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('complex conditional html attributes', () => {
+    test('complex conditional html attributes', async () => {
         const input = `
         <table>
             <tbody
@@ -482,10 +485,10 @@ class="divide-y whitespace-nowrap dark:divide-gray-700"
     ])
 ></div>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('it doe not break semicolon placement', () => {
+    test('it doe not break semicolon placement', async () => {
         const input = `
 <textarea
 @if ($shouldAutosize())
@@ -511,10 +514,10 @@ class="divide-y whitespace-nowrap dark:divide-gray-700"
     @endif
 ></textarea>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('nicely indent code is not indented more', () => {
+    test('nicely indent code is not indented more', async () => {
         const input = `
 <div
     x-transition:enter="ease duration-300"
@@ -549,10 +552,10 @@ class="divide-y whitespace-nowrap dark:divide-gray-700"
     @endif
 ></div>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('it can indent nested conditions', () => {
+    test('it can indent nested conditions', async () => {
         const input = `
 <{!! $tag !!}
     @if ($url)
@@ -571,10 +574,10 @@ class="divide-y whitespace-nowrap dark:divide-gray-700"
     @endif
 ></{!! $tag !!}>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('simple conditions do not get weird wrapping', () => {
+    test('simple conditions do not get weird wrapping', async () => {
         const input = `
 <div
 @if ($closeByClickingAway)
@@ -597,6 +600,6 @@ class="divide-y whitespace-nowrap dark:divide-gray-700"
     @endif
 ></div>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 });

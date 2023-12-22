@@ -1,6 +1,6 @@
-import { BladeDocument } from '../document/bladeDocument';
-import { BladeEchoNode, LiteralNode } from '../nodes/nodes';
-import { assertCount, assertEchoContent, assertInstanceOf, assertLiteralContent } from './testUtils/assertions';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { BladeEchoNode, LiteralNode } from '../nodes/nodes.js';
+import { assertCount, assertEchoContent, assertInstanceOf, assertLiteralContent } from './testUtils/assertions.js';
 
 suite('Neighboring Blade Nodes', () => {
     test('it parses simple neighboring nodes', () => {

@@ -1,8 +1,8 @@
 import assert from 'assert';
-import { formatBladeString } from '../formatting/prettier/utils';
+import { formatBladeString } from '../formatting/prettier/utils.js';
 
 suite('Directive JSON Arguments', () => {
-    test('it applies relative indentation to JSON argument blocks', () => {
+    test('it applies relative indentation to JSON argument blocks', async () => {
         const input = `
 @someDirectiveName({
     "name": "John Doe",
@@ -85,6 +85,6 @@ suite('Directive JSON Arguments', () => {
     </div>
 </div>
 `;
-        assert.strictEqual(formatBladeString(input), expected);
+        assert.strictEqual(await formatBladeString(input), expected);
     });
 });

@@ -1,5 +1,5 @@
-import { DocumentParser } from '../../parser/documentParser';
-import { StringUtilities } from '../../utilities/stringUtilities';
+import { DocumentParser } from '../../parser/documentParser.js';
+import { StringUtilities } from '../../utilities/stringUtilities.js';
 
 export class WordScanner {
 

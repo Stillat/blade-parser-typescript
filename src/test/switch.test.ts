@@ -1,7 +1,7 @@
-import assert = require('assert');
-import { BladeDocument } from '../document/bladeDocument';
-import { AbstractNode, DirectiveNode, LiteralNode, SwitchCaseNode, SwitchStatementNode } from '../nodes/nodes';
-import { assertCount, assertInstanceOf, assertLiteralContent, assertNotNull, assertPaired } from './testUtils/assertions';
+import assert from 'assert';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { AbstractNode, DirectiveNode, LiteralNode, SwitchCaseNode, SwitchStatementNode } from '../nodes/nodes.js';
+import { assertCount, assertInstanceOf, assertLiteralContent, assertNotNull, assertPaired } from './testUtils/assertions.js';
 
 suite('Switch Statements', () => {
     test('it can parse switch statements', () => {

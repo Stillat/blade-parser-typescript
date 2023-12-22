@@ -1,6 +1,6 @@
-import { BladeDocument } from '../../document/bladeDocument';
+import { BladeDocument } from '../../document/bladeDocument.js';
 
-export function transformString(text: string): string {
+export function transformString(text: string): Promise<string> {
     const doc = BladeDocument.fromText(text),
         transformed = doc.transform().toStructure();
 

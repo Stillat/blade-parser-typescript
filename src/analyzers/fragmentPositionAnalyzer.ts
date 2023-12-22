@@ -1,6 +1,6 @@
-import { BladeComponentNode, ConditionNode, DirectiveNode, ForElseNode, FragmentPosition, LiteralNode, SwitchStatementNode } from '../nodes/nodes';
-import { DocumentParser } from '../parser/documentParser';
-import { FragmentsParser } from '../parser/fragmentsParser';
+import { BladeComponentNode, ConditionNode, DirectiveNode, ForElseNode, FragmentPosition, LiteralNode, SwitchStatementNode } from '../nodes/nodes.js';
+import { DocumentParser } from '../parser/documentParser.js';
+import { FragmentsParser } from '../parser/fragmentsParser.js';
 
 export class FragmentPositionAnalyzer {
     private documentParser: DocumentParser;

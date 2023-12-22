@@ -1,25 +1,26 @@
 {
-	"compilerOptions": {
-		"target": "es2019",
-		"lib": [
-			"ES2019",
-			"ES2020.String"
-		],
-		"module": "commonjs",
-		"moduleResolution": "node",
-        "esModuleInterop": true,
-		"sourceMap": true,
-		"strict": true,
-		"outDir": "out",
-		"rootDir": "src",
-        "declaration": true,
-        "declarationMap": true,
-        "skipLibCheck": true
-	},
-	"include": [
-		"src"
-	],
 	"exclude": [
-		"node_modules"
-	]
+  "compilerOptions": {
+    "target": "es2020",
+    "lib": [
+      "ES2020",
+      "ES2020.String"
+    ],
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "strict": true,
+    "outDir": "out",
+    "rootDir": "src",
+    "declaration": true,
+    "declarationMap": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

@@ -1,11 +1,11 @@
-import { JavaScriptStructuresAnalyzer } from '../analyzers/javaScriptStructuresAnalyzer';
-import { PhpStructuresAnalyzer } from '../analyzers/phpStructuresAnalyzer';
-import { ClassStringRuleEngine, IClassRuleset } from '../formatting/classStringsConfig';
-import { formatAsHtmlStrings } from '../formatting/prettier/utils';
-import { ILabeledRange } from '../nodes/labeledRange';
-import { StringUtilities } from '../utilities/stringUtilities';
-import { InlineStringParser } from './inlineStringParser';
-import { StringRemover } from './stringRemover';
+import { JavaScriptStructuresAnalyzer } from '../analyzers/javaScriptStructuresAnalyzer.js';
+import { PhpStructuresAnalyzer } from '../analyzers/phpStructuresAnalyzer.js';
+import { ClassStringRuleEngine, IClassRuleset } from '../formatting/classStringsConfig.js';
+import { formatAsHtmlStrings } from '../formatting/prettier/utils.js';
+import { ILabeledRange } from '../nodes/labeledRange.js';
+import { StringUtilities } from '../utilities/stringUtilities.js';
+import { InlineStringParser } from './inlineStringParser.js';
+import { StringRemover } from './stringRemover.js';
 
 export class ClassEmulator {
     private phpStructuresAnalyzer: PhpStructuresAnalyzer;
@@ -65,7 +65,7 @@ export class ClassEmulator {
         return this.foundAnyStrings;
     }
 
-    emulateString(content: string): string {
+    async emulateString(content: string): Promise<string> {
         const uniqueSlug = StringUtilities.makeSlug(32),
             prefix = `Emulate:${uniqueSlug}=`,
             structures = this.phpStructuresAnalyzer.getStructures()
@@ -108,7 +108,7 @@ export class ClassEmulator {
         });
 
         try {
-            emulateDocument = formatAsHtmlStrings(emulateDocument);
+            emulateDocument = await formatAsHtmlStrings(emulateDocument);
         } catch (err) {
             // If the transformation process failed, we cannot safely
             // continue with anything and to not have things get
@@ -168,22 +168,22 @@ export class ClassEmulator {
         return newDocument;
     }
 
-    emulatePhpNode(content: string) {
+    async emulatePhpNode(content: string) {
         const analyzeContent = '<?php ' + content;
         this.phpStructuresAnalyzer.getStructureLocations(analyzeContent, 0);
 
-        return this.emulateString(analyzeContent).trimLeft().substring(6);
+        return (await this.emulateString(analyzeContent)).trimLeft().substring(6);
     }
 
-    emulatePhpTag(content: string): string {
+    async emulatePhpTag(content: string): Promise<string> {
         this.phpStructuresAnalyzer.getStructureLocations(content, 0);
 
-        return this.emulateString(content);
+        return await this.emulateString(content);
     }
 
-    emulateJavaScriptString(content: string): string {
+    async emulateJavaScriptString(content: string): Promise<string> {
         this.jsStructuresAnalyzer.getStructureLocations(content, 0);
 
-        return this.emulateString(content).trimLeft();
+        return (await this.emulateString(content)).trimLeft();
     }
 }

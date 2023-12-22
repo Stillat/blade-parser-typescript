@@ -1,16 +1,16 @@
 import assert from 'assert';
-import { formatBladeStringWithPint } from '../formatting/prettier/utils';
+import { formatBladeStringWithPint } from '../formatting/prettier/utils.js';
 
 suite('Pint Transformer: Conditional Element Directive Pair', () => {
-    test('pint: it can indent directive pairs used as HTML elements', () => {
+    test('pint: it can indent directive pairs used as HTML elements', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`                    <@pair Test @endpair class="something">
+            (await formatBladeStringWithPint(`                    <@pair Test @endpair class="something">
             <div><p>SOme {{ $title }} text</p>
             <p>
             @pair <p>Something</p> @endpair
             </p>
         </div>
-                </@pair Test @endpair>`).trim(),
+                </@pair Test @endpair>`)).trim(),
             `<@pair Test @endpair class="something">
     <div>
         <p>SOme {{ $title }} text</p>
@@ -24,15 +24,15 @@ suite('Pint Transformer: Conditional Element Directive Pair', () => {
         );
     });
 
-    test('pint: it can indent directives used as HTML elements', () => {
+    test('pint: it can indent directives used as HTML elements', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<@directive >
+            (await formatBladeStringWithPint(`<@directive >
             <div>
                 @directive
             <p>This should be {{    $paired    }}</p>
                 @enddirective
         </div>
-                </@directive >`).trim(),
+                </@directive >`)).trim(),
             `<@directive>
     <div>
         @directive

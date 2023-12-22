@@ -1,25 +1,25 @@
 import assert from 'assert';
-import { formatBladeString, formatBladeStringWithPint } from '../formatting/prettier/utils';
+import { formatBladeString, formatBladeStringWithPint } from '../formatting/prettier/utils.js';
 
 suite('Component Tags', () => {
-    test('it formats simple component tags', () => {
+    test('it formats simple component tags', async () => {
         assert.strictEqual(
-            formatBladeString(`        <x-icon 
+            (await formatBladeString(`        <x-icon 
             @class([$icon, 'pe-2'])
-                        />`).trim(),
+                        />`)).trim(),
             `<x-icon @class([$icon, "pe-2"]) />`
         );
     });
 
-    test('it can format component tag pairs', () => {
+    test('it can format component tag pairs', async () => {
         assert.strictEqual(
-            formatBladeString(`    <x-icon 
+            (await formatBladeString(`    <x-icon 
             @class([$icon, 'pe-2'])
                         >
 <div>
 <p>test</p>
 </div>
-                    </x-icon>`).trim(),
+                    </x-icon>`)).trim(),
             `<x-icon @class([$icon, "pe-2"])>
     <div>
         <p>test</p>
@@ -28,89 +28,89 @@ suite('Component Tags', () => {
         );
     });
 
-    test('it can format slots with names', () => {
+    test('it can format slots with names', async () => {
         assert.strictEqual(
-            formatBladeString(`<x-slot:name
+            (await formatBladeString(`<x-slot:name
 
-            param="value" />`).trim(),
+            param="value" />`)).trim(),
             `<x-slot:name param="value" />`
         );
     });
 
-    test('it normalizes inline names', () => {
+    test('it normalizes inline names', async () => {
         assert.strictEqual(
-            formatBladeString(`<x:slot:name
+            (await formatBladeString(`<x:slot:name
 
-            param="value" />`).trim(),
+            param="value" />`)).trim(),
             `<x-slot:name param="value" />`
         );
     });
 
-    test('it normalizes inline name pairs', () => {
+    test('it normalizes inline name pairs', async () => {
         assert.strictEqual(
-            formatBladeString(`<x:slot:name
+            (await formatBladeString(`<x:slot:name
 
             param="value">
    <p>Content</p>
-            </x:slot:name>`).trim(),
+            </x:slot:name>`)).trim(),
             `<x-slot:name param="value">
     <p>Content</p>
 </x-slot>`
         );
     });
 
-    test('it normalizes names', () => {
+    test('it normalizes names', async () => {
         assert.strictEqual(
-            formatBladeString(`<x:slot:name />`).trim(),
+            (await formatBladeString(`<x:slot:name />`)).trim(),
             `<x-slot:name />`
         );
     });
 
-    test('it formats dot names', () => {
+    test('it formats dot names', async () => {
         assert.strictEqual(
-            formatBladeString(`<x-inputs.button 
-            class="something" />`).trim(),
+            (await formatBladeString(`<x-inputs.button 
+            class="something" />`)).trim(),
             `<x-inputs.button class="something" />`
         );
     });
 
-    test('it formats params and bindings', () => {
+    test('it formats params and bindings', async () => {
         assert.strictEqual(
-            formatBladeString(`<x-alert            type="error"
+            (await formatBladeString(`<x-alert            type="error"
 
 
- :message="$message" />`).trim(),
+ :message="$message" />`)).trim(),
             `<x-alert type="error" :message="$message" />`
         );
     });
 
-    test('it formats escaped parameter bindings', () => {
+    test('it formats escaped parameter bindings', async () => {
         assert.strictEqual(
-            formatBladeString(`<x-button                   
+            (await formatBladeString(`<x-button                   
 
             
             ::class="{ danger: isDeleting }">
                            Submit
-                       </x-button>`).trim(),
+                       </x-button>`)).trim(),
             `<x-button ::class="{ danger: isDeleting }">Submit</x-button>`
         );
     });
 
-    test('it formats json bindings', () => {
+    test('it formats json bindings', async () => {
         assert.strictEqual(
-            formatBladeString(`<button :class="{ danger: isDeleting }">
+            (await formatBladeString(`<button :class="{ danger: isDeleting }">
             Submit
-        </button>`).trim(),
+        </button>`)).trim(),
             `<button :class="{ danger: isDeleting }">Submit</button>`
         );
     });
 
-    test('it formats inline echos', () => {
+    test('it formats inline echos', async () => {
         assert.strictEqual(
-            formatBladeString(`<option 
+            (await formatBladeString(`<option 
                         {{ $isSelected($value) ? 'selected="selected"' : '' }} value="{{ $value }}">
                   {{ $label }}
-        </option>`).trim(),
+        </option>`)).trim(),
             `<option
     {{ $isSelected($value) ? 'selected="selected"' : "" }}
     value="{{ $value }}"
@@ -120,23 +120,23 @@ suite('Component Tags', () => {
         );
     });
 
-    test('it formats attributes', () => {
+    test('it formats attributes', async () => {
         assert.strictEqual(
-            formatBladeString(`<div {{ $attributes }}>
+            (await formatBladeString(`<div {{ $attributes }}>
         <!-- Component content -->
-    </div>`).trim(),
+    </div>`)).trim(),
         `<div {{ $attributes }}>
     <!-- Component content -->
 </div>`
         );
     });
 
-    test('it formats merged attributes', () => {
+    test('it formats merged attributes', async () => {
         assert.strictEqual(
-            formatBladeString(`<div {{ $attributes->merge(['class' => 'alert alert-'.$type]) }}
+            (await formatBladeString(`<div {{ $attributes->merge(['class' => 'alert alert-'.$type]) }}
         >
                     {{ $message }}
-            </div>`).trim(),
+            </div>`)).trim(),
         `<div
     {{ $attributes->merge(["class" => "alert alert-" . $type]) }}
 >
@@ -145,31 +145,31 @@ suite('Component Tags', () => {
         );
     });
 
-    test('it formats conditionally merged attributes', () => {
+    test('it formats conditionally merged attributes', async () => {
         assert.strictEqual(
-            formatBladeString(`<div {{ $attributes->class(['p-4', 'bg-red' => $hasError]) }}>
+            (await formatBladeString(`<div {{ $attributes->class(['p-4', 'bg-red' => $hasError]) }}>
             {{ $message }}
-        </div>`).trim(),
+        </div>`)).trim(),
             `<div {{ $attributes->class(["p-4", "bg-red" => $hasError]) }}>
     {{ $message }}
 </div>`
         );
     });
 
-    test('it formats chained merged attributes', () => {
+    test('it formats chained merged attributes', async () => {
         assert.strictEqual(
-            formatBladeString(`<button {{ $attributes->class(['p-4'])->merge(['type' => 'button']) }}>
+            (await formatBladeString(`<button {{ $attributes->class(['p-4'])->merge(['type' => 'button']) }}>
             {{ $slot }}
-        </button>`).trim(),
+        </button>`)).trim(),
             `<button {{ $attributes->class(["p-4"])->merge(["type" => "button"]) }}>
     {{ $slot }}
 </button>`
         );
     });
 
-    test('it preserves inline attributes params echos and directives', () => {
+    test('it preserves inline attributes params echos and directives', async () => {
         assert.strictEqual(
-            formatBladeString(`<x-alert attribute param="{{ $title }}" {{ $title }} @directiveName @directiveWithParams('test') />`).trim(),
+            (await formatBladeString(`<x-alert attribute param="{{ $title }}" {{ $title }} @directiveName @directiveWithParams('test') />`)).trim(),
             `<x-alert
     attribute
     param="{{ $title }}"
@@ -180,31 +180,31 @@ suite('Component Tags', () => {
         );
     });
 
-    test('it can format PHP inside directive parameters', () => {
+    test('it can format PHP inside directive parameters', async () => {
         assert.strictEqual(
-            formatBladeString(`
-            <x-alert @param($value    + $anotherValue) />`).trim(),
+            (await formatBladeString(`
+            <x-alert @param($value    + $anotherValue) />`)).trim(),
             `<x-alert @param($value + $anotherValue) />`
         );
     });
 
-    test('it preservies invalid PHP inside directive parameters', () => {
+    test('it preservies invalid PHP inside directive parameters', async () => {
         assert.strictEqual(
-            formatBladeString(`
-            <x-alert @param($value   $= + $anotherValue) />`).trim(),
+            (await formatBladeString(`
+            <x-alert @param($value   $= + $anotherValue) />`)).trim(),
             `<x-alert @param($value   $= + $anotherValue) />`
         );
     });
 
-    test('it can rewrite slots to not break HTML tag pairs', () => {
+    test('it can rewrite slots to not break HTML tag pairs', async () => {
         assert.strictEqual(
-            formatBladeString(`<x-alert>
+            (await formatBladeString(`<x-alert>
             <x-slot:title>
                 Server Error
             </x-slot>
          
             <strong>Whoops!</strong> Something went wrong!
-        </x-alert>`).trim(),
+        </x-alert>`)).trim(),
             `<x-alert>
     <x-slot:title>Server Error</x-slot>
 
@@ -214,14 +214,14 @@ suite('Component Tags', () => {
         );     
     });
 
-    test('it can format attribute short syntax', () => {
+    test('it can format attribute short syntax', async () => {
         const template = `<x-profile :$userId :$size></x-profile>`;
-        const result = formatBladeString(template);
+        const result = await formatBladeString(template);
 
         assert.strictEqual(result.trim(), template);
     });
 
-    test('it preserves inline echo', () => {
+    test('it preserves inline echo', async () => {
         const input = `<x-filament::avatar
         :src="filament()->getTenantAvatarUrl($tenant)"
         {{ $attributes }}
@@ -231,18 +231,18 @@ suite('Component Tags', () => {
     {{ $attributes }}
 />
 `;
-        assert.strictEqual(formatBladeString(input), out);
-        assert.strictEqual(formatBladeString(out), out);
+        assert.strictEqual(await formatBladeString(input), out);
+        assert.strictEqual(await formatBladeString(out), out);
     });
 
-    test('it preserves comments', () => {
+    test('it preserves comments', async () => {
         const input = `<x-foo {{-- foo="" --}} />`;
         const out = `<x-foo {{-- foo="" --}} />
 `;
-        assert.strictEqual(formatBladeString(input), out);
+        assert.strictEqual(await formatBladeString(input), out);
     });
 
-    test('it does not break @click.prevent directive', () => {
+    test('it does not break @click.prevent directive', async () => {
         const input = `<x-jet-dropdown-link
     href="{{ route('logout') }}"
     @click.prevent="$root.submit();"
@@ -256,10 +256,10 @@ suite('Component Tags', () => {
     {{ __("Log Out") }}
 </x-jet-dropdown-link>
 `;
-        assert.strictEqual(formatBladeString(input), out);
+        assert.strictEqual(await formatBladeString(input), out);
     });
 
-    test('it can format inline slot names', () => {
+    test('it can format inline slot names', async () => {
         const input = `
 <x-slot name="title">
     <p>Howdy, sir.</p>
@@ -526,10 +526,10 @@ suite('Component Tags', () => {
     {{ __("My Title") }}
 </x-slot>
 `;
-        assert.strictEqual(formatBladeString(input), output);
+        assert.strictEqual(await formatBladeString(input), output);
     });
 
-    test('custom html tags that have the same name as void tags can be formatted', () => {
+    test('custom html tags that have the same name as void tags can be formatted', async () => {
         const input = `
 <object data="audi.wav">
   <param name="autoplay" value="true">
@@ -920,10 +920,10 @@ Hello, there!
     </Link>
 </Command>
 `;
-        assert.strictEqual(formatBladeString(input), expected);
+        assert.strictEqual(await formatBladeString(input), expected);
     });
 
-    test('formatting comments inside attributs', () => {
+    test('formatting comments inside attributs', async () => {
         const input = `
 
 @if ($true)
@@ -939,10 +939,10 @@ Hello, there!
     <x-filament::button {{-- Test --}}>Text</x-filament::button>
 @endif
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('it produces sane indentation on component tag expression parameters', function () {
+    test('it produces sane indentation on component tag expression parameters', async function () {
         const input = `<x-checkbox
     :checked="
         $firstCondition
@@ -966,13 +966,13 @@ Hello, there!
     "
 />
 `;
-        const format1 = formatBladeString(input),
-            format2 = formatBladeString(format1);
+        const format1 = await formatBladeString(input),
+            format2 = await formatBladeString(format1);
         assert.strictEqual(format1, out)
         assert.strictEqual(format2, out)
     });
 
-    test('it produces sane indentation on component tag expression parameters inside html elements', function () {
+    test('it produces sane indentation on component tag expression parameters inside html elements', async function () {
         const input = `
 <div>
 <x-checkbox
@@ -1002,8 +1002,8 @@ Hello, there!
     />
 </div>
 `;
-        const format1 = formatBladeString(input),
-            format2 = formatBladeString(format1);
+        const format1 = await formatBladeString(input),
+            format2 = await formatBladeString(format1);
         assert.strictEqual(format1, out)
         assert.strictEqual(format2, out)
     });

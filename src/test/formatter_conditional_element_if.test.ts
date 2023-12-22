@@ -1,17 +1,17 @@
 import assert from 'assert';
-import { formatBladeString } from '../formatting/prettier/utils';
+import { formatBladeString } from '../formatting/prettier/utils.js';
 
 suite('Conditional Element If Statements', () => {
-    test('it can detect and format conditional if statements as HTML tags', () => {
+    test('it can detect and format conditional if statements as HTML tags', async () => {
         assert.strictEqual(
-            formatBladeString(`                        <@if($something)here @endif class="something">
+            (await formatBladeString(`                        <@if($something)here @endif class="something">
     <div><p>SOme {{ $text }} text</p>
                             <@if($something)here @endif class="something">
     <div><p>SOme {{ $text }} text</p>
 </div>
         </@if($something)here @endif>
 </div>
-        </@if($something)here @endif>`).trim(),
+        </@if($something)here @endif>`)).trim(),
             `<@if($something)here @endif class="something">
     <div>
         <p>SOme {{ $text }} text</p>
@@ -23,9 +23,9 @@ suite('Conditional Element If Statements', () => {
         );
     });
 
-    test('it does not format exact matches as dynamic HTML', () => {
+    test('it does not format exact matches as dynamic HTML', async () => {
         assert.strictEqual(
-            formatBladeString(`                       <@if($something)here @endif class="something">
+            (await formatBladeString(`                       <@if($something)here @endif class="something">
             <div><p>SOme {{ $text }} text</p>
                                     <@if($something)here @endif class="something">
             <div><p>SOme {{ $text }} text</p>
@@ -34,7 +34,7 @@ suite('Conditional Element If Statements', () => {
         </div>
                 </@if($something)here @endif>
         </div>
-                </@if($something)here @endif>`).trim(),
+                </@if($something)here @endif>`)).trim(),
             `<@if($something)here @endif class="something">
     <div>
         <p>SOme {{ $text }} text</p>

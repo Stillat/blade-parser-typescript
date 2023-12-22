@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { formatBladeStringWithPint } from '../formatting/prettier/utils';
+import { formatBladeStringWithPint } from '../formatting/prettier/utils.js';
 
 suite('Pint Transformer: JSON Parameters', () => {
-    test('pint: it can detect and format JSON parameters in directives', () => {
+    test('pint: it can detect and format JSON parameters in directives', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`@varSet({
+            (await formatBladeStringWithPint(`@varSet({
                 "logo": 
                 
                 "logo",
@@ -14,7 +14,7 @@ suite('Pint Transformer: JSON Parameters', () => {
             })
             
             
-            @varSet( $test +        $thing + $another - ($that + $something))`).trim(),
+            @varSet( $test +        $thing + $another - ($that + $something))`)).trim(),
             `@varSet({
   "logo": "logo",
   "width": 78,
@@ -25,9 +25,9 @@ suite('Pint Transformer: JSON Parameters', () => {
         );
     });
 
-    test('pint: it ignores invalid JSON when formatting', () => {
+    test('pint: it ignores invalid JSON when formatting', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`@varSet({
+            (await formatBladeStringWithPint(`@varSet({
 "logo": 
 
 "logo",
@@ -37,7 +37,7 @@ suite('Pint Transformer: JSON Parameters', () => {
 })
 
 
-@varSet( $test +        $thing + $another - ( $that + $something   ))`).trim(),
+@varSet( $test +        $thing + $another - ( $that + $something   ))`)).trim(),
             `@varSet({
 "logo": 
 

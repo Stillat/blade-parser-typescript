@@ -1,5 +1,5 @@
-import { AbstractNode } from '../nodes/nodes';
-import { Range } from '../nodes/position';
+import { AbstractNode } from '../nodes/nodes.js';
+import { Range } from '../nodes/position.js';
 
 export enum ErrrorLevel {
     Error = 0,

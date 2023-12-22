@@ -1,9 +1,9 @@
-import { BladeDocument } from '../document/bladeDocument';
-import { BladeComponentNode, BladeEchoNode, BladeEscapedEchoNode, DirectiveNode, LiteralNode } from '../nodes/nodes';
-import { NodeCompiler } from './nodeCompiler';
-import * as Compilers from './compilers';
-import { UuidDirectiveIdResolver } from './uuidDirectiveIdResolver';
-import { ComponentTagCompiler } from './componentTagCompiler';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { BladeComponentNode, BladeEchoNode, BladeEscapedEchoNode, DirectiveNode, LiteralNode } from '../nodes/nodes.js';
+import { NodeCompiler } from './nodeCompiler.js';
+import * as Compilers from './compilers/index.js';
+import { UuidDirectiveIdResolver } from './uuidDirectiveIdResolver.js';
+import { ComponentTagCompiler } from './componentTagCompiler.js';
 
 export class PhpCompiler {
     private directiveCompilers: Map<string, NodeCompiler> = new Map();

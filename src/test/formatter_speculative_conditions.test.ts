@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { formatBladeString } from '../formatting/prettier/utils';
+import { formatBladeString } from '../formatting/prettier/utils.js';
 
 suite('Speculative Conditions Formatting', () => {
-    test('it can format detected custom conditions', () => {
+    test('it can format detected custom conditions', async () => {
         assert.strictEqual(
-            formatBladeString(`@disk('local')
+            (await formatBladeString(`@disk('local')
     <div>
     @disk('local')
     @disk('local')
@@ -24,7 +24,7 @@ suite('Speculative Conditions Formatting', () => {
     <!-- The application is using the s3 disk... -->
 @else
     <!-- The application is using some other disk... -->
-@enddisk`).trim(),
+@enddisk`)).trim(),
             `@disk("local")
     <div>
         @disk("local")

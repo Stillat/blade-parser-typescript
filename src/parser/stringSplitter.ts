@@ -1,6 +1,6 @@
-import { isStartOfString } from './scanners/isStartOfString';
-import { skipToEndOfStringTraced } from './scanners/skipToEndOfString';
-import { StringIterator } from './stringIterator';
+import { isStartOfString } from './scanners/isStartOfString.js';
+import { skipToEndOfStringTraced } from './scanners/skipToEndOfString.js';
+import { StringIterator } from './stringIterator.js';
 
 export class StringSplitter implements StringIterator {
     private chars: string[] = [];

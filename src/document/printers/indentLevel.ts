@@ -1,5 +1,5 @@
-import { StringUtilities } from '../../utilities/stringUtilities';
-import { TransformOptions } from '../transformOptions';
+import { StringUtilities } from '../../utilities/stringUtilities.js';
+import { TransformOptions } from '../transformOptions.js';
 
 export class IndentLevel {
     static relativeIndentLevel(value: string, content: string): number {
@@ -223,6 +223,12 @@ export class IndentLevel {
         const lines = StringUtilities.breakByNewLine(value.trim()),
             trimmedLines: string[] = [];
         let minWhitespace = -1;
+
+        if (lines.length > 0) {
+            if (lines[lines.length - 1].trim() == '"') {
+                lines[lines.length - 1] = '"';
+            }
+        }
 
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];

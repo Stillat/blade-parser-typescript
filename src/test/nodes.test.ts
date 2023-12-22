@@ -1,7 +1,7 @@
-import assert = require('assert');
-import { BladeDocument } from '../document/bladeDocument';
-import { BladeCommentNode, BladeEchoNode, BladeEntitiesEchoNode, BladeEscapedEchoNode, ConditionNode, DirectiveNode, LiteralNode } from '../nodes/nodes';
-import { assertCount, assertEchoContent, assertInstanceOf, assertLiteralContent } from './testUtils/assertions';
+import assert from 'assert';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { BladeCommentNode, BladeEchoNode, BladeEntitiesEchoNode, BladeEscapedEchoNode, ConditionNode, DirectiveNode, LiteralNode } from '../nodes/nodes.js';
+import { assertCount, assertEchoContent, assertInstanceOf, assertLiteralContent } from './testUtils/assertions.js';
 
 suite('Blade Nodes Test', () => {
     test('it parses simple nodes', () => {

@@ -1,4 +1,4 @@
-import { AbstractNode, BladeComponentNode } from '../nodes/nodes';
+import { AbstractNode, BladeComponentNode } from '../nodes/nodes.js';
 
 export class ComponentSlotPairAnalyzer {
     protected static findClosingTag(nodes: AbstractNode[], index: number, node: BladeComponentNode) {

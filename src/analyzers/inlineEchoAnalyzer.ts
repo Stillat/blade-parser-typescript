@@ -1,5 +1,5 @@
-import { AbstractNode, BladeEchoNode, LiteralNode } from '../nodes/nodes';
-import { StringUtilities } from '../utilities/stringUtilities';
+import { AbstractNode, BladeEchoNode, LiteralNode } from '../nodes/nodes.js';
+import { StringUtilities } from '../utilities/stringUtilities.js';
 
 export class InlineEchoAnalyzer {
     static analyze(nodes: AbstractNode[]) {

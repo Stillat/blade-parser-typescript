@@ -1,8 +1,8 @@
 import assert from 'assert';
-import { formatBladeString } from '../formatting/prettier/utils';
+import { formatBladeString } from '../formatting/prettier/utils.js';
 
 suite('Ignore Formatting Sections', () => {
-    test('it can ignore things', () => {
+    test('it can ignore things', async () => {
         const template = `
 {{-- format-ignore-start --}}
 
@@ -377,11 +377,11 @@ $status = $kernel->handle(
 
 ?>
 `;
-        assert.strictEqual(formatBladeString(template), output);
-        assert.strictEqual(formatBladeString(output), output);
+        assert.strictEqual(await formatBladeString(template), output);
+        assert.strictEqual(await formatBladeString(output), output);
     });
 
-    test('it restores ignored parts inside child documents', () => {
+    test('it restores ignored parts inside child documents', async () => {
         const input = `
 @if (true)
     {{-- format-ignore-start --}}
@@ -395,6 +395,6 @@ $status = $kernel->handle(
     {{-- format-ignore-end --}}
 @endif
 `;
-        assert.strictEqual(formatBladeString(input), out);
+        assert.strictEqual(await formatBladeString(input), out);
     });
 });

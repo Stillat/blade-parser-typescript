@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { transformString } from './testUtils/transform';
+import { transformString } from './testUtils/transform.js';
 
 suite('Script Structures Transformer', () => {
-    test('it can transform script structures', () => {
+    test('it can transform script structures', async () => {
         assert.strictEqual(
-            transformString(`<html>
+            (await transformString(`<html>
 @directive($test)
 
 @enddirective
@@ -52,7 +52,7 @@ if (something) {
 
 <script></script>
 </body>
-</html>`).trim(),
+</html>`)).trim(),
             `<html>
 @directive($test)
 @enddirective

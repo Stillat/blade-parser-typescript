@@ -1,7 +1,7 @@
-import assert = require('assert');
-import { BladeDocument } from '../document/bladeDocument';
-import { BladeComponentNode, ComponentNameNode, LiteralNode, ParameterNode } from '../nodes/nodes';
-import { assertCount, assertInstanceOf, assertLiteralContent, assertNotNull, assertPosition } from './testUtils/assertions';
+import assert from 'assert';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { BladeComponentNode, ComponentNameNode, LiteralNode, ParameterNode } from '../nodes/nodes.js';
+import { assertCount, assertInstanceOf, assertLiteralContent, assertNotNull, assertPosition } from './testUtils/assertions.js';
 
 suite('Component Tags', () => {
     test('it can parse component tags', () => {

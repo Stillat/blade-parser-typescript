@@ -1,5 +1,5 @@
-import { AbstractNode, LiteralNode } from '../../nodes/nodes';
-import { Position } from '../../nodes/position';
+import { AbstractNode, LiteralNode } from '../../nodes/nodes.js';
+import { Position } from '../../nodes/position.js';
 
 export class NodeQueries {
     static findNodeAfterPosition(position: Position | null, nodes: AbstractNode[]): AbstractNode | null {

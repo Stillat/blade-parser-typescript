@@ -1,51 +1,51 @@
 import assert from 'assert';
-import { transformString } from './testUtils/transform';
+import { transformString } from './testUtils/transform.js';
 
 suite('Basic Node Transform', () => {
 
-    test('it transforms echos', () => {
+    test('it transforms echos', async () => {
         assert.strictEqual(
-            transformString('{{ $title }}').trim(),
+            (await transformString('{{ $title }}')).trim(),
             "{{ $title }}"
         );
     });
 
-    test('it transforms echo variant', () => {
+    test('it transforms echo variant', async () => {
         assert.strictEqual(
-            transformString('{{{ $title }}}').trim(),
+            (await transformString('{{{ $title }}}')).trim(),
             "{{{ $title }}}"
         );
     });
 
-    test('it transforms escaped echos', () => {
+    test('it transforms escaped echos', async () => {
         assert.strictEqual(
-            transformString('{!! $title !!}').trim(),
+            (await transformString('{!! $title !!}')).trim(),
             "{!! $title !!}"
         );
     });
 
-    test('it transforms simple comments', () => {
+    test('it transforms simple comments', async () => {
         assert.strictEqual(
-            transformString('{{-- Comment. --}}').trim(),
+            (await transformString('{{-- Comment. --}}')).trim(),
             "{{-- Comment. --}}"
         );
     });
 
-    test('it transforms block comments', () => {
+    test('it transforms block comments', async () => {
         assert.strictEqual(
-            transformString(`{{--
-                Block Comment. --}}`).trim(),
+            (await transformString(`{{--
+                Block Comment. --}}`)).trim(),
             `{{--
     Block Comment.
 --}}`
         );
     });
 
-    test('it transforms block comments with html', () => {
+    test('it transforms block comments with html', async () => {
         assert.strictEqual(
-            transformString(`{{--
+            (await transformString(`{{--
  Block Comment.
- with many lines and with <stuff></stuff> --}}`).trim(),
+ with many lines and with <stuff></stuff> --}}`)).trim(),
             `{{--
     Block Comment.
     with many lines and with <stuff></stuff>

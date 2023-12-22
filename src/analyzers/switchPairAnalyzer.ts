@@ -1,8 +1,8 @@
-import { BladeDocument } from '../document/bladeDocument';
-import { getStartPosition } from '../nodes/helpers';
-import { AbstractNode, DirectiveNode, SwitchCaseNode, SwitchStatementNode } from '../nodes/nodes';
-import { BladeKeywords } from '../parser/bladeKeywords';
-import { DocumentParser } from '../parser/documentParser';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { getStartPosition } from '../nodes/helpers.js';
+import { AbstractNode, DirectiveNode, SwitchCaseNode, SwitchStatementNode } from '../nodes/nodes.js';
+import { BladeKeywords } from '../parser/bladeKeywords.js';
+import { DocumentParser } from '../parser/documentParser.js';
 
 export class SwitchPairAnalyzer {
     static associate(nodes: AbstractNode[], document: DocumentParser) {

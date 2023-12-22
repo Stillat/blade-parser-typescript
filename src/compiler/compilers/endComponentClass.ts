@@ -1,6 +1,6 @@
-import { AbstractNode } from '../../nodes/nodes';
-import { NodeCompiler } from '../nodeCompiler';
-import { ComponentCompiler } from './component';
+import { AbstractNode } from '../../nodes/nodes.js';
+import { NodeCompiler } from '../nodeCompiler.js';
+import { ComponentCompiler } from './component.js';
 
 export class EndComponentClassCompiler implements NodeCompiler {
     private componentCompiler: ComponentCompiler;

@@ -1,4 +1,4 @@
-import { BladeError } from '../../errors/bladeError';
+import { BladeError } from '../../errors/bladeError.js';
 
 export class ErrorPrinter {
     static printError(error: BladeError, lines: Map<number, string>): string {

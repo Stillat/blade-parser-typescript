@@ -1,11 +1,11 @@
-import { StringUtilities } from '../utilities/stringUtilities';
-import { BladeDocument } from '../document/bladeDocument';
-import { LiteralNode, SwitchStatementNode, ConditionNode, DirectiveNode, BladeEchoNode, ForElseNode, BladeCommentNode, BladeComponentNode, InlinePhpNode, BladeEscapedEchoNode, BladeEntitiesEchoNode } from '../nodes/nodes';
-import { ClassEmulator } from '../parser/classEmulator';
-import { PhpValidator } from '../parser/php/phpValidator';
-import { ParserOptions, getParserOptions } from '../parser/parserOptions';
-import { ClassStringRuleEngine, IClassStringConfiguration } from './classStringsConfig';
-import { TransformIgnore } from '../document/transformIgnore';
+import { StringUtilities } from '../utilities/stringUtilities.js';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { LiteralNode, SwitchStatementNode, ConditionNode, DirectiveNode, BladeEchoNode, ForElseNode, BladeCommentNode, BladeComponentNode, InlinePhpNode, BladeEscapedEchoNode, BladeEntitiesEchoNode } from '../nodes/nodes.js';
+import { ClassEmulator } from '../parser/classEmulator.js';
+import { PhpValidator } from '../parser/php/phpValidator.js';
+import { ParserOptions, getParserOptions } from '../parser/parserOptions.js';
+import { ClassStringRuleEngine, IClassStringConfiguration } from './classStringsConfig.js';
+import { TransformIgnore } from '../document/transformIgnore.js';
 
 export class ClassStringEmulation {
     private classStringConfig: IClassStringConfiguration;
@@ -41,7 +41,7 @@ export class ClassStringEmulation {
         return emulator;
     }
 
-    transform(content: string): string {
+    async transform(content: string): Promise<string> {
         const document = new BladeDocument();
 
         document.getParser()
@@ -85,7 +85,7 @@ export class ClassStringEmulation {
                             } else {
                                 if (this.phpValidator?.isValid(node.documentContent, true)) {
                                     const phpEmulate = this.getEmulator();
-                                    stringResults += '@php' + phpEmulate.emulatePhpNode(node.documentContent);
+                                    stringResults += '@php' + await phpEmulate.emulatePhpNode(node.documentContent);
                                 } else {
                                     stringResults += node.sourceContent + node.documentContent;
                                 }                                
@@ -103,7 +103,7 @@ export class ClassStringEmulation {
                                 stringResults += node.sourceContent;
                             } else {
                                 const dirEmulate = this.getEmulator();
-                                stringResults += dirEmulate.emulateString(node.sourceContent);
+                                stringResults += await dirEmulate.emulateString(node.sourceContent);
                             }
 
                             if (i + 1 < nodes.length && nodes[i + 1] instanceof LiteralNode) {
@@ -131,7 +131,7 @@ export class ClassStringEmulation {
                     stringResults += node.sourceContent;
                 } else {
                     const phpEmulate = this.getEmulator(),
-                        echoResults = phpEmulate.emulatePhpNode(node.content).trim();
+                        echoResults = (await phpEmulate.emulatePhpNode(node.content)).trim();
                     let start = '{{ ',
                         end = ' }}';
 
@@ -162,7 +162,7 @@ export class ClassStringEmulation {
                     stringResults += node.sourceContent;
                 } else {
                     const phpEmulate = this.getEmulator();
-                    stringResults += phpEmulate.emulatePhpTag(node.sourceContent);
+                    stringResults += await phpEmulate.emulatePhpTag(node.sourceContent);
                 }
             }
         }

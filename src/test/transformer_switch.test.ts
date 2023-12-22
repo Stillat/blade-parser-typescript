@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { transformString } from './testUtils/transform';
+import { transformString } from './testUtils/transform.js';
 
 suite('Switch Transformer', () => {
-    test('it can transform switch statements', () => {
+    test('it can transform switch statements', async () => {
         assert.strictEqual(
-            transformString(`@switch($i)
+            (await transformString(`@switch($i)
 {{-- Leading node test. --}}
 
 <p>
@@ -65,7 +65,7 @@ Second case...
 
 
 <p>Default case...</p>
-@endswitch`).trim(),
+@endswitch`)).trim(),
             `@switch($i)
 
 

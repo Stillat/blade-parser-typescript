@@ -1,11 +1,11 @@
-import { ChildDocument } from '../nodes/nodes';
-import { Position } from '../nodes/position';
-import { DocumentIndex } from '../parser/documentIndex';
-import { DocumentParser } from '../parser/documentParser';
-import { DocumentCursor } from './documentCursor';
-import { DocumentErrors } from './documentErrors';
-import { NodeScanner } from './scanners/nodeScanner';
-import { Transformer } from './transformer';
+import { ChildDocument } from '../nodes/nodes.js';
+import { Position } from '../nodes/position.js';
+import { DocumentIndex } from '../parser/documentIndex.js';
+import { DocumentParser } from '../parser/documentParser.js';
+import { DocumentCursor } from './documentCursor.js';
+import { DocumentErrors } from './documentErrors.js';
+import { NodeScanner } from './scanners/nodeScanner.js';
+import { Transformer } from './transformer.js';
 
 export class BladeDocument {
     private documentParser: DocumentParser = new DocumentParser();

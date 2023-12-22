@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { transformString } from './testUtils/transform';
+import { transformString } from './testUtils/transform.js';
 
 suite('Forelse Transformer', () => {
-    test('it can transform forelse without an empty directive', () => {
+    test('it can transform forelse without an empty directive', async () => {
         assert.strictEqual(
-            transformString(`<div>
+            (await transformString(`<div>
 @forelse ($users as $user)
 <li>{{ $user->name }}</li>
 @endforelse
@@ -15,7 +15,7 @@ suite('Forelse Transformer', () => {
 @forelse ($users as $user)
 <li>{{ $user->name }}
 </li>
-@endforelse`).trim(),
+@endforelse`)).trim(),
             `<div>
 @forelse ($users as $user)
 <li>{{ $user->name }}</li>
@@ -31,15 +31,15 @@ suite('Forelse Transformer', () => {
         );
     });
 
-    test('it can transform forelse', () => {
+    test('it can transform forelse', async () => {
         assert.strictEqual(
-            transformString(`<div>
+            (await transformString(`<div>
 @forelse ($users as $user)
 <li>{{ $user->name }}</li>
 @empty
 <p>No users</p>
 @endforelse
-</div>`).trim(),
+</div>`)).trim(),
             `<div>
 @forelse ($users as $user)
 <li>{{ $user->name }}</li>
@@ -51,9 +51,9 @@ suite('Forelse Transformer', () => {
         );
     });
 
-    test('it can transform forelse from a single line', () => {
+    test('it can transform forelse from a single line', async () => {
         assert.strictEqual(
-            transformString(`<div> @forelse ($users as $user) <li>{{ $user->name }}</li> @empty <p>No users</p> @endforelse</div> `).trim(),
+            (await transformString(`<div> @forelse ($users as $user) <li>{{ $user->name }}</li> @empty <p>No users</p> @endforelse</div> `)).trim(),
             `<div> @forelse ($users as $user) <li>{{ $user->name }}</li> 
 @empty
  <p>No users</p> @endforelse</div>`

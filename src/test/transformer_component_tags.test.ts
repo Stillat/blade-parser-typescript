@@ -1,26 +1,26 @@
 import assert from 'assert';
-import { transformString } from './testUtils/transform';
+import { transformString } from './testUtils/transform.js';
 
 suite('Component Tag Transform', () => {
-    test('it can transform component tags', () => {
+    test('it can transform component tags', async () => {
         assert.strictEqual(
-            transformString(`<x:slot:name
+            (await transformString(`<x:slot:name
 
 param="value">
 <p>Content</p>
-</x:slot:name>`).trim(),
+</x:slot:name>`)).trim(),
             `<x-slot:name param="value" >
 <p>Content</p>
 </x-slot>`
         );
     });
 
-    test('it transforms inline echos', () => {
+    test('it transforms inline echos', async () => {
         assert.strictEqual(
-            transformString(`<option 
+            (await transformString(`<option 
 {{ $isSelected($value) ? 'selected="selected"' : '' }} value="{{ $value }}">
 {{ $label }}
-</option>`).trim(),
+</option>`)).trim(),
             `<option
 {{ $isSelected($value) ? 'selected="selected"' : '' }} value="{{ $value }}">
 {{ $label }}
@@ -28,11 +28,11 @@ param="value">
         );
     });
 
-    test('it transforms merged attributes', () => {
+    test('it transforms merged attributes', async () => {
         assert.strictEqual(
-            transformString(`<div {{ $attributes->class(['p-4', 'bg-red' => $hasError]) }}>
+            (await transformString(`<div {{ $attributes->class(['p-4', 'bg-red' => $hasError]) }}>
 {{ $message }}
-</div>`).trim(),
+</div>`)).trim(),
             `<div {{ $attributes->class(['p-4', 'bg-red' => $hasError]) }}>
 {{ $message }}
 </div>`

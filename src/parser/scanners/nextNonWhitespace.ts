@@ -1,6 +1,6 @@
-import { StringUtilities } from '../../utilities/stringUtilities';
-import { SeekResults } from '../scanResults';
-import { StringIterator } from '../stringIterator';
+import { StringUtilities } from '../../utilities/stringUtilities.js';
+import { SeekResults } from '../scanResults.js';
+import { StringIterator } from '../stringIterator.js';
 
 export function nextNonWhitespace(iterator: StringIterator): SeekResults {
     for (let i = iterator.getCurrentIndex() + 1; i < iterator.inputLength(); i++) {

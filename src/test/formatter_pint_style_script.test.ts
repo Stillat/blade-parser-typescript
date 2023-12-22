@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { formatBladeStringWithPint } from '../formatting/prettier/utils';
+import { formatBladeStringWithPint } from '../formatting/prettier/utils.js';
 
 suite('Pint Transformer: Styles and Scripts', () => {
-    test('pint: it preserves relative indents when formatting style tags', () => {
+    test('pint: it preserves relative indents when formatting style tags', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<html><head>
+            (await formatBladeStringWithPint(`<html><head>
             @directive($test)
             
                     @enddirective
@@ -18,7 +18,7 @@ suite('Pint Transformer: Styles and Scripts', () => {
                                 }
                 
                                 </style>
-                    </head>        </html>`).trim(),
+                    </head>        </html>`)).trim(),
             `<html>
     <head>
         @directive($test)
@@ -37,9 +37,9 @@ suite('Pint Transformer: Styles and Scripts', () => {
         );
     });
 
-    test('pint: it can apply relative indent to styles inside structures', () => {
+    test('pint: it can apply relative indent to styles inside structures', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<html>
+            (await formatBladeStringWithPint(`<html>
 
             <body>
         
@@ -61,7 +61,7 @@ suite('Pint Transformer: Styles and Scripts', () => {
         
                 <script></script>
             </body>
-        </html>`).trim(),
+        </html>`)).trim(),
             `<html>
     <body>
         @if ($true)

@@ -1,10 +1,10 @@
-import { DocumentParser } from '../parser/documentParser';
-import { Position, Range } from './position';
+import { DocumentParser } from '../parser/documentParser.js';
+import { Position, Range } from './position.js';
 import { v4 as uuidv4 } from 'uuid';
-import { StringUtilities } from '../utilities/stringUtilities';
-import { BladeDocument } from '../document/bladeDocument';
-import { Offset } from './offset';
-import { BladeError } from '../errors/bladeError';
+import { StringUtilities } from '../utilities/stringUtilities.js';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { Offset } from './offset.js';
+import { BladeError } from '../errors/bladeError.js';
 
 function newRefId() {
     return StringUtilities.replaceAllInString(uuidv4(), '-', '_');

@@ -1,9 +1,9 @@
-import { AbstractNode, ArrayElementNode, ArrayElementSeparatorNode, ArrayEndNode, ArrayKeyValueNode, ArrayNode, ArrayStartNode } from '../nodes/nodes';
-import { StringUtilities } from '../utilities/stringUtilities';
-import { DocumentParser } from './documentParser';
-import { isStartOfString } from './scanners/isStartOfString';
-import { skipToEndOfStringTraced } from './scanners/skipToEndOfString';
-import { StringIterator } from './stringIterator';
+import { AbstractNode, ArrayElementNode, ArrayElementSeparatorNode, ArrayEndNode, ArrayKeyValueNode, ArrayNode, ArrayStartNode } from '../nodes/nodes.js';
+import { StringUtilities } from '../utilities/stringUtilities.js';
+import { DocumentParser } from './documentParser.js';
+import { isStartOfString } from './scanners/isStartOfString.js';
+import { skipToEndOfStringTraced } from './scanners/skipToEndOfString.js';
+import { StringIterator } from './stringIterator.js';
 
 export class SimpleArrayParser implements StringIterator {
     private content = '';

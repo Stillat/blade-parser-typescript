@@ -1,31 +1,34 @@
 import assert from 'assert';
-import { formatBladeStringWithPint } from '../formatting/prettier/utils';
+import { formatBladeStringWithPint } from '../formatting/prettier/utils.js';
+import { setupTestHooks } from './testUtils/formatting.js';
 
 suite('Pint Transformer: Directives', () => {
-    test('pint: it can format PHP in directives', () => {
+    setupTestHooks();
+
+    test('pint: it can format PHP in directives', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`@directive   ($test  + $that-$another   + $thing)`).trim(),
+            (await formatBladeStringWithPint(`@directive   ($test  + $that-$another   + $thing)`)).trim(),
             `@directive($test + $that - $another + $thing)`
         );
     });
 
-    test('pint: it preserves content if PHP is invalid', () => {
+    test('pint: it preserves content if PHP is invalid', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`@directive   ($test  ++++ $that-$another   + $thing)`).trim(),
+            (await formatBladeStringWithPint(`@directive   ($test  ++++ $that-$another   + $thing)`)).trim(),
             `@directive($test  ++++ $that-$another   + $thing)`
         );
     });
 
-    test('pint: it indents nicely', () => {
+    test('pint: it indents nicely', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`@section("messages")
+            (await formatBladeStringWithPint(`@section("messages")
     <div class="alert success">
         <p><strong>Success!</strong></p>
         @foreach ($success->all('<p>:message</p>') as $msg)
             {{ $msg }}
         @endforeach
     </div>
-@show`).trim(),
+@show`)).trim(),
             `@section('messages')
 <div class="alert success">
     <p><strong>Success!</strong></p>
@@ -37,7 +40,7 @@ suite('Pint Transformer: Directives', () => {
         );
 
         assert.strictEqual(
-            formatBladeStringWithPint(`
+            (await formatBladeStringWithPint(`
 @section("messages")
 <div class="alert success">
 <p><strong>Success!</strong></p>
@@ -46,7 +49,7 @@ suite('Pint Transformer: Directives', () => {
 @endforeach
 </div>
 @show
-`).trim(),
+`)).trim(),
             `@section('messages')
 <div class="alert success">
     <p><strong>Success!</strong></p>
@@ -58,33 +61,33 @@ suite('Pint Transformer: Directives', () => {
         );
     });
 
-    test('pint: it indents if HTML is on separate lines', () => {
+    test('pint: it indents if HTML is on separate lines', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<div>
+            (await formatBladeStringWithPint(`<div>
             @directive   ($test  + $that-$another   + $thing)
-                </div>`).trim(),
+                </div>`)).trim(),
             `<div>
     @directive($test + $that - $another + $thing)
 </div>`
         );
     });
 
-    test('pint: it preserves same line if HTML is on same line', () => {
+    test('pint: it preserves same line if HTML is on same line', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<div>@directive   ($test  + $that-$another   + $thing)</div>`).trim(),
+            (await formatBladeStringWithPint(`<div>@directive   ($test  + $that-$another   + $thing)</div>`)).trim(),
             `<div>@directive($test + $that - $another + $thing)</div>`
         );
     });
 
-    test('pint: it can indent paired directives without any HTML hints', () => {
+    test('pint: it can indent paired directives without any HTML hints', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`
+            (await formatBladeStringWithPint(`
 <div>
     @pair
 dasdfsdf
 asdf
 @endpair
-            </div>`).trim(),
+            </div>`)).trim(),
             `<div>
     @pair
         dasdfsdf asdf
@@ -93,9 +96,9 @@ asdf
         );
     });
 
-    test('pint: it can indent paired directives with HTML', () => {
+    test('pint: it can indent paired directives with HTML', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`
+            (await formatBladeStringWithPint(`
 <div>
     @pair
 
@@ -134,7 +137,7 @@ asdf
 </div>
 
 @endpair
-            </div>`).trim(),
+            </div>`)).trim(),
             `<div>
     @pair
         <div>
@@ -167,7 +170,7 @@ asdf
         );
     });
 
-    test('pint: virtual wrappers are not created for paired directives containing only inlined content', () => {
+    test('pint: virtual wrappers are not created for paired directives containing only inlined content', async () => {
         const input = `
                 @can('create', App\\Models\\User::class)
                 {!! $something_here !!}
@@ -177,10 +180,10 @@ asdf
     {!! $something_here !!}
 @endcan
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('pint: it does not blindly remove newlines when formatting directive params', () => {
+    test('pint: it does not blindly remove newlines when formatting directive params', async () => {
         const input = `@class([
             'foo' => true,
                     'bar'       => false,
@@ -192,10 +195,10 @@ asdf
     'bar2' => false,
 ])
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('pint: it respects newline placement', () => {
+    test('pint: it respects newline placement', async () => {
         const input = `@class([
             'filament antialiased min-h-screen js-focus-visible',
             'dark' => filament()->hasDarkModeForced(),
@@ -205,11 +208,11 @@ asdf
     'dark' => filament()->hasDarkModeForced(),
 ])
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
-        assert.strictEqual(formatBladeStringWithPint(out), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(out), out);
     });
 
-    test('pint: it indents class directives nicely', () => {
+    test('pint: it indents class directives nicely', async () => {
         const input = `<div>
     <span @class([
         'some classes',
@@ -225,8 +228,8 @@ asdf
     </span>
 </div>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
-        assert.strictEqual(formatBladeStringWithPint(out), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(out), out);
 
         const input2 = `<div>
     <span @class([
@@ -236,10 +239,10 @@ asdf
         
         </span> </div>`;
         
-        assert.strictEqual(formatBladeStringWithPint(input2), out);
+        assert.strictEqual(await formatBladeStringWithPint(input2), out);
     });
 
-    test('pint: it indents class directives nicely2', () => {
+    test('pint: it indents class directives nicely2', async () => {
         const input = `<x-foo
 @class([
     'foo',
@@ -253,10 +256,10 @@ asdf
     ])
 />
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), output);
+        assert.strictEqual(await formatBladeStringWithPint(input), output);
     });
 
-    test('pint: it pairs guest', () => {
+    test('pint: it pairs guest', async () => {
         const input = `@guest
 <div></div>
 @endguest`
@@ -264,10 +267,10 @@ asdf
     <div></div>
 @endguest
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('pint: it pairs unless', () => {
+    test('pint: it pairs unless', async () => {
         const input = `@unless
 <div></div>
 @endunless`
@@ -275,10 +278,10 @@ asdf
     <div></div>
 @endunless
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('pint: it pairs sectionMissing', () => {
+    test('pint: it pairs sectionMissing', async () => {
         const input = `@sectionMissing
 <div></div>
 @endsectionMissing`
@@ -286,10 +289,10 @@ asdf
     <div></div>
 @endsectionMissing
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('pint: it pairs hasSection', () => {
+    test('pint: it pairs hasSection', async () => {
         const input = `@hasSection
 <div></div>
 @endhasSection`
@@ -297,10 +300,10 @@ asdf
     <div></div>
 @endhasSection
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('pint: it pairs auth', () => {
+    test('pint: it pairs auth', async () => {
         const input = `@auth
 <div></div>
 @endauth`
@@ -308,10 +311,10 @@ asdf
     <div></div>
 @endauth
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('pint: it pairs env', () => {
+    test('pint: it pairs env', async () => {
         const input = `@env
 <div></div>
 @endenv`
@@ -319,10 +322,10 @@ asdf
     <div></div>
 @endenv
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('pint: it pairs isset', () => {
+    test('pint: it pairs isset', async () => {
         const input = `@isset
 <div></div>
 @endisset`
@@ -330,10 +333,10 @@ asdf
     <div></div>
 @endisset
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('pint: it pairs cannot', () => {
+    test('pint: it pairs cannot', async () => {
         const input = `@cannot
 <div></div>
 @endcannot`
@@ -341,10 +344,10 @@ asdf
     <div></div>
 @endcannot
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
     
-    test('pint: it pairs canany', () => {
+    test('pint: it pairs canany', async () => {
         const input = `@canany
 <div></div>
 @endcanany`
@@ -352,10 +355,10 @@ asdf
     <div></div>
 @endcanany
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
     
-    test('pint: it pairs hasSection', () => {
+    test('pint: it pairs hasSection', async () => {
         const input = `@hasSection
 <div></div>
 @endhasSection`
@@ -363,10 +366,10 @@ asdf
     <div></div>
 @endhasSection
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
     
-    test('pint: it pairs production', () => {
+    test('pint: it pairs production', async () => {
         const input = `@production
 <div></div>
 @endproduction`
@@ -374,10 +377,10 @@ asdf
     <div></div>
 @endproduction
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('pint: it formats class with match nicely', () => {
+    test('pint: it formats class with match nicely', async () => {
         const input = `
 @class([
     'foo',
@@ -394,10 +397,10 @@ asdf
     },
 ])
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), output);
+        assert.strictEqual(await formatBladeStringWithPint(input), output);
     });
 
-    test('pint: it formats subdocuments correctly', () => {
+    test('pint: it formats subdocuments correctly', async () => {
         const input = `
 
                @once
@@ -427,10 +430,10 @@ asdf
     </li>
 @endonce
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), output);
+        assert.strictEqual(await formatBladeStringWithPint(input), output);
     });
 
-    test('pint: it does not trash ifs inside elements', () => {
+    test('pint: it does not trash ifs inside elements', async () => {
         const input = `
 
 @if ($that)
@@ -441,10 +444,10 @@ asdf
     <div @if ($somethingElse) this! @endif>Hello, world.</div>
 @endif
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('pint: it reflows operators inside directive simple arrays', () => {
+    test('pint: it reflows operators inside directive simple arrays', async () => {
         const input = `
 @class([
     'foo' => ! true,
@@ -454,10 +457,10 @@ asdf
     'foo' => ! true,
 ])
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), output);
+        assert.strictEqual(await formatBladeStringWithPint(input), output);
     });
 
-    test('pint: it does not trash complex arrays', () => {
+    test('pint: it does not trash complex arrays', async () => {
         const input = `@class([
             'text-sm font-medium leading-4',
             'text-gray-700' => !$error,
@@ -473,10 +476,10 @@ asdf
     'dark:text-danger-400' => $error && config('forms.dark_mode'),
 ])
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), output);
+        assert.strictEqual(await formatBladeStringWithPint(input), output);
     });
 
-    test('pint: it can format mixed directive arg arrays', () => {
+    test('pint: it can format mixed directive arg arrays', async () => {
         const input = `@class([
     'grid auto-cols-fr grid-flow-col gap-2 text-sm',
     'ms-8' => $active,
@@ -487,10 +490,10 @@ asdf
     'ms-8' => $active,
 ])
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('pint: really long directive array args without keys can be placed on separate lines', () => {
+    test('pint: really long directive array args without keys can be placed on separate lines', async () => {
         const input = `
 <div>
 <div class="relative group max-w-md">
@@ -515,11 +518,11 @@ asdf
     </div>
 </div>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
-        assert.strictEqual(formatBladeStringWithPint(out), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(out), out);
     });
 
-    test('pint: transformer results in the correct indentation', () => {
+    test('pint: transformer results in the correct indentation', async () => {
         const input = `<x-foo @class([
     'foo',
 ]) />
@@ -535,10 +538,10 @@ asdf
     'foo2',
 ]) />
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('pint: it reflows attached content nicely', () => {
+    test('pint: it reflows attached content nicely', async () => {
         const input = `@props([
     'error' => false,
     'prefix' => null,
@@ -607,10 +610,10 @@ asdf
     {{ $suffix }}
 </label>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), expected);
+        assert.strictEqual(await formatBladeStringWithPint(input), expected);
     });
 
-    test('it preserves relative indentation when formatting with pint', () => {
+    test('it preserves relative indentation when formatting with pint', async () => {
         const template = `
 
 
@@ -657,9 +660,9 @@ asdf
     ></x-filament-notifications::notification>
 </div>
 `;
-        const result = formatBladeStringWithPint(template);
+        const result = await formatBladeStringWithPint(template);
         assert.strictEqual(result, out);
-        assert.strictEqual(formatBladeStringWithPint(result), out);
-        assert.strictEqual(formatBladeStringWithPint(formatBladeStringWithPint(result)), out);
+        assert.strictEqual(await formatBladeStringWithPint(result), out);
+        assert.strictEqual(await formatBladeStringWithPint(await formatBladeStringWithPint(result)), out);
     });
 });

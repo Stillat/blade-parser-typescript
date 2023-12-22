@@ -1,8 +1,8 @@
 import assert from 'assert';
-import { formatBladeString } from '../formatting/prettier/utils';
+import { formatBladeString } from '../formatting/prettier/utils.js';
 
 suite('Can Directive Formatting', () => {
-    test('it can format can directive without errors', () => {
+    test('it can format can directive without errors', async () => {
         const template = `{{-- foo.blade.php --}}
 
 @props([
@@ -25,6 +25,6 @@ any
 @else
     any
 @endcan`;
-        assert.strictEqual(formatBladeString(template).trim(), expected.trim());
+        assert.strictEqual((await formatBladeString(template)).trim(), expected.trim());
     });
 });

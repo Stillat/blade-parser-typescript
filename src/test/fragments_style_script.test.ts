@@ -1,6 +1,6 @@
 import assert from 'assert';
-import { BladeDocument } from '../document/bladeDocument';
-import { BladeEchoNode, DirectiveNode } from '../nodes/nodes';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { BladeEchoNode, DirectiveNode } from '../nodes/nodes.js';
 
 suite('Fragments Style and Script Labeling', () => {
     test('it labels nodes inside style and script tags', () => {

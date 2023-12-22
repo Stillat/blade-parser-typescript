@@ -1,9 +1,11 @@
 import assert from 'assert';
-import { formatBladeStringWithPint } from '../../../formatting/prettier/utils';
-import { StringUtilities } from '../../../utilities/stringUtilities';
+import { formatBladeStringWithPint } from '../../../formatting/prettier/utils.js';
+import { StringUtilities } from '../../../utilities/stringUtilities.js';
+import { setupTestHooks } from '../../../test/testUtils/formatting.js';
 
 suite('Pint Transformer Acceptance: panels_resources_views_widgets_filament_info_widget_blade_php', () => {
-    test('pint: it can format panels_resources_views_widgets_filament_info_widget_blade_php', () => {
+    setupTestHooks();
+    test('pint: it can format panels_resources_views_widgets_filament_info_widget_blade_php', async () => {
         const input = `<x-filament-widgets::widget class="filament-filament-info-widget">
     <x-filament::card class="relative">
         <div class="relative h-12 flex flex-col justify-center items-center space-y-2">
@@ -300,7 +302,7 @@ suite('Pint Transformer Acceptance: panels_resources_views_widgets_filament_info
 </x-filament-widgets::widget>
 `;
 
-        assert.strictEqual(StringUtilities.normalizeLineEndings(formatBladeStringWithPint(input).trim()), StringUtilities.normalizeLineEndings(output.trim()));
-        assert.strictEqual(StringUtilities.normalizeLineEndings(formatBladeStringWithPint(output).trim()), StringUtilities.normalizeLineEndings(output.trim()));
+        assert.strictEqual(StringUtilities.normalizeLineEndings((await formatBladeStringWithPint(input)).trim()), StringUtilities.normalizeLineEndings(output.trim()));
+        assert.strictEqual(StringUtilities.normalizeLineEndings((await formatBladeStringWithPint(output)).trim()), StringUtilities.normalizeLineEndings(output.trim()));
     }).timeout(30000);
 });

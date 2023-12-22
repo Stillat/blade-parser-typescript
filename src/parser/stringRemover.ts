@@ -1,7 +1,7 @@
-import { StringUtilities } from '../utilities/stringUtilities';
-import { isStartOfString } from './scanners/isStartOfString';
-import { skipToEndOfStringTraced } from './scanners/skipToEndOfString';
-import { StringIterator } from './stringIterator';
+import { StringUtilities } from '../utilities/stringUtilities.js';
+import { isStartOfString } from './scanners/isStartOfString.js';
+import { skipToEndOfStringTraced } from './scanners/skipToEndOfString.js';
+import { StringIterator } from './stringIterator.js';
 
 export class StringRemover implements StringIterator {
     private chars: string[] = [];

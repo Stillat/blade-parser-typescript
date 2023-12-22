@@ -1,8 +1,8 @@
 import assert from 'assert';
-import { formatBladeStringWithPint } from '../formatting/prettier/utils';
+import { formatBladeStringWithPint } from '../formatting/prettier/utils.js';
 
 suite('Pint Transformer: General Templates', () => {
-    test('pint: it can format strangely indented files', () => {
+    test('pint: it can format strangely indented files', async () => {
         const template = `<!doctype html>
 <html lang="{{ app()->getLocale() }}">
     <head>
@@ -58,10 +58,10 @@ suite('Pint Transformer: General Templates', () => {
     </body>
 </html>
 `
-        assert.strictEqual(formatBladeStringWithPint(template), out);
+        assert.strictEqual(await formatBladeStringWithPint(template), out);
     });
 
-    test('pint: it indents sections and content with ambiguous section start', () => {
+    test('pint: it indents sections and content with ambiguous section start', async () => {
         const template = `@extends('layouts.master')
 
 @section('title', 'About Us')
@@ -88,10 +88,10 @@ suite('Pint Transformer: General Templates', () => {
     @include('partials.team')
 @endsection
 `;
-        assert.strictEqual(formatBladeStringWithPint(template), out);
+        assert.strictEqual(await formatBladeStringWithPint(template), out);
     });
 
-    test('pint: it indents sections conditions and loops', () => {
+    test('pint: it indents sections conditions and loops', async () => {
         const template = `@extends('layouts.master')
 
 @section('title', 'User List')
@@ -127,10 +127,10 @@ suite('Pint Transformer: General Templates', () => {
     @endif
 @endsection
 `;
-        assert.strictEqual(formatBladeStringWithPint(template), out);
+        assert.strictEqual(await formatBladeStringWithPint(template), out);
     });
 
-    test('pint: it indents form fields inside sections', () => {
+    test('pint: it indents form fields inside sections', async () => {
         const template = `@extends('layouts.master')
 
 @section('title', 'Contact Us')
@@ -176,10 +176,10 @@ suite('Pint Transformer: General Templates', () => {
     </form>
 @endsection
 `;
-        assert.strictEqual(formatBladeStringWithPint(template), out);
+        assert.strictEqual(await formatBladeStringWithPint(template), out);
     });
 
-    test('pint: it indents nested loops', () => {
+    test('pint: it indents nested loops', async () => {
         const template = `@extends('layouts.master')
 
 @section('title', 'Product Categories')
@@ -223,10 +223,10 @@ suite('Pint Transformer: General Templates', () => {
     @endforeach
 @endsection
 `;
-        assert.strictEqual(formatBladeStringWithPint(template), out);
+        assert.strictEqual(await formatBladeStringWithPint(template), out);
     });
 
-    test('pint: it indents nested conditions', () => {
+    test('pint: it indents nested conditions', async () => {
         const template = `@extends('layouts.master')
 
 @section('title', 'Dashboard')
@@ -275,10 +275,10 @@ suite('Pint Transformer: General Templates', () => {
     @endif
 @endsection
 `;
-        assert.strictEqual(formatBladeStringWithPint(template), out);
+        assert.strictEqual(await formatBladeStringWithPint(template), out);
     });
     
-    test('pint: it indents conditions missing content', () => {
+    test('pint: it indents conditions missing content', async () => {
         const template = `@extends('layouts.master')
 
         @section('title', 'Dashboard')
@@ -309,10 +309,10 @@ suite('Pint Transformer: General Templates', () => {
     @endif
 @endsection
 `;
-        assert.strictEqual(formatBladeStringWithPint(template), out);
+        assert.strictEqual(await formatBladeStringWithPint(template), out);
     });
 
-    test('pint: it indents switch statements', () => {
+    test('pint: it indents switch statements', async () => {
         const template = `@extends('layouts.master')
 
         @section('title', 'Notification')
@@ -362,12 +362,12 @@ suite('Pint Transformer: General Templates', () => {
     @endswitch
 @endsection
 `;
-        assert.strictEqual(formatBladeStringWithPint(template), out);
+        assert.strictEqual(await formatBladeStringWithPint(template), out);
     });
 
-    test('pint: it does not eat email addresses', () => {
+    test('pint: it does not eat email addresses', async () => {
         let input = `someone@example.com`;
-        assert.strictEqual(formatBladeStringWithPint(input).trim(), input);
+        assert.strictEqual((await formatBladeStringWithPint(input)).trim(), input);
 
         input = `<a 
 
@@ -381,30 +381,30 @@ suite('Pint Transformer: General Templates', () => {
     @endsomeone
 </a>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('pint: it does not eat email addresses 2', () => {
+    test('pint: it does not eat email addresses 2', async () => {
         const template =  `<a>
         test@example.com
         </a>`;
         const expected = `<a>test@example.com</a>
 `;
-        assert.strictEqual(formatBladeStringWithPint(template), expected);
-        assert.strictEqual(formatBladeStringWithPint(expected), expected);
+        assert.strictEqual(await formatBladeStringWithPint(template), expected);
+        assert.strictEqual(await formatBladeStringWithPint(expected), expected);
     });
 
-    test('pint: it preserves inline echos as text', () => {
+    test('pint: it preserves inline echos as text', async () => {
         const input = `<span>
     {{ 'foo' }}:
 </span>`;
         const output = `<span>{{ 'foo' }}:</span>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), output);
-        assert.strictEqual(formatBladeStringWithPint(output), output);
+        assert.strictEqual(await formatBladeStringWithPint(input), output);
+        assert.strictEqual(await formatBladeStringWithPint(output), output);
     });
 
-    test('pint: it unwraps really long echos', () => {
+    test('pint: it unwraps really long echos', async () => {
         const template = `                  <div><div><div>  <x-something::component-name.here :action="$hintAction" :color="$hintColor" :icon="$hintIcon">
         {{ filled($hint) ? ($hint instanceof \\Illuminate\\Support\\HtmlString ? $hint : \\Illuminate\\Support\\Str::of($hint)->markdown()->sanitizeHtml()->toHtmlString()) : null }}
         </x-something::component-name.here></div></div></div>`;
@@ -422,10 +422,10 @@ suite('Pint Transformer: General Templates', () => {
     </div>
 </div>
 `;
-        assert.strictEqual(formatBladeStringWithPint(template), output);
+        assert.strictEqual(await formatBladeStringWithPint(template), output);
     });
 
-    test('it does not continuously indent inside component attributes', () => {
+    test('it does not continuously indent inside component attributes', async () => {
 const input = `
 <x-filament::grid
     :x-on:form-validation-error.window="
@@ -500,10 +500,10 @@ const input = `
     {{--  --}}
 </x-filament::grid>
 `;
-        const f1 = formatBladeStringWithPint(input),
-            f2 = formatBladeStringWithPint(f1),
-            f3 = formatBladeStringWithPint(f2),
-            f4 = formatBladeStringWithPint(f3);
+        const f1 = await formatBladeStringWithPint(input),
+            f2 = await formatBladeStringWithPint(f1),
+            f3 = await formatBladeStringWithPint(f2),
+            f4 = await formatBladeStringWithPint(f3);
         assert.strictEqual(f1, out);
         assert.strictEqual(f2, out);
         assert.strictEqual(f3, out);

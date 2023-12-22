@@ -1,10 +1,10 @@
-import { AbstractNode, DirectiveNode } from '../../nodes/nodes';
-import { isStartOfString } from '../../parser/scanners/isStartOfString';
-import { StringSplitter } from '../../parser/stringSplitter';
-import { StringUtilities } from '../../utilities/stringUtilities';
-import { NodeCompiler } from '../nodeCompiler';
+import { AbstractNode, DirectiveNode } from '../../nodes/nodes.js';
+import { isStartOfString } from '../../parser/scanners/isStartOfString.js';
+import { StringSplitter } from '../../parser/stringSplitter.js';
+import { StringUtilities } from '../../utilities/stringUtilities.js';
+import { NodeCompiler } from '../nodeCompiler.js';
 
-const sha1 = require('sha1');
+import sha1 from 'sha1';
 
 export class ComponentCompiler implements NodeCompiler {
     private hashStack: string[] = [];

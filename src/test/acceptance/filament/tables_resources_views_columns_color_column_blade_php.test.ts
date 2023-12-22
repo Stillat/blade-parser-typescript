@@ -1,9 +1,11 @@
 import assert from 'assert';
-import { formatBladeStringWithPint } from '../../../formatting/prettier/utils';
-import { StringUtilities } from '../../../utilities/stringUtilities';
+import { formatBladeStringWithPint } from '../../../formatting/prettier/utils.js';
+import { StringUtilities } from '../../../utilities/stringUtilities.js';
+import { setupTestHooks } from '../../../test/testUtils/formatting.js';
 
 suite('Pint Transformer Acceptance: tables_resources_views_columns_color_column_blade_php', () => {
-    test('pint: it can format tables_resources_views_columns_color_column_blade_php', () => {
+    setupTestHooks();
+    test('pint: it can format tables_resources_views_columns_color_column_blade_php', async () => {
         const input = `@php
     $isCopyable = $isCopyable();
     $copyMessage = $getCopyMessage();
@@ -74,7 +76,7 @@ suite('Pint Transformer Acceptance: tables_resources_views_columns_color_column_
 </div>
 `;
 
-        assert.strictEqual(StringUtilities.normalizeLineEndings(formatBladeStringWithPint(input).trim()), StringUtilities.normalizeLineEndings(output.trim()));
-        assert.strictEqual(StringUtilities.normalizeLineEndings(formatBladeStringWithPint(output).trim()), StringUtilities.normalizeLineEndings(output.trim()));
+        assert.strictEqual(StringUtilities.normalizeLineEndings((await formatBladeStringWithPint(input)).trim()), StringUtilities.normalizeLineEndings(output.trim()));
+        assert.strictEqual(StringUtilities.normalizeLineEndings((await formatBladeStringWithPint(output)).trim()), StringUtilities.normalizeLineEndings(output.trim()));
     }).timeout(30000);
 });

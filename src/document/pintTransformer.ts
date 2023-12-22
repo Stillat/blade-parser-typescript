@@ -1,10 +1,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
-const { execSync } = require('child_process');
-import { BladeComponentNode, BladeEchoNode, DirectiveNode, InlinePhpNode, ParameterNode, ParameterType } from '../nodes/nodes';
-import { BladeDocument } from './bladeDocument';
-import { StringUtilities } from '../utilities/stringUtilities';
-import { PintCache } from './pintCache';
+import { execSync } from 'child_process';
+import { BladeComponentNode, BladeEchoNode, DirectiveNode, InlinePhpNode, ParameterNode, ParameterType } from '../nodes/nodes.js';
+import { BladeDocument } from './bladeDocument.js';
+import { StringUtilities } from '../utilities/stringUtilities.js';
+import { PintCache } from './pintCache.js';
 
 /**
  * The PintTransformer class will take an input document

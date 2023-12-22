@@ -1,6 +1,6 @@
-import { AbstractNode, DirectiveNode } from '../../nodes/nodes';
-import { NodeCompiler } from '../nodeCompiler';
-import { SwitchCompiler } from './switch';
+import { AbstractNode, DirectiveNode } from '../../nodes/nodes.js';
+import { NodeCompiler } from '../nodeCompiler.js';
+import { SwitchCompiler } from './switch.js';
 
 export class CaseCompiler implements NodeCompiler {
     private switchCompiler: SwitchCompiler;

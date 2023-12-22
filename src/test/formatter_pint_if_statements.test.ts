@@ -1,10 +1,13 @@
 import assert from 'assert';
-import { formatBladeStringWithPint } from '../formatting/prettier/utils';
+import { formatBladeStringWithPint } from '../formatting/prettier/utils.js';
+import { setupTestHooks } from './testUtils/formatting.js';
 
 suite('Pint Transformer: If Statements', () => {
-    test('pint: it can format if statements without any HTML hints', () => {
+    setupTestHooks();
+
+    test('pint: it can format if statements without any HTML hints', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`@if($true)
+            (await formatBladeStringWithPint(`@if($true)
 
 @elseif($anotherValue)
 @else
@@ -18,7 +21,7 @@ Thing
 More Things
 @else
 Another Thing
-@endif`).trim(),
+@endif`)).trim(),
             `@if ($true)
 @elseif ($anotherValue)
 @else
@@ -34,9 +37,9 @@ Another Thing
         );
     });
 
-    test('pint: it can format if statements with embedded HTML', () => {
+    test('pint: it can format if statements with embedded HTML', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`@if($true)
+            (await formatBladeStringWithPint(`@if($true)
 <span>Hello</span>
 @elseif($anotherValue)
 <div>
@@ -54,7 +57,7 @@ Another Thing
         </p>
 
 @endif
-`).trim(),
+`)).trim(),
             `@if ($true)
     <span>Hello</span>
 @elseif ($anotherValue)
@@ -72,9 +75,9 @@ Another Thing
         );
     });
 
-    test('pint: it can parse and format conditions with lots of whitespace', () => {
+    test('pint: it can parse and format conditions with lots of whitespace', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`@if         ($true)
+            (await formatBladeStringWithPint(`@if         ($true)
             <span>Hello</span>
             @elseif                     ($anotherValue)
             <div>
@@ -91,7 +94,7 @@ Another Thing
             <p>Test {{ $title}}     test
                     </p>
             
-            @endif`).trim(),
+            @endif`)).trim(),
             `@if ($true)
     <span>Hello</span>
 @elseif ($anotherValue)
@@ -109,21 +112,21 @@ Another Thing
         );
     });
 
-    test('pint: simple if statement does not add extra indentation', () => {
+    test('pint: simple if statement does not add extra indentation', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`@if($true)
+            (await formatBladeStringWithPint(`@if($true)
             <p>Hello
             </p>
-            @endif`).trim(),
+            @endif`)).trim(),
             `@if ($true)
     <p>Hello</p>
 @endif`
         );
     });
 
-    test('pint: it can format nested if statements', () => {
+    test('pint: it can format nested if statements', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`@if($true)
+            (await formatBladeStringWithPint(`@if($true)
             Thing
         @elseif($anotherValue)
             More Things
@@ -135,7 +138,7 @@ Another Thing
         @else
             Another Thing
         @endif
-        @endif`).trim(),
+        @endif`)).trim(),
             `@if ($true)
     Thing
 @elseif ($anotherValue)
@@ -152,11 +155,11 @@ Another Thing
         );
     });
 
-    test('pint: it can format without an else', () => {
+    test('pint: it can format without an else', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`@if($true)
+            (await formatBladeStringWithPint(`@if($true)
             Thing
-                        @elseif($anotherValue) More Things @endif`).trim(),
+                        @elseif($anotherValue) More Things @endif`)).trim(),
             `@if ($true)
     Thing
 @elseif ($anotherValue)
@@ -165,7 +168,7 @@ Another Thing
         );
     });
 
-    test('pint: it indents child documents nicely if its just an echo', () => {
+    test('pint: it indents child documents nicely if its just an echo', async () => {
         const template = `@if ('foo')
         {{ $actions }}
         @elseif ('bar')
@@ -176,10 +179,10 @@ Another Thing
 @elseif ('bar')
 @endif
 `;
-        assert.strictEqual(formatBladeStringWithPint(template), out);
+        assert.strictEqual(await formatBladeStringWithPint(template), out);
     });
 
-    test('pint: it preserves line placement inside conditions', () => {
+    test('pint: it preserves line placement inside conditions', async () => {
         const template=  `<div>
     @if (count($tenants = filament()->getUserTenants(filament()->auth()->user())))
     @endif
@@ -190,11 +193,11 @@ Another Thing
 </div>
 `;
 
-        assert.strictEqual(formatBladeStringWithPint(template), out);
-        assert.strictEqual(formatBladeStringWithPint(out), out);
+        assert.strictEqual(await formatBladeStringWithPint(template), out);
+        assert.strictEqual(await formatBladeStringWithPint(out), out);
     });
 
-    test('pint: it indents conditions in a sane way', () => {
+    test('pint: it indents conditions in a sane way', async () => {
         const template = `<div>
         @if (count($tenants = filament()->getUserTenants(filament()->auth()->user()))
         )
@@ -205,11 +208,11 @@ Another Thing
     @endif
 </div>
 `;
-        assert.strictEqual(formatBladeStringWithPint(template), out);
-        assert.strictEqual(formatBladeStringWithPint(out), out);
+        assert.strictEqual(await formatBladeStringWithPint(template), out);
+        assert.strictEqual(await formatBladeStringWithPint(out), out);
     });
 
-    test('pint: it treats echos as text inside else blocks', () => {
+    test('pint: it treats echos as text inside else blocks', async () => {
         const input = `@something('test') {{ $one }}
     @elsesomething('something else?') 
     {{ $two }} 
@@ -224,11 +227,11 @@ Another Thing
     {{ $three }}
 @endsomething
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
-        assert.strictEqual(formatBladeStringWithPint(out), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(out), out);
     });
 
-    test('pint: it indents ifs containing only echos nicely', () => {
+    test('pint: it indents ifs containing only echos nicely', async () => {
         const input = `@if (true)
 {{ 'foo' }}
 {{ 'bar' }}
@@ -244,10 +247,10 @@ Another Thing
     {{ 'baz' }}
 @endif
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), output);
+        assert.strictEqual(await formatBladeStringWithPint(input), output);
     });
 
-    test('pint: it formats nicely if contains just components', () => {
+    test('pint: it formats nicely if contains just components', async () => {
         const input = `
         @guest
             <x-foo></x-foo>
@@ -261,10 +264,10 @@ Another Thing
     <x-foo></x-foo>
 @endguest
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), output);
+        assert.strictEqual(await formatBladeStringWithPint(input), output);
     });
 
-    test('pint: it formats nicely without any else block if just contains components', () => {
+    test('pint: it formats nicely without any else block if just contains components', async () => {
         const input = `@if (filament()->hasRegistration())
 <x-slot name="subheading">
     {{ __('filament::pages/auth/login.buttons.register.before') }}
@@ -278,10 +281,10 @@ Another Thing
     </x-slot>
 @endif
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), output);
+        assert.strictEqual(await formatBladeStringWithPint(input), output);
     });
 
-    test('pint: layout engine detects different types of situations and formats nicely', () => {
+    test('pint: layout engine detects different types of situations and formats nicely', async () => {
         const input = `
 
 @if (true)
@@ -341,11 +344,11 @@ A
     A
 @endif
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), output);
-        assert.strictEqual(formatBladeStringWithPint(output), output);
+        assert.strictEqual(await formatBladeStringWithPint(input), output);
+        assert.strictEqual(await formatBladeStringWithPint(output), output);
     });
 
-    test('pint: it can detect simple attached if statements to echos', () => {
+    test('pint: it can detect simple attached if statements to echos', async () => {
         const input = `@props([
     'error' => false,
     'isDisabled' => false,
@@ -404,10 +407,10 @@ A
     {{ $suffix }}
 </label>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('void elements inside if statements', () => {
+    test('void elements inside if statements', async () => {
         const input = `<div>
 @if (true)
     <Link href="{{ route('profile.show') }}" class="text-sm text-gray-600 underline hover:text-gray-900">
@@ -426,6 +429,6 @@ A
     @endif
 </div>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), output);
+        assert.strictEqual(await formatBladeStringWithPint(input), output);
     });
 });

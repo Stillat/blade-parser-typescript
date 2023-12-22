@@ -1,8 +1,11 @@
 import assert from 'assert';
-import { formatBladeStringWithPint } from '../formatting/prettier/utils';
+import { formatBladeStringWithPint } from '../formatting/prettier/utils.js';
+import { setupTestHooks } from './testUtils/formatting.js';
 
 suite('Pint Transformer: PHP Blocks', () => {
-    test('pint: it preserves relative indents within PHP', () => {
+    setupTestHooks();
+
+    test('pint: it preserves relative indents within PHP', async () => {
         const input = `@php
 $wireClickAction =
     $action->getAction() && ! $action->getUrl()
@@ -31,12 +34,12 @@ $wireClickAction =
         : null;
 ?>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), expected);
+        assert.strictEqual(await formatBladeStringWithPint(input), expected);
     });
 
-    test('pint: it indents php blocks', () => {
+    test('pint: it indents php blocks', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<main class="index">
+            (await formatBladeStringWithPint(`<main class="index">
 <div>
         {{--
  Block Comment.
@@ -61,7 +64,7 @@ $data = [
 ],
 ];
     @endphp
-</main>`).trim(),
+</main>`)).trim(),
             `<main class="index">
     <div>
         {{--
@@ -92,7 +95,7 @@ $data = [
         );
     });
 
-    test('pint: it does not indent empty lines', () => {
+    test('pint: it does not indent empty lines', async () => {
         const input =  `@php
     $foo = 'foo';
 
@@ -106,10 +109,10 @@ $data = [
 @endphp
 `;
 
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('pint: it does not indent already indented code', () => {
+    test('pint: it does not indent already indented code', async () => {
         const template = `@php
     /**
     * @deprecated Override \`logo.blade.php\` instead.
@@ -121,10 +124,10 @@ $data = [
     */
 @endphp
 `;
-        assert.strictEqual(formatBladeStringWithPint(template), out);
+        assert.strictEqual(await formatBladeStringWithPint(template), out);
     });
 
-    test('pint: php block content is not lost', () => {
+    test('pint: php block content is not lost', async () => {
         const template = `@if (true)
     @if (false)
     @if ('something')
@@ -146,10 +149,10 @@ $data = [
     @endif
 @endif
 `;
-        assert.strictEqual(formatBladeStringWithPint(template), out);
+        assert.strictEqual(await formatBladeStringWithPint(template), out);
     });
 
-    test('pint: it reflows arrows inside php blocks', () => {
+    test('pint: it reflows arrows inside php blocks', async () => {
         const template = `@php
     fn () => true;
 @endphp`;
@@ -157,10 +160,10 @@ $data = [
     fn () => true;
 @endphp
 `;
-        assert.strictEqual(formatBladeStringWithPint(template), out);
+        assert.strictEqual(await formatBladeStringWithPint(template), out);
     });
 
-    test('pint: it reflows arrows inside php blocks2', () => {
+    test('pint: it reflows arrows inside php blocks2', async () => {
         const template = `<?php
     fn () => true;
 ?>`;
@@ -168,10 +171,10 @@ $data = [
 fn () => true;
 ?>
 `;
-        assert.strictEqual(formatBladeStringWithPint(template), out);
+        assert.strictEqual(await formatBladeStringWithPint(template), out);
     });
 
-    test('pint: it is smart about print width', () => {
+    test('pint: it is smart about print width', async () => {
         const input = `
 @php
     $buttonClasses = \\Illuminate\\Support\\Arr::toCssClasses([
@@ -192,11 +195,11 @@ fn () => true;
 @endphp
 `;
 
-        assert.strictEqual(formatBladeStringWithPint(input), out);
-        assert.strictEqual(formatBladeStringWithPint(out), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(out), out);
     });
 
-    test('it can do reasonable things with deeply indented code', () => {
+    test('it can do reasonable things with deeply indented code', async () => {
         // This requiresmoving the `match` part to the line with the assignment.
         // Otherwise things get confused when transitioning between Pint/Prettier.
         const input = `
@@ -258,10 +261,10 @@ fn () => true;
     </div>
 </div>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('pint: placeholder characters are not in output #1', () => {
+    test('pint: placeholder characters are not in output #1', async () => {
         const template = `<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -331,10 +334,10 @@ fn () => true;
     </body>
 </html>
 `;
-        assert.strictEqual(formatBladeStringWithPint(template), output);
+        assert.strictEqual(await formatBladeStringWithPint(template), output);
     });
 
-    test('pint: it doesnt needlessly indent', () => {
+    test('pint: it doesnt needlessly indent', async () => {
         const input = `@props([
     'action',
     'component',
@@ -397,10 +400,10 @@ fn () => true;
     {{ $slot }}
 </x-dynamic-component>
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), output);
+        assert.strictEqual(await formatBladeStringWithPint(input), output);
     });
 
-    test('pint: it can be smart about relative indent', () => {
+    test('pint: it can be smart about relative indent', async () => {
         const input = `@props([
     'action',
     'component',
@@ -496,10 +499,10 @@ fn () => true;
     </div>
 </div>
 `
-        assert.strictEqual(formatBladeStringWithPint(input), out);
+        assert.strictEqual(await formatBladeStringWithPint(input), out);
     });
 
-    test('pint: it automatically removes strict types', () => {
+    test('pint: it automatically removes strict types', async () => {
         const input =  `
 
 @if (! $something)
@@ -531,6 +534,6 @@ fn () => true;
     };
 @endphp
 `;
-        assert.strictEqual(formatBladeStringWithPint(input), expected);
+        assert.strictEqual(await formatBladeStringWithPint(input), expected);
     });
 });

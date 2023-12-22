@@ -1,5 +1,5 @@
-import { DocumentParser } from '../documentParser';
-import { StringIterator } from '../stringIterator';
+import { DocumentParser } from '../documentParser.js';
+import { StringIterator } from '../stringIterator.js';
 
 export interface StringResults {
     value: string,

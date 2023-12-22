@@ -1,7 +1,7 @@
 import assert from 'assert';
-import { PhpCompiler } from '../compiler/phpCompiler';
-import { BladeDocument } from '../document/bladeDocument';
-import { DirectiveNode } from '../nodes/nodes';
+import { PhpCompiler } from '../compiler/phpCompiler.js';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { DirectiveNode } from '../nodes/nodes.js';
 
 suite('Unknown Directives Test', () => {
     test('unknown directive compiler', () => {

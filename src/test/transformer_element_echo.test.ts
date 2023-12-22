@@ -1,17 +1,17 @@
 import assert from 'assert';
-import { transformString } from './testUtils/transform';
+import { transformString } from './testUtils/transform.js';
 
 suite('Element Echo Transformer', () => {
-    test('it transforms echo elements', () => {
+    test('it transforms echo elements', async () => {
         assert.strictEqual(
-            transformString(`<{{ $element }} class="something">
+            (await transformString(`<{{ $element }} class="something">
 <div><p>SOme {{ $element }} text</p>
 <{{ $element }} class="something">
 <div><p>SOme {{ $element }} text</p>
 </div>
     </{{ $element }}>
 </div>
-    </{{ $element }}>`).trim(),
+    </{{ $element }}>`)).trim(),
             `<{{ $element }} class="something">
 <div><p>SOme {{ $element }} text</p>
 <{{ $element }} class="something">
@@ -23,16 +23,16 @@ suite('Element Echo Transformer', () => {
         );
     });
 
-    test('it transforms echo elements with {{{', () => {
+    test('it transforms echo elements with {{{', async () => {
         assert.strictEqual(
-            transformString(`<{{{ $element }}} class="something">
+            (await transformString(`<{{{ $element }}} class="something">
 <div><p>SOme {{{ $element }}} text</p>
 <{{{ $element }}} class="something">
 <div><p>SOme {{{ $element }}} text</p>
 </div>
     </{{{ $element }}}>
 </div>
-    </{{{ $element }}}>`).trim(),
+    </{{{ $element }}}>`)).trim(),
             `<{{{ $element }}} class="something">
 <div><p>SOme {{{ $element }}} text</p>
 <{{{ $element }}} class="something">
@@ -44,16 +44,16 @@ suite('Element Echo Transformer', () => {
         );
     });
 
-    test('it transforms echo elements with {!!', () => {
+    test('it transforms echo elements with {!!', async () => {
         assert.strictEqual(
-            transformString(`<{!! $element !!} class="something">
+            (await transformString(`<{!! $element !!} class="something">
 <div><p>SOme {!! $element !!} text</p>
 <{!! $element !!} class="something">
 <div><p>SOme {!! $element !!} text</p>
 </div>
     </{!! $element !!}>
 </div>
-    </{!! $element !!}>`).trim(),
+    </{!! $element !!}>`)).trim(),
             `<{!! $element !!} class="something">
 <div><p>SOme {!! $element !!} text</p>
 <{!! $element !!} class="something">

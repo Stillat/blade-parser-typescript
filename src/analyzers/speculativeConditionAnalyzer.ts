@@ -1,8 +1,8 @@
-import { BladeDocument } from '../document/bladeDocument';
-import { getStartPosition } from '../nodes/helpers';
-import { AbstractNode, ConditionNode, DirectiveNode, ExecutionBranchNode } from '../nodes/nodes';
-import { DocumentParser } from '../parser/documentParser';
-import { PairManager } from './pairManager';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { getStartPosition } from '../nodes/helpers.js';
+import { AbstractNode, ConditionNode, DirectiveNode, ExecutionBranchNode } from '../nodes/nodes.js';
+import { DocumentParser } from '../parser/documentParser.js';
+import { PairManager } from './pairManager.js';
 
 export class SpeculativeConditionAnalyzer {
     static analyze(nodes: AbstractNode[], document: DocumentParser) {

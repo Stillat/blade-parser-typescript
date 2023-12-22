@@ -1,6 +1,6 @@
 // ctype regexes adapted from: https://github.com/locutusjs/locutus/blob/master/src/php/strings/setlocale.js
 
-import { is_numeric } from './isNumeric';
+import { is_numeric } from './isNumeric.js';
 
 export class StringUtilities {
     static normalizeLineEndings(string: string, to = "\n") {

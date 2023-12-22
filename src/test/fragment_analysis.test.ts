@@ -1,7 +1,7 @@
-import assert = require('assert');
-import { BladeDocument } from '../document/bladeDocument';
-import { BladeEchoNode, ConditionNode, DirectiveNode, FragmentPosition } from '../nodes/nodes';
-import { assertCount, assertInstanceOf } from './testUtils/assertions';
+import assert from 'assert';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { BladeEchoNode, ConditionNode, DirectiveNode, FragmentPosition } from '../nodes/nodes.js';
+import { assertCount, assertInstanceOf } from './testUtils/assertions.js';
 
 suite('Fragment Analysis', () => {
     test('it identifies dynamic opening', () => {

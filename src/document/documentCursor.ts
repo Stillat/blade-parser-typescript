@@ -1,6 +1,6 @@
-import { AbstractNode } from '../nodes/nodes';
-import { BladeDocument } from './bladeDocument';
-import { NodeQueries } from './scanners/nodeQueries';
+import { AbstractNode } from '../nodes/nodes.js';
+import { BladeDocument } from './bladeDocument.js';
+import { NodeQueries } from './scanners/nodeQueries.js';
 
 export class DocumentCursor {
     private doc: BladeDocument;

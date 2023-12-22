@@ -1,5 +1,5 @@
 import { Engine } from 'php-parser';
-import { PhpValidator } from './phpValidator';
+import { PhpValidator } from './phpValidator.js';
 
 export class PhpParserPhpValidator  implements PhpValidator {
     private lastError: SyntaxError | null = null;

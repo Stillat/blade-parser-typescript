@@ -1,8 +1,8 @@
 import assert from 'assert';
-import { ArrayPrinter } from '../document/printers/arrayPrinter';
-import { ArrayNode } from '../nodes/nodes';
-import { SimpleArrayParser } from '../parser/simpleArrayParser';
-import { assertNotNull } from './testUtils/assertions';
+import { ArrayPrinter } from '../document/printers/arrayPrinter.js';
+import { ArrayNode } from '../nodes/nodes.js';
+import { SimpleArrayParser } from '../parser/simpleArrayParser.js';
+import { assertNotNull } from './testUtils/assertions.js';
 
 suite('Simple Array Parser', () => {
     test('it can parse and print arrays', () => {

@@ -1,4 +1,4 @@
-import { AbstractNode, BladeEchoNode, BladeEntitiesEchoNode, BladeEscapedEchoNode, BladeVerbatimNode, DirectiveNode, LiteralNode } from '../nodes/nodes';
+import { AbstractNode, BladeEchoNode, BladeEntitiesEchoNode, BladeEscapedEchoNode, BladeVerbatimNode, DirectiveNode, LiteralNode } from '../nodes/nodes.js';
 
 export class DirectiveStack {
     static setChildTypeCounts(nodes: AbstractNode[]) {

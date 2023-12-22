@@ -1,5 +1,5 @@
-import { BladeCommentNode } from '../../nodes/nodes';
-import { StringUtilities } from '../../utilities/stringUtilities';
+import { BladeCommentNode } from '../../nodes/nodes.js';
+import { StringUtilities } from '../../utilities/stringUtilities.js';
 
 export class CommentPrinter {
     static printComment(comment: BladeCommentNode, tabSize: number, targetIndent: number): string {

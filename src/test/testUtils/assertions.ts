@@ -1,6 +1,6 @@
-import assert = require('assert');
-import { AbstractNode, BladeCommentNode, BladeEchoNode, DirectiveNode, LiteralNode } from '../../nodes/nodes';
-import { Position } from '../../nodes/position';
+import assert from 'assert';
+import { AbstractNode, BladeCommentNode, BladeEchoNode, DirectiveNode, LiteralNode } from '../../nodes/nodes.js';
+import { Position } from '../../nodes/position.js';
 
 export function assertCount(count: number, actual: any[]) {
     assert.strictEqual(actual.length, count);

@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { formatBladeStringWithPint } from '../formatting/prettier/utils';
+import { formatBladeStringWithPint } from '../formatting/prettier/utils.js';
 
 suite('Pint Transformer: Script Structures', () => {
-    test('pint: it can apply relative indent levels on <script> tags', () => {
+    test('pint: it can apply relative indent levels on <script> tags', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<html>
+            (await formatBladeStringWithPint(`<html>
             @directive($test)
             
                     @enddirective
@@ -52,7 +52,7 @@ suite('Pint Transformer: Script Structures', () => {
             
                     <script></script>
                 </body>
-            </html>`).trim(),
+            </html>`)).trim(),
             `<html>
     @directive($test)
         

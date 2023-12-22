@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { setPrettierFilePath } from '../formatting/optionDiscovery';
-import { formatBladeStringWithPint } from '../formatting/prettier/utils';
+import { setPrettierFilePath } from '../formatting/optionDiscovery.js';
+import { formatBladeStringWithPint } from '../formatting/prettier/utils.js';
 
 function getBladePhpFiles(directory: string): string[] {
     const bladePhpFiles: string[] = [];

@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { formatBladeStringWithPint } from '../formatting/prettier/utils';
+import { formatBladeStringWithPint } from '../formatting/prettier/utils.js';
 
 suite('Pint Transformer: Speculative Conditions', () => {
-    test('pint: it can format detected custom conditions', () => {
+    test('pint: it can format detected custom conditions', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`@disk('local')
+            (await formatBladeStringWithPint(`@disk('local')
     <div>
     @disk('local')
     @disk('local')
@@ -24,7 +24,7 @@ suite('Pint Transformer: Speculative Conditions', () => {
     <!-- The application is using the s3 disk... -->
 @else
     <!-- The application is using some other disk... -->
-@enddisk`).trim(),
+@enddisk`)).trim(),
             `@disk('local')
     <div>
         @disk('local')

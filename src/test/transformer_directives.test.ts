@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { transformString } from './testUtils/transform';
+import { transformString } from './testUtils/transform.js';
 
 suite('Directive Transformer', () => {
-    test('it transforms directives', () => {
+    test('it transforms directives', async () => {
         assert.strictEqual(
-            transformString(`
+            (await transformString(`
 <div>
     @pair
 
@@ -43,7 +43,7 @@ suite('Directive Transformer', () => {
 </div>
 
 @endpair
-            </div>`).trim(),
+            </div>`)).trim(),
             `<div>
     @pair
 

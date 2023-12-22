@@ -1,7 +1,7 @@
-import { BladeDocument } from '../document/bladeDocument';
-import { ConditionNode, LiteralNode } from '../nodes/nodes';
-import { ParserOptions } from '../parser/parserOptions';
-import { assertCount, assertInstanceOf } from './testUtils/assertions';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { ConditionNode, LiteralNode } from '../nodes/nodes.js';
+import { ParserOptions } from '../parser/parserOptions.js';
+import { assertCount, assertInstanceOf } from './testUtils/assertions.js';
 
 suite('Custom If Statements', () => {
     test('it can parse configured custom ifs', () => {

@@ -1,66 +1,69 @@
 import assert from 'assert';
-import { defaultSettings } from '../formatting/optionDiscovery';
-import { formatBladeStringWithPint } from '../formatting/prettier/utils';
+import { defaultSettings } from '../formatting/optionDiscovery.js';
+import { formatBladeStringWithPint } from '../formatting/prettier/utils.js';
+import { setupTestHooks } from './testUtils/formatting.js';
 
-function formatBladeStringInlineEchoWithPint(content: string): string {
+async function formatBladeStringInlineEchoWithPint(content: string): Promise<string> {
     const options = defaultSettings;
 
-    return formatBladeStringWithPint(content, {
+    return await formatBladeStringWithPint(content, {
         ...options,
         echoStyle: 'inline'
     });
 }
 
 suite('Pint Transformer: Inline Echo Blocks', () => {
-    test('pint: it formats valid PHP code', () => {
+    setupTestHooks();
+
+    test('pint: it formats valid PHP code', async () => {
         assert.strictEqual(
-            formatBladeStringInlineEchoWithPint('{{$test   +$that}}').trim(),
+            (await formatBladeStringInlineEchoWithPint('{{$test   +$that}}')).trim(),
             '{{ $test + $that }}'
         );
     });
 
-    test('pint: it formats valid PHP code in {!!', () => {
+    test('pint: it formats valid PHP code in {!!', async () => {
         assert.strictEqual(
-            formatBladeStringInlineEchoWithPint('{!!$test   +$that!!}').trim(),
+            (await formatBladeStringInlineEchoWithPint('{!!$test   +$that!!}')).trim(),
             '{!! $test + $that !!}'
         );
     });
 
-    test('pint: it formats valid PHP code in {{{', () => {
+    test('pint: it formats valid PHP code in {{{', async () => {
         assert.strictEqual(
-            formatBladeStringInlineEchoWithPint('{{{$test   +$that}}}').trim(),
+            (await formatBladeStringInlineEchoWithPint('{{{$test   +$that}}}')).trim(),
             '{{{ $test + $that }}}'
         );
     });
 
-    test('pint: it ingores invalid PHP code', () => {
+    test('pint: it ingores invalid PHP code', async () => {
         assert.strictEqual(
-            formatBladeStringInlineEchoWithPint('{{$test   $+++$that}}').trim(),
+            (await formatBladeStringInlineEchoWithPint('{{$test   $+++$that}}')).trim(),
             '{{ $test   $+++$that }}'
         );
     });
 
-    test('pint: it ignores invalid PHP code in {!!', () => {
+    test('pint: it ignores invalid PHP code in {!!', async () => {
         assert.strictEqual(
-            formatBladeStringInlineEchoWithPint('{!!$test   $+++$that!!}').trim(),
+            (await formatBladeStringInlineEchoWithPint('{!!$test   $+++$that!!}')).trim(),
             '{!! $test   $+++$that !!}'
         );
     });
 
-    test('pint: it formats php without crashing', () => {
+    test('pint: it formats php without crashing', async () => {
         const input = `{{ str_pad($loop->index + 1, 2, '0', STR_PAD_LEFT) }}`;
         const out = `{{ str_pad($loop->index + 1, 2, '0', STR_PAD_LEFT) }}`;
-        assert.strictEqual(formatBladeStringInlineEchoWithPint(input).trim(), out);
+        assert.strictEqual((await formatBladeStringInlineEchoWithPint(input)).trim(), out);
     });
 
-    test('pint: it ignores invalid PHP code in {{{', () => {
+    test('pint: it ignores invalid PHP code in {{{', async () => {
         assert.strictEqual(
-            formatBladeStringInlineEchoWithPint('{{{$test   $+++$that}}}').trim(),
+            (await formatBladeStringInlineEchoWithPint('{{{$test   $+++$that}}}')).trim(),
             '{{{ $test   $+++$that }}}'
         );
     });
 
-    test('pint: test formatting inline echo arrays does not add extra whitespace', () => {
+    test('pint: test formatting inline echo arrays does not add extra whitespace', async () => {
         const input = `<a
 href="#"
 target="_blank"
@@ -75,30 +78,30 @@ Some link
 >
     Some link
 </a>`;
-        assert.strictEqual(formatBladeStringInlineEchoWithPint(input).trim(), expected);
+        assert.strictEqual((await formatBladeStringInlineEchoWithPint(input)).trim(), expected);
     });
 
-    test('pint: it can format inline echos as text', () => {
+    test('pint: it can format inline echos as text', async () => {
         assert.strictEqual(
-            formatBladeStringInlineEchoWithPint(`
+            (await formatBladeStringInlineEchoWithPint(`
             <p>test {{ $title }} test
             
             asdfasdf </p>
 
-            <p>{{ $test }}</p>`).trim(),
+            <p>{{ $test }}</p>`)).trim(),
             `<p>test {{ $title }} test asdfasdf</p>
 
 <p>{{ $test }}</p>`
         );
     });
 
-    test('pint: it does not force wrap long echos', () => {
+    test('pint: it does not force wrap long echos', async () => {
         const input = `{{ $attributes->class(["text-gray-900 border-gray-300 invalid:text-gray-400 block w-full h-9 py-1 transition duration-75 rounded-lg shadow-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-inset focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:focus:border-primary-500"]) }}`;
         const out = `{{ $attributes->class(['focus:border-primary-500 focus:ring-primary-500 dark:focus:border-primary-500 block h-9 w-full rounded-lg border-gray-300 py-1 text-gray-900 shadow-sm outline-none transition duration-75 invalid:text-gray-400 focus:ring-1 focus:ring-inset dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200']) }}`;
-        assert.strictEqual(formatBladeStringInlineEchoWithPint(input).trim(), out);
+        assert.strictEqual((await formatBladeStringInlineEchoWithPint(input)).trim(), out);
     });
 
-    test('pint: it respects echo line choices', () => {
+    test('pint: it respects echo line choices', async () => {
         const input = `<label
 {{
     $attributes
@@ -114,10 +117,10 @@ Some link
         ->class(['flex gap-3 text-sm']) }}
 ></label>
 `;
-        assert.strictEqual(formatBladeStringInlineEchoWithPint(input), out);
+        assert.strictEqual(await formatBladeStringInlineEchoWithPint(input), out);
     });
 
-    test('pint: it respects line placement2', () => {
+    test('pint: it respects line placement2', async () => {
         const input = `<div>
 {{
 $foo->bar([
@@ -135,11 +138,11 @@ $foo->bar([
     ]) }}
 </div>
 `;
-        assert.strictEqual(formatBladeStringInlineEchoWithPint(input), out);
-        assert.strictEqual(formatBladeStringInlineEchoWithPint(out), out);
+        assert.strictEqual(await formatBladeStringInlineEchoWithPint(input), out);
+        assert.strictEqual(await formatBladeStringInlineEchoWithPint(out), out);
     });
 
-    test('pint: it respects line placement 3', () => {
+    test('pint: it respects line placement 3', async () => {
         const input = `<div {{ $attributes->class([
             'some classes',
             match ($someCondition) {
@@ -158,11 +161,11 @@ $foo->bar([
     ]) }}
 ></div>
 `;
-        assert.strictEqual(formatBladeStringInlineEchoWithPint(input), out);
-        assert.strictEqual(formatBladeStringInlineEchoWithPint(out), out);
+        assert.strictEqual(await formatBladeStringInlineEchoWithPint(input), out);
+        assert.strictEqual(await formatBladeStringInlineEchoWithPint(out), out);
     });
 
-    test('pint: it respects line placement 4', () => {
+    test('pint: it respects line placement 4', async () => {
         const input = `<div {{ $attributes->class([
             'some classes',
             match ($someCondition) {
@@ -186,11 +189,11 @@ $foo->bar([
     something="else"
 ></div>
 `;
-        assert.strictEqual(formatBladeStringInlineEchoWithPint(input), out);
-        assert.strictEqual(formatBladeStringInlineEchoWithPint(out), out);
+        assert.strictEqual(await formatBladeStringInlineEchoWithPint(input), out);
+        assert.strictEqual(await formatBladeStringInlineEchoWithPint(out), out);
     });
 
-    test('pint: it preserves trailing comma on match', () => {
+    test('pint: it preserves trailing comma on match', async () => {
         const template = `<div
 {{
     match ($foo) {
@@ -205,10 +208,10 @@ $foo->bar([
         default => 'bar',
     } }}
 ></div>`;
-        assert.strictEqual(formatBladeStringInlineEchoWithPint(template).trim(), out);
+        assert.strictEqual((await formatBladeStringInlineEchoWithPint(template)).trim(), out);
     });
 
-    test('pint: it respects line placement when blocking echos', () => {
+    test('pint: it respects line placement when blocking echos', async () => {
         const input = `<form wire:submit.prevent="authenticate" class="grid gap-y-8">
 {{ $this->form }}
 
@@ -220,15 +223,15 @@ $foo->bar([
     {{ $this->authenticateAction }}
 </form>
 `;
-        assert.strictEqual(formatBladeStringInlineEchoWithPint(input), output);
+        assert.strictEqual(await formatBladeStringInlineEchoWithPint(input), output);
     });
 
-    test('pint: it inlines adjacent echos', () => {
+    test('pint: it inlines adjacent echos', async () => {
         const input = `<div>
     {{ $foo }}{{ $bar }}
 </div>`;
         const out = `<div>{{ $foo }}{{ $bar }}</div>
 `;
-        assert.strictEqual(formatBladeStringInlineEchoWithPint(input), out);
+        assert.strictEqual(await formatBladeStringInlineEchoWithPint(input), out);
     });
 });

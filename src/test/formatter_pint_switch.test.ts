@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { formatBladeStringWithPint } from '../formatting/prettier/utils';
+import { formatBladeStringWithPint } from '../formatting/prettier/utils.js';
 
 suite('Pint Transformer: Switch Statements', () => {
-    test('pint: it can format simple switch statements', () => {
+    test('pint: it can format simple switch statements', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`
+            (await formatBladeStringWithPint(`
 @switch($i)
     @case(1)
         First case...
@@ -17,7 +17,7 @@ suite('Pint Transformer: Switch Statements', () => {
 
 
         Default case...
-@endswitch`).trim(),
+@endswitch`)).trim(),
             `@switch($i)
     @case(1)
         First case...
@@ -33,9 +33,9 @@ suite('Pint Transformer: Switch Statements', () => {
         );
     });
 
-    test('pint: it can format leading switch nodes', () => {
+    test('pint: it can format leading switch nodes', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`
+            (await formatBladeStringWithPint(`
 @switch($i)
 {{-- Leading node test. --}}
 
@@ -52,7 +52,7 @@ Second case...
 
 
 Default case...
-@endswitch`).trim(),
+@endswitch`)).trim(),
             `@switch($i)
     {{-- Leading node test. --}}
 
@@ -71,9 +71,9 @@ Default case...
         );
     });
 
-    test('pint: it can format switch with embedded HTML', () => {
+    test('pint: it can format switch with embedded HTML', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`
+            (await formatBladeStringWithPint(`
             @switch($i)
             {{-- Leading node test. --}}
             
@@ -90,7 +90,7 @@ Default case...
             
             
             <p>Default case...</p>
-            @endswitch`).trim(),
+            @endswitch`)).trim(),
             `@switch($i)
     {{-- Leading node test. --}}
 
@@ -109,9 +109,9 @@ Default case...
         );
     });
 
-    test('pint: it can format switch without breaks', () => {
+    test('pint: it can format switch without breaks', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`
+            (await formatBladeStringWithPint(`
             @switch($i)
             
             @case(1)
@@ -121,7 +121,7 @@ Default case...
             @default
             
             <p>Default case...</p>
-            @endswitch`).trim(),
+            @endswitch`)).trim(),
             `@switch($i)
     @case(1)
         <p>First case...</p>
@@ -133,16 +133,16 @@ Default case...
         );
     });
 
-    test('pint: it can format switch without default', () => {
+    test('pint: it can format switch without default', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`
+            (await formatBladeStringWithPint(`
             @switch($i)
             
             @case(1)
             <p>First case...</p>
             @case(2)
             <p>Second case...</p>
-            @endswitch`).trim(),
+            @endswitch`)).trim(),
             `@switch($i)
     @case(1)
         <p>First case...</p>
@@ -152,15 +152,15 @@ Default case...
         );
     });
 
-    test('pint: it can format switch with no cases', () => {
+    test('pint: it can format switch with no cases', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`
+            (await formatBladeStringWithPint(`
             @switch($i)
             <div>
             <p>Just testing
             </p>
             </div>
-            @endswitch`).trim(),
+            @endswitch`)).trim(),
             `@switch($i)
     <div>
         <p>Just testing</p>
@@ -169,14 +169,14 @@ Default case...
         );
     });
 
-    test('pint: it can format switch with just default', () => {
+    test('pint: it can format switch with just default', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`
+            (await formatBladeStringWithPint(`
             @switch($i)
             
                                     @default
                                         <p>Default case...</p>
-            @endswitch`).trim(),
+            @endswitch`)).trim(),
             `@switch($i)
     @default
         <p>Default case...</p>
@@ -184,9 +184,9 @@ Default case...
         );
     });
 
-    test('pint: it can wrap to next line', () => {
+    test('pint: it can wrap to next line', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`@switch($i)
+            (await formatBladeStringWithPint(`@switch($i)
             {{-- Leading node test. --}}
             
             <p>Test {{ $title}} 
@@ -197,7 +197,7 @@ Default case...
             
             
             <p>Default case...</p>
-            @endswitch`).trim(),
+            @endswitch`)).trim(),
             `@switch($i)
     {{-- Leading node test. --}}
 

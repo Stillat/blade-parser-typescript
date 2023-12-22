@@ -1,14 +1,14 @@
-import { BladeCommentNode, BladeComponentNode, BladeEchoNode, ComponentNameNode, DirectiveNode, ParameterNode, ParameterType } from '../nodes/nodes';
-import { StringUtilities } from '../utilities/stringUtilities';
-import { DocumentParser } from './documentParser';
-import { isStartOfString } from './scanners/isStartOfString';
-import { nextNonWhitespace } from './scanners/nextNonWhitespace';
-import { scanToEndOfLogicGroup } from './scanners/scanToEndOfLogicGroup';
-import { skipToEndOfLine } from './scanners/skipToEndOfLine';
-import { skipToEndOfMultilineComment } from './scanners/skipToEndOfMultilineComment';
-import { skipToEndOfStringTraced } from './scanners/skipToEndOfString';
-import { LogicGroupScanResults } from './scanResults';
-import { StringIterator } from './stringIterator';
+import { BladeCommentNode, BladeComponentNode, BladeEchoNode, ComponentNameNode, DirectiveNode, ParameterNode, ParameterType } from '../nodes/nodes.js';
+import { StringUtilities } from '../utilities/stringUtilities.js';
+import { DocumentParser } from './documentParser.js';
+import { isStartOfString } from './scanners/isStartOfString.js';
+import { nextNonWhitespace } from './scanners/nextNonWhitespace.js';
+import { scanToEndOfLogicGroup } from './scanners/scanToEndOfLogicGroup.js';
+import { skipToEndOfLine } from './scanners/skipToEndOfLine.js';
+import { skipToEndOfMultilineComment } from './scanners/skipToEndOfMultilineComment.js';
+import { skipToEndOfStringTraced } from './scanners/skipToEndOfString.js';
+import { LogicGroupScanResults } from './scanResults.js';
+import { StringIterator } from './stringIterator.js';
 
 export class ComponentParser implements StringIterator {
     private document: DocumentParser;

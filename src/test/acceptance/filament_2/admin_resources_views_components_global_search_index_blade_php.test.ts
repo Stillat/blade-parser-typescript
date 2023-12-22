@@ -1,9 +1,11 @@
 import assert from 'assert';
-import { formatBladeStringWithPint } from '../../../formatting/prettier/utils';
-import { StringUtilities } from '../../../utilities/stringUtilities';
+import { formatBladeStringWithPint } from '../../../formatting/prettier/utils.js';
+import { StringUtilities } from '../../../utilities/stringUtilities.js';
+import { setupTestHooks } from '../../../test/testUtils/formatting.js';
 
 suite('Pint Transformer Acceptance: admin_resources_views_components_global_search_index_blade_php', () => {
-    test('pint: it can format admin_resources_views_components_global_search_index_blade_php', () => {
+    setupTestHooks();
+    test('pint: it can format admin_resources_views_components_global_search_index_blade_php', async () => {
         const input = `<div class="filament-global-search flex items-center ml-4 rtl:ml-0 rtl:mr-4">
     <x-filament::global-search.start />
     {{ \\Filament\\Facades\\Filament::renderHook('global-search.start') }}
@@ -43,7 +45,7 @@ suite('Pint Transformer Acceptance: admin_resources_views_components_global_sear
 </div>
 `;
 
-        assert.strictEqual(StringUtilities.normalizeLineEndings(formatBladeStringWithPint(input).trim()), StringUtilities.normalizeLineEndings(output.trim()));
-        assert.strictEqual(StringUtilities.normalizeLineEndings(formatBladeStringWithPint(output).trim()), StringUtilities.normalizeLineEndings(output.trim()));
+        assert.strictEqual(StringUtilities.normalizeLineEndings((await formatBladeStringWithPint(input)).trim()), StringUtilities.normalizeLineEndings(output.trim()));
+        assert.strictEqual(StringUtilities.normalizeLineEndings((await formatBladeStringWithPint(output)).trim()), StringUtilities.normalizeLineEndings(output.trim()));
     }).timeout(30000);
 });

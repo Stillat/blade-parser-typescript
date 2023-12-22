@@ -1,6 +1,6 @@
 import assert from 'assert';
-import { PhpParserPhpValidator } from '../parser/php/phpParserPhpValidator';
-import { assertNotNull } from './testUtils/assertions';
+import { PhpParserPhpValidator } from '../parser/php/phpParserPhpValidator.js';
+import { assertNotNull } from './testUtils/assertions.js';
 
 suite('PHP Validator', () => {
     test('it detects invalid php', () => {

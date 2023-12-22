@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { formatBladeStringWithPint } from '../formatting/prettier/utils';
+import { formatBladeStringWithPint } from '../formatting/prettier/utils.js';
 
 suite('Pint Transformer: for Nodes', () => {
-    test('pint: it correctly pairs and formats for nodes', () => {
+    test('pint: it correctly pairs and formats for nodes', async () => {
         assert.strictEqual(
-            formatBladeStringWithPint(`<p>
+            (await formatBladeStringWithPint(`<p>
 <strong>Message</strong>
 @if($one)
 One
@@ -18,7 +18,7 @@ One
 @else
     Nope!
 @endif
-</p>`).trim(),
+</p>`)).trim(),
             `<p>
     <strong>Message</strong>
     @if ($one)

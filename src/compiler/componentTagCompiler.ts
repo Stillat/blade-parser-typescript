@@ -1,8 +1,9 @@
-import { BladeDocument } from '../document/bladeDocument';
-import { BladeComponentNode, BladeEchoNode, LiteralNode, ParameterNode, ParameterType } from '../nodes/nodes';
-import { AppClassNameResolver, ComponentClassNameResolver } from './componentClassNameResolver';
-import { ComponentDetailsResolver } from './componentDetailsResolver';
-const camelize = require('camelize');
+import { BladeDocument } from '../document/bladeDocument.js';
+import { BladeComponentNode, BladeEchoNode, LiteralNode, ParameterNode, ParameterType } from '../nodes/nodes.js';
+import { AppClassNameResolver, ComponentClassNameResolver } from './componentClassNameResolver.js';
+import { ComponentDetailsResolver } from './componentDetailsResolver.js';
+
+import camelize from 'camelize';
 
 export class ComponentTagCompiler {
     private aliases: Map<string, string> = new Map();

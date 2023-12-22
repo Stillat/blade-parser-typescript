@@ -1,26 +1,26 @@
-import { formatExtractedScript } from '../formatting/bladeJavaScriptFormatter';
-import { getDefaultClassStringConfig } from '../formatting/classStringsConfig';
-import { FormattingOptions } from '../formatting/formattingOptions';
-import { GeneralSyntaxReflow } from '../formatting/generalSyntaxReflow';
-import { formatBladeString, formatBladeStringWithPint, getPhpOptions } from '../formatting/prettier/utils';
-import { VoidHtmlTagsManager } from '../formatting/prettier/voidHtmlTagsManager';
-import { SyntaxReflow } from '../formatting/syntaxReflow';
-import { AbstractNode, BladeCommentNode, BladeComponentNode, BladeEchoNode, ConditionNode, DirectiveNode, ExecutionBranchNode, ForElseNode, FragmentPosition, InlinePhpNode, LiteralNode, ParameterNode, ParameterType, SwitchCaseNode, SwitchStatementNode } from '../nodes/nodes';
-import { IExtractedAttribute } from '../parser/extractedAttribute';
-import { SimpleArrayParser } from '../parser/simpleArrayParser';
-import { StringUtilities } from '../utilities/stringUtilities';
-import { canProcessAttributes, disableAttributeProcessing, enableAttributeProcessing, isAttributeFormatter, isAttributeFormattingEnabled, setIsFormattingAttributeContent } from './attributeRangeRemover';
-import { BladeDocument } from './bladeDocument';
-import { BlockPhpFormatter, JsonFormatter, PhpFormatter, PhpTagFormatter } from './formatters';
-import { PintTransformer } from './pintTransformer';
-import { ArrayPrinter } from './printers/arrayPrinter';
-import { CommentPrinter } from './printers/commentPrinter';
-import { DirectivePrinter } from './printers/directivePrinter';
-import { EchoPrinter } from './printers/echoPrinter';
-import { IndentLevel } from './printers/indentLevel';
-import { getPrintWidth } from './printers/printWidthUtils';
-import { TransformIgnore } from './transformIgnore';
-import { TransformOptions } from './transformOptions';
+import { formatExtractedScript } from '../formatting/bladeJavaScriptFormatter.js';
+import { getDefaultClassStringConfig } from '../formatting/classStringsConfig.js';
+import { FormattingOptions } from '../formatting/formattingOptions.js';
+import { GeneralSyntaxReflow } from '../formatting/generalSyntaxReflow.js';
+import { formatBladeString, formatBladeStringWithPint, getPhpOptions } from '../formatting/prettier/utils.js';
+import { VoidHtmlTagsManager } from '../formatting/prettier/voidHtmlTagsManager.js';
+import { SyntaxReflow } from '../formatting/syntaxReflow.js';
+import { AbstractNode, BladeCommentNode, BladeComponentNode, BladeEchoNode, ConditionNode, DirectiveNode, ExecutionBranchNode, ForElseNode, FragmentPosition, InlinePhpNode, LiteralNode, ParameterNode, ParameterType, SwitchCaseNode, SwitchStatementNode } from '../nodes/nodes.js';
+import { IExtractedAttribute } from '../parser/extractedAttribute.js';
+import { SimpleArrayParser } from '../parser/simpleArrayParser.js';
+import { StringUtilities } from '../utilities/stringUtilities.js';
+import { canProcessAttributes, disableAttributeProcessing, enableAttributeProcessing, isAttributeFormatter, isAttributeFormattingEnabled, setIsFormattingAttributeContent } from './attributeRangeRemover.js';
+import { BladeDocument } from './bladeDocument.js';
+import { BlockPhpFormatter, JsonFormatter, PhpFormatter, PhpTagFormatter } from './formatters.js';
+import { PintTransformer } from './pintTransformer.js';
+import { ArrayPrinter } from './printers/arrayPrinter.js';
+import { CommentPrinter } from './printers/commentPrinter.js';
+import { DirectivePrinter } from './printers/directivePrinter.js';
+import { EchoPrinter } from './printers/echoPrinter.js';
+import { IndentLevel } from './printers/indentLevel.js';
+import { getPrintWidth } from './printers/printWidthUtils.js';
+import { TransformIgnore } from './transformIgnore.js';
+import { TransformOptions } from './transformOptions.js';
 
 interface EmbeddedDocument {
     slug: string,
@@ -341,8 +341,8 @@ export class Transformer {
         return '<' + value + '>' + innerContent + '</' + value + '>';
     }
 
-    private printDirective(directive: DirectiveNode, indentLevel: number): string {
-        return DirectivePrinter.printDirective(
+    private async printDirective(directive: DirectiveNode, indentLevel: number): Promise<string> {
+        return await DirectivePrinter.printDirective(
             directive,
             this.transformOptions,
             this.phpFormatter,
@@ -642,10 +642,10 @@ export class Transformer {
         return "\n" + open + close + "\n";
     }
 
-    private transformPhpBlock(content: string): string {
+    private async transformPhpBlock(content: string): Promise<string> {
         let value = content;
 
-        this.blockPhpNodes.forEach((php, slug) => {
+        for (const [slug, php] of this.blockPhpNodes) {
             const open = this.open(slug),
                 targetIndent = this.indentLevel(open);
 
@@ -660,7 +660,7 @@ export class Transformer {
                     }
                 } else {
                     if (this.phpTagFormatter != null) {
-                        result = this.phpTagFormatter(result, this.transformOptions, null);
+                        result = await this.phpTagFormatter(result, this.transformOptions, null);
 
                         if (GeneralSyntaxReflow.couldReflow(result)) {
                             result = GeneralSyntaxReflow.instance.reflow(result);
@@ -681,24 +681,27 @@ export class Transformer {
             }
 
             value = StringUtilities.safeReplace(value, open, result);
-        });
+        }
 
-        this.dynamicElementPhpNodes.forEach((php, slug) => {
-            value = StringUtilities.safeReplaceAllInString(value, slug, this.printInlinePhp(php));
-        });
+        for (const [slug, php] of this.dynamicElementPhpNodes) {
+            const printedPhp = await this.printInlinePhp(php);
+            value = StringUtilities.safeReplaceAllInString(value, slug, printedPhp);
+        }
 
-        this.inlinePhpNodes.forEach((php, slug) => {
-            value = StringUtilities.safeReplace(value, slug, this.printInlinePhp(php));
-        });
+        for (const [slug, php] of this.inlinePhpNodes) {
+            const printedPhp = await this.printInlinePhp(php);
+            value = StringUtilities.safeReplace(value, slug, printedPhp);
+        }
+
 
         return value;
     }
 
-    private printInlinePhp(php: InlinePhpNode): string {
+    private async printInlinePhp(php: InlinePhpNode): Promise<string> {
         let phpContent = php.sourceContent;
 
         if (this.phpTagFormatter && php.hasValidPhp()) {
-            phpContent = this.phpTagFormatter(phpContent, this.transformOptions, null);
+            phpContent = await this.phpTagFormatter(phpContent, this.transformOptions, null);
 
             if (GeneralSyntaxReflow.couldReflow(phpContent)) {
                 phpContent = GeneralSyntaxReflow.instance.reflow(phpContent);
@@ -1762,22 +1765,23 @@ export class Transformer {
         return this;
     }
 
-    private transformInlineDirectives(content: string): string {
+    private async transformInlineDirectives(content: string): Promise<string> {
         let value = content;
-        this.inlineDirectiveBlocks.forEach((directive, slug) => {
-            const search = this.selfClosing(slug),
-                replace = this.printDirective(directive, this.indentLevel(search));
 
-            value = StringUtilities.safeReplace(value, search, replace);
-        });
+        for (const [slug, directive] of this.inlineDirectiveBlocks) {
+            const search = this.selfClosing(slug),
+                replace = await this.printDirective(directive, this.indentLevel(search));
+
+            value = await StringUtilities.safeReplace(value, search, replace);
+        }
 
         return value;
     }
 
-    private transformHtmlSwitchStatements(content: string): string {
+    private async transformHtmlSwitchStatements(content: string): Promise<string> {
         let value = content;
 
-        this.htmlTagSwitchStatements.forEach((switchNode: SwitchStatementNode, slug: string) => {
+        for (const [slug, switchNode] of this.htmlTagSwitchStatements) {
             let formatContent = switchNode.nodeContent,
                 subDoc = formatContent;
 
@@ -1788,27 +1792,26 @@ export class Transformer {
                     disableAttributeProcessing();
 
                     if (this.transformOptions.useLaravelPint) {
-                        subDoc = formatBladeStringWithPint(formatContent, this.formattingOptions, this.transformOptions).trim();
+                        subDoc = (await formatBladeStringWithPint(formatContent, this.formattingOptions, this.transformOptions)).trim();
                     } else {
-                        subDoc = formatBladeString(formatContent, this.formattingOptions).trim();
+                        subDoc = (await formatBladeString(formatContent, this.formattingOptions)).trim();
                     }
                 } catch (err) {
                     enableAttributeProcessing();
                     setIsFormattingAttributeContent(false);
                     throw err;
                 }
-            }
 
-            enableAttributeProcessing();
-            setIsFormattingAttributeContent(false);
+                enableAttributeProcessing();
+                setIsFormattingAttributeContent(false);
+            }
 
             let indentLevel = IndentLevel.relativeIndentLevel(slug, value),
                 forceLeadNewline = false;
 
-            if (indentLevel == 0) {
+            if (indentLevel === 0) {
                 forceLeadNewline = true;
                 indentLevel = this.transformOptions.tabSize;
-            } else {
             }
 
             formatContent = IndentLevel.shiftHtmlAttributeContent(
@@ -1822,42 +1825,42 @@ export class Transformer {
             }
 
             value = StringUtilities.safeReplace(value, slug, formatContent);
-        });
+        }
 
         return value;
     }
 
-    private transformHtmlTagDirectives(content: string): string {
+    private async transformHtmlTagDirectives(content: string): Promise<string> {
         let value = content;
 
-        this.htmlTagDirectives.forEach((directive: DirectiveNode, slug: string) => {
+        for (const [slug, directive] of this.htmlTagDirectives) {
             let formatContent = `${directive.sourceContent}
-    ${directive.documentContent}
-${directive.isClosedBy?.sourceContent}
-`;
-
+            ${directive.documentContent}
+        ${directive.isClosedBy?.sourceContent}
+        `;
+        
             if (this.transformOptions.formatJsAttributes && isAttributeFormattingEnabled) {
                 setIsFormattingAttributeContent(true);
                 try {
                     disableAttributeProcessing();
                     if (this.transformOptions.useLaravelPint) {
-                        formatContent = formatBladeStringWithPint(formatContent, this.formattingOptions, this.transformOptions).trim();
+                        formatContent = (await formatBladeStringWithPint(formatContent, this.formattingOptions, this.transformOptions)).trim();
                     } else {
-                        formatContent = formatBladeString(formatContent, this.formattingOptions).trim();
+                        formatContent = (await formatBladeString(formatContent, this.formattingOptions)).trim();
                     }
                 } catch (err) {
                     enableAttributeProcessing();
                     setIsFormattingAttributeContent(false);
                     throw err;
                 }
+                enableAttributeProcessing();
+                setIsFormattingAttributeContent(false);
             }
-
-            enableAttributeProcessing();
-            setIsFormattingAttributeContent(false);
+        
             const indentLevel = IndentLevel.relativeIndentLevel(slug, value);
-
+        
             formatContent = this.adjustAttributeFormattingResults(formatContent);
-
+        
             formatContent = IndentLevel.shiftIndent(
                 formatContent,
                 indentLevel,
@@ -1865,24 +1868,24 @@ ${directive.isClosedBy?.sourceContent}
                 this.transformOptions,
                 false, false
             );
-
+        
             value = StringUtilities.safeReplace(value, slug, formatContent);
-        });
+        }        
 
         return value;
     }
 
-    private transformContentDirectives(content: string): string {
+    private async transformContentDirectives(content: string): Promise<string> {
         let value = content;
 
-        this.contentDirectives.forEach((directive: DirectiveNode, slug: string) => {
-            let directiveResult = this.printDirective(directive, 0);
-
+        for (const [slug, directive] of this.contentDirectives) {
+            let directiveResult = await this.printDirective(directive, 0);
+        
             if (directiveResult.includes("\n")) {
                 const relativeIndent = this.indentLevel(slug);
-
+        
                 if (relativeIndent > 0) {
-                    directiveResult = IndentLevel.shiftIndent(
+                    directiveResult = await IndentLevel.shiftIndent(
                         directiveResult,
                         relativeIndent,
                         true,
@@ -1890,37 +1893,36 @@ ${directive.isClosedBy?.sourceContent}
                     );
                 }
             }
-
+        
             value = StringUtilities.safeReplace(value, slug, directiveResult);
-        });
+        }
 
         return value;
     }
 
-    private transformDynamicEcho(content: string): string {
+    private async transformDynamicEcho(content: string): Promise<string> {
         let value = content;
-        this.dynamicEchoBlocks.forEach((echo: BladeEchoNode, slug: string) => {
-            const echoContent = EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug), this.pintTransformer ?? Transformer.sharedPintTransformer);
 
+        for (const [slug, echo] of this.dynamicEchoBlocks) {
+            const echoContent = await EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug), this.pintTransformer ?? Transformer.sharedPintTransformer);
             value = StringUtilities.safeReplaceAllInString(value, slug, echoContent);
-        });
+        }        
 
         return value;
     }
 
-    private transformDynamicDirectives(content: string): string {
+    private async transformDynamicDirectives(content: string): Promise<string> {
         let value = content;
 
-        this.dynamicElementDirectiveNodes.forEach((directive, slug) => {
-            const directiveContent = this.printDirective(directive, this.indentLevel(slug));
-
+        for (const [slug, directive] of this.dynamicElementDirectiveNodes) {
+            const directiveContent = await this.printDirective(directive, this.indentLevel(slug));
             value = StringUtilities.safeReplaceAllInString(value, slug, directiveContent);
-        });
+        }
 
         return value;
     }
 
-    private transformBlockPhp(content: string, withNewLine: boolean): string {
+    private async transformBlockPhp(content: string, withNewLine: boolean): Promise<string> {
         if (this.blockPhpFormatter == null) { return content; }
         let value = content.trim();
 
@@ -1930,7 +1932,7 @@ ${directive.isClosedBy?.sourceContent}
 
         const phpOptions = getPhpOptions();
 
-        value = this.blockPhpFormatter(value, this.transformOptions, {
+        value = await this.blockPhpFormatter(value, this.transformOptions, {
             ...phpOptions,
             printWidth: getPrintWidth(content, phpOptions.printWidth)
         });
@@ -1975,30 +1977,30 @@ ${directive.isClosedBy?.sourceContent}
         return -1;
     }
 
-    private transformPairedDirectives(content: string): string {
+    private async transformPairedDirectives(content: string): Promise<string> {
         let value = content;
 
-        this.attachedDirectives.forEach((directive: TransformedPairedDirective, slug: string) => {
+        for (const [slug, directive] of this.attachedDirectives) {
             value = this.removeLeadingWhitespace(value, slug);
             let attachedDoc = directive.directive.documentContent;
 
             disableAttributeProcessing();
             if (this.transformOptions.useLaravelPint) {
-                attachedDoc = formatBladeStringWithPint(attachedDoc, this.formattingOptions, this.transformOptions).trim();
+                attachedDoc = (await formatBladeStringWithPint(attachedDoc, this.formattingOptions, this.transformOptions)).trim();
             } else {
-                attachedDoc = formatBladeString(attachedDoc, this.formattingOptions).trim();
+                attachedDoc = (await formatBladeString(attachedDoc, this.formattingOptions)).trim();
             }
             enableAttributeProcessing();
 
-            const dirResult = this.printDirective(directive.directive, this.indentLevel(slug)).trim(),
+            const dirResult = (await this.printDirective(directive.directive, this.indentLevel(slug))).trim(),
                 relIndent = this.findNewLeadingStart(value, slug),
-                tmpDoc = dirResult + attachedDoc + "\n" + directive.directive.isClosedBy?.sourceContent ?? '';
+                tmpDoc = dirResult + attachedDoc + "\n" + (directive.directive.isClosedBy?.sourceContent ?? '');
 
             let insertResult = IndentLevel.shiftIndent(tmpDoc, relIndent + this.transformOptions.tabSize, true, this.transformOptions, false, true);
             value = StringUtilities.safeReplace(value, slug, insertResult);
-        });
+        }
 
-        this.pairedDirectives.forEach((directive: TransformedPairedDirective, slug: string) => {
+        for (const [slug, directive] of this.pairedDirectives) {
             const originalDirective = directive.directive;
 
             if (directive.virtualElementSlug.length > 0) {
@@ -2024,7 +2026,7 @@ ${directive.isClosedBy?.sourceContent}
                 if (this.transformOptions.formatDirectivePhpParameters) {
                     if (!this.useLaravelPint) {
                         formattedPhp = IndentLevel.shiftIndent(
-                            this.transformBlockPhp(originalDirective.innerContent, true),
+                            await this.transformBlockPhp(originalDirective.innerContent, true),
                             targetIndent,
                             true,
                             this.transformOptions
@@ -2075,7 +2077,7 @@ ${directive.isClosedBy?.sourceContent}
                     value = StringUtilities.safeReplace(value, open, replaceVerbatim);
                 }
             } else {
-                value = StringUtilities.safeReplace(value, open, this.printDirective(directive.directive, this.indentLevel(open)));
+                value = StringUtilities.safeReplace(value, open, await this.printDirective(directive.directive, this.indentLevel(open)));
             }
 
             if (placeClosingDirective) {
@@ -2083,7 +2085,7 @@ ${directive.isClosedBy?.sourceContent}
             } else {
                 value = StringUtilities.safeReplace(value, close, '');
             }
-        });
+        }
 
         this.inlineDirectives.forEach((directive, slug) => {
             value = StringUtilities.safeReplaceAllInString(value, slug, directive.directive.nodeContent);
@@ -2104,51 +2106,55 @@ ${directive.isClosedBy?.sourceContent}
         return value;
     }
 
-    private transformForElseWithNoEmpty(content: string): string {
+    private async transformForElseWithNoEmpty(content: string): Promise<string> {
         let value = content;
 
-        this.forElseNoEmpty.forEach((forElse: TransformedForElse) => {
+        for (const forElse of this.forElseNoEmpty) {
             const construction = forElse.forElse.constructedFrom as DirectiveNode,
                 open = this.open(forElse.truthSlug),
-                close = this.close(forElse.truthSlug),
-                openContent = this.printDirective(construction, this.indentLevel(open)),
+                close = this.close(forElse.truthSlug);
+
+            const openContent = await this.printDirective(construction, this.indentLevel(open)),
                 closeContent = construction.isClosedBy?.sourceContent as string;
+
             value = StringUtilities.safeReplace(value, open, openContent);
             value = StringUtilities.safeReplace(value, close, closeContent);
-        });
+        }
 
         return value;
     }
 
-    private transformForElseWithEmpty(content: string): string {
+    private async transformForElseWithEmpty(content: string): Promise<string> {
         let value = content;
 
-        this.forElseWithEmpty.forEach((forElse: TransformedForElse) => {
+        for (const forElse of this.forElseWithEmpty) {
             const truthOpen = this.open(forElse.truthSlug),
-                construction = forElse.forElse.constructedFrom as DirectiveNode,
-                constructionContent = this.printDirective(construction, this.indentLevel(truthOpen));
+                construction = forElse.forElse.constructedFrom as DirectiveNode;
+
+            const constructionContent = await this.printDirective(construction, this.indentLevel(truthOpen));
 
             value = StringUtilities.safeReplace(value, truthOpen, constructionContent);
             value = StringUtilities.safeReplace(value, forElse.pairClose, construction.isClosedBy?.sourceContent as string);
             value = StringUtilities.safeReplace(value, forElse.emptyOpen, forElse.forElse.elseNode?.sourceContent as string);
             this.removeLines.push(forElse.truthClose);
-        });
+        }
 
         return value;
     }
 
-    private transformInlineEcho(content: string): string {
+    private async transformInlineEcho(content: string): Promise<string> {
         let value = content;
 
-        this.inlineEchos.forEach((echo: BladeEchoNode, slug: string) => {
+        for (const [slug, echo] of this.inlineEchos) {
             const inline = this.selfClosing(slug);
+            const echoContent = await EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug), this.pintTransformer ?? Transformer.sharedPintTransformer);
+            value = StringUtilities.safeReplace(value, inline, echoContent);
+        }
 
-            value = StringUtilities.safeReplace(value, inline, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug), this.pintTransformer ?? Transformer.sharedPintTransformer));
-        });
-
-        this.spanEchos.forEach((echo: BladeEchoNode, slug: string) => {
-            value = StringUtilities.safeReplace(value, slug, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug), this.pintTransformer ?? Transformer.sharedPintTransformer));
-        });
+        for (const [slug, echo] of this.spanEchos) {
+            const echoContent = await EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, this.indentLevel(slug), this.pintTransformer ?? Transformer.sharedPintTransformer);
+            value = StringUtilities.safeReplace(value, slug, echoContent);
+        }
 
         return value;
     }
@@ -2170,11 +2176,11 @@ ${directive.isClosedBy?.sourceContent}
         }
     }
 
-    private transformConditions(content: string): string {
+    private async transformConditions(content: string): Promise<string> {
         let value = content;
 
-        this.conditions.forEach((condition) => {
-            condition.structures.forEach((structure) => {
+        for (const condition of this.conditions) {
+            for (const structure of condition.structures) {
                 const structureDirective = structure.branch.head as DirectiveNode;
 
                 if (structure.isLiteralContent) {
@@ -2196,54 +2202,49 @@ ${directive.isClosedBy?.sourceContent}
 
                 if (!structure.isLast) {
                     this.removeLines.push(structure.pairClose);
-                    value = StringUtilities.safeReplace(value, structure.pairOpen, this.printDirective(structureDirective, this.indentLevel(structure.pairOpen)));
+                    value = StringUtilities.safeReplace(value, structure.pairOpen, await this.printDirective(structureDirective, this.indentLevel(structure.pairOpen)));
                 } else {
-                    value = StringUtilities.safeReplace(value, structure.pairOpen, this.printDirective(structureDirective, this.indentLevel(structure.pairOpen)));
+                    value = StringUtilities.safeReplace(value, structure.pairOpen, await this.printDirective(structureDirective, this.indentLevel(structure.pairOpen)));
                     const closeDirective = structureDirective.isClosedBy as DirectiveNode;
-                    value = StringUtilities.safeReplace(value, structure.pairClose, this.printDirective(closeDirective, this.indentLevel(structure.pairClose)));
+                    value = StringUtilities.safeReplace(value, structure.pairClose, await this.printDirective(closeDirective, this.indentLevel(structure.pairClose)));
                 }
-            });
-        });
+            }
+        }
 
         return value;
     }
 
-    private transformSwitchStatements(content: string): string {
+    private async transformSwitchStatements(content: string): Promise<string> {
         let value = content;
 
-        this.switchStatements.forEach((switchStatement) => {
+        for (const switchStatement of this.switchStatements) {
             const open = switchStatement.switchNode.constructedFrom as DirectiveNode;
 
-            value = StringUtilities.safeReplace(value, switchStatement.virtualSwitchOpen, this.printDirective(open, this.indentLevel(switchStatement.virtualSwitchOpen)));
+            value = StringUtilities.safeReplace(value, switchStatement.virtualSwitchOpen, await this.printDirective(open, this.indentLevel(switchStatement.virtualSwitchOpen)));
             const closeDirective = open.isClosedBy as DirectiveNode;
             value = StringUtilities.safeReplace(value, switchStatement.virtualSwitchClose, closeDirective.sourceContent);
 
-            switchStatement.structures.forEach((structure) => {
+            for (const structure of switchStatement.structures) {
                 const structureDirective = structure.case.head as DirectiveNode;
                 this.removeLines.push(structure.virtualClose);
                 this.removeLines.push(structure.virtualOpen);
                 if (!structure.isLast) {
-                    if (structure.isFirst) {
-                        this.removeLines.push(structure.pairClose);
-                        value = StringUtilities.safeReplace(value, structure.pairOpen, this.printDirective(structureDirective, this.indentLevel(structure.pairOpen)));
-                    } else {
-                        this.removeLines.push(structure.pairClose);
-                        value = StringUtilities.safeReplace(value, structure.pairOpen, this.printDirective(structureDirective, this.indentLevel(structure.pairOpen)));
-                    }
+                    this.removeLines.push(structure.pairClose);
+                    value = StringUtilities.safeReplace(value, structure.pairOpen, await this.printDirective(structureDirective, this.indentLevel(structure.pairOpen)));
                 } else {
-                    value = StringUtilities.safeReplace(value, structure.pairOpen, this.printDirective(structureDirective, this.indentLevel(structure.pairOpen)));
+                    value = StringUtilities.safeReplace(value, structure.pairOpen, await this.printDirective(structureDirective, this.indentLevel(structure.pairOpen)));
                     this.removeLines.push(structure.pairClose);
                 }
-            });
-        });
+            }
+        }
 
         return value;
     }
 
-    private transformProps(content: string): string {
+    private async transformProps(content: string): Promise<string> {
         let value = content;
 
-        this.propDirectives.forEach((directive, slug) => {
+        for (const [slug, directive] of this.propDirectives) {
             const close = this.close(slug),
                 open = this.open(slug);
             this.removeLines.push(close);
@@ -2256,14 +2257,12 @@ ${directive.isClosedBy?.sourceContent}
                         if (this.phpFormatter != null && directive.hasValidPhp()) {
                             let params = directive.getPhpContent().trim();
                             if (params.startsWith('(') && params.endsWith(')')) {
-                                params = params.substring(1);
-                                params = params.substring(0, params.length - 1);
+                                params = params.substring(1, params.length - 1);
                             }
-                            let tResult = this.phpFormatter('<?php ' + params, this.transformOptions, null);
-
+                            let tResult = await this.phpFormatter('<?php ' + params, this.transformOptions, null);
 
                             const arrayParser = new SimpleArrayParser(),
-                                array = arrayParser.parse(StringUtilities.safeReplaceAllInString(tResult, "\n", ' ')),
+                                array = arrayParser.parse(StringUtilities.safeReplaceAllInString(await tResult, "\n", ' ')),
                                 targetIndent = this.indentLevel(open);
 
                             if (arrayParser.getIsAssoc()) {
@@ -2273,7 +2272,7 @@ ${directive.isClosedBy?.sourceContent}
                                     tResult = ArrayPrinter.print(array, this.transformOptions.tabSize, 1);
 
                                     if (targetIndent > 0) {
-                                        tResult = StringUtilities.removeEmptyNewLines(IndentLevel.shiftIndent(tResult, targetIndent, true, this.transformOptions));
+                                        tResult = StringUtilities.removeEmptyNewLines(IndentLevel.shiftIndent(await tResult, targetIndent, true, this.transformOptions));
                                     }
 
                                     content = '@props' + ' '.repeat(this.transformOptions.spacesAfterDirective) + '(' + tResult + ')';
@@ -2281,7 +2280,7 @@ ${directive.isClosedBy?.sourceContent}
                             }
                         }
                     } else {
-                        content = this.printDirective(directive, this.indentLevel(open));
+                        content = await this.printDirective(directive, this.indentLevel(open));
                     }
                 }
             } catch (err) {
@@ -2289,7 +2288,7 @@ ${directive.isClosedBy?.sourceContent}
             }
 
             value = StringUtilities.safeReplace(value, open, content);
-        });
+        }
 
         return value;
     }
@@ -2397,10 +2396,10 @@ ${directive.isClosedBy?.sourceContent}
         return newLines.join("\n");
     }
 
-    private transformDynamicElementConditions(content: string): string {
+    private async transformDynamicElementConditions(content: string): Promise<string> {
         let value = content;
 
-        this.dynamicElementConditionNodes.forEach((condition, slug) => {
+        for (const [slug, condition] of this.dynamicElementConditionNodes) {
             if (condition.startPosition?.line != condition.endPosition?.line) {
                 let formatContent = condition.nodeContent;
 
@@ -2409,9 +2408,9 @@ ${directive.isClosedBy?.sourceContent}
                     setIsFormattingAttributeContent(true);
                     try {
                         if (this.transformOptions.useLaravelPint) {
-                            formatContent = formatBladeStringWithPint(formatContent, this.formattingOptions, this.transformOptions).trim();
+                            formatContent = (await formatBladeStringWithPint(formatContent, this.formattingOptions, this.transformOptions)).trim();
                         } else {
-                            formatContent = formatBladeString(formatContent, this.formattingOptions).trim();
+                            formatContent = (await formatBladeString(formatContent, this.formattingOptions)).trim();
                         }
                     } catch (err) {
                         enableAttributeProcessing();
@@ -2439,7 +2438,8 @@ ${directive.isClosedBy?.sourceContent}
                 value = this.removeTrailingWhitespaceAfterSubstring(value, slug);
                 value = StringUtilities.safeReplaceAllInString(value, slug, condition.nodeContent);
             }
-        });
+        }
+
 
         return value;
     }
@@ -2454,14 +2454,14 @@ ${directive.isClosedBy?.sourceContent}
         return value;
     }
 
-    private transformDirectiveParameters(content: string): string {
+    private async transformDirectiveParameters(content: string): Promise<string> {
         let value = content;
 
-        this.directiveParameters.forEach((param, slug) => {
+        for (const [slug, param] of this.directiveParameters) {
             const paramDirective = param.directive as DirectiveNode;
-
-            value = StringUtilities.safeReplace(value, slug, this.printDirective(paramDirective, this.indentLevel(slug)));
-        });
+            const directiveContent = await this.printDirective(paramDirective, this.indentLevel(slug));
+            value = StringUtilities.safeReplace(value, slug, directiveContent);
+        }
 
         return value;
     }
@@ -2485,22 +2485,14 @@ ${directive.isClosedBy?.sourceContent}
             if (content.includes("\n")) {
                 const relativeIndent = this.indentLevel(slug);
 
-                if (pintUsed) {
-                    content = IndentLevel.shiftIndent(
-                        IndentLevel.removeLeadingWhitespace(content, this.transformOptions.tabSize),
-                        relativeIndent + this.transformOptions.tabSize,
-                        true,
-                        this.transformOptions,
-                        false,
-                        true,
-                    );
-                } else {
-                    content = IndentLevel.shiftParameterContent(
-                        content,
-                        relativeIndent,
-                        this.transformOptions.tabSize
-                    );
-                }
+                content = IndentLevel.shiftIndent(
+                    IndentLevel.removeLeadingWhitespace(content, this.transformOptions.tabSize),
+                    relativeIndent + this.transformOptions.tabSize,
+                    true,
+                    this.transformOptions,
+                    false,
+                    true,
+                );
             }
 
             value = StringUtilities.safeReplace(value, slug, content);
@@ -2509,7 +2501,7 @@ ${directive.isClosedBy?.sourceContent}
         return value;
     }
 
-    private transformEchoParameters(content: string): string {
+    private async transformEchoParameters(content: string): Promise<string> {
         let value = content;
 
         this.commentParameters.forEach((param, slug) => {
@@ -2520,70 +2512,71 @@ ${directive.isClosedBy?.sourceContent}
             }
         });
 
-        this.echoParameters.forEach((param, slug) => {
+        for (const [slug, param] of this.echoParameters) {
             if (param.inlineEcho != null) {
                 const checkContent = param.inlineEcho.content.trim();
-                // Handle case of comments (this shouldn't happen anymore, but will leave it for now.)
+
+                // Handle case of comments
                 if (checkContent.startsWith('{{--') && checkContent.endsWith('--}}')) {
                     let commentContent = checkContent.substring(2, checkContent.length - 2);
                     value = StringUtilities.safeReplace(value, slug, '{{' + commentContent.trim() + '}}');
-                    return;
                 } else if (checkContent.startsWith('{--') && checkContent.endsWith('--}')) {
                     let commentContent = checkContent.substring(3, checkContent.length - 3);
                     value = StringUtilities.safeReplace(value, slug, '{{-- ' + commentContent.trim() + ' --}}');
-                    return;
                 } else if (checkContent.startsWith('--') && checkContent.endsWith('--')) {
                     let commentContent = checkContent.substring(2, checkContent.length - 2);
                     value = StringUtilities.safeReplace(value, slug, '{{-- ' + commentContent.trim() + ' --}}');
-                    return;
+                } else {
+                    value = StringUtilities.safeReplace(value, slug, await EchoPrinter.printEcho(param.inlineEcho, this.transformOptions, this.phpFormatter, 0, this.pintTransformer ?? Transformer.sharedPintTransformer));
                 }
-
-                value = StringUtilities.safeReplace(value, slug, EchoPrinter.printEcho(param.inlineEcho, this.transformOptions, this.phpFormatter, 0, this.pintTransformer ?? Transformer.sharedPintTransformer));
             } else {
                 value = StringUtilities.safeReplace(value, slug, '');
             }
-        });
+        }
 
         return value;
     }
 
-    private transformEmbeddedEcho(content: string): string {
+    private async transformEmbeddedEcho(content: string): Promise<string> {
         let value = content;
 
-        this.embeddedEchos.forEach((echo, slug) => {
+        for (const [slug, echo] of this.embeddedEchos) {
             let indentLevel = this.indentLevel(slug);
 
-            if (indentLevel == 0) {
+            if (indentLevel === 0) {
                 indentLevel = this.transformOptions.tabSize;
             }
-            value = StringUtilities.safeReplace(value, slug, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, indentLevel, this.pintTransformer ?? Transformer.sharedPintTransformer));
-        });
+            const echoContent = await EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, indentLevel, this.pintTransformer ?? Transformer.sharedPintTransformer);
+            value = StringUtilities.safeReplace(value, slug, echoContent);
+        }
 
-        this.dynamicAttributeEchoBlocks.forEach((echo, slug) => {
+        for (const [slug, echo] of this.dynamicAttributeEchoBlocks) {
             let indentLevel = this.indentLevel(slug),
                 targetReplace = `${slug}="${slug}"`;
 
-            if (indentLevel == 0) {
+            if (indentLevel === 0) {
                 indentLevel = this.transformOptions.tabSize;
             }
-            value = StringUtilities.safeReplace(value, targetReplace, EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, indentLevel, this.pintTransformer ?? Transformer.sharedPintTransformer));
-        });
+            const echoContent = await EchoPrinter.printEcho(echo, this.transformOptions, this.phpFormatter, indentLevel, this.pintTransformer ?? Transformer.sharedPintTransformer);
+            value = StringUtilities.safeReplace(value, targetReplace, echoContent);
+        }
 
         return value;
     }
 
-    private transformEmbeddedDirectives(content: string): string {
+    private async transformEmbeddedDirectives(content: string): Promise<string> {
         let value = content;
 
-        this.embeddedDirectives.forEach((directive, slug) => {
+        for (const [slug, directive] of this.embeddedDirectives) {
             let targetIndent = this.indentLevel(slug);
 
-            if (targetIndent == 0 && directive.sourceContent.includes("\n")) {
+            if (targetIndent === 0 && directive.sourceContent.includes("\n")) {
                 targetIndent = IndentLevel.relativeIndentLevel(slug, value) + (2 * this.transformOptions.tabSize);
             }
 
-            value = StringUtilities.safeReplace(value, slug, this.printDirective(directive, targetIndent));
-        });
+            const directiveContent = await this.printDirective(directive, targetIndent);
+            value = StringUtilities.safeReplace(value, slug, directiveContent);
+        }
 
         return value;
     }
@@ -2750,18 +2743,18 @@ ${directive.isClosedBy?.sourceContent}
         return result;
     }
 
-    private transformRemovedAttibutes(content: string): string {
+    private async transformRemovedAttibutes(content: string): Promise<string> {
         let result = content;
 
-        this.removedAttributes.forEach((attribute, slug) => {
-            const attributeResult = formatExtractedScript(attribute, this.transformOptions, slug, result, this, this.doc);
-            result = StringUtilities.safeReplace(result, '"' + slug + '"', attributeResult)
-        });
+        for (const [slug, attribute] of this.removedAttributes) {
+            const attributeResult = await formatExtractedScript(attribute, this.transformOptions, slug, result, this, this.doc);
+            result = StringUtilities.safeReplace(result, '"' + slug + '"', attributeResult);
+        }
 
         return result;
     }
 
-    fromStructure(content: string) {
+    async fromStructure(content: string) {
         if (this.didPintFail) {
             if (this.shadowDoc != null) {
                 return this.shadowDoc.getContent();
@@ -2776,15 +2769,15 @@ ${directive.isClosedBy?.sourceContent}
 
         // Dynamic blocks might be hiding some attributes. We need to restore
         // those first before transforming the removed attributes safely.
-        let results = this.transformDynamicElementConditions(reflowedContent);
-        results = this.transformDynamicEcho(results);
-        results = this.transformDynamicElementForElse(results);
-        results = this.transformDynamicElementSwitch(results);
-        results = this.transformDynamicDirectives(results);
-        results = this.transformHtmlTagDirectives(results);
-        results = this.transformHtmlSwitchStatements(results);
+        let results = await this.transformDynamicElementConditions(reflowedContent);
+        results = await this.transformDynamicEcho(results);
+        results = await this.transformDynamicElementForElse(results);
+        results = await this.transformDynamicElementSwitch(results);
+        results = await this.transformDynamicDirectives(results);
+        results = await this.transformHtmlTagDirectives(results);
+        results = await this.transformHtmlSwitchStatements(results);
 
-        results = this.transformRemovedAttibutes(results);
+        results = await this.transformRemovedAttibutes(results);
 
         if (this.parentTransformer == null && VoidHtmlTagsManager.voidTagMapping.size > 0) {
             VoidHtmlTagsManager.voidTagMapping.forEach((htmlTag, slug) => {
@@ -2792,7 +2785,7 @@ ${directive.isClosedBy?.sourceContent}
             });
         }
 
-        return this.transformStructures(results);
+        return await this.transformStructures(results);
     }
 
     public containsRemovedAttributes(content: string): boolean {
@@ -2813,36 +2806,36 @@ ${directive.isClosedBy?.sourceContent}
         return false;
     }
 
-    transformStructures(content: string) {
+    async transformStructures(content: string) {
         let results = content;
 
-        results = this.transformInlineDirectives(results);
-        results = this.transformContentDirectives(results);
-        results = this.transformDynamicEcho(results);
-        results = this.transformPairedDirectives(results);
-        results = this.transformForElseWithEmpty(results);
-        results = this.transformForElseWithNoEmpty(results);
+        results = await this.transformInlineDirectives(results);
+        results = await this.transformContentDirectives(results);
+        results = await this.transformDynamicEcho(results);
+        results = await this.transformPairedDirectives(results);
+        results = await this.transformForElseWithEmpty(results);
+        results = await this.transformForElseWithNoEmpty(results);
         results = this.transformInlineLiterals(results);
         results = this.transformDynamicElementForElse(results);
-        results = this.transformInlineEcho(results);
-        results = this.transformConditions(results);
-        results = this.transformDynamicElementConditions(results);
-        results = this.transformSwitchStatements(results);
+        results = await this.transformInlineEcho(results);
+        results = await this.transformConditions(results);
+        results = await this.transformDynamicElementConditions(results);
+        results = await this.transformSwitchStatements(results);
         results = this.transformDynamicElementSwitch(results);
         results = this.transformBreaks(results);
-        results = this.transformProps(results);
+        results = await this.transformProps(results);
         results = this.transformComments(results);
         results = this.transformVirtualComments(results);
-        results = this.transformDirectiveParameters(results);
+        results = await this.transformDirectiveParameters(results);
         results = this.transformExpressionParameters(results);
-        results = this.transformEchoParameters(results);
-        results = this.transformDynamicDirectives(results);
+        results = await this.transformEchoParameters(results);
+        results = await this.transformDynamicDirectives(results);
         results = this.cleanVirtualStructures(results);
         results = this.removeVirtualStructures(results);
-        results = this.transformEmbeddedEcho(results);
-        results = this.transformEmbeddedDirectives(results);
+        results = await this.transformEmbeddedEcho(results);
+        results = await this.transformEmbeddedDirectives(results);
         results = this.transformExtractedDocuments(results);
-        results = this.transformPhpBlock(results);
+        results = await this.transformPhpBlock(results);
         results = this.transformComponentSlots(results);
 
         if (this.ignoredLiteralBlocks.size > 0) {

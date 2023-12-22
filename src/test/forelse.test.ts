@@ -1,7 +1,7 @@
-import assert = require('assert');
-import { BladeDocument } from '../document/bladeDocument';
-import { BladeEchoNode, ChildDocument, DirectiveNode, ForElseNode, LiteralNode } from '../nodes/nodes';
-import { assertCount, assertInstanceOf, assertLiteralContent, assertNotNull, assertNull } from './testUtils/assertions';
+import assert from 'assert';
+import { BladeDocument } from '../document/bladeDocument.js';
+import { BladeEchoNode, ChildDocument, DirectiveNode, ForElseNode, LiteralNode } from '../nodes/nodes.js';
+import { assertCount, assertInstanceOf, assertLiteralContent, assertNotNull, assertNull } from './testUtils/assertions.js';
 
 suite('For Else Nodes', () => {
     test('it can parse forelse with empty', () => {

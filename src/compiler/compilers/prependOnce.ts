@@ -1,7 +1,7 @@
-import { AbstractNode, DirectiveNode } from '../../nodes/nodes';
-import { StringSplitter } from '../../parser/stringSplitter';
-import { DirectiveIdResolver } from '../directiveIdResolver';
-import { NodeCompiler } from '../nodeCompiler';
+import { AbstractNode, DirectiveNode } from '../../nodes/nodes.js';
+import { StringSplitter } from '../../parser/stringSplitter.js';
+import { DirectiveIdResolver } from '../directiveIdResolver.js';
+import { NodeCompiler } from '../nodeCompiler.js';
 
 export class PrependOnceCompiler implements NodeCompiler {
     private idResolver: DirectiveIdResolver;

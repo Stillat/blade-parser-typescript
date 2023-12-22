@@ -1,8 +1,8 @@
 import assert from 'assert';
-import { formatBladeString } from '../formatting/prettier/utils';
+import { formatBladeString } from '../formatting/prettier/utils.js';
 
 suite('Formatting Error Recovery', () => {
-    test('it can recover from invalid strings when parsing directive arguments', () => {
+    test('it can recover from invalid strings when parsing directive arguments', async () => {
         const input = `
 <div>
 
@@ -23,10 +23,10 @@ suite('Formatting Error Recovery', () => {
 ))
 </div>
 `;
-        assert.strictEqual(formatBladeString(input), expected);
+        assert.strictEqual(await formatBladeString(input), expected);
     });
 
-    test('it can recover from improperly closed directive arguments', () => {
+    test('it can recover from improperly closed directive arguments', async () => {
         // The output isn't great, but it won't delete things at least.
         const input = `
 <div><div>
@@ -50,6 +50,6 @@ suite('Formatting Error Recovery', () => {
     </div>
 </div>
 `;
-        assert.strictEqual(formatBladeString(input), expected);
+        assert.strictEqual(await formatBladeString(input), expected);
     });
 });

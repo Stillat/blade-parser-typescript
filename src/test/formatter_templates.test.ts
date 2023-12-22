@@ -1,8 +1,8 @@
 import assert from 'assert';
-import { formatBladeString } from '../formatting/prettier/utils';
+import { formatBladeString } from '../formatting/prettier/utils.js';
 
 suite('General Template Formatting', () => {
-    test('it can format strangely indented files', () => {
+    test('it can format strangely indented files', async () => {
         const template = `<!doctype html>
 <html lang="{{ app()->getLocale() }}">
     <head>
@@ -58,10 +58,10 @@ suite('General Template Formatting', () => {
     </body>
 </html>
 `
-        assert.strictEqual(formatBladeString(template), out);
+        assert.strictEqual(await formatBladeString(template), out);
     });
 
-    test('it indents sections and content with ambiguous section start', () => {
+    test('it indents sections and content with ambiguous section start', async () => {
         const template = `@extends('layouts.master')
 
 @section('title', 'About Us')
@@ -88,10 +88,10 @@ suite('General Template Formatting', () => {
     @include("partials.team")
 @endsection
 `;
-        assert.strictEqual(formatBladeString(template), out);
+        assert.strictEqual(await formatBladeString(template), out);
     });
 
-    test('it indents sections conditions and loops', () => {
+    test('it indents sections conditions and loops', async () => {
         const template = `@extends('layouts.master')
 
 @section('title', 'User List')
@@ -127,10 +127,10 @@ suite('General Template Formatting', () => {
     @endif
 @endsection
 `;
-        assert.strictEqual(formatBladeString(template), out);
+        assert.strictEqual(await formatBladeString(template), out);
     });
 
-    test('it indents form fields inside sections', () => {
+    test('it indents form fields inside sections', async () => {
         const template = `@extends('layouts.master')
 
 @section('title', 'Contact Us')
@@ -176,10 +176,10 @@ suite('General Template Formatting', () => {
     </form>
 @endsection
 `;
-        assert.strictEqual(formatBladeString(template), out);
+        assert.strictEqual(await formatBladeString(template), out);
     });
 
-    test('it indents nested loops', () => {
+    test('it indents nested loops', async () => {
         const template = `@extends('layouts.master')
 
 @section('title', 'Product Categories')
@@ -223,10 +223,10 @@ suite('General Template Formatting', () => {
     @endforeach
 @endsection
 `;
-        assert.strictEqual(formatBladeString(template), out);
+        assert.strictEqual(await formatBladeString(template), out);
     });
 
-    test('it indents nested conditions', () => {
+    test('it indents nested conditions', async () => {
         const template = `@extends('layouts.master')
 
 @section('title', 'Dashboard')
@@ -275,10 +275,10 @@ suite('General Template Formatting', () => {
     @endif
 @endsection
 `;
-        assert.strictEqual(formatBladeString(template), out);
+        assert.strictEqual(await formatBladeString(template), out);
     });
     
-    test('it indents conditions missing content', () => {
+    test('it indents conditions missing content', async () => {
         const template = `@extends('layouts.master')
 
         @section('title', 'Dashboard')
@@ -309,10 +309,10 @@ suite('General Template Formatting', () => {
     @endif
 @endsection
 `;
-        assert.strictEqual(formatBladeString(template), out);
+        assert.strictEqual(await formatBladeString(template), out);
     });
 
-    test('it indents switch statements', () => {
+    test('it indents switch statements', async () => {
         const template = `@extends('layouts.master')
 
         @section('title', 'Notification')
@@ -362,12 +362,12 @@ suite('General Template Formatting', () => {
     @endswitch
 @endsection
 `;
-        assert.strictEqual(formatBladeString(template), out);
+        assert.strictEqual(await formatBladeString(template), out);
     });
 
-    test('it does not eat email addresses', () => {
+    test('it does not eat email addresses', async () => {
         let input = `someone@example.com`;
-        assert.strictEqual(formatBladeString(input).trim(), input);
+        assert.strictEqual((await formatBladeString(input)).trim(), input);
 
         input = `<a 
 
@@ -381,30 +381,30 @@ suite('General Template Formatting', () => {
     @endsomeone
 </a>
 `;
-        assert.strictEqual(formatBladeString(input), out);
+        assert.strictEqual(await formatBladeString(input), out);
     });
 
-    test('it does not eat email addresses 2', () => {
+    test('it does not eat email addresses 2', async () => {
         const template =  `<a>
         test@example.com
         </a>`;
         const expected = `<a>test@example.com</a>
 `;
-        assert.strictEqual(formatBladeString(template), expected);
-        assert.strictEqual(formatBladeString(expected), expected);
+        assert.strictEqual(await formatBladeString(template), expected);
+        assert.strictEqual(await formatBladeString(expected), expected);
     });
 
-    test('it preserves inline echos as text', () => {
+    test('it preserves inline echos as text', async () => {
         const input = `<span>
     {{ 'foo' }}:
 </span>`;
         const output = `<span>{{ "foo" }}:</span>
 `;
-        assert.strictEqual(formatBladeString(input), output);
-        assert.strictEqual(formatBladeString(output), output);
+        assert.strictEqual(await formatBladeString(input), output);
+        assert.strictEqual(await formatBladeString(output), output);
     });
 
-    test('it unwraps really long echos', () => {
+    test('it unwraps really long echos', async () => {
         const template = `                  <div><div><div>  <x-something::component-name.here :action="$hintAction" :color="$hintColor" :icon="$hintIcon">
         {{ filled($hint) ? ($hint instanceof \\Illuminate\\Support\\HtmlString ? $hint : \\Illuminate\\Support\\Str::of($hint)->markdown()->sanitizeHtml()->toHtmlString()) : null }}
         </x-something::component-name.here></div></div></div>`;
@@ -422,10 +422,10 @@ suite('General Template Formatting', () => {
     </div>
 </div>
 `;
-        assert.strictEqual(formatBladeString(template), output);
+        assert.strictEqual(await formatBladeString(template), output);
     });
 
-    test('it formats email addresses inside simple if statements', () => {
+    test('it formats email addresses inside simple if statements', async () => {
         const template = `
 @if (true)
 test@example.com
@@ -436,6 +436,88 @@ test@example.com
     test@example.com
 @endif
 `;
-        assert.strictEqual(formatBladeString(template), expected);
+        assert.strictEqual(await formatBladeString(template), expected);
+    });
+
+    test('excessive indentation is not added when not using pint', async () => {
+        const input = `
+<x-filament::grid
+    :x-on:form-validation-error.window="
+        $isRoot ? ('if ($event.detail.livewireId !== ' . Js::from($this->getId()) . ') {
+            return
+        }
+
+        $nextTick(() => {
+            error = $el.querySelector(\\'[data-validation-error]\\')
+
+            if (! error) {
+                return
+            }
+
+            elementToExpand = error
+
+            while (elementToExpand) {
+                elementToExpand.dispatchEvent(new CustomEvent(\\'expand\\'))
+
+                elementToExpand = elementToExpand.parentNode
+            }
+
+            setTimeout(
+                () =>
+                    error.closest(\\'[data-field-wrapper]\\').scrollIntoView({
+                        behavior: \\'smooth\\',
+                        block: \\'start\\',
+                        inline: \\'start\\',
+                    }),
+                200,
+            )
+        })') : null
+    "
+>
+    {{-- --}}
+</x-filament::grid>
+
+`;
+        const out = `<x-filament::grid
+    :x-on:form-validation-error.window="
+        $isRoot ? ('if ($event.detail.livewireId !== ' . Js::from($this->getId()) . ') {
+            return
+        }
+
+        $nextTick(() => {
+            error = $el.querySelector(\\'[data-validation-error]\\')
+
+            if (! error) {
+                return
+            }
+
+            elementToExpand = error
+
+            while (elementToExpand) {
+                elementToExpand.dispatchEvent(new CustomEvent(\\'expand\\'))
+
+                elementToExpand = elementToExpand.parentNode
+            }
+
+            setTimeout(
+                () =>
+                    error.closest(\\'[data-field-wrapper]\\').scrollIntoView({
+                        behavior: \\'smooth\\',
+                        block: \\'start\\',
+                        inline: \\'start\\',
+                    }),
+                200,
+            )
+        })') : null
+    "
+>
+    {{--  --}}
+</x-filament::grid>
+`;
+        const f1 = await formatBladeString(input),
+            f2 = await formatBladeString(f1);
+
+        assert.strictEqual(f1, out);
+        assert.strictEqual(f2, out);
     });
 });

@@ -1,20 +1,25 @@
 import * as prettier from 'prettier';
-import { BladeDocument } from '../../document/bladeDocument';
-import { TransformOptions } from '../../document/transformOptions';
-import { ParserOptions } from '../../parser/parserOptions';
-import { PhpParserPhpValidator } from '../../parser/php/phpParserPhpValidator';
-import { FormattingOptions } from '../formattingOptions';
-import { getEnvSettings, getPrettierFilePath } from '../optionDiscovery';
-import { PrettierDocumentFormatter } from './prettierDocumentFormatter';
-import { getHtmlOptions, getOptionsAdjuster, setOptions } from './utils';
-import { ClassStringEmulation } from '../classStringEmulation';
-import { AttributeRangeRemover, canProcessAttributes } from '../../document/attributeRangeRemover';
-import { FragmentsParser } from '../../parser/fragmentsParser';
-import { IExtractedAttribute } from '../../parser/extractedAttribute';
-import { ClassStringRuleEngine } from '../classStringsConfig';
-import { ClassEmulator } from '../../parser/classEmulator';
-import { BladeComponentNode } from '../../nodes/nodes';
-import { VoidHtmlTagsManager } from './voidHtmlTagsManager';
+import { BladeDocument } from '../../document/bladeDocument.js';
+import { TransformOptions } from '../../document/transformOptions.js';
+import { ParserOptions } from '../../parser/parserOptions.js';
+import { PhpParserPhpValidator } from '../../parser/php/phpParserPhpValidator.js';
+import { FormattingOptions } from '../formattingOptions.js';
+import { getEnvSettings, getPrettierFilePath } from '../optionDiscovery.js';
+import { PrettierDocumentFormatter } from './prettierDocumentFormatter.js';
+import { getHtmlOptions, getOptionsAdjuster, setOptions } from './utils.js';
+import { ClassStringEmulation } from '../classStringEmulation.js';
+import { AttributeRangeRemover, canProcessAttributes } from '../../document/attributeRangeRemover.js';
+import { FragmentsParser } from '../../parser/fragmentsParser.js';
+import { IExtractedAttribute } from '../../parser/extractedAttribute.js';
+import { ClassStringRuleEngine } from '../classStringsConfig.js';
+import { ClassEmulator } from '../../parser/classEmulator.js';
+import { BladeComponentNode } from '../../nodes/nodes.js';
+import { VoidHtmlTagsManager } from './voidHtmlTagsManager.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 let prettierOptions: prettier.ParserOptions,
     transformOptions: TransformOptions,
@@ -26,7 +31,8 @@ interface IAttributeRemovedDocument {
     shadowDocument: BladeDocument,
     attributeMap: Map<string, IExtractedAttribute>,
     canSafelyContinue: boolean,
-    originalText: string
+    originalText: string,
+    formattedDocument: string,
 }
 
 const plugin: prettier.Plugin = {
@@ -40,7 +46,7 @@ const plugin: prettier.Plugin = {
     ],
     parsers: {
         blade: {
-            parse: function (text: string, _, options) {
+            parse: async function (text: string, options) {
                 const overridePath = getPrettierFilePath(),
                     adjuster = getOptionsAdjuster();
 
@@ -123,39 +129,38 @@ const plugin: prettier.Plugin = {
                 if (classConfig.enabled) {
                     const classStringEmulation = new ClassStringEmulation(classConfig);
 
-                    prettierText = classStringEmulation
+                    const setupTransformer = classStringEmulation
                         .withParserOptions(parserOptions)
-                        .withPhpValidator(phpValidator)
-                        .transform(prettierText);
+                        .withPhpValidator(phpValidator);
+                    prettierText = await setupTransformer.transform(prettierText);
 
-                    shadowText = classStringEmulation
+                    shadowText = await classStringEmulation
                         .withParserOptions(parserOptions)
                         .withPhpValidator(phpValidator)
                         .transform(shadowText);
 
                     if (attributeMap.size > 0) {
-                        attributeMap.forEach((attribute) => {
+                        for (const attribute of attributeMap) {
                             try {
-
                                 const classStringRuleEngine = new ClassStringRuleEngine(classConfig),
                                     jsEmulator = new ClassEmulator(classStringRuleEngine);
 
                                 jsEmulator.setAllowedMethodNames(classConfig.allowedMethodNames);
                                 jsEmulator.setExcludedLanguageStructures(classConfig.ignoredLanguageStructures);
 
-                                let transformContent = attribute.content.substring(1, attribute.content.length - 1),
-                                    newTransformContent = jsEmulator.emulateJavaScriptString(transformContent);
+                                let transformContent = attribute[1].content.substring(1, attribute[1].content.length - 1),
+                                    newTransformContent = await jsEmulator.emulateJavaScriptString(transformContent);
 
-                                if (transformContent == newTransformContent && !jsEmulator.getFoundAnyStrings()) {
-                                    attribute.content = jsEmulator.emulateJavaScriptString(attribute.content);
+                                if (transformContent === newTransformContent && !jsEmulator.getFoundAnyStrings()) {
+                                    attribute[1].content = await jsEmulator.emulateJavaScriptString(attribute[1].content);
                                 } else {
-                                    attribute.content = '"' + transformContent + '"';
+                                    attribute[1].content = '"' + transformContent + '"';
                                 }
-
                             } catch (err) {
-                                return;
+                                // Handle the error or continue to the next iteration
                             }
-                        });
+                        }
+
                     }
                 }
 
@@ -177,15 +182,34 @@ const plugin: prettier.Plugin = {
                 document.loadString(prettierText);
                 shadow.loadString(shadowText);
 
-                const result: IAttributeRemovedDocument = {
+                const formatResult: IAttributeRemovedDocument = {
                     doc: document,
                     attributeMap: attributeMap,
                     shadowDocument: shadow,
                     canSafelyContinue: canSafelyContinue,
-                    originalText: text
+                    originalText: text,
+                    formattedDocument: text,
                 };
 
-                return result;
+                const formatter = new PrettierDocumentFormatter(prettierOptions, transformOptions);
+
+                if (!canSafelyContinue) {
+                    formatResult.formattedDocument = text;
+
+                    return formatResult;
+                }
+
+                var result = await formatter
+                    .withRemovedAttributes(attributeMap)
+                    .formatDocument(document, shadow);
+
+                const adjustHtmlDoctype = /^(\s*)<!doctype html>/im;
+
+                result = result.replace(adjustHtmlDoctype, '$1<!DOCTYPE html>');
+
+                formatResult.formattedDocument = result;
+
+                return formatResult;
             },
             locStart: () => 0,
             locEnd: () => 0,
@@ -194,17 +218,10 @@ const plugin: prettier.Plugin = {
     },
     printers: {
         blade: {
-            print(path: prettier.AstPath) {
-                const doc = path.stack[0] as IAttributeRemovedDocument,
-                    formatter = new PrettierDocumentFormatter(prettierOptions, transformOptions);
+            print: function (path: prettier.AstPath) {
+                const doc = path.stack[0] as IAttributeRemovedDocument;
 
-                if (!doc.canSafelyContinue) {
-                    return doc.originalText;
-                }
-
-                return formatter
-                    .withRemovedAttributes(doc.attributeMap)
-                    .formatDocument(doc.doc, doc.shadowDocument);
+                return doc.formattedDocument;
             }
         }
     },
@@ -213,4 +230,4 @@ const plugin: prettier.Plugin = {
     },
 };
 
-export = plugin;
+export default plugin;

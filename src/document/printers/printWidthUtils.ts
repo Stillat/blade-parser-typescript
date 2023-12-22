@@ -1,4 +1,4 @@
-import { StringUtilities } from '../../utilities/stringUtilities';
+import { StringUtilities } from '../../utilities/stringUtilities.js';
 
 export function getPrintWidth(content:string, defaultWidth:number): number {
     if (content.includes("\n") && (
