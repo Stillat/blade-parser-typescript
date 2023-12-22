@@ -93,6 +93,8 @@ export function getEnvSettings(startingDirectory: string): FormattingOptions {
 
                 if (fs.existsSync(vendorPath)) {
                     bladeFormattingConfig.pintCommand = `php ${vendorPath} {file}`;
+                } else {
+                    bladeFormattingConfig.pintCommand = 'pint {file}';
                 }
             }
 

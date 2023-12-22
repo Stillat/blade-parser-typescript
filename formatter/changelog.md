@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.0
+
+- Prettier v3 support (#69)
+- Improved relative indentation of attribute content when not using Pint
+- Improved graceful fallback of Pint command when not running in a full Laravel project
+
 ## 1.6.19
 
 - Corrects an issue when `{{-- format-ignore-start --}}{{-- format-ingore-end --}}` that would cause some nodes to be internally eaten

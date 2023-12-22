@@ -2,6 +2,11 @@
 
 A list of what's changed, and more.
 
+## 2.0.0
+
+- Moved formatter specific dependencies to `devDependencies`
+- Compatibility with ECMAScript modules
+
 ## 1.2.1
 
 - Improves parsing of Blade echo blocks that contain PHP comments (#79)
