@@ -762,12 +762,16 @@ export class PintTransformer {
             fs.writeFileSync(fileName, transformResults, { encoding: 'utf8' });
 
             const command = this.pintCommand.replace('{file}', `"${fileName}"`) + ` --config "${PintTransformer.processConfigPath}"`;
-
             baseFileName = path.basename(fileName);
-            output = execSync(command).toString();
-            this.cleanupFiles.push(fileName);
 
-            pintResults = fs.readFileSync(fileName, { encoding: 'utf8' });
+            try {
+                output = execSync(command).toString();
+                pintResults = fs.readFileSync(fileName, { encoding: 'utf8' });
+            } catch (err) {
+                throw err;
+            } finally {
+                this.cleanupFiles.push(fileName);
+            }
         }
 
         if (this.outputPintResults && typeof this.templateFile !== 'undefined' && this.templateFile != null) {
