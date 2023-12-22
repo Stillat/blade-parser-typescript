@@ -1,5 +1,4 @@
 {
-	"exclude": [
   "compilerOptions": {
     "target": "es2020",
     "lib": [
