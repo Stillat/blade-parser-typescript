@@ -38,6 +38,7 @@ export class PintTransformer {
     private cleanupFiles: string[] = [];
     private cleanupDirs: string[] = [];
     private didFail: boolean = false;
+    private pintCacheEnabled: boolean = true;
     private defaultConfig: object = {
         "preset": "laravel",
         "rules": {
@@ -54,7 +55,8 @@ export class PintTransformer {
         }
     };
 
-    constructor(tmpFilePath: string, cacheDir: string, pintCommand: string, pintConfigurationPath: string) {
+    constructor(tmpFilePath: string, cacheDir: string, pintCommand: string, pintConfigurationPath: string, pintCacheEnabled: boolean) {
+        this.pintCacheEnabled = pintCacheEnabled;
         this.tmpDir = tmpFilePath;
         this.cacheDir = cacheDir;
 
@@ -548,7 +550,7 @@ export class PintTransformer {
         }
 
         this.wasCached = false;
-        if (this.cache.canCache(this.templateFile)) {
+        if (this.pintCacheEnabled && this.cache.canCache(this.templateFile)) {
             if (this.cache.has(this.templateFile)) {
                 try {
                     const restoredCache = this.cache.get(this.templateFile);
@@ -632,7 +634,7 @@ export class PintTransformer {
             curIndex = -1;
         }
 
-        if (this.cache.canCache(this.templateFile)) {
+        if (this.pintCacheEnabled && this.cache.canCache(this.templateFile)) {
             this.cache.put(this.templateFile, this.resultMapping, this.contentMapping);
         }
 

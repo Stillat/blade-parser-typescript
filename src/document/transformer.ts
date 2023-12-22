@@ -1659,7 +1659,8 @@ export class Transformer {
                     this.transformOptions.pintTempDirectory,
                     this.transformOptions.pintCacheDirectory,
                     this.transformOptions.pintCommand,
-                    this.transformOptions.pintConfigPath
+                    this.transformOptions.pintConfigPath,
+                    this.transformOptions.pintCacheEnabled
                 );
                 Transformer.sharedPintTransformer = this.pintTransformer;
                 this.pintTransformer.setTemplateFilePath(this.filePath);
