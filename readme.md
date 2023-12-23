@@ -9,10 +9,10 @@ What this project is:
 * A Blade static analysis library
 * A Blade error/diagnostics library
 * An advanced Blade document transformation library
+* A Blade Formatter for Prettier (more info here)
 
 What this project is not:
 
-* This project (when used by itself) is *not* a formatter. However, it can be used to quickly write a formatter. If you are looking for a formatter built from this project, you may checkout [prettier-plugin-blade](https://www.npmjs.com/package/prettier-plugin-blade).
 * A view engine. It will not be able to actually render your Blade templates
 
 ## Installing
