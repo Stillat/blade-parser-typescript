@@ -105,7 +105,7 @@ The Blade formatter will utilize Prettier's HTML parser when formatting your Bla
 
 When the Blade formatter invokes Prettier's HTML formatter, the PHP and Blade code will be safely removed from the document to prevent the Blade and PHP content from being mangled by other front-end plugins with similar syntax. Once the layout of the template has been established by the HTML formatter using your project's configuration, the layout engine will start assembling the Blade and PHP content (utilizing the built-in PHP formatter or Laravel Pint, if configured).
 
-## Prettier 2 Configuration
+## Prettier 2 Configuration: Could Not Resolve Module
 
 If you continuously receive errors like "could not resolve module prettier-plugin-blade", the following updates to a project's `.prettierrc` have proved successful:
 
