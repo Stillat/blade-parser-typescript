@@ -6,7 +6,10 @@ If you'd like to view the source, report issues, etc. you can do so on the forma
 
 [https://github.com/stillat/blade-parser-typescript](https://github.com/stillat/blade-parser-typescript)
 
-> **Important**: This plugin currently only supports Prettier v2.
+For additional documentation, consider checking out the following resources:
+
+* [Prettier Plugin Installation](https://stillat.com/blade-parser/v1/installing-prettier-plugin)
+* [Formatter Configuration and Usage](https://stillat.com/blade-parser/v1/formatting-configuration)
 
 ## Installation
 
