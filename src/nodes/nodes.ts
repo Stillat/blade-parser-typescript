@@ -413,7 +413,7 @@ export class DirectiveNode extends AbstractNode {
     }
 
     getPhpContent() {
-        if (this.directiveName.toLowerCase() == 'forelse') {
+        if (this.directiveName.toLowerCase().match(/^for(each|else)$/)) {
             return 'foreach (' + this.getInnerContent() + '):endforeach;';
         }
 

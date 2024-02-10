@@ -174,7 +174,7 @@ export class DirectivePrinter {
                         }
                     }
 
-                    if (directive.directiveName.toLowerCase() == 'forelse') {
+                    if (directive.directiveName.match(/^for(each|else)$/)) {
                         tResult = tResult.substring(9);
                         tResult = tResult.substring(0, tResult.length - 14);
                     }

@@ -2,6 +2,21 @@ import assert from 'assert';
 import { formatBladeString } from '../formatting/prettier/utils.js';
 
 suite('Forelse Formatting', () => {
+    test('it formats foreach', async () => {
+        assert.strictEqual(
+            (await formatBladeString(`<div>
+        @foreach (   $users   as   $id   =>    $user    )
+<li>{{ $user->name }}</li>
+@endforeach
+            </div>`)).trim(),
+            `<div>
+    @foreach ($users as $id => $user)
+        <li>{{ $user->name }}</li>
+    @endforeach
+</div>`
+        );
+    });
+
     test('it indents forelse', async () => {
         assert.strictEqual(
             (await formatBladeString(`<div>
