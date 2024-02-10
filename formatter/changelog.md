@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.0
+
+- Adds general support for formatting directives with multiple parameters (#89)
+
 ## 2.0.0
 
 - Prettier v3 support (#69)

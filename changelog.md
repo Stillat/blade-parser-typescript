@@ -2,6 +2,10 @@
 
 A list of what's changed, and more.
 
+## 2.0.1
+
+- Calling `getPhpContent()` will take into account the directive's argument count
+
 ## 2.0.0
 
 - Moved formatter specific dependencies to `devDependencies`
