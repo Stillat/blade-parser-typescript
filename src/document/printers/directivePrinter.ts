@@ -179,6 +179,13 @@ export class DirectivePrinter {
                         tResult = tResult.substring(0, tResult.length - 14);
                     }
 
+                    if (
+                        directive.directiveName.toLowerCase().startsWith('include') ||
+                        directive.directiveName.toLowerCase() === 'each'
+                    ) {
+                        tResult = tResult.substring(1, tResult.length - 2);
+                    }
+
                     if (GeneralSyntaxReflow.couldReflow(tResult)) {
                         tResult = GeneralSyntaxReflow.instance.reflow(tResult);
                     }

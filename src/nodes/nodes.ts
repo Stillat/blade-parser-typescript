@@ -417,6 +417,13 @@ export class DirectiveNode extends AbstractNode {
             return 'foreach (' + this.getInnerContent() + '):endforeach;';
         }
 
+        if (
+            this.directiveName.toLowerCase().startsWith('include') ||
+            this.directiveName.toLowerCase() === 'each'
+        ) {
+            return `[${this.getInnerContent()}];`;
+        }
+
         return this.directiveParameters;
     }
 
