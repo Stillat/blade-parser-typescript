@@ -418,8 +418,12 @@ export class DirectiveNode extends AbstractNode {
         }
 
         if (
-            this.directiveName.toLowerCase().startsWith('include') ||
-            this.directiveName.toLowerCase() === 'each'
+            this
+              .directiveName
+              .toLowerCase()
+              .match(
+                  /(^(include|section))|(^(each|extends)$)/
+              )
         ) {
             return `[${this.getInnerContent()}];`;
         }

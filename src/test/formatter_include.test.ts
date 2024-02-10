@@ -40,6 +40,20 @@ suite('@include Formatting', () => {
     );
   });
 
+  test('it formats @section directives with multiple parameters', async () => {
+    assert.strictEqual(
+      (await formatBladeString('@section( "title" ,  "Page Title" )')).trim(),
+      '@section("title", "Page Title")',
+    );
+  });
+
+  test('it formats @extends directives with view parameters', async () => {
+    assert.strictEqual(
+      (await formatBladeString('@extends("layouts.app" ,  [ "view"   =>"data"   ] )')).trim(),
+      '@extends("layouts.app", ["view" => "data"])',
+    );
+  });
+
   test('it formats @include directives with many view  parameters', async () => {
     assert.strictEqual(
       (

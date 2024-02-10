@@ -180,8 +180,12 @@ export class DirectivePrinter {
                     }
 
                     if (
-                        directive.directiveName.toLowerCase().startsWith('include') ||
-                        directive.directiveName.toLowerCase() === 'each'
+                        directive
+                            .directiveName
+                            .toLowerCase()
+                            .match(
+                                /(^(include|section))|(^(each|extends)$)/
+                            )
                     ) {
                         tResult = tResult.substring(1, tResult.length - 2);
                     }
@@ -256,4 +260,3 @@ function removeContentLines(content: string): string {
 
     return newContent;
 }
-
