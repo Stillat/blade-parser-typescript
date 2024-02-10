@@ -37,7 +37,7 @@ suite('General Template Formatting', () => {
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        <title>@yield('title', 'Default Title')</title>
+        <title>@yield("title", "Default Title")</title>
 
         <!-- Styles -->
         <link href="{{ asset("css/app.css") }}" rel="stylesheet" />
@@ -75,7 +75,7 @@ suite('General Template Formatting', () => {
 @endsection`;
         const out = `@extends("layouts.master")
 
-@section('title', 'About Us')
+@section("title", "About Us")
 
 @section("content")
     <h1>About Us</h1>
@@ -111,7 +111,7 @@ suite('General Template Formatting', () => {
 @endsection`;
         const out = `@extends("layouts.master")
 
-@section('title', 'User List')
+@section("title", "User List")
 
 @section("content")
     <h1>User List</h1>
@@ -155,7 +155,7 @@ suite('General Template Formatting', () => {
 @endsection`
         const out = `@extends("layouts.master")
 
-@section('title', 'Contact Us')
+@section("title", "Contact Us")
 
 @section("content")
     <h1>Contact Us</h1>
@@ -203,7 +203,7 @@ suite('General Template Formatting', () => {
 @endsection`;
         const out = `@extends("layouts.master")
 
-@section('title', 'Product Categories')
+@section("title", "Product Categories")
 
 @section("content")
     <h1>Product Categories</h1>
@@ -249,7 +249,7 @@ suite('General Template Formatting', () => {
 
         const out = `@extends("layouts.master")
 
-@section('title', 'Dashboard')
+@section("title", "Dashboard")
 
 @section("content")
     <h1>Dashboard</h1>
@@ -296,7 +296,7 @@ suite('General Template Formatting', () => {
         @endsection`;
         const out = `@extends("layouts.master")
 
-@section('title', 'Dashboard')
+@section("title", "Dashboard")
 
 @section("content")
     <h1>Dashboard</h1>
@@ -339,7 +339,7 @@ suite('General Template Formatting', () => {
         @endsection`
         const out = `@extends("layouts.master")
 
-@section('title', 'Notification')
+@section("title", "Notification")
 
 @section("content")
     <h1>Notification</h1>

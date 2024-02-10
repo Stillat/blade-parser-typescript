@@ -6,7 +6,7 @@ import { skipToEndOfLine } from './skipToEndOfLine.js';
 import { skipToEndOfMultilineComment } from './skipToEndOfMultilineComment.js';
 import { skipToEndOfString } from './skipToEndOfString.js';
 
-export function scanToEndOfLogicGroup(iterator: StringIterator): LogicGroupScanResults {
+export function scanToEndOfLogicGroup(iterator: StringIterator, structureStart = '(', structureEnd = ')'): LogicGroupScanResults {
     const groupStartedOn = iterator.getCurrentIndex() + iterator.getSeedOffset(),
         recoveryIndex = iterator.getCurrentIndex();
     let groupEndsOn = 0,
@@ -41,12 +41,12 @@ export function scanToEndOfLogicGroup(iterator: StringIterator): LogicGroupScanR
             continue;
         }
 
-        if (iterator.getCurrent() == DocumentParser.LeftParen) {
+        if (iterator.getCurrent() == structureStart) {
             groupOpenCount += 1;
             continue;
         }
 
-        if (iterator.getCurrent() == DocumentParser.RightParen) {
+        if (iterator.getCurrent() == structureEnd) {
             if (groupOpenCount > 0) {
                 groupOpenCount -= 1;
                 continue;

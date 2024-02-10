@@ -5,6 +5,7 @@ import { StringUtilities } from '../utilities/stringUtilities.js';
 import { BladeDocument } from '../document/bladeDocument.js';
 import { Offset } from './offset.js';
 import { BladeError } from '../errors/bladeError.js';
+import { ArgStringSplitter } from '../parser/argStringSplitter.js';
 
 function newRefId() {
     return StringUtilities.replaceAllInString(uuidv4(), '-', '_');
@@ -331,6 +332,7 @@ export class DirectiveNode extends AbstractNode {
 
     private cachedHasValidJson: boolean | null = null;
 
+    private cachedArgCount: number | null = null;
     private cachedHasValidPhp: boolean | null = null;
     private cachedPhpLastError: SyntaxError | null = null;
 
@@ -412,9 +414,32 @@ export class DirectiveNode extends AbstractNode {
         return immediateChildren;
     }
 
+    getArgCount() {
+        if (this.cachedArgCount == null) {
+            try {
+                const splitArgs = ArgStringSplitter.fromText(this.getInnerContent());
+                
+                this.cachedArgCount = splitArgs.length;
+            } catch (err) {
+                // Prevent any errors from crashing remaining process.
+                this.cachedArgCount = 1;
+            }
+        }
+
+        return this.cachedArgCount;
+    }
+
     getPhpContent() {
-        if (this.directiveName.toLowerCase() == 'forelse') {
+        if (this.hasJsonParameters) {
+            return this.directiveParameters;
+        }
+
+        if (this.directiveName.toLowerCase().match(/^for(each|else)$/)) {
             return 'foreach (' + this.getInnerContent() + '):endforeach;';
+        }
+
+        if (this.getArgCount() > 1) {
+            return `[${this.getInnerContent()}];`;
         }
 
         return this.directiveParameters;

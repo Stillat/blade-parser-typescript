@@ -382,15 +382,23 @@ export class PintTransformer {
 
                             replaceIndex += 1;
                         } else {
-                            const candidate = node.directiveParameters.substring(1, node.directiveParameters.length - 1).trim();
+                            let candidate = node.directiveParameters.substring(1, node.directiveParameters.length - 1).trim(),
+                                prefix = '$tVar = ',
+                                outputType = '=DIR';
+
+                            if (node.getArgCount() > 1) {
+                                candidate = '[' + candidate + ']';
+                                prefix = '$tArrVar = ';
+                                outputType = '=ADR';
+                            }
 
                             if (candidate.length == 0) { return; }
 
                             itemsInOutput += 1;
 
-                            results += '// ' + replaceIndex.toString() + '=DIR' + this.markerSuffix;
+                            results += '// ' + replaceIndex.toString() + outputType + this.markerSuffix;
                             results += "\n";
-                            results += '$tVar = ';
+                            results += prefix;
 
                             StringUtilities.breakByNewLine(candidate).forEach((cLine) => {
                                 results += cLine.trimLeft() + "\n";
@@ -650,6 +658,15 @@ export class PintTransformer {
             if (tResult.endsWith(';')) {
                 tResult = tResult.substring(0, tResult.length - 1).trimRight()
             }
+        } else if (type == 'ADR') {
+            tResult = tResult.trim().trimRight();
+            tResult = tResult.substring(10).trimLeft();
+            if (tResult.endsWith(';')) {
+                tResult = tResult.substring(0, tResult.length - 1).trimRight()
+            }
+
+            // Remove wrapping [ and ]
+            tResult = tResult.substring(1, tResult.length - 1);
         } else if (type == 'PHP') {
             tResult = result.trim().substring(5).trimLeft();
             tResult = tResult.trimRight();
