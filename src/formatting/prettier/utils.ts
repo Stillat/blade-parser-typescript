@@ -194,7 +194,7 @@ export async function formatAsJavaScript(text: string, transformOptions: Transfo
 function getPrettierPlugins() {
     let plugins: any[] = [];
 
-    if (htmlOptions.plugins) {
+    if (htmlOptions?.plugins) {
         plugins = htmlOptions.plugins;
     }
 
