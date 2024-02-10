@@ -32,7 +32,7 @@ suite('Directives Formatting', () => {
             `@section("messages")
 <div class="alert success">
     <p><strong>Success!</strong></p>
-    @foreach ($success->all('<p>:message</p>') as $msg)
+    @foreach ($success->all("<p>:message</p>") as $msg)
         {{ $msg }}
     @endforeach
 </div>
@@ -53,7 +53,7 @@ suite('Directives Formatting', () => {
             `@section("messages")
 <div class="alert success">
     <p><strong>Success!</strong></p>
-    @foreach ($success->all('<p>:message</p>') as $msg)
+    @foreach ($success->all("<p>:message</p>") as $msg)
         {{ $msg }}
     @endforeach
 </div>
@@ -176,7 +176,7 @@ asdf
                 {!! $something_here !!}
                 @endcan
 `;
-        const out = `@can('create', App\\Models\\User::class)
+        const out = `@can("create", App\\Models\\User::class)
     {!! $something_here !!}
 @endcan
 `;

@@ -54,12 +54,22 @@ suite('@include Formatting', () => {
     );
   });
 
-  test('it formats @include directives with many view  parameters', async () => {
+  test('it formats @include directives with many view parameters', async () => {
+    // Arrays will remain a single line if the input was a single line.
     assert.strictEqual(
       (
         await formatBladeString('@include( "lorem.ipsum.dolor"   , ["sit"=>"amet",    "consectetur" => "adipiscing", "elit" => "sed", "do" => "eiusmod" ]   )')
       ).trim(),
-      `@include(
+      `@include("lorem.ipsum.dolor", ["sit" => "amet", "consectetur" => "adipiscing", "elit" => "sed", "do" => "eiusmod"])`,
+    );
+
+    // If an array already has a newline, we will allow it unwrap to multiple lines.
+    assert.strictEqual(
+        (
+          await formatBladeString(`@include( "lorem.ipsum.dolor"   , [
+            "sit"=>"amet",    "consectetur" => "adipiscing", "elit" => "sed", "do" => "eiusmod" ]   )`)
+        ).trim(),
+        `@include(
     "lorem.ipsum.dolor",
     [
         "sit" => "amet",
@@ -68,12 +78,52 @@ suite('@include Formatting', () => {
         "do" => "eiusmod",
     ]
 )`,
+      );
+  });
+
+  test('it formats @include directives with many view parameters inside nested elements', async () => {
+    const template = `
+<div><div><div><div>
+@include( "lorem.ipsum.dolor"   , [
+    "sit"=>"amet",    "consectetur" => "adipiscing", "elit" => "sed", "do" => "eiusmod" ]   )
+</div></div></div></div>`;
+    const expected = `<div>
+    <div>
+        <div>
+            <div>
+                @include(
+                    "lorem.ipsum.dolor",
+                    [
+                        "sit" => "amet",
+                        "consectetur" => "adipiscing",
+                        "elit" => "sed",
+                        "do" => "eiusmod",
+                    ]
+                )
+            </div>
+        </div>
+    </div>
+</div>`;
+
+    let result = (await formatBladeString(template)).trim();
+
+    assert.strictEqual(
+      result,
+      expected
     );
+
+    // Ensure that repeated formatting does not do weird things.
+    for (let i = 0; i < 5; i++) {
+        result = (await formatBladeString(result)).trim();
+
+        assert.strictEqual(
+            result,
+            expected
+        );
+    }
   });
 
   test('it formats @include directives with view parameters', async () => {
-    // This test is only to demonstrate that arrays allow this to work on main.
-    // This is not actually valid Blade, and should be removed before merge.
     assert.strictEqual(
       (
         await formatBladeString('@include([ "a.b"   , [ "c"   =>"d"   ]   ])')

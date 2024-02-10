@@ -286,8 +286,22 @@ export class IndentLevel {
         return trimmedLines.join("\n");
     }
 
-    static shiftIndent(value: string, targetIndent: number, skipFirst: boolean = false, options: TransformOptions, reflowRelative: boolean = false, dedentLast: boolean = false): string {
-        const lines = StringUtilities.breakByNewLine(value.trim()),
+    static shiftIndent(
+        value: string,
+        targetIndent: number,
+        skipFirst: boolean = false,
+        options: TransformOptions,
+        reflowRelative: boolean = false,
+        dedentLast: boolean = false,
+        trimShift: boolean = true
+    ): string {
+        let breakValue = value;
+
+        if (trimShift) {
+            breakValue = value.trim();
+        }
+
+        const lines = StringUtilities.breakByNewLine(breakValue),
             reflowedLines: string[] = [];
 
         if (lines.length > 1) {

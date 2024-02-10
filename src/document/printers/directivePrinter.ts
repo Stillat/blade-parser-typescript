@@ -92,7 +92,8 @@ export class DirectivePrinter {
                     }
 
                     let tResult = params,
-                        removeLines = false;
+                        removeLines = false,
+                        trimShift = true;
 
                     const phpOptions = getPhpOptions();
                     if (params.startsWith('[') && params.endsWith(']') && directive.startPosition?.line != directive.endPosition?.line) {
@@ -179,15 +180,26 @@ export class DirectivePrinter {
                         tResult = tResult.substring(0, tResult.length - 14);
                     }
 
-                    if (
-                        directive
-                            .directiveName
-                            .toLowerCase()
-                            .match(
-                                /(^(include|section))|(^(each|extends)$)/
-                            )
-                    ) {
-                        tResult = tResult.substring(1, tResult.length - 2);
+                    if (directive.getArgCount() > 1) {
+                        let argTempResult = tResult;
+
+                        if (argTempResult.startsWith('[') && argTempResult.endsWith('];')) {
+                            argTempResult = tResult.substring(1, tResult.length - 2)
+                        }
+
+                        if (tResult.trimStart().startsWith('[') && tResult.trimEnd().endsWith('];')) {
+                            trimShift = false;
+                            argTempResult = "\n" + argTempResult.trimEnd();
+
+                            if (argTempResult.endsWith(',')) {
+                                argTempResult = argTempResult.substring(1, argTempResult.length - 1);
+                                argTempResult += "\n";
+                            }
+
+                            tResult = argTempResult;
+                        } else {
+                            tResult = argTempResult;
+                        }
                     }
 
                     if (GeneralSyntaxReflow.couldReflow(tResult)) {
@@ -203,8 +215,18 @@ export class DirectivePrinter {
                             tResult,
                             indentLevel,
                             true,
-                            options
-                        ) + ')';
+                            options,
+                            false,
+                            false,
+                            trimShift
+                        );
+
+                        if (! trimShift) {
+                            // We want to add some leading whitespace.
+                            paramContent += ' '.repeat(indentLevel);
+                        }
+
+                        paramContent += ')';
                     } else {
                         if (removeLines) {
                             tResult = removeContentLines(tResult);
