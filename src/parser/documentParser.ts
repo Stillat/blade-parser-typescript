@@ -2090,7 +2090,7 @@ export class DocumentParser implements StringIterator {
 
         const lowerName = directive.name.toLowerCase();
 
-        if (lowerName == 'endcan' || lowerName == 'endcannot' || lowerName == 'endauth' || lowerName == 'endguest' || lowerName == 'endenv' || lowerName == 'endproduction') {
+        if (lowerName == 'endcan' || lowerName == 'endcannot' || lowerName == 'endauth' || lowerName == 'endguest' || lowerName == 'endenv' || lowerName == 'endproduction' || lowerName == 'endif') {
             directive.name = 'if';
             directive.isClosingDirective = true;
         } else if (name.startsWith('end')) {

@@ -399,4 +399,22 @@ A
 ></div>`;
         assert.strictEqual((await formatBladeStringWithPint(template)).trim(), out);
     });
+
+    test('it can format hasSection without error', async () => {
+        const template = `
+@hasSection('sidebar') 
+<aside class="sidebar">
+@yield('sidebar')
+</aside>
+@endif
+
+`;
+        const out = `@hasSection("sidebar")
+    <aside class="sidebar">
+        @yield("sidebar")
+    </aside>
+@endif
+`;
+        assert.strictEqual(await formatBladeString(template), out);
+    });
 });

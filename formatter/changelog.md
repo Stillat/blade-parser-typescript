@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.1
+
+- Corrects an issue preventing `@hasSection` from formatting correctly (#92)
+
 ## 2.1.0
 
 - Adds general support for formatting directives with multiple parameters (#89)
