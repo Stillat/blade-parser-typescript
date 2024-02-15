@@ -1,6 +1,6 @@
 {
     "name": "prettier-plugin-blade",
-    "version": "2.1.1",
+    "version": "2.1.2",
     "description": "A Prettier plugin to format Laravel Blade templates",
     "repository": {
         "type": "git",

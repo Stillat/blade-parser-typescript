@@ -586,4 +586,56 @@ asdf
         assert.strictEqual(out, expected);
         assert.strictEqual(out2, expected);
     });
+
+    test('it does not trash comments inside directive args', async () => {
+        const template = `<img
+@class([
+  // This is valid a comment.
+  $coverUrl ? "object-center" :"object-left-top",
+])
+/>`;
+        const expected = `<img
+    @class([
+        // This is valid a comment.
+        $coverUrl ? "object-center" : "object-left-top",
+    ])
+/>
+`;
+        let result = await formatBladeString(template);
+
+        assert.strictEqual(result, expected);
+
+        for (let i = 0; i < 5; i++) {
+            result = await formatBladeString(result);
+
+            assert.strictEqual(result, expected);
+        }
+    });
+
+    test('it does not remove whitespace complicated directive args', async () => {
+        const template = `<img
+@class([
+  $coverUrl ? "object-center" :"object-left-top",
+])
+/>`;
+        // Unfortunately this will be the result.
+        const expected = `<img @class([$coverUrl ? "object-center" : "object-left-top"]) />
+`;
+        const result = await formatBladeString(template);
+        assert.strictEqual(result, expected);
+    });
+
+    test('the manual prettier array workaround works', async () => {
+        const template = `<img
+@class([
+  $coverUrl ? "object-center" :"object-left-top", //
+])
+/>`;
+        const expected = `<img @class([
+    $coverUrl ? "object-center" : "object-left-top", //
+]) />
+`;
+        const result = await formatBladeString(template);
+        assert.strictEqual(result, expected);
+    });
 });

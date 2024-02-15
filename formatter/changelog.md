@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.2
+
+- Improves directive array formatting to prevent trashing complex input (#93)
+
 ## 2.1.1
 
 - Corrects an issue preventing `@hasSection` from formatting correctly (#92)

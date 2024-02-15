@@ -17,6 +17,21 @@ export class DirectivePrinter {
         'if', 'elseif', 'unless', 'while', 'for', 'foreach', 'forelse'
     ];
 
+    private static canUseSimpleParser(value: string): boolean {
+        // Quick work around for now.
+        // Likely remove the prettier workaround logic in the next major version to save headache.
+        if (
+            value.includes('//') || value.includes('/**') ||
+            value.includes('?') || value.includes(':') ||
+            (value.includes('(') && value.includes(')')) ||
+            (value.includes('{') && value.includes('}'))
+        ) {
+            return false;
+        }
+
+        return true;
+    }
+
     private static getReasonableDirectivePhpOptions(directive: DirectiveNode, phpOptions: ParserOptions): ParserOptions {
         // We will override the traillingCommaPHP setting within condition-like
         // directives; if we don't we end up with rather ugly @if(...) blocks
@@ -96,7 +111,10 @@ export class DirectivePrinter {
                         trimShift = true;
 
                     const phpOptions = getPhpOptions();
-                    if (params.startsWith('[') && params.endsWith(']') && directive.startPosition?.line != directive.endPosition?.line) {
+                    if (
+                            params.startsWith('[') && params.endsWith(']') && directive.startPosition?.line != directive.endPosition?.line &&
+                            DirectivePrinter.canUseSimpleParser(params)
+                        ) {
                         let phpInput = '<?php ' + params;
                         const lineWrapWorkaround = preparePrettierWorkaround(phpInput);
 
