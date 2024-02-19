@@ -10,6 +10,9 @@ For additional documentation, consider checking out the following resources:
 
 * [Prettier Plugin Installation](https://stillat.com/blade-parser/v1/installing-prettier-plugin)
 * [Formatter Configuration and Usage](https://stillat.com/blade-parser/v1/formatting-configuration)
+* [Using Laravel Pint to Format PHP Inside Blade](https://stillatdotcom.test/blade-parser/v1/formatting-configuration#content-configuring-laravel-pint)
+
+If you've found this project and want to help keep my lights on, you can do so here: [https://github.com/sponsors/JohnathonKoster](https://github.com/sponsors/JohnathonKoster).
 
 ## Installation
 
@@ -73,6 +76,27 @@ For example, if we had installed the `prettier-plugin-tailwindcss` plugin, we co
 }
 ```
 
+### VS Code Prettier Troubleshooting
+
+Suppose you are using the Prettier VS Code extension and are encountering an error stating something similar to "There are no formatters for Blade files." In that case, you may need to update your VS Code configuration and inform Prettier about the Blade file extension.
+
+The simplest way to do this is to update your user JSON configuration file and ensure it has the following settings:
+
+```json
+{
+  "[blade]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "prettier.documentSelectors": [
+      "**/*.blade.php"
+  ]
+}
+```
+
+> **Important**: You will still need to create and configure the `.prettierrc` file!
+
+For more information about Prettier's document selectors, please consult their documentation here: [https://github.com/prettier/prettier-vscode?tab=readme-ov-file#prettierdocumentselectors](https://github.com/prettier/prettier-vscode?tab=readme-ov-file#prettierdocumentselectors)
+
 ### Prettier 2 Example
 
 For example, if we had installed the `prettier-plugin-tailwindcss` plugin, we could update our `.prettierrc` file like so:
@@ -124,6 +148,36 @@ If you continuously receive errors like "could not resolve module prettier-plugi
       }
     ]
 }
+```
+
+## Formatting Conditional Element Open/Close Tags
+
+Because of the way formatter works internally, you will need to take a few steps if you need to format templates containing Blade code similar to the following:
+
+```blade
+@if ($someCondition)
+    <x-slot:the_slot>
+@endif
+
+    <!-- More content here. -->
+
+@if ($someCondition)
+    </x-slot>
+@endif
+```
+
+The above template will result in a Prettier error stating it encountered an unexpected closing tag. This can be resolved by wrapping the fragmented open/close tags with ignore comments:
+
+```blade
+@if ($someCondition)
+    {{-- format-ignore-start --}}<x-slot:the_slot>{{-- format-ignore-end --}}
+@endif
+
+    <!-- More content here. -->
+
+@if ($someCondition)
+    {{-- format-ignore-start --}}</x-slot>{{-- format-ignore-end --}}
+@endif
 ```
 
 ## Reporting Issues
