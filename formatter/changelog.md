@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.5
+
+- Corrects an issue when using the formatter with different Pint configurations (#94)
+
 ## 2.1.2
 
 - Improves directive array formatting to prevent trashing complex input (#93)

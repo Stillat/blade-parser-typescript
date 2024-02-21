@@ -683,7 +683,12 @@ export class PintTransformer {
                 tResult = tResult.substring(0, tResult.length - 1).trimRight()
             }
         } else if (type == 'FRL') {
-            tResult = tResult.trimLeft().substring(8).trimLeft().substring(1).trimLeft();
+            tResult = tResult.trimLeft().substring(8).trimLeft();
+
+            if (tResult.startsWith('$') == false) {
+                tResult = tResult.substring(1).trimLeft();
+            }
+
             tResult = tResult.trimRight();
             tResult = tResult.trimRight();
             if (tResult.endsWith('?')) {
