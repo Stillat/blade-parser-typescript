@@ -152,7 +152,12 @@ const plugin: prettier.Plugin = {
                                     newTransformContent = await jsEmulator.emulateJavaScriptString(transformContent);
 
                                 if (transformContent === newTransformContent && !jsEmulator.getFoundAnyStrings()) {
-                                    attribute[1].content = await jsEmulator.emulateJavaScriptString(attribute[1].content);
+                                    // Safe guard against trashing a few things.
+                                    if (newTransformContent.includes(' = ')) {
+                                        attribute[1].content = '"' + transformContent + '"';
+                                    } else {
+                                        attribute[1].content = await jsEmulator.emulateJavaScriptString(attribute[1].content);
+                                    }
                                 } else {
                                     attribute[1].content = '"' + transformContent + '"';
                                 }

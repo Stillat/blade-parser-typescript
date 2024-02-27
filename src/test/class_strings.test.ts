@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { formatBladeStringWithPint } from '../formatting/prettier/utils.js';
+import { formatBladeString, formatBladeStringWithPint } from '../formatting/prettier/utils.js';
 import { defaultSettings } from '../formatting/optionDiscovery.js';
 import { classConfigFromObject } from '../formatting/classStringsConfig.js';
 import { setupTestHooks } from './testUtils/formatting.js';
@@ -463,5 +463,19 @@ x-thing="text-white px-4 sm:px-8 py-2 sm:py-3 bg-sky-700 hover:bg-sky-800">
 ])
 `;
         assert.strictEqual(await formatBladeStringWithPint(input), expected);
+    });
+
+    test('it doesnt attempt to reorder js assignments', async () => {
+        const template = `
+        <div x-intersect="visible = true">
+                <!-- -->
+        </div>
+        
+        `;
+        const expected = `<div x-intersect="visible = true">
+    <!-- -->
+</div>
+`;
+        assert.strictEqual(await formatBladeString(template), expected);
     });
 });

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.6
+
+- Corrects an issue where JavaScript assignments would get improperly ordered when combined with the Tailwind CSS plugin
+
 ## 2.1.5
 
 - Corrects an issue when using the formatter with different Pint configurations (#94)
