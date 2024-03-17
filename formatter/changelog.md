@@ -3,6 +3,7 @@
 ## 2.1.7
 
 - Corrects an issue when using Blade echo blocks as dynamic HTML attribute values without quotes without trailing whitespace duplicating the internal substitution (`<div data-something={{ something() }} >`)
+- Prevent excessive indentation when formatting Blade component parameters containing PHP in some circumstances (#95)
 
 ## 2.1.6
 

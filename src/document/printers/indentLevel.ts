@@ -219,10 +219,13 @@ export class IndentLevel {
         return reflowed.join("\n");
     }
 
-    static removeLeadingWhitespace(value: string, tabSize: number): string {
+    static removeLeadingWhitespace(value: string, tabSize: number, usingPint: boolean): string {
         const lines = StringUtilities.breakByNewLine(value.trim()),
             trimmedLines: string[] = [];
-        let minWhitespace = -1;
+        let minWhitespace = -1,
+            contentLinesAreTabSize = true,
+            areAllContentIndentationsTheSame = true,
+            tabSizes:number[] = [];
 
         if (lines.length > 0) {
             if (lines[lines.length - 1].trim() == '"') {
@@ -242,7 +245,20 @@ export class IndentLevel {
             }
 
             const wsDiff = line.length - line.trimLeft().length;
-                
+
+            if (i < lines.length - 1) {
+                if (wsDiff != tabSize) {
+                    if (tabSizes.length > 0) {
+                        if (tabSizes.includes(wsDiff) == false) {
+                            areAllContentIndentationsTheSame = false;
+                        }
+                    } else {
+                        tabSizes.push(wsDiff);
+                    }
+                    contentLinesAreTabSize = false;
+                }
+            }
+
             if (minWhitespace < 0 && wsDiff > 0) {
                 minWhitespace = wsDiff;
                 continue;
@@ -255,6 +271,34 @@ export class IndentLevel {
 
         if (minWhitespace <= 0) {
             return value;
+        }
+
+        // We don't want to do this for Pint output as its leading whitespace will already be handled.
+        if (! usingPint) {
+            if (! contentLinesAreTabSize && areAllContentIndentationsTheSame && tabSizes.length > 0) {
+                if (tabSizes[0] % tabSize === 0) {
+                    contentLinesAreTabSize = true;
+                }
+            }
+    
+            if (contentLinesAreTabSize) {
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i];
+    
+                    if (i == 0 || i == lines.length - 1) {
+                        if (minWhitespace > tabSize && i == lines.length - 1) {
+                            trimmedLines.push(line.trimLeft());
+                            continue;
+                        }
+                        trimmedLines.push(line);
+                        continue;
+                    }
+    
+                    trimmedLines.push(line.trimLeft());
+                }
+    
+                return trimmedLines.join("\n");
+            }
         }
 
         if (minWhitespace == tabSize) {

@@ -2497,7 +2497,7 @@ export class Transformer {
                 const relativeIndent = this.indentLevel(slug);
 
                 content = IndentLevel.shiftIndent(
-                    IndentLevel.removeLeadingWhitespace(content, this.transformOptions.tabSize),
+                    IndentLevel.removeLeadingWhitespace(content, this.transformOptions.tabSize, pintUsed),
                     relativeIndent + this.transformOptions.tabSize,
                     true,
                     this.transformOptions,

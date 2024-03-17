@@ -1007,4 +1007,46 @@ Hello, there!
         assert.strictEqual(format1, out)
         assert.strictEqual(format2, out)
     });
+
+    test('it does not continue to indent attribute content', async() => {
+        const input = `<div>
+<div>
+<div>
+<x-component :prop="array_filter(array_merge([
+[], []
+]))" />
+</div>
+</div>
+</div>`;
+        const expected = `<div>
+    <div>
+        <div>
+            <x-component :prop="array_filter(array_merge([
+                [], []
+            ]))" />
+        </div>
+    </div>
+</div>
+`;
+        // Subsequent formats will now trigger line length wrapping/etc.
+        const expected2 = `<div>
+    <div>
+        <div>
+            <x-component
+                :prop="array_filter(array_merge([
+                    [], []
+                ]))"
+            />
+        </div>
+    </div>
+</div>
+`;
+        let out = await formatBladeString(input);
+        assert.strictEqual(out, expected);
+
+        for (let i = 0; i < 5; i++) {
+            out = await formatBladeString(out);
+            assert.strictEqual(out, expected2);
+        }
+    });
 });
