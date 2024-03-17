@@ -1264,6 +1264,16 @@ export class Transformer {
                     const trailingLiteral = echo.nextNode;
 
                     if ((trailingLiteral.content.length - trailingLiteral.content.trimLeft().length) > 0) {
+                        if (echo.prevNode != null && echo.prevNode instanceof LiteralNode) {
+                            const leadingLiteral = echo.prevNode as LiteralNode;
+
+                            // Prevent cases like <div data-something={{ blade() }} > or
+                            // <div data-something={{ blade() }} data-something-else>
+                            // from duplicating the {{ blade() }} replacement.
+                            if (leadingLiteral.content.endsWith('=')) {
+                                return this.registerDynamicFragmentEcho(echo);
+                            }
+                        }
                         return this.registerDynamicAttributeFragmentEcho(echo);
                     } else {
                         if (trailingLiteral.content.length == 0) {

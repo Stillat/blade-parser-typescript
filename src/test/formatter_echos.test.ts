@@ -410,4 +410,17 @@ x-on:input.debounce.{{ $debounce ?? '500ms' }}="updateState"
 
         assert.strictEqual(await formatBladeString(input), out);
     });
+
+    test('inline echos are not duplicated in transformer', async () => {
+        let input = `<div data-attribute={{ someCodeHere() }} ></div>`,
+        out = `<div data-attribute="{{ someCodeHere() }}"></div>
+`;
+        assert.strictEqual(await formatBladeString(input), out);
+
+        
+        input = `<div data-attribute={{ someCodeHere() }} data-thing></div>`;
+        out = `<div data-attribute="{{ someCodeHere() }}" data-thing></div>
+`;
+        assert.strictEqual(await formatBladeString(input), out);
+    });
 });

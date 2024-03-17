@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.7
+
+- Corrects an issue when using Blade echo blocks as dynamic HTML attribute values without quotes without trailing whitespace duplicating the internal substitution (`<div data-something={{ something() }} >`)
+
 ## 2.1.6
 
 - Corrects an issue where JavaScript assignments would get improperly ordered when combined with the Tailwind CSS plugin
