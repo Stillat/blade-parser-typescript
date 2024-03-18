@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.9
+
+- Improves parsing of directives to reduce false positives
+
 ## 2.1.8
 
 - Improves relative indentation when formatting `@php @endphp` blocks when not using Pint
