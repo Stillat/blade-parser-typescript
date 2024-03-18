@@ -423,4 +423,17 @@ x-on:input.debounce.{{ $debounce ?? '500ms' }}="updateState"
 `;
         assert.strictEqual(await formatBladeString(input), out);
     });
+
+    test('strings containing @ inside echoes do not cause false positive directive matches', async () => {
+        const template = `
+{!! Something::here(['action' =>        'ControllerName@actionName']) !!}
+{{ Something::here(['action' =>         'ControllerName2@actionName']) }}
+{{{ Something::here(['action' =>                    'ControllerName3@actionName']) }}}
+`;
+        const expected = `{!! Something::here(['action' => 'ControllerName@actionName']) !!}
+{{ Something::here(['action' => 'ControllerName2@actionName']) }}
+{{{ Something::here(['action' => 'ControllerName3@actionName']) }}}
+`;
+        assert.strictEqual(await formatBladeStringWithPint(template), expected);
+    });
 });

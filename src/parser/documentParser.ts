@@ -280,6 +280,10 @@ export class DocumentParser implements StringIterator {
             }
         }
         if (this.cur == DocumentParser.AtChar && this.next != null && this.prev != DocumentParser.AtChar) {
+            if (! StringUtilities.ctypeSpace(this.prev)) {
+                return false;
+            }
+
             return true;
         }
 
