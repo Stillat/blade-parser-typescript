@@ -10,7 +10,7 @@ For additional documentation, consider checking out the following resources:
 
 * [Prettier Plugin Installation](https://stillat.com/blade-parser/v1/installing-prettier-plugin)
 * [Formatter Configuration and Usage](https://stillat.com/blade-parser/v1/formatting-configuration)
-* [Using Laravel Pint to Format PHP Inside Blade](https://stillatdotcom.test/blade-parser/v1/formatting-configuration#content-configuring-laravel-pint)
+* [Using Laravel Pint to Format PHP Inside Blade](https://stillat.com/blade-parser/v1/formatting-configuration#content-configuring-laravel-pint)
 
 If you've found this project and want to help keep my lights on, you can do so here: [https://github.com/sponsors/JohnathonKoster](https://github.com/sponsors/JohnathonKoster).
 
