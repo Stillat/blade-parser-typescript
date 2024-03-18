@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.8
+
+- Improves relative indentation when formatting `@php @endphp` blocks when not using Pint
+
 ## 2.1.7
 
 - Corrects an issue when using Blade echo blocks as dynamic HTML attribute values without quotes and there is trailing whitespace duplicating the internal substitution (`<div data-something={{ something() }} >`)
