@@ -186,4 +186,29 @@ fn () => true;
 `;
         assert.strictEqual(await formatBladeStringWithPint(input), input);
     });
+
+    test('formatting php blocks does not aggressively remove leading whitespace', async () => {
+        const template = `
+
+@php
+$isUserProfileOwner = auth()->user()?->is($user);
+@endphp
+
+`;
+        const expected = `@php
+    $isUserProfileOwner = auth()
+        ->user()
+        ?->is($user);
+@endphp
+`;
+        let result = await formatBladeString(template);
+
+        assert.strictEqual(result, expected);
+
+        for (let i = 0; i < 5; i++) {
+            result = await formatBladeString(result);
+
+            assert.strictEqual(result, expected);
+        }
+    });
 });

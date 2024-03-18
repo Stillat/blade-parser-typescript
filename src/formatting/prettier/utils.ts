@@ -342,15 +342,49 @@ export async function inlineFormatPhp(text: string, transformOptions: TransformO
 
 export async function formatPhp(text: string, transformOptions: TransformOptions, options: ParserOptions | null = null) {
     const opts = resolvePhpOptions(phpOptions, transformOptions, options);
-    let result = (await prettier.format(text, opts)).trim();
+    let result = (await prettier.format(text, opts)).trimLeft();
 
     result = result.substring(5);
+
+    const checkContent = result.trim();
+
+    // Handle the case where the content only contains a /**  */ comment.
+    if (checkContent.startsWith('/**') && checkContent.endsWith('*/')) {
+        const updatedLines = StringUtilities.breakByNewLine(result),
+            newLines:string[] = [];
+        let safeToAdjustComment = true;
+        for (let i = 0; i < updatedLines.length; i++) {
+            const line  = updatedLines[i],
+                trimmedLine = line.trimLeft();
+
+            if (trimmedLine.trim().length > 0 && (trimmedLine.startsWith('/*') || trimmedLine.startsWith('*') || trimmedLine.startsWith('*/')) == false) {
+                safeToAdjustComment = false;
+                break;
+            }
+
+            if (trimmedLine.length == 0) {
+                newLines.push('');
+                continue;
+            }
+
+            if (trimmedLine.startsWith('/*')) {
+                newLines.push(trimmedLine);
+                continue;
+            }
+
+            newLines.push(trimmedLine);
+        }
+
+        if (safeToAdjustComment) {
+            return newLines.join("\n");
+        }
+    }
 
     if (text.endsWith(';') == false && result.endsWith(';')) {
         result = result.substring(0, result.length - 1);
     }
 
-    return result.trim();
+    return result;
 }
 
 export async function formatTagPhp(text: string, transformOptions: TransformOptions, options: ParserOptions | null = null) {

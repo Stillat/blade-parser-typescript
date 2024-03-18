@@ -1938,7 +1938,7 @@ export class Transformer {
         let value = content.trim();
 
         if (value.startsWith('<?php') == false) {
-            value = '<?php ' + value;
+            value = "<?php\n" + value;
         }
 
         const phpOptions = getPhpOptions();
@@ -2036,15 +2036,35 @@ export class Transformer {
 
                 if (this.transformOptions.formatDirectivePhpParameters) {
                     if (!this.useLaravelPint) {
-                        formattedPhp = IndentLevel.shiftIndent(
-                            await this.transformBlockPhp(originalDirective.innerContent, true),
-                            targetIndent,
-                            true,
-                            this.transformOptions
-                        );
+                        formattedPhp = await this.transformBlockPhp(originalDirective.innerContent, true);
 
-                        value = StringUtilities.safeReplace(value, open, replacePhp);
-                        value = StringUtilities.safeReplace(value, virtualOpen, formattedPhp);
+                        const lines = StringUtilities.breakByNewLine(formattedPhp),
+                            reflow: string[] = [];
+
+                        let hasFoundContentLine = false;
+
+                        for (let i = 0; i < lines.length; i++) {
+                            const line = lines[i];
+
+                            if (line.trim().length > 0) {
+                                hasFoundContentLine = true;
+                            }
+
+                            if (! hasFoundContentLine) {
+                                continue;
+                            }
+
+                            if (line.trim().length == 0) {
+                                reflow.push('');
+                                continue;
+                            }
+                            reflow.push(' '.repeat(targetIndent) + line);
+                        }
+
+                        formattedPhp = reflow.join("\n");
+
+                        value = StringUtilities.safeReplace(value, open, replacePhp + "\n" + formattedPhp);
+                        value = StringUtilities.safeReplace(value, virtualOpen, '');
                     } else {
                         if (this.pintTransformer != null || Transformer.sharedPintTransformer != null) {
                             if (this.pintTransformer != null) {
