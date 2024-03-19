@@ -520,4 +520,32 @@ test@example.com
         assert.strictEqual(f1, out);
         assert.strictEqual(f2, out);
     });
+
+    test('it does not excessively indent component attributes #96', async () => {
+        const input = `@section('content')
+    <x-tw::page-header :breadcrumbs="[
+            [
+                'title' => 'Shortener',
+            ],
+    ]" />
+@endsection`;
+        const expected = `@section("content")
+    <x-tw::page-header
+        :breadcrumbs="[
+            [
+                'title' => 'Shortener',
+            ],
+        ]"
+    />
+@endsection
+`;
+        let out = await formatBladeString(input);
+        assert.strictEqual(out, expected);
+
+        for (let i = 0; i < 5; i++) {
+            out = await formatBladeString(out);
+
+            assert.strictEqual(out, expected);
+        }
+    });
 });

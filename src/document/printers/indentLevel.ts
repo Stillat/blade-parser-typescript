@@ -244,6 +244,10 @@ export class IndentLevel {
                 continue;
             }
 
+            if (i == lines.length - 1) {
+                continue;
+            }
+
             const wsDiff = line.length - line.trimLeft().length;
 
             if (i < lines.length - 1) {
@@ -310,6 +314,11 @@ export class IndentLevel {
 
             if (i == 0) {
                 trimmedLines.push(line);
+                continue;
+            }
+
+            if (i == lines.length - 1) {
+                trimmedLines.push(line.trimLeft());
                 continue;
             }
 
