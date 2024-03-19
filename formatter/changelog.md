@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.10
+
+- Improves relative indentation of Blade component attribute content (#96)
+
 ## 2.1.9
 
 - Improves parsing of directives to reduce false positives
