@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.11
+
+- Improves parsing of escaped Directives within Blade component attribute list
+
 ## 2.1.10
 
 - Improves relative indentation of Blade component attribute content (#96)

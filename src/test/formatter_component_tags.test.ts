@@ -1049,4 +1049,17 @@ Hello, there!
             assert.strictEqual(out, expected2);
         }
     });
+
+    test('it does not lose leading escape character in directive-like parameters', async () => {
+        const input = `
+
+<x-hero @@click="navigaotr" one="two">
+<p>Hello, world.</p></x-hero>
+`;
+        const out = `<x-hero @@click="navigaotr" one="two">
+    <p>Hello, world.</p>
+</x-hero>
+`;
+        assert.strictEqual(await formatBladeString(input), out);
+    });
 });

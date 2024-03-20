@@ -473,7 +473,7 @@ export class ComponentParser implements StringIterator {
                 }
             }
 
-            if (this.hasFoundName && this.cur == DocumentParser.AtChar && this.currentContent.length == 0 && this.nextPunctuation() != DocumentParser.Punctuation_Equals) {
+            if (this.hasFoundName && this.next != DocumentParser.AtChar && this.cur == DocumentParser.AtChar && this.currentContent.length == 0 && this.nextPunctuation() != DocumentParser.Punctuation_Equals) {
                 const directive = this.scanToEndOfDirective();
 
                 if (directive != null) {
