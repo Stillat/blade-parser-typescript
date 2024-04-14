@@ -43,6 +43,6 @@ end @endverbatim end
         assert.strictEqual(verbatimOpen.innerContent, " start\n\nstart\n{{-- comment!!! --}}3\ns1@props-two(['color' => (true ?? 'gray')])\ns2@directive\n@directive something\ns3@props-three  (['color' => (true ?? 'gray')])\n@props(['color' => 'gray'])\n{!! $dooblyDoo !!}1\n<ul {{ $attributes->merge(['class' => 'bg-'.$color.'-200']) }}>\n{{ $slot }}\n</ul>\n\nend ");
 
         assertLiteralContent("\nstart ", nodes[0]);
-        assertLiteralContent("end\n\n", nodes[3]);
+        assertLiteralContent(" end\n\n", nodes[3]);
     });
 });

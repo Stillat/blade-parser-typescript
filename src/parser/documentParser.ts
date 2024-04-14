@@ -1052,7 +1052,7 @@ export class DocumentParser implements StringIterator {
                             literalNodeOffset = 0;
                         }
 
-                        const literalStartIndex = this.lastBladeEndIndex + literalNodeOffset;
+                        let literalStartIndex = this.lastBladeEndIndex + literalNodeOffset;
 
                         if (nextBladeStart < literalStartIndex) {
                             if (this.lastBladeEndIndex > nextBladeStart) {
@@ -1079,6 +1079,8 @@ export class DocumentParser implements StringIterator {
                             if (this.isVerbatim) {
                                 break;
                             }
+
+
                             // In this scenario, we will create the last trailing literal node and break.
                             const thisOffset = this.currentChunkOffset,
                                 nodeContent = this.content.substr(literalStartIndex);
@@ -1175,7 +1177,9 @@ export class DocumentParser implements StringIterator {
                             const literalNode = new LiteralNode();
                             literalNode.withParser(this);
 
-                            literalNode.content = this.prepareLiteralContent(this.content.substr(literalStart));
+                            literalNode.content = this.prepareLiteralContent(this.content.substr(
+                                this.shiftIndexToWhitespace(literalStart)
+                            ));
 
                             if (literalNode.content.length > 0) {
                                 literalNode.startPosition = this.positionFromOffset(literalStart, literalStart);
@@ -1354,6 +1358,37 @@ export class DocumentParser implements StringIterator {
         DirectiveStack.setChildTypeCounts(this.nodes);
 
         return this.renderNodes;
+    }
+
+    private shiftIndexToWhitespace(index:number) {
+        let char = this.content[index];
+
+        if (index > 0) {
+            char = this.content[index - 1];
+
+            if (! StringUtilities.ctypeSpace(char) || char === "\n") {
+                return index;
+            }
+
+            while (StringUtilities.ctypeSpace(char)) {
+                index -= 1;
+
+                if (index < 0) {
+                    return 0;
+                }
+
+                char = this.content[index];
+
+                if (char === "\n") {
+                    index += 1;
+                    break;
+                }
+            }
+
+            return index + 1;
+        }
+
+        return index;
     }
 
     getNodeIndexRanges() {

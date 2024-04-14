@@ -19,7 +19,7 @@ suite('Conditions Test', () => {
         assertInstanceOf(LiteralNode, nodes[2]);
 
         assertLiteralContent("before\n", nodes[0]);
-        assertLiteralContent("after", nodes[2]);
+        assertLiteralContent(" after", nodes[2]);
 
         const condition = nodes[1] as ConditionNode;
 

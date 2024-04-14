@@ -20,6 +20,6 @@ suite('Transformer Remove Blade', () => {
     </body>
 </html>
 `).transform().removeBlade();
-        assert.strictEqual(result, "<html>\n    <head>\n        <title>Transformer Test</title>\n    </head>\n    <body>\n    before\n    \n        I have one record!\n    \n        I have multiple records!\n    \n        I don't have any records!\n    after\n    </body>\n</html>\n");
+        assert.strictEqual(result, "<html>\n    <head>\n        <title>Transformer Test</title>\n    </head>\n    <body>\n    before\n    \n        I have one record!\n    \n        I have multiple records!\n    \n        I don't have any records!\n     after\n    </body>\n</html>\n");
     });
 });
