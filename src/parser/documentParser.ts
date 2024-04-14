@@ -1135,7 +1135,13 @@ export class DocumentParser implements StringIterator {
                                 continue;
                             }
 
-                            const nodeContent = this.content.substr(literalStartIndex, literalLength);
+                            const shiftedIndex = this.shiftIndexToWhitespace(literalStartIndex),
+                                lDiff = literalStartIndex - shiftedIndex;
+
+                            const nodeContent = this.content.substr(
+                                shiftedIndex,
+                                literalLength + lDiff
+                            );
 
                             const literalNode = new LiteralNode();
                             literalNode.withParser(this);
@@ -1361,31 +1367,37 @@ export class DocumentParser implements StringIterator {
     }
 
     private shiftIndexToWhitespace(index:number) {
-        let char = this.content[index];
+        let newIndex = index;
+        let char = this.content[newIndex];
 
         if (index > 0) {
-            char = this.content[index - 1];
+            char = this.content[newIndex - 1];
 
             if (! StringUtilities.ctypeSpace(char) || char === "\n") {
                 return index;
             }
 
             while (StringUtilities.ctypeSpace(char)) {
-                index -= 1;
+                newIndex -= 1;
 
-                if (index < 0) {
+                if (newIndex < 0) {
                     return 0;
                 }
 
-                char = this.content[index];
+                char = this.content[newIndex];
 
                 if (char === "\n") {
-                    index += 1;
+                    newIndex += 1;
                     break;
                 }
             }
 
-            return index + 1;
+            if (newIndex != index) {
+                // Prevent excessive scanning backward
+                return index - 1;
+            }
+
+            return newIndex + 1;
         }
 
         return index;

@@ -11,7 +11,7 @@ suite('Conditional Element Pair Transform', () => {
 </p>
 </div>
     </@pair Test @endpair>`)).trim(),
-            `<@pair Test @endpair class="something">
+            `<@pair Test @endpair  class="something">
 <div><p>SOme {{ $title }} text</p>
 <p>
 @pair

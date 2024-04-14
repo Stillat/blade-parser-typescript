@@ -638,4 +638,96 @@ asdf
         const result = await formatBladeString(template);
         assert.strictEqual(result, expected);
     });
+
+    test('it doesnt eat spaces on css utilities', async () => {
+        const template = `<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style type="text/tailwindcss">
+            @layer components {
+                .btn {
+                    @apply rounded-full leading-4;
+                    color: white;
+                }
+            }
+        </style>
+        <style type="text/tailwindcss">
+            @layer components {
+                .btn {
+                    @apply rounded-full leading-4;
+                    color: white;
+                }
+            }
+        </style>
+        <style type="text/tailwindcss">
+            @layer components {
+                .btn {
+                    @apply rounded-full leading-4;
+                    color: white;
+                }
+            }
+        </style>
+        <style type="text/tailwindcss">
+            @layer components {
+                .btn {
+                    @apply rounded-full leading-4;
+                    color: white;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        Hello
+    </body>
+</html>`;
+        const expected = `<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style type="text/tailwindcss">
+            @layer components {
+                .btn {
+                    @apply rounded-full leading-4;
+                    color: white;
+                }
+            }
+        </style>
+        <style type="text/tailwindcss">
+            @layer components {
+                .btn {
+                    @apply rounded-full leading-4;
+                    color: white;
+                }
+            }
+        </style>
+        <style type="text/tailwindcss">
+            @layer components {
+                .btn {
+                    @apply rounded-full leading-4;
+                    color: white;
+                }
+            }
+        </style>
+        <style type="text/tailwindcss">
+            @layer components {
+                .btn {
+                    @apply rounded-full leading-4;
+                    color: white;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        Hello
+    </body>
+</html>
+`;
+        let result = await formatBladeString(template);
+        assert.strictEqual(result, expected);
+
+        for (let i = 0; i < 2; i++) {
+            assert.strictEqual(result, expected);
+        }
+    });
 });

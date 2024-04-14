@@ -12,9 +12,9 @@ suite('Element Unless Transformer', () => {
     </@unless($something)here @endunless>
 </div>
     </@unless($something)here @endunless>`)).trim(),
-            `<@unless($something)here @endunless class="something">
+            `<@unless($something)here @endunless  class="something">
 <div><p>SOme {{ $text }} text</p>
-<@unless($something)here @endunless class="something">
+<@unless($something)here @endunless  class="something">
 <div><p>SOme {{ $text }} text</p>
 </div>
     </@unless($something)here @endunless >

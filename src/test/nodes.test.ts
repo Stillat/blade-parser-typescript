@@ -111,7 +111,7 @@ suite('Blade Nodes Test', () => {
         assert.strictEqual(directiveThree.hasDirectiveParameters, false);
 
         assertInstanceOf(LiteralNode, nodes[8]);
-        assertLiteralContent("something\n    s3", nodes[8]);
+        assertLiteralContent(" something\n    s3", nodes[8]);
 
         assertInstanceOf(DirectiveNode, nodes[9]);
         const directiveFour = nodes[9] as DirectiveNode;
