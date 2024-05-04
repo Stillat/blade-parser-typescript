@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.13
+
+- Corrects an issue when parsing escaped echo blocks (#99)
+
 ## 2.1.12
 
 - Corrects an issue where leading spaces may be removed from literal nodes in some situations (#97)

@@ -1748,6 +1748,19 @@ export class DocumentParser implements StringIterator {
                 spaceRecoveryIndex = this.currentIndex;
             }
 
+            if (isStartOfString(this.cur)) {
+                const stringStart = this.cur as string;
+                this.shouldIgnoreStructures = true;
+                const results = skipToEndOfStringTraced(this);
+                this.shouldIgnoreStructures = false;
+                this.currentIndex = results.endedOn;
+                this.currentContent.push(stringStart);
+                this.currentContent = this.currentContent.concat(results.value.split(''));
+                this.currentContent.push(stringStart);
+                this.currentIndex = results.endedOn;
+                continue;
+            }
+
             // Ignore PHP comments.
             if (this.cur == DocumentParser.Punctuation_ForwardSlash && this.next == DocumentParser.Punctuation_ForwardSlash) {
                 this.shouldIgnoreStructures = true;

@@ -436,4 +436,15 @@ x-on:input.debounce.{{ $debounce ?? '500ms' }}="updateState"
 `;
         assert.strictEqual(await formatBladeStringWithPint(template), expected);
     });
+
+    test('escaped echos are parsed correctly when they contain strings', async () => {
+        const template = `One
+        {!! __('I agree with the <a href="https://domain.com/privacy-policy">privacy policy</a>.') !!}
+        Two`;
+        const out = `One
+{!! __('I agree with the <a href="https://domain.com/privacy-policy">privacy policy</a>.') !!}
+Two
+`;
+        assert.strictEqual(await formatBladeString(template), out);
+    })
 });
