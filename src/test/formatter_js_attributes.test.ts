@@ -151,8 +151,8 @@ x-bind:class="
 <div>
     <button
         x-bind:class="
-    @for ($i = 0; $i < 10; $i++)
- test @endfor
+    @for ($i = 0; $i < 10; $i++) test @endfor
+
     var somethingHere = 'that';
 "
     >
@@ -164,7 +164,6 @@ x-bind:class="
     <button
         x-bind:class="
 @verbatim @continue @endverbatim
-
         var somethingHere = 'that';
 "
     >

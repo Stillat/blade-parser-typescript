@@ -790,7 +790,21 @@ export class Transformer {
             }
 
             let virtualSlug = '';
-            let result = `${this.open(slug)}\n`;
+            let result = `${this.open(slug)}`;
+            let addTrailingNewline = true;
+
+            if (directive.fragmentPosition == FragmentPosition.InsideFragmentParameter) {
+                if (directiveName != 'php' && directiveName != 'verbatim') {
+                    if (directive.isClosedBy == null || (directive.startPosition?.line != directive.isClosedBy.startPosition?.line)) {
+                        result += "\n";
+                    } else {
+                        addTrailingNewline = false;
+                    }
+                }
+            } else {
+                result += "\n";
+            }
+            
             if (directiveName == 'php' || directiveName == 'verbatim') {
                 virtualSlug = this.makeSlug(15);
                 result += this.pair(virtualSlug);
@@ -825,7 +839,11 @@ export class Transformer {
                 }
             }
 
-            result += `${this.close(slug)}\n`;
+            result += `${this.close(slug)}`;
+
+            if (addTrailingNewline) {
+                result += "\n";
+            }
 
             this.virtualStructureOpens.push(this.open(virtualSlug));
             this.virtualStructureClose.push(this.close(virtualSlug));

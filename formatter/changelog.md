@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.14
+
+- Improves formatting of directives inside attribute content (#103)
+
 ## 2.1.13
 
 - Corrects an issue when parsing escaped echo blocks (#99)

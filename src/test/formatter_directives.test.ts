@@ -730,4 +730,17 @@ asdf
             assert.strictEqual(result, expected);
         }
     });
+
+    test('it does not add extra spaces inside attribute content', async () => {
+        const template = `<input type="text" class="my-class @error('form.title') has-error @enderror" />`
+        const expected = `<input
+    type="text"
+    class="my-class @error("form.title") has-error @enderror"
+/>
+`;
+        const output = await formatBladeString(template);
+
+
+        assert.strictEqual(output, expected);
+    });
 });
