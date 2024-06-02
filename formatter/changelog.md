@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.15
+
+- Corrects an issue where some attributes may be excessively indented (#104)
+
 ## 2.1.14
 
 - Improves formatting of directives inside attribute content (#103)
