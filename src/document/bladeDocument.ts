@@ -31,7 +31,7 @@ export class BladeDocument {
             document.getParser().setSeedPosition(seedPosition);
         }
 
-        document.getParser().withPhpValidator(parentParser.getPhpValidator());
+        document.getParser().withParserOptions(parentParser.getParserOptions()).withPhpValidator(parentParser.getPhpValidator());
 
         document.loadString(text);
 

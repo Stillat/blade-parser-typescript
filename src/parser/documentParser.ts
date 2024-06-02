@@ -590,6 +590,10 @@ export class DocumentParser implements StringIterator {
             candidate = candidate.substring(1);
         }
 
+        if (candidate.includes('=')) {
+            candidate = candidate.substring(0, candidate.indexOf('='));
+        }
+
         return candidate.toLowerCase();
     }
 

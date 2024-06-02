@@ -2803,7 +2803,57 @@ export class Transformer {
         return result;
     }
 
+    private reflowMultilineStrings(content: string): string {
+        const lines = StringUtilities.breakByNewLine(content),
+            newLines:string[] = [];
+
+        let foundDirectiveString = false;
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            newLines.push(line);
+            if (line.trimLeft().startsWith('@') && line.trimRight().endsWith('"')) {
+                const openingPosition = line.indexOf('"');
+                const subLines:string[] = [];
+
+                // Reset in case there is an invalid one in the mix.
+                foundDirectiveString = false;
+
+                for (let j = i; j < lines.length; j++) {
+                    const subLine = lines[j];
+
+                    subLines.push(subLine);
+                    if (subLine.trim() === '"') {
+                        const closingPosition = subLine.indexOf('"');
+
+                        if (closingPosition > openingPosition) {
+                            for (let k = 0; k < subLines.length; k++) {
+                                const trimmedLine = subLines[k].substring(closingPosition);
+
+                                if (trimmedLine.length == 0) {
+                                    continue;
+                                }
+
+                                newLines.push(' '.repeat(openingPosition - 1) + trimmedLine);
+                            }
+
+                            i += subLines.length - 1;
+                        }
+                        foundDirectiveString = true;
+                    }
+                }
+            }
+        }
+
+        if (! foundDirectiveString) {
+            return content;
+        }
+
+        return newLines.join("\n");
+    }
+
     async fromStructure(content: string) {
+        content = this.reflowMultilineStrings(content);
         if (this.didPintFail) {
             if (this.shadowDoc != null) {
                 return this.shadowDoc.getContent();

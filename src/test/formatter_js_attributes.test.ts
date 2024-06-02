@@ -185,4 +185,62 @@ x-bind:class="
 
         assert.strictEqual((await formatBladeString(input)).trim(), input);
     });
+
+    test('ignored directive names do not cause excessive indentation when followed by an equals sign', async function () {
+        const template = `
+<div><div>
+<div
+    @click="if($wire.loginRequired){return}; isLiked = !isLiked; showUsers=false"
+    wire:click="handle('{{ $key }}', '{{ $value["model"] }}')"
+    @if ($authMode)
+        @mouseover="
+              if(
+                  !$wire.loginRequired &&
+                  $wire.reactions['{{ $key }}']['count'] > 0 &&
+                   !showUsers
+               ) {
+                      showUsers = true;
+                      $wire.lastReactedUser('{{ $key }}')
+                  }
+              "
+    @endif
+    class="flex cursor-pointer items-center"
+    title="like"
+>
+</div>
+</div>
+</div>
+    `;
+        const expected = `<div>
+    <div>
+        <div
+            @click="if($wire.loginRequired){return}; isLiked = !isLiked; showUsers=false"
+            wire:click="handle('{{ $key }}', '{{ $value["model"] }}')"
+            @if ($authMode)
+                @mouseover="
+                          if(
+                              !$wire.loginRequired &&
+                              $wire.reactions['{{ $key }}']['count'] > 0 &&
+                               !showUsers
+                           ) {
+                                  showUsers = true;
+                                  $wire.lastReactedUser('{{ $key }}')
+                              }
+                          "
+            @endif
+            class="flex cursor-pointer items-center"
+            title="like"
+        ></div>
+    </div>
+</div>
+`;
+        let out = await formatBladeString(template);
+        assert.strictEqual(out, expected);
+
+        for (let i = 0; i < 3; i++) {
+            out = await formatBladeString(out);
+
+            assert.strictEqual(out, expected);
+        }
+    });
 });
