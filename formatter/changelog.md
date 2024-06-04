@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.16
+
+- Prevents `x-mask` attributes from being supplied to class string emulation (#105)
+
 ## 2.1.15
 
 - Corrects an issue where some attributes may be excessively indented (#104)
