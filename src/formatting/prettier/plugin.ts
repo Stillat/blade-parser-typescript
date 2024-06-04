@@ -17,6 +17,7 @@ import { BladeComponentNode } from '../../nodes/nodes.js';
 import { VoidHtmlTagsManager } from './voidHtmlTagsManager.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import UnsafeClassStringAttributes from '../unsafeClassStringAttributes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -142,6 +143,10 @@ const plugin: prettier.Plugin = {
                     if (attributeMap.size > 0) {
                         for (const attribute of attributeMap) {
                             try {
+                                if (UnsafeClassStringAttributes.includes(attribute[1].name.toLowerCase())) {
+                                    continue;
+                                }
+
                                 const classStringRuleEngine = new ClassStringRuleEngine(classConfig),
                                     jsEmulator = new ClassEmulator(classStringRuleEngine);
 

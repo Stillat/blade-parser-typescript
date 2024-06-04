@@ -478,4 +478,19 @@ x-thing="text-white px-4 sm:px-8 py-2 sm:py-3 bg-sky-700 hover:bg-sky-800">
 `;
         assert.strictEqual(await formatBladeString(template), expected);
     });
+
+    test('it ignores x-mask', async () => {
+        const template = `
+<input
+    type="text"
+    x-mask="text-white px-4 sm:px-8 py-2 sm:py-3 bg-sky-700 hover:bg-sky-800"
+/>
+`;
+        const expected = `<input
+    type="text"
+    x-mask="text-white px-4 sm:px-8 py-2 sm:py-3 bg-sky-700 hover:bg-sky-800"
+/>
+`;
+        assert.strictEqual(await formatBladeString(template), expected);
+    });
 });
