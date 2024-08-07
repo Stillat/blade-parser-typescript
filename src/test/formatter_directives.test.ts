@@ -743,4 +743,20 @@ asdf
 
         assert.strictEqual(output, expected);
     });
+
+    test('it doesnt duplicate or toggle between leading parenthesis', async () => {
+        const template = `@php(($bg = get_field('populated_bg_color') === 'gray' ? ' bg-gray-100 my-2 my-lg-5' : ''))`,
+            expected = `@php($bg = get_field("populated_bg_color") === "gray" ? " bg-gray-100 my-2 my-lg-5" : "")`;
+
+        let out = await formatBladeString(template);
+
+        assert.strictEqual(out.trim(), expected);
+
+        for (let i = 0; i < 3; i++) {
+            out = await formatBladeString(out);
+
+            assert.strictEqual(out.trim(), expected);
+        }
+
+    });
 });

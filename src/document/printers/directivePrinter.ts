@@ -11,6 +11,7 @@ import { ParserOptions } from "prettier";
 import { getPrintWidth, preparePrettierWorkaround, undoPrettierWorkaround } from './printWidthUtils.js';
 import { PintTransformer } from '../pintTransformer.js';
 import { GeneralSyntaxReflow } from '../../formatting/generalSyntaxReflow.js';
+import { ParenUnwrapper } from '../../parser/parenUnwrapper.js';
 
 export class DirectivePrinter {
     private static defaultControlDirectiveNames: string[] = [
@@ -101,9 +102,9 @@ export class DirectivePrinter {
                     }
 
                     let params = directive.getPhpContent().trim();
-                    if (params.startsWith('(') && params.endsWith(')')) {
-                        params = params.substring(1);
-                        params = params.substring(0, params.length - 1);
+                    const parenUnwrapper = new ParenUnwrapper();
+                    while (params.startsWith('(') && params.endsWith(')')) {
+                        params = parenUnwrapper.unwrap(params);
                     }
 
                     let tResult = params,
@@ -249,6 +250,11 @@ export class DirectivePrinter {
                         if (removeLines) {
                             tResult = removeContentLines(tResult);
                         }
+
+                        if (tResult.startsWith('(') && tResult.endsWith(')')) {
+                            tResult = parenUnwrapper.unwrap(tResult);
+                        }
+
                         paramContent = '(' + tResult + ')';
                     }
                 }

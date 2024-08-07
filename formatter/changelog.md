@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.17
+
+- Corrects an issue where leading parenthesis may be repeatedly toggled or duplicated (#102)
+
 ## 2.1.16
 
 - Prevents `x-mask` attributes from being supplied to class string emulation (#105)
