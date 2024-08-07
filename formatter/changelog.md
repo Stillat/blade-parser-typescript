@@ -3,6 +3,7 @@
 ## 2.1.17
 
 - Corrects an issue where leading parenthesis may be repeatedly toggled or duplicated (#102)
+- Corrects an issue where some content may be interpreted as directives, causing improper line wrapping (#106)
 
 ## 2.1.16
 

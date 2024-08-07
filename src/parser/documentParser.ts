@@ -558,7 +558,9 @@ export class DocumentParser implements StringIterator {
                             const checkPrefetch = this.breakPreFetch(preFetch).toLowerCase();
 
                             if (!lowerIgnoreDirectives.includes(checkPrefetch)) {
-                                this.bladeStartIndex.push(offset);
+                                if (! checkPrefetch.endsWith('{')) {
+                                    this.bladeStartIndex.push(offset);
+                                }
                             }
                         } else {
                             this.bladeStartIndex.push(offset);

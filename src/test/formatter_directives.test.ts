@@ -759,4 +759,26 @@ asdf
         }
 
     });
+
+    test('it doesnt consider invalid directives and cause impropper wrapping', async () => {
+        const template = `
+
+<div 
+     @reply-deleted-{{ $comment->getKey() }}.window="
+        doSomething()
+     "
+>
+</div>
+
+`;
+        const expected = `<div
+    @reply-deleted-{{ $comment->getKey() }}.window="
+        doSomething()
+     "
+></div>
+`;
+        const out = await formatBladeString(template);
+
+        assert.strictEqual(out, expected);
+    });
 });
