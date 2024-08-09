@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.18
+
+- Improves formatting results of foreach directives with upper-case characters (#108)
+
 ## 2.1.17
 
 - Corrects an issue where leading parenthesis may be repeatedly toggled or duplicated (#102)

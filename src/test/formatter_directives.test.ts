@@ -39,6 +39,29 @@ suite('Directives Formatting', () => {
 @show`
         );
 
+        test('it formats foreach with uppecase', async () => {
+            const template = `@Foreach($filters as $item)
+  <li class="list-unstyled">
+    <a href="{{ $item->link }}" class="{{ $item->active ? 'fw-bold text-primary' : '' }}">
+                    {{ $item->name }}
+    </a>
+  </li>
+@endforeach`;
+            const expected = `@Foreach($filters as $item)
+<li class="list-unstyled">
+    <a
+        href="{{ $item->link }}"
+        class="{{ $item->active ? "fw-bold text-primary" : "" }}"
+    >
+        {{ $item->name }}
+    </a>
+</li>
+@endforeach
+`;
+            const result = await formatBladeString(template);
+            assert.strictEqual(result, expected);
+        });
+
         assert.strictEqual(
             (await formatBladeString(`
 @section("messages")

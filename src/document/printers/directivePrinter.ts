@@ -194,7 +194,7 @@ export class DirectivePrinter {
                         }
                     }
 
-                    if (directive.directiveName.match(/^for(each|else)$/)) {
+                    if (directive.directiveName.toLocaleLowerCase().match(/^for(each|else)$/)) {
                         tResult = tResult.substring(9);
                         tResult = tResult.substring(0, tResult.length - 14);
                     }
