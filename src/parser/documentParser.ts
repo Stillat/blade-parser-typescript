@@ -595,6 +595,14 @@ export class DocumentParser implements StringIterator {
         if (candidate.includes('=')) {
             candidate = candidate.substring(0, candidate.indexOf('='));
         }
+        
+        if (candidate.includes('<')) {
+            candidate = candidate.substring(0, candidate.indexOf('<'));
+        }
+
+        if (candidate.includes('>')) {
+            candidate = candidate.substring(0, candidate.indexOf('>'));
+        }
 
         return candidate.toLowerCase();
     }

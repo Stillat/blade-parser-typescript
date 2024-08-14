@@ -417,4 +417,19 @@ A
 `;
         assert.strictEqual(await formatBladeString(template), out);
     });
+
+    test('it can format if statements bordering html closing chars', async () => {
+        const input = `@if($domains->isNotEmpty() || $customDomains->isNotEmpty())
+    <option @if($selectedDomain === $value) selected="selected" @endif>{{ $label }}</option>
+@endif`;
+        const expected = `@if ($domains->isNotEmpty() || $customDomains->isNotEmpty())
+    <option @if($selectedDomain === $value) selected="selected" @endif>
+        {{ $label }}
+    </option>
+@endif
+`;
+        const out = await formatBladeString(input);
+
+        assert.strictEqual(out, expected);
+    });
 });
