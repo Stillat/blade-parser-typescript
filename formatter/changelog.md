@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.19
+
+- Improves formatting of `@if` statements neighboring the `>` or `<` characters (#112)
+
 ## 2.1.18
 
 - Improves formatting results of foreach directives with upper-case characters (#108)
