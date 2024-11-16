@@ -17,6 +17,8 @@ export class PairManager {
         'canany',
         'hasSection',
         'production',
+        'feature',
+        'featureany',
     ];
 
     public static customIfs: Map<string, number> = new Map();

@@ -337,6 +337,28 @@ asdf
         assert.strictEqual(await formatBladeString(input), out);
     });
 
+    test('it pairs feature', async () => {
+        const input = `@feature("api")
+<div></div>
+@endfeature`
+        const out = `@feature("api")
+    <div></div>
+@endfeature
+`;
+        assert.strictEqual(await formatBladeString(input), out);
+    });
+
+    test('it pairs featureany', async () => {
+        const input = `@featureany(["api-v1","api-v2"])
+<div></div>
+@endfeatureany`
+        const out = `@featureany(["api-v1", "api-v2"])
+    <div></div>
+@endfeatureany
+`;
+        assert.strictEqual(await formatBladeString(input), out);
+    });
+
     test('it pairs env', async () => {
         const input = `@env
 <div></div>

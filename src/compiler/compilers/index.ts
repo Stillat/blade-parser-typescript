@@ -93,6 +93,10 @@ import { EndComponentCompiler } from './endComponent.js';
 import { SlotCompiler } from './slot.js';
 import { EndSlotCompiler } from './endSlot.js';
 import { EndComponentClassCompiler } from './endComponentClass.js';
+import { FeatureCompiler } from './feature.js';
+import { EndFeatureCompiler } from './endFeature.js';
+import { FeatureAnyCompiler } from './featureAny.js';
+import { EndFeatureAnyCompiler } from './endFeatureAny.js';
 
 export {
     AppendCompiler,
@@ -190,4 +194,8 @@ export {
     SlotCompiler,
     EndSlotCompiler,
     EndComponentClassCompiler,
+    FeatureCompiler,
+    EndFeatureCompiler,
+    FeatureAnyCompiler,
+    EndFeatureAnyCompiler,
 }

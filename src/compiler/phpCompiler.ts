@@ -118,6 +118,10 @@ export class PhpCompiler {
         this.registerCompiler('slot', new Compilers.SlotCompiler());
         this.registerCompiler('endslot', new Compilers.EndSlotCompiler());
         this.registerCompiler('endcomponentClass', new Compilers.EndComponentClassCompiler(componentCompiler));
+        this.registerCompiler('feature', new Compilers.FeatureCompiler());
+        this.registerCompiler('endfeature', new Compilers.EndFeatureCompiler());
+        this.registerCompiler('featureany', new Compilers.FeatureAnyCompiler());
+        this.registerCompiler('endfeatureany', new Compilers.EndFeatureAnyCompiler());
     }
 
     setCompileComponentTagBlade(compileBlade: boolean) {
