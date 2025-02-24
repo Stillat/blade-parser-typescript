@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.20
+
+- Corrects a bug when formatting `@foreach` directives (#116)
+
 ## 2.1.19
 
 - Improves formatting of `@if` statements neighboring the `>` or `<` characters (#112)

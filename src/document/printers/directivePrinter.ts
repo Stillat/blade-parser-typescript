@@ -136,7 +136,7 @@ export class DirectivePrinter {
                             array = arrayParser.parse(StringUtilities.replaceAllInString(tResult, "\n", ' ')),
                             targetIndent = 0;
 
-                        if (arrayParser.getIsAssoc() || tResult.includes('match') || tResult.includes('=>' || tResult.includes('&&'))) {
+                        if (arrayParser.getIsAssoc() || tResult.includes('match') || tResult.includes('=>')  || tResult.includes('&&')) {
                             if (tResult.includes("\n") && !removeLines) {
                                 tResult = IndentLevel.shiftIndent(
                                     tResult,
@@ -248,7 +248,7 @@ export class DirectivePrinter {
                         paramContent += ')';
                     } else {
                         if (removeLines) {
-                            tResult = removeContentLines(tResult);
+                            tResult = removeContentLines(tResult, directive);
                         }
 
                         if (tResult.startsWith('(') && tResult.endsWith(')')) {
@@ -294,14 +294,20 @@ export class DirectivePrinter {
     }
 }
 
-function removeContentLines(content: string): string {
+function removeContentLines(content: string, directive: DirectiveNode): string {
     let newContent = '';
     const lines = StringUtilities.breakByNewLine(content);
 
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
 
-        newContent += line.trim();
+        const tmpLine = line.trim();
+
+        if (directive?.directiveName === 'foreach' && (tmpLine === 'as' || tmpLine.startsWith('as '))) {
+            newContent += ' ';
+        }
+
+        newContent += tmpLine;
     }
 
     return newContent;

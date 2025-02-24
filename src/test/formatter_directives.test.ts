@@ -804,4 +804,17 @@ asdf
 
         assert.strictEqual(out, expected);
     });
+
+    test('foreach with chained methods do not smoosh the as keyword', async () => {
+        const input = `@foreach (collect()->where('foo', 'bar')->where('bar', 'foo') as $item)
+<!-- -->
+@endforeach`;
+        const expected = `@foreach (collect()->where("foo", "bar")->where("bar", "foo") as $item)
+    <!-- -->
+@endforeach`;
+
+        const out = await formatBladeString(input);
+
+        assert.strictEqual(out.trim(), expected);
+    });
 });
