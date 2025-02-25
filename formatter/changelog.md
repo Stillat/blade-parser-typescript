@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.21
+
+- Corrects a bug when formatting `@forelse` directives (same as #116)
+
 ## 2.1.20
 
 - Corrects a bug when formatting `@foreach` directives (#116)

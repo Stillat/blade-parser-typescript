@@ -817,4 +817,21 @@ asdf
 
         assert.strictEqual(out.trim(), expected);
     });
+
+    test('forelse with chained methods do not smoosh the as keyword', async () => {
+        const input = `@forelse (collect($users)->one()->two()->take(3) as $user)
+<li>{{ $user->name }}</li>
+@empty
+<p>No users</p>
+@endforelse`;
+        const expected = `@forelse (collect($users)->one()->two()->take(3) as $user)
+    <li>{{ $user->name }}</li>
+@empty
+    <p>No users</p>
+@endforelse`;
+
+        const out = await formatBladeString(input);
+
+        assert.strictEqual(out.trim(), expected);
+    });
 });

@@ -303,7 +303,10 @@ function removeContentLines(content: string, directive: DirectiveNode): string {
 
         const tmpLine = line.trim();
 
-        if (directive?.directiveName === 'foreach' && (tmpLine === 'as' || tmpLine.startsWith('as '))) {
+        if (
+            (directive?.directiveName === 'foreach' || directive?.directiveName === 'forelse') && 
+            (tmpLine === 'as' || tmpLine.startsWith('as '))
+        ) {
             newContent += ' ';
         }
 
