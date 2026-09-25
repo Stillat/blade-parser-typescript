@@ -10,6 +10,7 @@ import {
   forceBreakChildren,
   forceNextEmptyLine,
   getPrintableSubtreeEnd,
+  isDirectiveAttachedToText,
   preferHardlineAsLeadingSpaces,
   type ChildPrintSegment,
 } from "./utils.js";
@@ -145,6 +146,10 @@ function printBetweenLine(prev: WrappedNode, next: WrappedNode): Doc {
   // Escaped blade prefixes (e.g. @@, @{{, @{!!) must stay attached to
   // the following construct/text to preserve semantics.
   if (prev.kind === NodeKind.NonOutput || next.kind === NodeKind.NonOutput) {
+    return "";
+  }
+
+  if (isDirectiveAttachedToText(prev, next)) {
     return "";
   }
 

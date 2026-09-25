@@ -6,7 +6,12 @@ import { HTML_ELEMENT_ATTRIBUTES } from "../html-data.js";
 import { hasFrontMatterMark } from "../front-matter.js";
 import { getIgnoreCommentKindFromCommentText, type IgnoreCommentKind } from "../ignore-markers.js";
 import { isBladeConstructChild, parentContainsBladeSyntax } from "./blade-syntax.js";
-import { isEchoLike, isScriptLikeTag, isVueNonHtmlBlock } from "../node-predicates.js";
+import {
+  isEchoLike,
+  isScriptLikeTag,
+  isVueNonHtmlBlock,
+  isWhitespaceTextLikeNode,
+} from "../node-predicates.js";
 
 export type AttributeValueKind = "none" | "static_text" | "pure_construct" | "mixed_structured";
 
@@ -189,6 +194,24 @@ export function preferHardlineAsSurroundingSpaces(node: WrappedNode): boolean {
     default:
       return false;
   }
+}
+
+/**
+ * Blade outputs the text around a directive verbatim, so a directive written
+ * flush against text or an echo must stay flush: any break here renders as a space.
+ */
+export function isDirectiveAttachedToText(prev: WrappedNode, next: WrappedNode): boolean {
+  const isDirectiveNode = (node: WrappedNode) =>
+    node.kind === NodeKind.Directive || node.kind === NodeKind.DirectiveBlock;
+
+  return (
+    ((isDirectiveNode(prev) && isWhitespaceTextLikeNode(next)) ||
+      (isWhitespaceTextLikeNode(prev) && isDirectiveNode(next))) &&
+    !prev.hasTrailingSpaces &&
+    !next.hasLeadingSpaces &&
+    prev.source === next.source &&
+    getPrintableSubtreeEnd(prev) === next.start
+  );
 }
 
 export function preferHardlineAsLeadingSpaces(node: WrappedNode): boolean {

@@ -15,7 +15,7 @@ import {
   isDirectiveInElementOpenTag,
 } from "./directive-spacing-context.js";
 import { trimTrailingHorizontalWhitespace } from "../string-utils.js";
-import { isEchoLike, isTextLikeNode } from "../node-predicates.js";
+import { isEchoLike, isTextLikeNode, isWhitespaceTextLikeNode } from "../node-predicates.js";
 import {
   fullText,
   preferHardlineAsLeadingSpaces,
@@ -23,6 +23,7 @@ import {
   getPrintableSubtreeEnd,
   getPrettierIgnoreMode,
   hasPrettierIgnore,
+  isDirectiveAttachedToText,
   type ChildPrintSegment,
 } from "./utils.js";
 import { htmlTrimEnd, htmlTrimStart, replaceEndOfLine } from "./doc-utils.js";
@@ -228,11 +229,41 @@ export function printDirectiveBlock(
   if (children.length === 0) return "";
 
   const style = getDirectiveBlockStyle(options);
-  if (style !== "multiline" && shouldPreserveInlineBlock(node, style)) {
+  if (
+    hasDirectiveTokenAttachedToText(node) ||
+    (style !== "multiline" && shouldPreserveInlineBlock(node, style))
+  ) {
     return printDirectiveBlockInline(path, print, options);
   }
 
   return printDirectiveBlockMultiline(node, path, print, options);
+}
+
+// The multiline layout puts line breaks between a branch token and its body,
+// which changes the rendered text wherever the two are written flush.
+function hasDirectiveTokenAttachedToText(node: WrappedNode): boolean {
+  const isInlineContent = (child: WrappedNode) =>
+    isWhitespaceTextLikeNode(child) ||
+    (child.kind === NodeKind.Element && child.cssDisplay.startsWith("inline"));
+
+  const branches = node.children.filter((child) => isBranchNode(child));
+  return branches.some((branch, index) => {
+    const first = branch.children[0];
+    const last = branch.children[branch.children.length - 1];
+    const nextBranch = branches[index + 1];
+
+    return (
+      (first !== undefined &&
+        isInlineContent(first) &&
+        !first.hasLeadingSpaces &&
+        first.start === branch.end) ||
+      (last !== undefined &&
+        nextBranch !== undefined &&
+        isInlineContent(last) &&
+        !last.hasTrailingSpaces &&
+        getPrintableSubtreeEnd(last) === nextBranch.start)
+    );
+  });
 }
 
 function shouldFallbackMalformedDirectiveBlock(node: WrappedNode): boolean {
@@ -394,18 +425,25 @@ function printDirectiveBodyInline(
 ): Doc[] {
   const docs: Doc[] = [];
   const segments = getChildPrintSegments(branchPath.node.children);
-  const printedChildren = branchPath.map(
-    (childPath) => printDirectiveBodyChild(childPath, print, options),
-    "children",
-  );
+  const printedChildren = branchPath.map((childPath): Doc => {
+    const child = childPath.node;
+    if (isBranchNode(child) && child.children.length > 0) {
+      return [
+        child.kind === NodeKind.Directive
+          ? renderDirectiveTokens(child, options)
+          : print(childPath),
+        hasWhitespaceBeforeBody(child) ? " " : "",
+        printDirectiveBodyInline(childPath, print, options),
+      ];
+    }
+
+    return printDirectiveBodyChild(childPath, print, options);
+  }, "children");
 
   for (const [segmentIndex, segment] of segments.entries()) {
     const prev = segmentIndex > 0 ? segments[segmentIndex - 1] : null;
     if (prev !== null) {
-      const between =
-        isIgnoreRangeNode(prev.last) || isIgnoreRangeNode(segment.first)
-          ? getSourceBetweenSegments(prev, segment)
-          : getSourceBetween(prev.last, segment.first);
+      const between = getSourceBetweenSegments(prev, segment);
 
       if (isIgnoreRangeNode(prev.last) || isIgnoreRangeNode(segment.first)) {
         if (between.length > 0) {
@@ -417,7 +455,11 @@ function printDirectiveBodyInline(
                 : between,
           );
         }
-      } else if (/\s/.test(between)) {
+      } else if (
+        /\s/.test(between) ||
+        prev.last.hasTrailingSpaces ||
+        segment.first.hasLeadingSpaces
+      ) {
         docs.push(" ");
       }
     }
@@ -457,7 +499,7 @@ function printDirectiveBlockInline(
     if (child.children.length > 0) {
       const body = printDirectiveBodyInline(childPath, print, options);
       if (body.length > 0) {
-        segments.push(" ", body);
+        segments.push(hasWhitespaceBeforeBody(child) ? " " : "", body);
       }
     }
 
@@ -528,7 +570,11 @@ function printDirectiveBodyChild(
     ((child.prev !== null && isEchoLike(child.prev)) ||
       (child.next !== null && isEchoLike(child.next)))
   ) {
-    return replaceEndOfLine(child.rawText);
+    return [
+      printOpeningTagPrefix(child, options),
+      replaceEndOfLine(child.rawText),
+      printClosingTagSuffix(child, options),
+    ];
   }
 
   return print(childPath);
@@ -590,6 +636,15 @@ function getInlineDirectiveSeparator(prev: WrappedNode | null, next: WrappedNode
     return "";
   }
   return /\s$/.test(between) ? " " : "";
+}
+
+function hasWhitespaceBeforeBody(directive: WrappedNode): boolean {
+  if (isDirectiveInElementOpenTag(directive)) {
+    return true;
+  }
+
+  const firstBodyChild = directive.children[0];
+  return firstBodyChild.hasLeadingSpaces || /\s/u.test(getSourceBetween(directive, firstBodyChild));
 }
 
 function hasBlankLineBetween(between: string): boolean {
@@ -695,6 +750,10 @@ function printBetweenLine(prev: WrappedNode, next: WrappedNode): Doc {
   // Escaped blade prefixes (e.g. @@, @{{, @{!!) must stay attached to
   // the following construct/text to preserve semantics.
   if (prev.kind === NodeKind.NonOutput || next.kind === NodeKind.NonOutput) {
+    return "";
+  }
+
+  if (isDirectiveAttachedToText(prev, next)) {
     return "";
   }
 

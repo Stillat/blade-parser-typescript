@@ -694,8 +694,7 @@ exports[`validation/conformance/formatter-cases > formats conditional_element_di
   </div>
 </@pair>
 Test
-@endpair
->
+@endpair>
 "
 `;
 
@@ -760,12 +759,10 @@ exports[`validation/conformance/formatter-cases > formats conditional_element_if
     <@if ($something)here @endif class="something">
       <div><p>SOme {{ $text }} text</p></div> </@if
     >($something)here
-    @endif
-    >
+    @endif>
   </div> </@if
 >($something)here
-@endif
->
+@endif>
 "
 `;
 
@@ -777,15 +774,13 @@ exports[`validation/conformance/formatter-cases > formats conditional_element_if
       <div>
         <p>SOme {{ $text }} text</p>
 
-        @if ($something) here @endif
+        @if ($something)here @endif
       </div> </@if
     >($something)here
-    @endif
-    >
+    @endif>
   </div> </@if
 >($something)here
-@endif
->
+@endif>
 "
 `;
 
@@ -796,12 +791,10 @@ exports[`validation/conformance/formatter-cases > formats conditional_element_un
     <@unless ($something)here @endunless class="something">
       <div><p>SOme {{ $text }} text</p></div> </@unless
     >($something)here
-    @endunless
-    >
+    @endunless>
   </div> </@unless
 >($something)here
-@endunless
->
+@endunless>
 "
 `;
 

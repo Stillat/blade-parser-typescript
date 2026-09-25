@@ -58,17 +58,10 @@ MAL_GA_9_BRIDGE {{ $text_9_100 }}
         /@if|@unless
       >
         .test(value) } }" x-bind:class="{ active: open, 'MAL_GA_9_1': true,
-        blade: '
-        @endif
-        ' }"
-        @click
-        .prevent="message = \`MAL_GA_9_1
-        @if
-        \`; if (ok) submit(
-        @json ($payload_9_1)
-        )" class="
-        @if ($active_9_1) active @endif
-        " data-marker="MAL_GA_9_1">
+        blade: '@endif' }"
+        @click.prevent="message = \`MAL_GA_9_1
+        @if\`; if (ok) submit(@json ($payload_9_1))" class="@if ($active_9_1) active @endif"
+        data-marker="MAL_GA_9_1">
         <span>MAL_GA_9_1 {{ $label_9_1 }}</span>
       </div>
 
@@ -156,15 +149,10 @@ MAL_GA_9_BRIDGE {{ $text_9_100 }}
             /@if|@unless
           >
             .test(value) } }" x-bind:class="{ active: open, 'MAL_GA_9_9': true,
-            blade: '
-            @endif
-            ' }"
-            @click
-            .prevent="if (/^
-            @endif
-            /.test($event.key)) { selected = 'MAL_GA_9_9' }" class="
-            @if ($active_9_9) active @endif
-            " data-marker="MAL_GA_9_9">
+            blade: '@endif' }"
+            @click.prevent="if (/^@endif/.test($event.key)) { selected =
+            'MAL_GA_9_9' }" class="@if ($active_9_9) active @endif"
+            data-marker="MAL_GA_9_9">
             <span>MAL_GA_9_9 {{ $label_9_9 }}</span>
           </div>
         </template>
