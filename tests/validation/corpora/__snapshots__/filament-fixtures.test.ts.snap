@@ -1321,10 +1321,10 @@ exports[`validation/filament-fixtures > formats forms_resources_views_components
 
             @if (filled($label) && (! $labelSrOnly))
               <span class="fi-fo-field-label-content">
-                {{ $label }}
-                @if ($required && (! $isDisabled))
-                  <sup class="fi-fo-field-label-required-mark">*</sup>
-                @endif
+                {{ $label }}@if ($required && (! $isDisabled))<sup
+                  class="fi-fo-field-label-required-mark"
+                  >*</sup
+                > @endif
               </span>
             @endif
 
@@ -2629,12 +2629,10 @@ exports[`validation/filament-fixtures > formats forms_resources_views_components
                                 ])
               >
                 @if (! $column->isHeaderLabelHidden())
-                  {{ $column->getLabel() }}
-                  @if ($column->isMarkedAsRequired())
-                    <sup class="fi-fo-table-repeater-header-required-mark"
-                      >*</sup
-                    >
-                  @endif
+                  {{ $column->getLabel() }}@if ($column->isMarkedAsRequired())<sup
+                    class="fi-fo-table-repeater-header-required-mark"
+                    >*</sup
+                  > @endif
                 @else
                   <span class="fi-sr-only"> {{ $column->getLabel() }} </span>
                 @endif
@@ -8877,10 +8875,9 @@ exports[`validation/filament-fixtures > formats support_resources_views_componen
 >
   @if (filled($label))
     <legend>
-      {{ $label }}
-      @if ($required)
-        <sup class="fi-fieldset-label-required-mark">*</sup>
-      @endif
+      {{ $label }}@if ($required)<sup class="fi-fieldset-label-required-mark"
+        >*</sup
+      > @endif
     </legend>
   @endif
 

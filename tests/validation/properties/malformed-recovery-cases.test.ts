@@ -412,9 +412,7 @@ const tpl_3 = \`MAL_GA_15_3 \${@json($value_15_3)} @verbatim @endverbatim\`;
 const tpl_6 = \`MAL_GA_15_6 \${@json($value_15_6)} @verbatim
 @endverbatim\`; const tpl_8 =
 \`MAL_GA_15_8
-\${
-@json ($value_15_8)
-} @verbatim @endverbatim\`;
+\${@json ($value_15_8)} @verbatim @endverbatim\`;
 `,
     expectedProfiles: ["default"],
     markers: ["MAL_GA_15_BRIDGE", "MAL_GA_15_3", "MAL_GA_15_STYLE", "MAL_GA_15_6", "MAL_GA_15_8"],
